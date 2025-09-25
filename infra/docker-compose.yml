@@ -1,0 +1,105 @@
+services:
+  app:
+    build:
+      context: ./php
+    container_name: vg-app
+    volumes:
+      - ../app:/var/www/html:cached
+    ports:
+      - "${APP_PORT}:80"
+    environment:
+      APP_ENV: dev
+      DB_HOST: mysql
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASS: ${MYSQL_PASSWORD}
+      MONGO_HOST: mongo
+      MONGO_DB: ${MONGO_DB}
+      MONGO_USER: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_PASS: ${MONGO_INITDB_ROOT_PASSWORD}
+      MAILHOG_HOST: mailhog
+      MAILHOG_PORT: 1025
+      PMA_PORT: ${PMA_PORT}
+      MONGO_EXPRESS_PORT: ${MONGO_EXPRESS_PORT}
+      MAILHOG_WEB_PORT: ${MAILHOG_PORT}
+    depends_on:
+      - mysql
+      - mongo
+      - mailhog
+    networks:
+      - vg-net
+
+  mysql:
+    image: mysql:8.0
+    container_name: vg-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    command: --default-authentication-plugin=mysql_native_password
+    ports:
+      - "${MYSQL_PORT}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - vg-net
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: vg-phpmyadmin
+    environment:
+      PMA_HOST: mysql
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${PMA_PORT}:80"
+    depends_on:
+      - mysql
+    networks:
+      - vg-net
+
+  mongo:
+    image: mongo:6
+    container_name: vg-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - "${MONGO_PORT}:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - vg-net
+
+  mongo-express:
+    image: mongo-express:1
+    container_name: vg-mongo-express
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_ADMINPASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    ports:
+      - "${MONGO_EXPRESS_PORT}:8081"
+    depends_on:
+      - mongo
+    networks:
+      - vg-net
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: vg-mailhog
+    ports:
+      - "${MAILHOG_PORT}:8025"
+    networks:
+      - vg-net
+
+volumes:
+  mysql_data:
+  mongo_data:
+
+networks:
+  vg-net:
+    driver: bridge

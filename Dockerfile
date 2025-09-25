@@ -7,7 +7,6 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    libssl-dev \
     zip \
     unzip
 
@@ -17,9 +16,20 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install PHP extensions
 RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd
 
-# Install MongoDB PHP extension
-RUN pecl install mongodb \
-    && docker-php-ext-enable mongodb
+# Enable Apache mod_rewrite
+RUN a2enmod rewrite
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy Apache configuration
+COPY apache.conf /etc/apache2/sites-available/000-default.conf
+
+# Expose port 80
+EXPOSE 80
+
+# Start Apache
+CMD ["apache2-foreground"]
 
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite

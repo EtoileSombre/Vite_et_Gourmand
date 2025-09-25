@@ -16,6 +16,12 @@ class OrderService {
             
             $stmt = $this->pdo->prepare($sql);
             
+            // Handle empty delivery_date
+            $deliveryDate = null;
+            if (!empty($orderData['delivery_date'])) {
+                $deliveryDate = $orderData['delivery_date'];
+            }
+            
             $result = $stmt->execute([
                 ':customer_name' => $orderData['customer_name'],
                 ':customer_email' => $orderData['customer_email'],
@@ -23,7 +29,7 @@ class OrderService {
                 ':customer_address' => $orderData['customer_address'] ?? null,
                 ':items' => json_encode($orderData['items']),
                 ':total_amount' => $orderData['total_amount'],
-                ':delivery_date' => $orderData['delivery_date'] ?? null,
+                ':delivery_date' => $deliveryDate,
                 ':notes' => $orderData['notes'] ?? null
             ]);
             

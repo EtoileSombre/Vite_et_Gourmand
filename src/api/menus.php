@@ -10,7 +10,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit();
 }
 
-require_once __DIR__ . '/../includes/MenuService.php';
+// Use simple file-based service for testing
+require_once __DIR__ . '/../includes/MenuService_Simple.php';
 
 $menuService = new MenuService();
 
@@ -31,11 +32,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         } elseif ($eventType) {
             // Get menus by event type
             $menus = $menuService->getMenusByEventType($eventType);
-            echo json_encode(['success' => true, 'data' => $menus]);
+            echo json_encode(['success' => true, 'data' => array_values($menus)]);
         } else {
             // Get all menus
             $menus = $menuService->getAllMenus();
-            echo json_encode(['success' => true, 'data' => $menus]);
+            echo json_encode(['success' => true, 'data' => array_values($menus)]);
         }
     } catch (Exception $e) {
         http_response_code(500);

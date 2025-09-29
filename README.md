@@ -23,10 +23,10 @@ Application full-stack exécutée avec Docker Compose :
 |-----------------|------------------------------------------|---------|
 | 🖥️ app          | PHP + Apache (frontend & backend)        | PHP 8.3 |
 | 🐬 mysql        | Base de données relationnelle            | MySQL 8 |
-| 🗄️ phpmyadmin   | Interface web pour gérer MySQL           | latest  |
+| 🗄️ phpmyadmin   | Interface web pour gérer MySQL           | phpmyadmin:5.2 |
 | 🍃 mongo        | Base de données NoSQL                    | MongoDB 6 |
-| 📊 mongo-express| Interface web pour gérer MongoDB         | latest  |
-| 📧 mailhog      | Serveur SMTP de test + interface web     | latest  |
+| 📊 mongo-express| Interface web pour gérer MongoDB         | mongo-express:1.0.0-alpha.4  |
+| 📧 mailhog      | Serveur SMTP de test + interface web     | mailhog/mailhog:v1.0.1  |
 
 
 ## 📂 Arborescence

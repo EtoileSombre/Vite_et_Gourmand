@@ -1,33 +1,33 @@
 # 🍽️ Vite & Gourmand
 
 Projet réalisé dans le cadre du Titre Professionnel Développeur Web & Web Mobile (DWWM).  
-
+```
 👩‍💻 Auteur : [EtoileSombre](https://github.com/EtoileSombre)  
 📍 Entreprise fictive : Vite & Gourmand - (Julie & José – Restaurateurs à Bordeaux)
-
+```
 ---
 
 ## 🎯 Objectif
 
 Développer une application web pour l’entreprise Vite & Gourmand afin de :
-
+```
 - Présenter les menus en ligne
 - Gérer les commandes
 - Disposer d’un back-office pour l’administration
-
+```
 ---
 
 ## ⚙️ Stack technique
 
 Application full-stack exécutée avec Docker Compose :
-
+```
 - `app` → PHP 8.3 + Apache (frontend & backend)
 - `mysql` → Base relationnelle MySQL 8
 - `phpmyadmin` → Interface web pour MySQL
 - `mongo` → Base NoSQL MongoDB 6
 - `mongo-express` → Interface web pour MongoDB
 - `mailhog` → Serveur SMTP de test + UI web
-
+```
 ---
 
 ## 📂 Arborescence
@@ -50,11 +50,11 @@ vite-gourmand/
 ## 🚀 Installation & lancement en local
 
 ### 1. Prérequis 💻
-
+```
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
 - [Git](https://git-scm.com/)  
 - (Windows) [WSL2](https://learn.microsoft.com/fr-fr/windows/wsl/install) conseillé
-
+```
 ### 2. Cloner le projet 📥
 ```
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git

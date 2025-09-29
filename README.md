@@ -49,8 +49,8 @@ vite-gourmand/
 ### 1. Prérequis 💻
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop)
-- [Git](https://git-scm.com/)  
 - (Windows) [WSL2](https://learn.microsoft.com/fr-fr/windows/wsl/install) conseillé
+- [Git](https://git-scm.com/)  
 
 
 ### 2. Cloner le projet 📥

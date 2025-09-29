@@ -86,8 +86,9 @@ MONGO_DB=vg
 ### 4. Lancer les conteneurs via Docker 
 docker compose up -d --build
 
-### 5. Accèder aux services 
+### 5. Accèder aux services
 
+```
 Application PHP → http://localhost:8080
 
 phpMyAdmin → http://localhost:8082
@@ -98,3 +99,4 @@ basic auth : admin / admin
 
 MailHog (UI) → http://localhost:8025
 SMTP dispo sur mailhog:1025
+```

@@ -71,12 +71,33 @@ MONGO_EXPRESS_PORT=8081 # Port d'accès à Mongo Express (UI MongoDB)
 MAILHOG_PORT=8025      # Port d'accès à l'interface Mailhog
 ```
 
-👉 Ces variables disent à Docker sur quels ports externes les services seront accessibles depuis le navigateur.
+  👉 Ces variables disent à Docker sur quels ports externes les services seront accessibles depuis le navigateur.
 
-### 4. Lancer les conteneurs via Docker 
+```
+MYSQL_ROOT_PASSWORD=rootpass  # Mot de passe du super-admin MySQL (root)
+MYSQL_DATABASE=vg             # Nom de la base par défaut
+MYSQL_USER=vg                 # Nom de l'utilisateur applicatif
+MYSQL_PASSWORD=vgpass         # Mot de passe de l'utilisateur applicatif
+```
+root = compte administrateur (à utiliser uniquement pour la maintenance)
+vg / vgpass = utilisateur normal pour ton appli Vite & Gourmand
+
+   👉 Définition de la base relationnelle principale.
+
+```
+MONGO_INITDB_ROOT_USERNAME=vgroot      # Identifiant root MongoDB
+MONGO_INITDB_ROOT_PASSWORD=vgrootpass  # Mot de passe root MongoDB
+MONGO_DB=vg                            # Nom de la base MongoDB utilisée
+```
+   👉 Définition des accès pour la base NoSQL MongoDB.
+      Comme pour MySQL, il y a un compte root + une base spécifique (vg).
+
+### 4. Lancer les conteneurs via Docker 🐋
+```
 docker compose up -d --build
+```
 
-### 5. Accèder aux services
+### 5. Accèder aux services 🌐
 
 ```
 Application PHP → http://localhost:8080

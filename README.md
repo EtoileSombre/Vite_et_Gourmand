@@ -32,7 +32,8 @@ Application full-stack exécutée avec Docker Compose :
 
 ## 📂 Arborescence
 
-```vite-gourmand/
+```
+vite-gourmand/
 ├─ app/ # Code source PHP / HTML / CSS / JS
 │ └─ public/ # DocumentRoot (index.php, assets…)
 ├─ infra/ # Infrastructure Docker
@@ -41,7 +42,8 @@ Application full-stack exécutée avec Docker Compose :
 │ └─ php/
 │ ├─ Dockerfile
 │ └─ php.ini
-└─ docs/ # Documentation (charte graphique, maquettes…)```
+└─ docs/ # Documentation (charte graphique, maquettes…)
+```
 
 ---
 

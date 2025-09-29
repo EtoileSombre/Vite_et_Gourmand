@@ -56,9 +56,10 @@ vite-gourmand/
 - (Windows) [WSL2](https://learn.microsoft.com/fr-fr/windows/wsl/install) conseillé
 
 ### 2. Cloner le projet 📥
-
+```
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd vite-gourmand/infra
+```
 
 ### 3. Créer un fichier .env 📄
 

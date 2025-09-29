@@ -63,25 +63,15 @@ cd vite-gourmand/infra
 ### 3. Créer un fichier .env 📄
 
 ```
-## Ports
-APP_PORT=8080
-MYSQL_PORT=3306
-PMA_PORT=8082
-MONGO_PORT=27017
-MONGO_EXPRESS_PORT=8081
-MAILHOG_PORT=8025
-
-## MySQL
-MYSQL_ROOT_PASSWORD=rootpass
-MYSQL_DATABASE=vg
-MYSQL_USER=vg
-MYSQL_PASSWORD=vgpass
-
-## MongoDB
-MONGO_INITDB_ROOT_USERNAME=vgroot
-MONGO_INITDB_ROOT_PASSWORD=vgrootpass
-MONGO_DB=vg
+APP_PORT=8080          # Port pour accéder à ton application web (PHP/Apache)
+MYSQL_PORT=3306        # Port standard de MySQL
+PMA_PORT=8082          # Port d'accès à phpMyAdmin
+MONGO_PORT=27017       # Port standard de MongoDB
+MONGO_EXPRESS_PORT=8081 # Port d'accès à Mongo Express (UI MongoDB)
+MAILHOG_PORT=8025      # Port d'accès à l'interface Mailhog
 ```
+
+👉 Ces variables disent à Docker sur quels ports externes les services seront accessibles depuis le navigateur.
 
 ### 4. Lancer les conteneurs via Docker 
 docker compose up -d --build

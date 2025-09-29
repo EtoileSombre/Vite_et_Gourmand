@@ -32,15 +32,20 @@ Application full-stack exécutée avec Docker Compose :
 ## 📂 Arborescence
 ```
 vite-gourmand/
-├─ app/ # Code source PHP / HTML / CSS / JS
-│ └─ public/ # DocumentRoot (index.php, assets…)
-├─ infra/ # Infrastructure Docker
-│ ├─ docker-compose.yml
-│ ├─ .env
-│ └─ php/
-│ ├─ Dockerfile
-│ └─ php.ini
-└─ docs/ # Documentation (charte graphique, maquettes…)
+│
+├── app/                     # Code source PHP / HTML / CSS / JS
+│   └── public/              # DocumentRoot (index.php, assets…)
+│
+├── infra/                   # Infrastructure Docker
+│   ├── docker-compose.yml
+│   ├── .env
+│   ├── php/
+│   │   ├── Dockerfile
+│   │   └── php.ini
+│
+├── docs/                    # Documentation (charte graphique, maquettes…)
+│
+└── README.md                # Guide principal du projet
 ```
 
 

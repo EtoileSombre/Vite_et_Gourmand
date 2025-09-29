@@ -6,7 +6,6 @@ Projet réalisé dans le cadre du Titre Professionnel Développeur Web & Web Mob
 📍 Entreprise fictive : Vite & Gourmand - (Julie & José – Restaurateurs à Bordeaux)
 
 
-
 ## 🎯 Objectif
 
 Développer une application web pour l’entreprise Vite & Gourmand afin de :
@@ -66,9 +65,9 @@ PMA_PORT=8082          # Port d'accès à phpMyAdmin
 MONGO_PORT=27017       # Port standard de MongoDB
 MONGO_EXPRESS_PORT=8081 # Port d'accès à Mongo Express (UI MongoDB)
 MAILHOG_PORT=8025      # Port d'accès à l'interface Mailhog
-```
-  👉 Ces variables disent à Docker sur quels ports externes les services seront accessibles depuis le navigateur.
 
+  👉 Ces variables disent à Docker sur quels ports externes les services seront accessibles depuis le navigateur.
+```
 
 ```
 MYSQL_ROOT_PASSWORD=rootpass  # Mot de passe du super-admin MySQL (root)
@@ -78,18 +77,18 @@ MYSQL_PASSWORD=vgpass         # Mot de passe de l'utilisateur applicatif
 
 root = compte administrateur (à utiliser uniquement pour la maintenance)
 vg / vgpass = utilisateur normal pour ton appli Vite & Gourmand
-```
-   👉 Définition de la base relationnelle principale.
 
+   👉 Définition de la base relationnelle principale.
+```
 
 ```
 MONGO_INITDB_ROOT_USERNAME=vgroot      # Identifiant root MongoDB
 MONGO_INITDB_ROOT_PASSWORD=vgrootpass  # Mot de passe root MongoDB
 MONGO_DB=vg                            # Nom de la base MongoDB utilisée
-```
+
    👉 Définition des accès pour la base NoSQL MongoDB.
       Comme pour MySQL, il y a un compte root + une base spécifique (vg).
-      
+```      
 
 ### 4. Lancer les conteneurs via Docker 🐋
 ```

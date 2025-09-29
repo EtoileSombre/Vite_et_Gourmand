@@ -62,6 +62,7 @@ cd vite-gourmand/infra
 
 ### 3. Créer un fichier .env 📄
 
+```
 ## Ports
 APP_PORT=8080
 MYSQL_PORT=3306
@@ -80,6 +81,7 @@ MYSQL_PASSWORD=vgpass
 MONGO_INITDB_ROOT_USERNAME=vgroot
 MONGO_INITDB_ROOT_PASSWORD=vgrootpass
 MONGO_DB=vg
+```
 
 ### 4. Lancer les conteneurs via Docker 
 docker compose up -d --build

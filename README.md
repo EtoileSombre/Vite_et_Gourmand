@@ -19,12 +19,14 @@ Développer une application web pour l’entreprise Vite & Gourmand afin de :
 
 Application full-stack exécutée avec Docker Compose :
 
-- `app` → PHP 8.3 + Apache (frontend & backend)
-- `mysql` → Base relationnelle MySQL 8
-- `phpmyadmin` → Interface web pour MySQL
-- `mongo` → Base NoSQL MongoDB 6
-- `mongo-express` → Interface web pour MongoDB
-- `mailhog` → Serveur SMTP de test + UI web
+| Service         | Description                              | Version |
+|-----------------|------------------------------------------|---------|
+| 🖥️ app          | PHP + Apache (frontend & backend)        | PHP 8.3 |
+| 🐬 mysql        | Base de données relationnelle            | MySQL 8 |
+| 🗄️ phpmyadmin   | Interface web pour gérer MySQL           | latest  |
+| 🍃 mongo        | Base de données NoSQL                    | MongoDB 6 |
+| 📊 mongo-express| Interface web pour gérer MongoDB         | latest  |
+| 📧 mailhog      | Serveur SMTP de test + interface web     | latest  |
 
 
 ## 📂 Arborescence

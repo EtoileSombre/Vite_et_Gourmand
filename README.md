@@ -6,6 +6,7 @@ Projet réalisé dans le cadre du Titre Professionnel Développeur Web & Web Mob
 📍 Entreprise fictive : Vite & Gourmand - (Julie & José – Restaurateurs à Bordeaux)
 
 
+
 ## 🎯 Objectif
 
 Développer une application web pour l’entreprise Vite & Gourmand afin de :

@@ -13,14 +13,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>";
 }
 
-include __DIR__ . "/../includes/header.php";
-?>
+include __DIR__ . "/../includes/header.php"; ?>
 
-<?php include __DIR__ . "/../includes/header.php"; ?>
-
-<main class="container py-5">
-  <h1 class="mb-4">Contactez-nous</h1>
-  <p class="lead">Une question, une commande, un devis ? Remplissez le formulaire ci-dessous 👇</p>
+<main class="flex-grow-1">
+  <div class="container py-5">
+    <h1 class="mb-4">Contactez-nous</h1>
+    <p class="lead">Une question, une commande, un devis ? Remplissez le formulaire ci-dessous 👇</p>
 
   <div class="row g-4">
     <!-- Formulaire -->

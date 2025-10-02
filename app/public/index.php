@@ -1,43 +1,55 @@
-<?php
-include __DIR__ . '/../includes/header.php';
-?>
+<?php include __DIR__ . '/../includes/header.php'; ?>
 
-<main class="container py-5">
-  <h1 class="mb-4">Bienvenue chez Vite & Gourmand</h1>
-  <p class="lead">25 ans de savoir-faire traiteur à Bordeaux.</p>
-</main>
+<main class="flex-grow-1">
+  <!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <h1>Cuisine maison, <span class="text-danger">prête en un clin d’œil</span>.</h1>
+        <p class="lead text-muted-ux mb-4">25 ans de savoir-faire traiteur à Bordeaux.</p>
+        <a class="btn btn-primary btn-lg" href="/contact.php">Demander un devis</a>
+        <a class="btn btn-outline-dark btn-lg ms-2" href="/index.php#menus">Voir les menus</a>
+      </div>
+      <div class="col-lg-5">
+        <img class="img-fluid rounded shadow" alt="Assortiment traiteur"
+             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1400&auto=format&fit=crop">
+      </div>
+    </div>
+  </div>
+</section>
 
-<?php
-include __DIR__ . '/../includes/footer.php';
-?>
+<section class="container py-5">
+  <h2 class="section-title">Notre professionnalisme</h2>
+  <p class="text-muted-ux mb-4">Équipe qualifiée, hygiène irréprochable, réactivité exemplaire.</p>
 
-  <!-- Section Professionnalisme -->
-  <section class="row g-4 mt-5">
+  <div class="row g-4">
     <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
+      <div class="card h-100">
         <div class="card-body text-center">
-          <h5 class="card-title">Équipe qualifiée</h5>
-          <p>Chefs et serveurs expérimentés à votre service.</p>
+          <div class="tag mb-2">Équipe qualifiée</div>
+          <p class="mb-0">Chefs et service expérimentés à votre écoute.</p>
         </div>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
+      <div class="card h-100">
         <div class="card-body text-center">
-          <h5 class="card-title">Qualité garantie</h5>
-          <p>Produits frais, locaux et respect des normes d’hygiène.</p>
+          <div class="tag mb-2">Qualité & hygiène</div>
+          <p class="mb-0">Produits frais, locaux — normes HACCP respectées.</p>
         </div>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card h-100 shadow-sm">
+      <div class="card h-100">
         <div class="card-body text-center">
-          <h5 class="card-title">Réactivité</h5>
-          <p>Commandes rapides et adaptées à vos besoins.</p>
+          <div class="tag mb-2">Réactivité</div>
+          <p class="mb-0">Devis rapides et prestation sur-mesure.</p>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- Avis Clients -->
   <section class="mt-5">

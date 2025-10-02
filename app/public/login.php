@@ -15,9 +15,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 include __DIR__ . "/../includes/header.php";
 ?>
 
-<main class="container py-5">
-  <h1 class="mb-4">Connexion</h1>
-  <p class="lead">Espace réservé aux employés, administrateurs et utilisateurs enregistrés.</p>
+<main class="flex-grow-1">
+  <div class="container py-5">
+    <h1 class="mb-4">Connexion</h1>
+    <p class="lead">Espace réservé aux employés, administrateurs et utilisateurs enregistrés.</p>
 
   <?php if (!empty($message)) echo $message; ?>
 

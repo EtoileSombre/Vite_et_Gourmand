@@ -51,14 +51,56 @@
   </div>
 </section>
 
-  <!-- Avis Clients -->
-  <section class="mt-5">
-    <h2 class="h4">Avis clients</h2>
-    <blockquote class="blockquote">
-      <p>"Service impeccable, tout le monde a adoré !"</p>
-      <footer class="blockquote-footer">Marie, Bordeaux</footer>
-    </blockquote>
-  </section>
+ <!-- Avis clients -->
+<section id="avis" class="container py-5">
+  <h2 class="section-title text-center mb-3">Avis clients (validés)</h2>
+  <p class="text-center text-muted-ux mb-4">Ils nous ont fait confiance pour leurs événements.</p>
+
+  <div id="carouselAvis" class="carousel slide" 
+       data-bs-ride="carousel" 
+       data-bs-interval="6000" 
+       data-bs-pause="hover"
+       data-bs-touch="true"
+       data-bs-wrap="true">
+    
+    <div class="carousel-inner">
+
+      <div class="carousel-item active">
+        <div class="card testimonial-card text-center mx-auto">
+          <div class="stars mb-2" aria-hidden="true">★★★★★</div>
+          <p class="quote-text mb-2"><span class="quote-mark">❝ </span>Service impeccable, plats délicieux ! ❞</p>
+          <div class="who"><span class="fw-semibold">Marie</span> · Bordeaux</div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="card testimonial-card text-center mx-auto">
+          <div class="stars mb-2" aria-hidden="true">★★★★★</div>
+          <p class="quote-text mb-2"><span class="quote-mark">❝ </span>Organisation parfaite pour notre mariage. ❞</p>
+          <div class="who"><span class="fw-semibold">Lucas</span> · Pessac</div>
+        </div>
+      </div>
+
+      <div class="carousel-item">
+        <div class="card testimonial-card text-center mx-auto">
+          <div class="stars mb-2" aria-hidden="true">★★★★☆</div>
+          <p class="quote-text mb-2"><span class="quote-mark">❝ </span>Très bon rapport qualité/prix, équipe réactive. ❞</p>
+          <div class="who"><span class="fw-semibold">Nadia</span> · Mérignac</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Contrôles -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselAvis" data-bs-slide="prev" aria-label="Précédent">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselAvis" data-bs-slide="next" aria-label="Suivant">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+</section>
+
 </main>
 
 <?php include __DIR__ . "/../includes/footer.php"; ?>

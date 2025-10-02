@@ -1,0 +1,78 @@
+/**
+ * Classes utilitaires pour éviter le CSS inline
+ * Vite & Gourmand - ECF DWWM 2025
+ */
+
+/* Icônes grande taille */
+.icon-large {
+    font-size: 3rem;
+    color: #ccc;
+}
+
+.icon-xl {
+    font-size: 4rem;
+}
+
+/* Progress bar petite */
+.progress-sm {
+    height: 5px;
+}
+
+.progress-xs {
+    height: 3px;
+}
+
+/* Sections masquées par défaut */
+.hidden-section {
+    display: none;
+}
+
+/* Styles pour les états vides (empty states) */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+}
+
+/* Animations douces */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Badges personnalisés */
+.badge-status-en-attente {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-status-validee {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.badge-status-terminee {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.badge-status-annulee {
+    background-color: #dc3545;
+    color: #fff;
+}

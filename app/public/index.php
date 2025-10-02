@@ -1,74 +1,106 @@
-<?php
-echo "<h1>Vite & Gourmand – Environnement Docker OK ✅</h1>";
+<?php include __DIR__ . '/../includes/header.php'; ?>
 
-echo "<p><a href='?phpinfo=1'>Afficher phpinfo()</a></p>";
-if (isset($_GET['phpinfo'])) { phpinfo(); exit; }
+<main class="flex-grow-1">
+  <!-- Hero Section -->
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <h1>Cuisine maison, <span class="text-danger">prête en un clin d’œil</span>.</h1>
+        <p class="lead text-muted-ux mb-4">25 ans de savoir-faire traiteur à Bordeaux.</p>
+        <a class="btn btn-primary btn-lg" href="/contact.php">Demander un devis</a>
+        <a class="btn btn-outline-dark btn-lg ms-2" href="/index.php#menus">Voir les menus</a>
+      </div>
+      <div class="col-lg-5">
+        <img class="img-fluid rounded shadow" alt="Assortiment traiteur"
+             src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=1400&auto=format&fit=crop">
+      </div>
+    </div>
+  </div>
+</section>
 
-$errors = [];
+<section class="container py-5">
+  <h2 class="section-title">Notre professionnalisme</h2>
+  <p class="text-muted-ux mb-4">Équipe qualifiée, hygiène irréprochable, réactivité exemplaire.</p>
 
-// --- MySQL (PDO) ---
-$dbHost = getenv('DB_HOST') ?: 'mysql';
-$dbName = getenv('DB_NAME') ?: 'vg';
-$dbUser = getenv('DB_USER') ?: 'vg';
-$dbPass = getenv('DB_PASS') ?: 'vgpass';
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <div class="tag mb-2">Équipe qualifiée</div>
+          <p class="mb-0">Chefs et service expérimentés à votre écoute.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <div class="tag mb-2">Qualité & hygiène</div>
+          <p class="mb-0">Produits frais, locaux — normes HACCP respectées.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <div class="tag mb-2">Réactivité</div>
+          <p class="mb-0">Devis rapides et prestation sur-mesure.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-echo "<h2>Test MySQL (PDO)</h2>";
-try {
-  $pdo = new PDO("mysql:host=$dbHost;dbname=$dbName;charset=utf8mb4", $dbUser, $dbPass, [
-    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-  ]);
-  $pdo->exec("
-    CREATE TABLE IF NOT EXISTS contact_messages (
-      id INT AUTO_INCREMENT PRIMARY KEY,
-      nom VARCHAR(100) NOT NULL,
-      email VARCHAR(190) NOT NULL,
-      message TEXT NOT NULL,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-  ");
-  $stmt = $pdo->prepare("INSERT INTO contact_messages (nom, email, message) VALUES (?, ?, ?)");
-  $stmt->execute(['Julie', 'julie@test.com', 'Bonjour, je teste la base.']);
-  $count = $pdo->query("SELECT COUNT(*) FROM contact_messages")->fetchColumn();
-  echo "<p>✅ MySQL OK — lignes dans contact_messages : <strong>$count</strong></p>";
-} catch (Throwable $e) {
-  $errors[] = "MySQL: " . $e->getMessage();
-  echo "<p>❌ MySQL KO — " . htmlspecialchars($e->getMessage()) . "</p>";
-}
+ <!-- Avis clients -->
+<section id="avis" class="container py-5">
+  <h2 class="section-title text-center mb-3">Avis clients (validés)</h2>
+  <p class="text-center text-muted-ux mb-4">Ils nous ont fait confiance pour leurs événements.</p>
 
-// --- MongoDB ---
-echo "<h2>Test MongoDB</h2>";
-try {
-  if (!extension_loaded('mongodb')) {
-    throw new Exception("Extension mongodb non chargée");
-  }
-  $mongoUser = getenv('MONGO_USER') ?: 'vgroot';
-  $mongoPass = getenv('MONGO_PASS') ?: 'vgrootpass';
-  $mongoHost = getenv('MONGO_HOST') ?: 'mongo';
-  $mongoDb   = getenv('MONGO_DB')   ?: 'vg';
+  <div id="carouselAvis" class="carousel slide" 
+       data-bs-ride="carousel" 
+       data-bs-interval="6000" 
+       data-bs-pause="hover"
+       data-bs-touch="true"
+       data-bs-wrap="true">
+    
+    <div class="carousel-inner">
 
-  $uri = "mongodb://{$mongoUser}:{$mongoPass}@{$mongoHost}:27017/{$mongoDb}?authSource=admin";
-  $manager = new MongoDB\Driver\Manager($uri);
-  $bulk = new MongoDB\Driver\BulkWrite();
-  $bulk->insert(['from' => 'index.php', 'created_at' => new MongoDB\BSON\UTCDateTime()]);
-  $result = $manager->executeBulkWrite("$mongoDb.test_messages", $bulk);
-  echo "<p>✅ MongoDB OK — document inséré.</p>";
-} catch (Throwable $e) {
-  $errors[] = "MongoDB: " . $e->getMessage();
-  echo "<p>❌ MongoDB KO — " . htmlspecialchars($e->getMessage()) . "</p>";
-}
+      <div class="carousel-item active">
+        <div class="card testimonial-card text-center mx-auto">
+          <div class="stars mb-2" aria-hidden="true">★★★★★</div>
+          <p class="quote-text mb-2"><span class="quote-mark">❝ </span>Service impeccable, plats délicieux ! ❞</p>
+          <div class="who"><span class="fw-semibold">Marie</span> · Bordeaux</div>
+        </div>
+      </div>
 
-echo "<h2>Interfaces utiles</h2>";
-$pma = getenv('PMA_PORT') ?: '8090';
-$me  = getenv('MONGO_EXPRESS_PORT') ?: '8081';
-$mh  = getenv('MAILHOG_WEB_PORT') ?: '8025';
-echo "<ul>";
-echo "<li><a href='http://localhost:$pma' target='_blank'>phpMyAdmin</a> (serveur: mysql, user: vg, pass: vgpass)</li>";
-echo "<li><a href='http://localhost:$me' target='_blank'>Mongo Express</a> (login: admin / pass: admin)</li>";
-echo "<li><a href='http://localhost:$mh' target='_blank'>Mailhog</a> (webmail tests)</li>";
-echo "</ul>";
+      <div class="carousel-item">
+        <div class="card testimonial-card text-center mx-auto">
+          <div class="stars mb-2" aria-hidden="true">★★★★★</div>
+          <p class="quote-text mb-2"><span class="quote-mark">❝ </span>Organisation parfaite pour notre mariage. ❞</p>
+          <div class="who"><span class="fw-semibold">Lucas</span> · Pessac</div>
+        </div>
+      </div>
 
-if ($errors) {
-  echo "<h3>Résumé erreurs</h3><pre>" . htmlspecialchars(implode("\n", $errors)) . "</pre>";
-} else {
-  echo "<p><strong>Tout est OK 🎉</strong></p>";
-}
+      <div class="carousel-item">
+        <div class="card testimonial-card text-center mx-auto">
+          <div class="stars mb-2" aria-hidden="true">★★★★☆</div>
+          <p class="quote-text mb-2"><span class="quote-mark">❝ </span>Très bon rapport qualité/prix, équipe réactive. ❞</p>
+          <div class="who"><span class="fw-semibold">Nadia</span> · Mérignac</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Contrôles -->
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselAvis" data-bs-slide="prev" aria-label="Précédent">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselAvis" data-bs-slide="next" aria-label="Suivant">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    </button>
+  </div>
+</section>
+
+</main>
+
+<?php include __DIR__ . "/../includes/footer.php"; ?>

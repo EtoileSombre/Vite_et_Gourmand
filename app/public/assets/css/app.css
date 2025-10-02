@@ -1,0 +1,108 @@
+/* ===== Design System Vite & Gourmand ===== */
+:root{
+  --vg-bordeaux:#7B1E1E;
+  --vg-bordeaux-600:#6a1919;
+  --vg-gold:#D4AF37;
+  --vg-cream:#FFF8F0;
+  --vg-ink:#1f1f1f;
+  --vg-muted:#6b7280;
+  --vg-radius:18px;
+  --vg-shadow:0 10px 30px rgba(0,0,0,.10);
+}
+
+html,body{scroll-behavior:smooth}
+
+body{
+  color:var(--vg-ink);
+  background:linear-gradient(180deg,#fff 0%, var(--vg-cream) 100%);
+}
+
+/* Container plus confortable */
+.container{max-width:1100px}
+
+/* ===== Navbar / Brand ===== */
+.navbar{backdrop-filter:saturate(1.2) blur(6px)}
+.navbar-light .navbar-brand{
+  font-weight:800; letter-spacing:.2px;
+  color:var(--vg-bordeaux) !important;
+}
+.navbar-light .nav-link{
+  font-weight:600; border-radius:10px;
+}
+.navbar-light .nav-link:hover{
+  background:#f5f5f7;
+}
+
+/* ===== Hero ===== */
+.hero{
+  padding:60px 0 40px;
+  background:
+    radial-gradient(1000px 400px at 90% -10%, rgba(212,175,55,.15), transparent 60%),
+    radial-gradient(1000px 400px at -10% 100%, rgba(123,30,30,.12), transparent 60%),
+    var(--vg-cream);
+}
+.hero h1{
+  font-family:"Playfair Display", serif;
+  font-size:clamp(32px, 5vw, 56px);
+  line-height:1.08;
+}
+.btn-primary, .btn-danger{
+  background:var(--vg-bordeaux); border-color:var(--vg-bordeaux);
+}
+.btn-primary:hover, .btn-danger:hover{
+  background:var(--vg-bordeaux-600); border-color:var(--vg-bordeaux-600);
+}
+
+/* ===== Cards sections ===== */
+.card{
+  border:0;
+  border-radius:var(--vg-radius);
+  box-shadow:var(--vg-shadow);
+}
+.card .badge{
+  font-weight:700;
+}
+.badge-gold{
+  background:#fff3d1; border:1px dashed #f2c97d; color:#7a5a00;
+}
+
+/* Images de menu plus propres */
+.menu-card img{
+  aspect-ratio:16/9; object-fit:cover;
+  border-top-left-radius:var(--vg-radius);
+  border-top-right-radius:var(--vg-radius);
+}
+
+/* Tags d’info */
+.tag{
+  display:inline-block; padding:6px 10px; border-radius:999px;
+  background:#f5f5f7; font-size:.85rem; font-weight:600;
+}
+
+/* Footer */
+.site-footer{
+  background:#111; color:#e9ecef;
+}
+.site-footer a{color:#e9ecef; text-decoration:none}
+.site-footer a:hover{text-decoration:underline}
+
+/* Petits raffinements */
+.section-title{
+  font-family:"Playfair Display", serif;
+  font-size:clamp(22px, 3.2vw, 36px);
+  margin-bottom:14px;
+}
+/* Dégradé de masque pour le carousel d’avis */
+#carouselAvis {
+  --fade-width: 80px;
+  mask-image: linear-gradient(to right,
+    transparent 0,
+    black var(--fade-width),
+    black calc(100% - var(--fade-width)),
+    transparent 100%);
+  -webkit-mask-image: linear-gradient(to right,
+    transparent 0,
+    black var(--fade-width),
+    black calc(100% - var(--fade-width)),
+    transparent 100%);
+}

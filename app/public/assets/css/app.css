@@ -1,0 +1,453 @@
+/* ===== Design System Vite & Gourmand ===== */
+:root{
+  --vg-bordeaux:#7B1E1E;
+  --vg-bordeaux-600:#6a1919;
+  --vg-gold:#D4AF37;
+  --vg-cream:#FFF8F0;
+  --vg-ink:#1f1f1f;
+  --vg-muted:#6b7280;
+  --vg-radius:18px;
+  --vg-shadow:0 10px 30px rgba(0,0,0,.10);
+}
+
+html,body{scroll-behavior:smooth}
+
+body{
+  font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  color:var(--vg-ink);
+  background:linear-gradient(180deg,#fff 0%, var(--vg-cream) 100%);
+}
+
+/* Container plus confortable */
+.container{max-width:1100px}
+
+/* ===== Navbar / Brand ===== */
+.navbar{backdrop-filter:saturate(1.2) blur(6px)}
+.navbar-light .navbar-brand{
+  font-weight:800; letter-spacing:.2px;
+  color:var(--vg-bordeaux) !important;
+}
+.navbar-light .nav-link{
+  font-weight:600; border-radius:10px;
+}
+.navbar-light .nav-link:hover{
+  background:#f5f5f7;
+}
+
+/* ===== Hero ===== */
+.hero{
+  padding:60px 0 40px;
+  background:
+    radial-gradient(1000px 400px at 90% -10%, rgba(212,175,55,.15), transparent 60%),
+    radial-gradient(1000px 400px at -10% 100%, rgba(123,30,30,.12), transparent 60%),
+    var(--vg-cream);
+}
+.hero h1{
+  font-family:"Playfair Display", serif;
+  font-size:clamp(32px, 5vw, 56px);
+  line-height:1.08;
+}
+.btn-primary, .btn-danger{
+  background:var(--vg-bordeaux); border-color:var(--vg-bordeaux);
+}
+.btn-primary:hover, .btn-danger:hover{
+  background:var(--vg-bordeaux-600); border-color:var(--vg-bordeaux-600);
+}
+
+/* ===== Chiffres clés ===== */
+.key-figures {
+  background: linear-gradient(135deg, var(--vg-bordeaux-600) 0%, var(--vg-bordeaux-600) 100%);
+}
+
+.key-figures .figure-number {
+  color: var(--vg-gold);
+}
+
+/* ===== Classes utilitaires ===== */
+/* Couleur bordeaux pour textes */
+.text-bordeaux {
+  color: var(--vg-bordeaux) !important;
+}
+
+/* Bouton bordeaux */
+.btn-bordeaux {
+  background-color: var(--vg-bordeaux) !important;
+  border-color: var(--vg-bordeaux) !important;
+  color: white !important;
+}
+
+.btn-bordeaux:hover {
+  background-color: var(--vg-bordeaux-600) !important;
+  border-color: var(--vg-bordeaux-600) !important;
+  color: white !important;
+}
+
+/* Couleur bordeaux pour icônes */
+.icon-bordeaux {
+  color: var(--vg-bordeaux);
+}
+
+/* Curseur pointer */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Sidebar sticky avec offset */
+.sticky-sidebar {
+  position: sticky;
+  top: 20px;
+}
+
+/* Icône extra-large */
+.icon-xl {
+  font-size: 4rem;
+}
+
+/* ===== Cards sections ===== */
+.card{
+  border:0;
+  border-radius:var(--vg-radius);
+  box-shadow:var(--vg-shadow);
+}
+.card .badge{
+  font-weight:700;
+}
+
+/* Image de carte menu avec gradient */
+.menu-card-img {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icône de menu */
+.menu-icon {
+  font-size: 4rem;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Gradients pour les menus */
+.gradient-bordeaux {
+  background: linear-gradient(135deg, #7B1E1E 0%, #6a1919 100%);
+}
+
+.gradient-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #c4a030 100%);
+}
+
+.gradient-bordeaux-gold {
+  background: linear-gradient(135deg, #7B1E1E 0%, #D4AF37 100%);
+}
+
+.gradient-dark-gold {
+  background: linear-gradient(135deg, #6a1919 0%, #c4a030 100%);
+}
+.badge-gold{
+  background:#fff3d1; border:1px dashed #f2c97d; color:#7a5a00;
+}
+
+/* Images de menu plus propres */
+.menu-card img{
+  aspect-ratio:16/9; object-fit:cover;
+  border-top-left-radius:var(--vg-radius);
+  border-top-right-radius:var(--vg-radius);
+}
+
+/* Tags d’info */
+.tag{
+  display:inline-block; padding:6px 10px; border-radius:999px;
+  background:#f5f5f7; font-size:.85rem; font-weight:600;
+}
+
+/* Footer */
+.site-footer{
+  background:#111; color:#e9ecef;
+}
+.site-footer a{color:#e9ecef; text-decoration:none}
+.site-footer a:hover{text-decoration:underline}
+
+/* Petits raffinements */
+.section-title{
+  font-family:"Playfair Display", serif;
+  font-size:clamp(22px, 3.2vw, 36px);
+  margin-bottom:14px;
+}
+/* Dégradé de masque pour le carousel d'avis */
+#carouselAvis {
+  --fade-width: 80px;
+  mask-image: linear-gradient(to right,
+    transparent 0,
+    black var(--fade-width),
+    black calc(100% - var(--fade-width)),
+    transparent 100%);
+  -webkit-mask-image: linear-gradient(to right,
+    transparent 0,
+    black var(--fade-width),
+    black calc(100% - var(--fade-width)),
+    transparent 100%);
+}
+
+/* Styles pour les cartes d'avis */
+.testimonial-card {
+  max-width: 600px;
+  padding: 2rem;
+  border: none;
+  box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,0.075);
+}
+
+.testimonial-card .stars {
+  font-size: 1.5rem;
+  color: var(--vg-gold);
+}
+
+.testimonial-card .quote-text {
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 1.6;
+  color: #495057;
+}
+
+.testimonial-card .quote-mark {
+  font-size: 1.5rem;
+  color: var(--vg-bordeaux);
+  font-weight: bold;
+}
+
+.testimonial-card .who {
+  font-size: 0.95rem;
+  color: #6c757d;
+}
+
+/* Contrôles du carousel plus visibles */
+#carouselAvis .carousel-control-prev,
+#carouselAvis .carousel-control-next {
+  width: 5%;
+  opacity: 0.7;
+}
+
+#carouselAvis .carousel-control-prev:hover,
+#carouselAvis .carousel-control-next:hover {
+  opacity: 1;
+}
+
+/* ===== Composants réutilisables ===== */
+
+/* Effet hover sur les cards */
+.hover-shadow {
+  transition: all 0.3s ease;
+}
+.hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+}
+
+/* Transitions génériques */
+.transition {
+  transition: all 0.3s ease;
+}
+
+/* Timeline pour historique commandes */
+.timeline-item {
+  position: relative;
+  padding-left: 0;
+}
+.timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 30px;
+  bottom: -20px;
+  width: 2px;
+  background-color: #e9ecef;
+}
+
+/* Sticky sidebar */
+.sticky-top {
+  position: sticky;
+  z-index: 1020;
+}
+
+/* Système de notation par étoiles */
+.star-rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  font-size: 2rem;
+}
+.star-rating input {
+  display: none;
+}
+.star-rating label {
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+  color: #ffc107;
+}
+.star-rating:hover label {
+  color: #ffc107;
+}
+.star-rating label:hover ~ label {
+  color: #ddd;
+}
+
+/* ========================================
+   MEDIA QUERIES RESPONSIVE
+   ======================================== */
+
+/* 📱 Mobile Portrait (< 576px) */
+@media (max-width: 575.98px) {
+  /* Titre hero plus petit sur mobile */
+  .hero h1 {
+    font-size: 28px !important;
+    line-height: 1.2;
+  }
+
+  /* Padding réduit sur hero mobile */
+  .hero {
+    padding: 30px 0 20px;
+  }
+
+  /* Cartes menus occupent toute la largeur */
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  /* Étoiles de notation plus petites sur mobile */
+  .star-rating {
+    font-size: 1.5rem;
+  }
+
+  /* Boutons pleine largeur sur mobile */
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Navbar brand plus compact */
+  .navbar-brand {
+    font-size: 1.1rem !important;
+  }
+
+  /* Timeline centrée sur mobile */
+  .timeline-item {
+    padding-left: 30px;
+  }
+}
+
+/* 📱 Mobile Landscape / Tablette Portrait (576px - 768px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  /* Titre hero ajusté pour tablette portrait */
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  /* Container légèrement plus large */
+  .container {
+    max-width: 540px;
+  }
+
+  /* Cartes en 2 colonnes sur petite tablette */
+  .card-deck .card {
+    flex: 0 0 48%;
+    margin-bottom: 1rem;
+  }
+}
+
+/* 💻 Tablette Landscape (768px - 992px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  /* Titre hero taille moyenne */
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  /* Navbar sticky avec ombre sur tablette */
+  .navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Sidebar ne colle pas sur tablette (économie d'espace) */
+  .sticky-sidebar {
+    position: static;
+  }
+}
+
+/* 🖥️ Desktop (992px - 1200px) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  /* Container ajusté pour desktop moyen */
+  .container {
+    max-width: 960px;
+  }
+
+  /* Hero avec plus d'espace */
+  .hero {
+    padding: 80px 0 60px;
+  }
+}
+
+/* 🖥️ Large Desktop (> 1200px) */
+@media (min-width: 1200px) {
+  /* Container maximal */
+  .container {
+    max-width: 1100px;
+  }
+
+  /* Hero pleine hauteur sur grand écran */
+  .hero {
+    padding: 100px 0 80px;
+  }
+
+  /* Titre hero taille maximale */
+  .hero h1 {
+    font-size: 56px;
+  }
+
+  /* Cartes avec plus d'espacement */
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Effet hover sur cartes (seulement desktop) */
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* 🎨 Mode paysage mobile (orientation landscape) */
+@media (max-width: 767.98px) and (orientation: landscape) {
+  /* Réduire le padding vertical en mode paysage */
+  .hero {
+    padding: 20px 0;
+  }
+
+  /* Navbar plus compacte en paysage mobile */
+  .navbar {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+}
+
+/* 🖨️ Mode impression */
+@media print {
+  /* Cacher navbar et footer à l'impression */
+  .navbar,
+  footer,
+  .btn {
+    display: none !important;
+  }
+
+  /* Fond blanc pour économiser l'encre */
+  body {
+    background: white;
+  }
+
+  /* Bordures noires pour les cartes */
+  .card {
+    border: 1px solid #000;
+    page-break-inside: avoid;
+  }
+}

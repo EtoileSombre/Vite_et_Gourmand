@@ -1,10 +1,15 @@
-<?php include __DIR__ . '/../included/header.php'; ?>
-<!-- contenu de la page -->
-<?php include __DIR__ . '/../included/footer.php'; ?>
+<?php
+include __DIR__ . '/../includes/header.php';
+?>
 
 <main class="container py-5">
   <h1 class="mb-4">Bienvenue chez Vite & Gourmand</h1>
   <p class="lead">25 ans de savoir-faire traiteur à Bordeaux.</p>
+</main>
+
+<?php
+include __DIR__ . '/../includes/footer.php';
+?>
 
   <!-- Section Professionnalisme -->
   <section class="row g-4 mt-5">
@@ -44,4 +49,4 @@
   </section>
 </main>
 
-<?php include __DIR__ . "/../included/footer.php"; ?>
+<?php include __DIR__ . "/../includes/footer.php"; ?>

@@ -63,7 +63,7 @@ Application full-stack exécutée avec Docker Compose :
 │
 ├─ 🚫 .gitignore
 └─ 📖 README.md
-
+```text
 
 🚀 Installation & lancement en local
 
@@ -74,30 +74,30 @@ Docker Desktop https://www.docker.com/products/docker-desktop/
 Git https://git-scm.com/
 
 2. Cloner le projet 📥
-
+```text
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd vite-gourmand/infra
-
+```text
 3. Créer le fichier .env 📄
 
 Copiez le modèle et adaptez-le :
-
+```text
 # Linux / Mac / WSL2
 cp infra/.env.example infra/.env
 
 # Windows PowerShell
 Copy-Item infra/.env.example infra/.env
-
+```text
 Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME
 par vos propres mots de passe ou ports si nécessaire.
-
+```text
 👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"),
 il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
 4. Lancer les conteneurs via Docker 🐋
-
+```text
 docker compose up -d --build
-
+```text
 5. Accéder aux services 🌐
 
 Application PHP → http://localhost:8080

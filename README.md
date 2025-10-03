@@ -64,6 +64,7 @@ Application full-stack exécutée avec **Docker Compose** :
 ├─ 🚫 .gitignore
 └─ 📖 README.md
 
+---
 
 🚀 Installation & lancement en local
 
@@ -75,9 +76,13 @@ Application full-stack exécutée avec **Docker Compose** :
 | 💻 WSL2 (Windows) | [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) |
 | 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
 
+---
+
 2. Cloner le projet 📥
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd vite-gourmand/infra
+
+---
 
 3. Créer le fichier .env 📄
 Copiez le modèle et adaptez-le :
@@ -94,9 +99,13 @@ par vos propres mots de passe ou ports si nécessaire.
 👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"),
 il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
+---
+
 4. Lancer les conteneurs via Docker 🐋
 cd infra
 docker compose up -d --build
+
+---
 
 5. Accéder aux services 🌐
 | Service             | URL                                            | Identifiants          |

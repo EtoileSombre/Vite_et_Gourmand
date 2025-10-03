@@ -63,9 +63,9 @@ Application full-stack exécutée avec **Docker Compose** :
 │
 ├─ 🚫 .gitignore
 └─ 📖 README.md
-```text
 
-🚀 Installation & lancement en local
+
+## 🚀 Installation & lancement en local
 
 ### 1. Prérequis 💻
 Docker Desktop https://www.docker.com/products/docker-desktop/
@@ -78,17 +78,16 @@ cd vite-gourmand/infra
 
 ### 3. Créer le fichier .env 📄
 Copiez le modèle et adaptez-le :
-# Linux / Mac / WSL2
+Linux / Mac / WSL2
 cp infra/.env.example infra/.env
 
-# Windows PowerShell
+Windows PowerShell
 Copy-Item infra/.env.example infra/.env
 
 Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME
 par vos propres mots de passe ou ports si nécessaire.
 
-👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"),
-il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
+     👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"), il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
 ### 4. Lancer les conteneurs via Docker 🐋
 cd infra

@@ -65,40 +65,45 @@ Application full-stack exécutée avec **Docker Compose** :
 └─ 📖 README.md
 
 
-## 🚀 Installation & lancement en local
+🚀 Installation & lancement en local
 
-### 1. Prérequis 💻
-Docker Desktop https://www.docker.com/products/docker-desktop/
-(Windows) WSL2 conseillé
-Git https://git-scm.com/
+1. Prérequis 💻
 
-### 2. Cloner le projet 📥
+| Outil             | Lien officiel                                                                                   |
+| ----------------- | ----------------------------------------------------------------------------------------------- |
+| 🐋 Docker Desktop | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)           |
+| 💻 WSL2 (Windows) | [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) |
+| 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
+
+2. Cloner le projet 📥
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd vite-gourmand/infra
 
-### 3. Créer le fichier .env 📄
+3. Créer le fichier .env 📄
 Copiez le modèle et adaptez-le :
-Linux / Mac / WSL2
+
+# Linux / Mac / WSL2
 cp infra/.env.example infra/.env
 
-Windows PowerShell
+# Windows PowerShell
 Copy-Item infra/.env.example infra/.env
 
 Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME
 par vos propres mots de passe ou ports si nécessaire.
 
-     👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"), il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
+👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"),
+il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
-### 4. Lancer les conteneurs via Docker 🐋
+4. Lancer les conteneurs via Docker 🐋
 cd infra
 docker compose up -d --build
 
-### 5. Accéder aux services 🌐
+5. Accéder aux services 🌐
+| Service             | URL                                            | Identifiants          |
+| ------------------- | ---------------------------------------------- | --------------------- |
+| 🍽️ Application PHP | [http://localhost:8080](http://localhost:8080) | -                     |
+| 🗄️ phpMyAdmin      | [http://localhost:8090](http://localhost:8090) | définis dans `.env`   |
+| 📊 Mongo Express    | [http://localhost:8081](http://localhost:8081) | définis dans `.env`   |
+| 📧 MailHog (UI)     | [http://localhost:8025](http://localhost:8025) | SMTP : `mailhog:1025` |
 
-| Service        | URL                               | Identifiants |
-|----------------|-----------------------------------|--------------|
-| 🍽️ Application PHP | [http://localhost:8080](http://localhost:8080) | - |
-| 🗄️ phpMyAdmin      | [http://localhost:8090](http://localhost:8090) | définis dans `.env` |
-| 📊 Mongo Express   | [http://localhost:8081](http://localhost:8081) | définis dans `.env` |
-| 📧 MailHog (UI)    | [http://localhost:8025](http://localhost:8025) | SMTP : `mailhog:1025` |
 

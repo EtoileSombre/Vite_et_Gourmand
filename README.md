@@ -34,7 +34,7 @@ Application full-stack exécutée avec Docker Compose :
 
 📂 Arborescence
 
-```text
+```plaintext
 📦 VITE_ET_GOURMAND/
 ├─ ⚙️ .vscode/
 │  └─ 📝 settings.json
@@ -63,7 +63,7 @@ Application full-stack exécutée avec Docker Compose :
 │
 ├─ 🚫 .gitignore
 └─ 📖 README.md
----
+```
 
 🚀 Installation & lancement en local
 

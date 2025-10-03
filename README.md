@@ -54,7 +54,7 @@ vite-gourmand/
 
 ### 2. Cloner le projet 📥
 
-git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
+git clone <https://github.com/EtoileSombre/Vite_et_Gourmand.git>
 
 cd vite-gourmand/infra
 
@@ -92,13 +92,13 @@ docker compose up -d --build
 
 ### 5. Accèder aux services 🌐
 
-Application PHP → http://localhost:8080
+Application PHP → [http://localhost:8080](http://localhost:8080)
 
-phpMyAdmin → http://localhost:8090
+phpMyAdmin → [http://localhost:8090](http://localhost:8090)
 user : vg / password : vgpass
 
-Mongo Express → http://localhost:8081
+Mongo Express → [http://localhost:8081](http://localhost:8081)
 basic auth : admin / admin
 
-MailHog (UI) → http://localhost:8025
+MailHog (UI) → <http://localhost:8025>
 SMTP dispo sur mailhog:1025

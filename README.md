@@ -57,45 +57,42 @@ Application full-stack exécutée avec Docker Compose :
 │  ├─ 📦 php/
 │  │   ├─ Dockerfile
 │  │   └─ php.ini
-│  ├─ 🔒 .env
+│  ├─ 🔒 .env              
+│  ├─ 🧪 .env.example      
 │  └─ 🔧 docker-compose.yml
 │
 ├─ 🚫 .gitignore
 └─ 📖 README.md
 
+
 🚀 Installation & lancement en local
 
 1. Prérequis 💻
 
-Docker Desktop
+Docker Desktop https://www.docker.com/products/docker-desktop/
 (Windows) WSL2 conseillé
-Git
+Git https://git-scm.com/
 
 2. Cloner le projet 📥
 
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd vite-gourmand/infra
 
-3. Créer un fichier .env 📄
+3. Créer le fichier .env 📄
 
-APP_PORT=8080
-MYSQL_PORT=3306
-PMA_PORT=8090
-MONGO_PORT=27017
-MONGO_EXPRESS_PORT=8081
-MAILHOG_PORT=8025
+Copiez le modèle et adaptez-le :
 
-MYSQL_ROOT_PASSWORD=rootpass
-MYSQL_DATABASE=vg
-MYSQL_USER=vg
-MYSQL_PASSWORD=vgpass
+# Linux / Mac / WSL2
+cp infra/.env.example infra/.env
 
-MONGO_INITDB_ROOT_USERNAME=vgroot
-MONGO_INITDB_ROOT_PASSWORD=vgrootpass
-MONGO_DB=vg
+# Windows PowerShell
+Copy-Item infra/.env.example infra/.env
 
-👉 Ces variables disent à Docker sur quels ports externes les services seront accessibles depuis le navigateur.
-👉 Comme pour MySQL, MongoDB a un compte root et une base spécifique (vg).
+Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME
+par vos propres mots de passe ou ports si nécessaire.
+
+👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"),
+il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
 4. Lancer les conteneurs via Docker 🐋
 

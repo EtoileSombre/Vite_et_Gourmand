@@ -76,23 +76,32 @@ Application full-stack exécutée avec Docker Compose :
 | 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
 
 - Cloner le projet 📥
+
+```plaintext
 git clone <https://github.com/EtoileSombre/Vite_et_Gourmand.git>
 cd vite-gourmand/infra
+```
 
 - Créer le fichier .env 📄
+
+```plaintext
 Copiez le modèle et adaptez-le :
 Linux / Mac / WSL2
 cp infra/.env.example infra/.env
 
 Windows PowerShell
 Copy-Item infra/.env.example infra/.env
+```
 
 Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME par vos propres mots de passe ou ports si nécessaire.
 👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"), il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
 - Lancer les conteneurs via Docker 🐋
+
+```plaintext
 cd infra
 docker compose up -d --build
+```
 
 - Accéder aux services 🌐
 

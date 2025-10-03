@@ -81,11 +81,11 @@ cd vite-gourmand/infra
 
 - Créer le fichier .env 📄
 Copiez le modèle et adaptez-le :
-     Linux / Mac / WSL2
-     cp infra/.env.example infra/.env
+Linux / Mac / WSL2
+cp infra/.env.example infra/.env
 
-     Windows PowerShell
-     Copy-Item infra/.env.example infra/.env
+Windows PowerShell
+Copy-Item infra/.env.example infra/.env
 
 Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME par vos propres mots de passe ou ports si nécessaire.
 👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"), il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).

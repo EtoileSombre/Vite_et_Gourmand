@@ -1,34 +1,34 @@
 # 🍽️ Vite & Gourmand
 
-Projet réalisé dans le cadre du Titre Professionnel Développeur Web & Web Mobile (DWWM).  
+Projet réalisé dans le cadre du Titre Professionnel **Développeur Web & Web Mobile (DWWM)**.  
 
 👩‍💻 Auteur : [EtoileSombre](https://github.com/EtoileSombre)  
-📍 Entreprise fictive : Vite & Gourmand - (Julie & José – Restaurateurs à Bordeaux)
+📍 Entreprise fictive : **Vite & Gourmand** – (Julie & José – Restaurateurs à Bordeaux)
 
 ---
 
 ## 🎯 Objectif
 
-Développer une application web pour l’entreprise Vite & Gourmand afin de :
+Développer une application web pour l’entreprise **Vite & Gourmand** afin de :
 
-- Présenter les menus en ligne
-- Gérer les commandes
-- Disposer d’un back-office pour l’administration
-  
+- Présenter les menus en ligne  
+- Gérer les commandes  
+- Disposer d’un back-office pour l’administration  
+
 ---
 
 ## ⚙️ Stack technique
 
-Application full-stack exécutée avec Docker Compose :
+Application full-stack exécutée avec **Docker Compose** :
 
-| Service         | Description                              | Version |
-|-----------------|------------------------------------------|---------|
-| 🖥️ app          | PHP + Apache (frontend & backend)        | PHP 8.3 |
-| 🐬 mysql        | Base de données relationnelle            | MySQL 8 |
-| 🗄️ phpmyadmin   | Interface web pour gérer MySQL           | phpmyadmin:5.2 |
-| 🍃 mongo        | Base de données NoSQL                    | MongoDB 6 |
-| 📊 mongo-express| Interface web pour gérer MongoDB         | mongo-express:1.0.0-alpha.4 |
-| 📧 mailhog      | Serveur SMTP de test + interface web     | mailhog/mailhog:v1.0.1 |
+| Service          | Description                              | Version |
+|------------------|------------------------------------------|---------|
+| 🖥️ app           | PHP + Apache (frontend & backend)        | PHP 8.3 |
+| 🐬 mysql         | Base de données relationnelle            | MySQL 8 |
+| 🗄️ phpmyadmin    | Interface web pour gérer MySQL           | phpmyadmin:5.2 |
+| 🍃 mongo         | Base de données NoSQL                    | MongoDB 6 |
+| 📊 mongo-express | Interface web pour gérer MongoDB         | mongo-express:1.0.0-alpha.4 |
+| 📧 mailhog       | Serveur SMTP de test + interface web     | mailhog/mailhog:v1.0.1 |
 
 ---
 
@@ -63,43 +63,38 @@ Application full-stack exécutée avec Docker Compose :
 │
 ├─ 🚫 .gitignore
 └─ 📖 README.md
-```text
+
 
 🚀 Installation & lancement en local
 
 1. Prérequis 💻
-
 Docker Desktop https://www.docker.com/products/docker-desktop/
 (Windows) WSL2 conseillé
 Git https://git-scm.com/
 
 2. Cloner le projet 📥
-```text
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd vite-gourmand/infra
-```text
-3. Créer le fichier .env 📄
 
+3. Créer le fichier .env 📄
 Copiez le modèle et adaptez-le :
-```text
 # Linux / Mac / WSL2
 cp infra/.env.example infra/.env
 
 # Windows PowerShell
 Copy-Item infra/.env.example infra/.env
-```text
+
 Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME
 par vos propres mots de passe ou ports si nécessaire.
-```text
+
 👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"),
 il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
 4. Lancer les conteneurs via Docker 🐋
-```text
+cd infra
 docker compose up -d --build
-```text
-5. Accéder aux services 🌐
 
+5. Accéder aux services 🌐
 Application PHP → http://localhost:8080
 
 phpMyAdmin → http://localhost:8090

@@ -63,7 +63,7 @@ Application full-stack exécutée avec **Docker Compose** :
 │
 ├─ 🚫 .gitignore
 └─ 📖 README.md
-
+```text
 ---
 
 🚀 Installation & lancement en local

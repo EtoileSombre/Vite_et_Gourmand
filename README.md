@@ -98,10 +98,10 @@ docker compose up -d --build
 Application PHP → http://localhost:8080
 
 phpMyAdmin → http://localhost:8090
-user : vg / password : vgpass
+ (identifiants définis dans .env)
 
 Mongo Express → http://localhost:8081
-basic auth : admin / admin
+ (identifiants définis dans .env)
 
 MailHog UI → http://localhost:8025
-SMTP dispo sur mailhog:1025
+(SMTP dispo sur mailhog:1025)

@@ -94,6 +94,7 @@ Copy-Item infra/.env.example infra/.env
 ```
 
 Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME par vos propres mots de passe ou ports si nécessaire.
+
 👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"), il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
 - Lancer les conteneurs via Docker 🐋

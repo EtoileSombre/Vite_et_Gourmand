@@ -67,7 +67,7 @@ Application full-stack exécutée avec Docker Compose :
 
 🚀 Installation & lancement en local
 
-1. Prérequis 💻
+- Prérequis 💻
 
 | Outil             | Lien officiel                                                                                   |
 | ----------------- | ----------------------------------------------------------------------------------------------- |
@@ -75,43 +75,30 @@ Application full-stack exécutée avec Docker Compose :
 | 💻 WSL2 (Windows) | [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) |
 | 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
 
----
-
-2. Cloner le projet 📥
-git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
+- Cloner le projet 📥
+git clone <https://github.com/EtoileSombre/Vite_et_Gourmand.git>
 cd vite-gourmand/infra
 
----
-
-3. Créer le fichier .env 📄
+- Créer le fichier .env 📄
 Copiez le modèle et adaptez-le :
+     Linux / Mac / WSL2
+     cp infra/.env.example infra/.env
 
-Linux / Mac / WSL2
-cp infra/.env.example infra/.env
+     Windows PowerShell
+     Copy-Item infra/.env.example infra/.env
 
-Windows PowerShell
-Copy-Item infra/.env.example infra/.env
+Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME par vos propres mots de passe ou ports si nécessaire.
+👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"), il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
-Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME
-par vos propres mots de passe ou ports si nécessaire.
-
-👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"),
-il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
-
----
-
-4. Lancer les conteneurs via Docker 🐋
+- Lancer les conteneurs via Docker 🐋
 cd infra
 docker compose up -d --build
 
----
+- Accéder aux services 🌐
 
-5. Accéder aux services 🌐
 | Service             | URL                                            | Identifiants          |
 | ------------------- | ---------------------------------------------- | --------------------- |
 | 🍽️ Application PHP | [http://localhost:8080](http://localhost:8080) | -                     |
 | 🗄️ phpMyAdmin      | [http://localhost:8090](http://localhost:8090) | définis dans `.env`   |
 | 📊 Mongo Express    | [http://localhost:8081](http://localhost:8081) | définis dans `.env`   |
 | 📧 MailHog (UI)     | [http://localhost:8025](http://localhost:8025) | SMTP : `mailhog:1025` |
-
-

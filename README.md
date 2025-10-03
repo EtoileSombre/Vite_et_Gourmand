@@ -1,13 +1,13 @@
 # 🍽️ Vite & Gourmand
 
-Projet réalisé dans le cadre du Titre Professionnel **Développeur Web & Web Mobile (DWWM)**.  
+Projet réalisé dans le cadre du Titre Professionnel Développeur Web & Web Mobile (DWWM).  
 
 👩‍💻 Auteur : [EtoileSombre](https://github.com/EtoileSombre)  
-📍 Entreprise fictive : **Vite & Gourmand** – (Julie & José – Restaurateurs à Bordeaux)
+📍 Entreprise fictive : Vite & Gourmand – (Julie & José – Restaurateurs à Bordeaux)
 
 ---
 
-## 🎯 Objectif
+🎯 Objectif
 
 Développer une application web pour l’entreprise **Vite & Gourmand** afin de :
 
@@ -17,9 +17,9 @@ Développer une application web pour l’entreprise **Vite & Gourmand** afin de 
 
 ---
 
-## ⚙️ Stack technique
+⚙️ Stack technique
 
-Application full-stack exécutée avec **Docker Compose** :
+Application full-stack exécutée avec Docker Compose :
 
 | Service          | Description                              | Version |
 |------------------|------------------------------------------|---------|
@@ -32,7 +32,7 @@ Application full-stack exécutée avec **Docker Compose** :
 
 ---
 
-## 📂 Arborescence
+📂 Arborescence
 
 ```text
 📦 VITE_ET_GOURMAND/
@@ -63,7 +63,6 @@ Application full-stack exécutée avec **Docker Compose** :
 │
 ├─ 🚫 .gitignore
 └─ 📖 README.md
-```text
 ---
 
 🚀 Installation & lancement en local
@@ -87,10 +86,10 @@ cd vite-gourmand/infra
 3. Créer le fichier .env 📄
 Copiez le modèle et adaptez-le :
 
-# Linux / Mac / WSL2
+Linux / Mac / WSL2
 cp infra/.env.example infra/.env
 
-# Windows PowerShell
+Windows PowerShell
 Copy-Item infra/.env.example infra/.env
 
 Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME

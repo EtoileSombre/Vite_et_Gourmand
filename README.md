@@ -63,7 +63,7 @@ Application full-stack exécutée avec **Docker Compose** :
 │
 ├─ 🚫 .gitignore
 └─ 📖 README.md
-
+```text
 
 🚀 Installation & lancement en local
 
@@ -73,8 +73,10 @@ Docker Desktop https://www.docker.com/products/docker-desktop/
 Git https://git-scm.com/
 
 2. Cloner le projet 📥
+```text
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd vite-gourmand/infra
+```text
 
 3. Créer le fichier .env 📄
 Copiez le modèle et adaptez-le :
@@ -91,17 +93,17 @@ par vos propres mots de passe ou ports si nécessaire.
 il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
 
 4. Lancer les conteneurs via Docker 🐋
+```text
 cd infra
 docker compose up -d --build
+```text
 
-5. Accéder aux services 🌐
-Application PHP → http://localhost:8080
+### 5. Accéder aux services 🌐
 
-phpMyAdmin → http://localhost:8090
- (identifiants définis dans .env)
+| Service        | URL                               | Identifiants |
+|----------------|-----------------------------------|--------------|
+| 🍽️ Application PHP | [http://localhost:8080](http://localhost:8080) | - |
+| 🗄️ phpMyAdmin      | [http://localhost:8090](http://localhost:8090) | définis dans `.env` |
+| 📊 Mongo Express   | [http://localhost:8081](http://localhost:8081) | définis dans `.env` |
+| 📧 MailHog (UI)    | [http://localhost:8025](http://localhost:8025) | SMTP : `mailhog:1025` |
 
-Mongo Express → http://localhost:8081
- (identifiants définis dans .env)
-
-MailHog UI → http://localhost:8025
-(SMTP dispo sur mailhog:1025)

@@ -61,7 +61,7 @@
        data-bs-touch="true"
        data-bs-wrap="true">
     
-    <div class="carousel-inner">
+    <div class="carousel-inner" aria-live="polite">
 
       <div class="carousel-item active">
         <div class="card testimonial-card text-center mx-auto">

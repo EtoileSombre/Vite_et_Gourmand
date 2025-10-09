@@ -58,22 +58,11 @@ Application **full-stack Dockerisée**, composée des services suivants :
 🚀 Installation & lancement en local
 
 - Prérequis 💻
-- Prérequis 💻
 
-| Outil             | Lien officiel                                                                                   |
-| ----------------- | ----------------------------------------------------------------------------------------------- |
-| 🐋 Docker Desktop | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)           |
-| 💻 WSL2 (Windows) | [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) |
-| 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
+🐋 Docker Desktop  [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)           
+💻 WSL2 (Windows)  [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) 
+🔧 Git             [git-scm.com](https://git-scm.com/)                                                             
 
-- Cloner le projet 📥
-
-```plaintext
-| Outil             | Lien officiel                                                                                   |
-| ----------------- | ----------------------------------------------------------------------------------------------- |
-| 🐋 Docker Desktop | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)           |
-| 💻 WSL2 (Windows) | [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) |
-| 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
 
 - Cloner le projet 📥
 
@@ -106,9 +95,9 @@ docker compose up -d --build
 
 - Accéder aux services 🌐
 
-| Service             | URL                                            | Identifiants          |
-| ------------------- | ---------------------------------------------- | --------------------- |
+| Service             | URL                                            | Identifiants         |
+| ------------------- | ---------------------------------------------- | ---------------------|
 | 🍽️ Application PHP | [http://localhost:8080](http://localhost:8080) | -                     |
 | 🗄️ phpMyAdmin      | [http://localhost:8090](http://localhost:8090) | définis dans `.env`   |
-| 📊 Mongo Express    | [http://localhost:8081](http://localhost:8081) | définis dans `.env`   |
-| 📧 MailHog (UI)     | [http://localhost:8025](http://localhost:8025) | définis dans `.env`|
+| 📊 Mongo Express    | [http://localhost:8081](http://localhost:8081) | définis dans `.env`  |
+| 📧 MailHog (UI)     | [http://localhost:8025](http://localhost:8025) |  -                   |

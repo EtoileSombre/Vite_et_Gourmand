@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli intl gd opcache zip
 
-# Apache + timezone (adapter si tu n'as pas /public)
+# Apache + timezone
 RUN a2enmod rewrite \
  && sed -ri 's#DocumentRoot /var/www/html#DocumentRoot /var/www/html/public#g' /etc/apache2/sites-available/000-default.conf \
  && printf '<Directory "/var/www/html/public">\nAllowOverride All\nRequire all granted\n</Directory>\n' > /etc/apache2/conf-available/project.conf \

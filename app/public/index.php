@@ -13,7 +13,7 @@
       </div>
       <div class="col-lg-5">
         <img class="img-fluid rounded shadow" alt="Assortiment traiteur"
-             src="assets/img/julie.jpg">
+             src="assets/img/lora.jpg">
       </div>
     </div>
   </div>

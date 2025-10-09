@@ -1,13 +1,10 @@
-# -----------------------------
-# Visual Studio / VS Code
-# -----------------------------
-*.rsuser
-*.suo
-*.user
-*.userosscache
-*.sln.docstates
+# ============================================================
+# 🎯 GITIGNORE — Projet Vite & Gourmand (DWWM / Docker / PHP)
+# ============================================================
 
-# VS / VSCode
+# -----------------------------
+# 🧠 VS / VS Code
+# -----------------------------
 .vs/
 .vscode/*
 !.vscode/settings.json
@@ -16,84 +13,102 @@
 !.vscode/extensions.json
 !.vscode/*.code-snippets
 
-# Logs & history
-[Ll]og/
-[Ll]ogs/
+# -----------------------------
+# 🧾 Logs & Historique
+# -----------------------------
 *.log
+logs/
 .history/
 .vshistory/
-
-# Build results
-[Dd]ebug/
-[Rr]elease/
-[Bb]in/
-[Oo]bj/
-[Oo]ut/
-
-# Test results
-[Tt]est[Rr]esult*/
-*.trx
-*.VisualState.xml
-TestResult.xml
-
-# Other IDE / tools
-_ReSharper*/
-*.DotSettings.user
-.idea/
-*.iml
-
-# -----------------------------
-# .NET / C# spécifiques
-# -----------------------------
-*.dll
-*.exe
-*.pdb
-*.mdb
-*.cache
-*.dbmdl
-*.bak
-*.mdf
-*.ldf
-
-# -----------------------------
-# Node.js
-# -----------------------------
-node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
 # -----------------------------
-# PHP
+# 🧱 Build / Cache
+# -----------------------------
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+dist/
+build/
+tmp/
+.cache/
+coverage/
+
+# -----------------------------
+# ⚙️ Node.js / Frontend
+# -----------------------------
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# -----------------------------
+# 🐘 PHP / Composer
 # -----------------------------
 vendor/
 composer.lock
+composer.phar
 
 # -----------------------------
-# Docker
+# 🐳 Docker
 # -----------------------------
-# Conteneurs & volumes
+# Volumes, images, data persistantes
 data/
 volumes/
+**/tmp/
+**/cache/
 
-# Images temporaires
+# Images / exports
 *.tar
 *.pid
 *.seed
 *.bak
 
 # -----------------------------
-# Environnements (⚠️ garder .env.example versionné)
+# 🔐 Environnements
 # -----------------------------
+# ⚠️ NE PAS versionner les fichiers sensibles
 .env
 *.env
 infra/.env
 
+# ✅ Garder le modèle versionné
+!infra/.env.example
+
 # -----------------------------
-# Système / OS
+# 🗃️ Base de données locales
+# -----------------------------
+*.sql
+*.sqlite
+dump.sql
+backup.sql
+
+# -----------------------------
+# 🖼️ Fichiers temporaires / OS
 # -----------------------------
 .DS_Store
 Thumbs.db
 ehthumbs.db
 desktop.ini
 $RECYCLE.BIN/
+
+# -----------------------------
+# 🧩 IDE / outils annexes
+# -----------------------------
+.idea/
+*.iml
+_ReSharper*/
+*.DotSettings.user
+
+# -----------------------------
+# 🧪 Tests / rapports
+# -----------------------------
+[Tt]est[Rr]esult*/
+*.trx
+*.VisualState.xml
+TestResult.xml
+coverage/

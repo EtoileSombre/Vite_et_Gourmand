@@ -1,114 +1,56 @@
 # 🍽️ Vite & Gourmand
 
-Projet réalisé dans le cadre du Titre Professionnel Développeur Web & Web Mobile (DWWM).  
+Projet réalisé dans le cadre du **Titre Professionnel Développeur Web & Web Mobile (DWWM)**.
 
-👩‍💻 Auteur : [EtoileSombre](https://github.com/EtoileSombre)  
-📍 Entreprise fictive : Vite & Gourmand – (Julie & José – Restaurateurs à Bordeaux)
-
----
-
-🎯 Objectif
-
-Développer une application web pour l’entreprise **Vite & Gourmand** afin de :
-
-- Présenter les menus en ligne  
-- Gérer les commandes  
-- Disposer d’un back-office pour l’administration  
+👩‍💻 **Auteur :** [EtoileSombre](https://github.com/EtoileSombre)  
+📍 **Entreprise fictive :** *Vite & Gourmand* – (Julie & José, restaurateurs à Bordeaux)
 
 ---
 
-⚙️ Stack technique
+## 🎯 Objectif du projet
 
-Application full-stack exécutée avec Docker Compose :
+Développer une **application web complète** permettant de :
 
-| Service          | Description                              | Version |
-|------------------|------------------------------------------|---------|
-| 🖥️ app           | PHP + Apache (frontend & backend)        | PHP 8.3 |
-| 🐬 mysql         | Base de données relationnelle            | MySQL 8 |
-| 🗄️ phpmyadmin    | Interface web pour gérer MySQL           | phpmyadmin:5.2 |
-| 🍃 mongo         | Base de données NoSQL                    | MongoDB 6 |
-| 📊 mongo-express | Interface web pour gérer MongoDB         | mongo-express:1.0.0-alpha.4 |
-| 📧 mailhog       | Serveur SMTP de test + interface web     | mailhog/mailhog:v1.0.1 |
+- Présenter les menus et les offres en ligne  
+- Gérer les commandes clients et leurs suivis  
+- Fournir un **back-office** (employé + administrateur)  
+- Gérer les avis et les contacts, dans le respect du RGAA et du RGPD
 
 ---
 
-📂 Arborescence
+## ⚙️ Stack technique
+
+Application **full-stack Dockerisée**, composée des services suivants :
+
+| Service | Description | Version |
+|:--|:--|:--:|
+| 🖥️ **app** | Serveur PHP + Apache (frontend & backend) | PHP 8.3 |
+| 🐬 **mysql** | Base de données relationnelle | MySQL 8 |
+| 🗄️ **phpmyadmin** | Interface web pour MySQL | 5.2 |
+| 🍃 **mongo** | Base de données NoSQL (statistiques, logs) | 6.0 |
+| 📊 **mongo-express** | Interface web pour MongoDB | 1.0.0-alpha.4 |
+| 📧 **mailhog** | Serveur SMTP de test + interface d’emails | v1.0.1 |
+
+---
+
+## 📂 Structure du projet
 
 ```plaintext
 📦 VITE_ET_GOURMAND/
-├─ ⚙️ .vscode/
-│  └─ 📝 settings.json
+├─ ⚙️ .vscode/              → Configuration VS Code
 │
-├─ 👨‍💻 app/
-│  ├─ 🗄️ config/
-│  │   └─ db.php
-│  ├─ 🧩 includes/
-│  │   ├─ footer.php
-│  │   └─ header.php
-│  ├─ 🌐 public/
-│  │   ├─ 📡 api/
-│  │   ├─ 🎨 assets/
-│  │   ├─ contact.php
-│  │   ├─ index.php
-│  │   └─ login.php
-│  └─ 🗃️ sql/
+├─ 👨‍💻 app/                 → Code source de l’application (frontend + backend)
+│  ├─ 🗄️ config/            → Connexion PDO MySQL / Mongo
+│  ├─ 🧩 includes/          → En-têtes et pieds de page PHP
+│  ├─ 🌐 public/            → Fichiers accessibles (HTML / PHP / CSS / JS)
+│  ├─ 📡 api/               → Endpoints REST (menus, commandes…)
+│  └─ 🗃️ sql/               → Script SQL pour MySQL
 │
-├─ 🐳 infra/
-│  ├─ 📦 php/
-│  │   ├─ Dockerfile
-│  │   └─ php.ini
-│  ├─ 🔒 .env              
-│  ├─ 🧪 .env.example      
-│  └─ 🔧 docker-compose.yml
+├─ 🐳 infra/                → Environnement Docker
+│  ├─ 📦 php/               → Dockerfile + php.ini
+│  ├─ 🔧 docker-compose.yml → Orchestration des services
+│  ├─ 🔒 .env               → Variables d’environnement (non versionné)
+│  └─ 🧪 .env.example       → Modèle à copier pour la configuration locale
 │
-├─ 🚫 .gitignore
-└─ 📖 README.md
-```
-
-🚀 Installation & lancement en local
-
-- Prérequis 💻
-
-| Outil             | Lien officiel                                                                                   |
-| ----------------- | ----------------------------------------------------------------------------------------------- |
-| 🐋 Docker Desktop | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)           |
-| 💻 WSL2 (Windows) | [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) |
-| 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
-
-- Cloner le projet 📥
-
-```plaintext
-git clone <https://github.com/EtoileSombre/Vite_et_Gourmand.git>
-cd vite-gourmand/infra
-```
-
-- Créer le fichier .env 📄
-
-```plaintext
-Copiez le modèle et adaptez-le :
-Linux / Mac / WSL2
-cp infra/.env.example infra/.env
-
-Windows PowerShell
-Copy-Item infra/.env.example infra/.env
-```
-
-Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME par vos propres mots de passe ou ports si nécessaire.
-
-👉 Exemple : si un port est déjà utilisé sur votre machine (erreur "port already allocated"), il suffit de modifier la valeur dans .env (ex. APP_PORT=8085 au lieu de 8080).
-
-- Lancer les conteneurs via Docker 🐋
-
-```plaintext
-cd infra
-docker compose up -d --build
-```
-
-- Accéder aux services 🌐
-
-| Service             | URL                                            | Identifiants          |
-| ------------------- | ---------------------------------------------- | --------------------- |
-| 🍽️ Application PHP | [http://localhost:8080](http://localhost:8080) | -                     |
-| 🗄️ phpMyAdmin      | [http://localhost:8090](http://localhost:8090) | définis dans `.env`   |
-| 📊 Mongo Express    | [http://localhost:8081](http://localhost:8081) | définis dans `.env`   |
-| 📧 MailHog (UI)     | [http://localhost:8025](http://localhost:8025) | SMTP : `mailhog:1025` |
+├─ 🚫 .gitignore            → Fichiers à ne pas versionner (.env, logs, vendor…)
+└─ 📖 README.md             → Documentation du projet

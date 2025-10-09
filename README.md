@@ -54,15 +54,17 @@ Application **full-stack Dockerisée**, composée des services suivants :
 │
 ├─ 🚫 .gitignore            → Fichiers à ne pas versionner (.env, logs, vendor…)
 └─ 📖 README.md             → Documentation du projet
+```
 
 🚀 Installation & lancement en local
 
 - Prérequis 💻
 
+```plaintext
 🐋 Docker Desktop  [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)           
 💻 WSL2 (Windows)  [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) 
 🔧 Git             [git-scm.com](https://git-scm.com/)                                                             
-
+```
 
 - Cloner le projet 📥
 
@@ -86,8 +88,6 @@ Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME par vos 
 
 - Lancer les conteneurs via Docker 🐋
 
-```plaintext
-cd infra
 ```plaintext
 cd infra
 docker compose up -d --build

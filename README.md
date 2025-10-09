@@ -54,3 +54,49 @@ Application **full-stack Dockerisée**, composée des services suivants :
 │
 ├─ 🚫 .gitignore            → Fichiers à ne pas versionner (.env, logs, vendor…)
 └─ 📖 README.md             → Documentation du projet
+
+🚀 Installation & lancement en local
+
+- Prérequis 💻
+
+| Outil             | Lien officiel                                                                                   |
+| ----------------- | ----------------------------------------------------------------------------------------------- |
+| 🐋 Docker Desktop | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)           |
+| 💻 WSL2 (Windows) | [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) |
+| 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
+
+- Cloner le projet 📥
+
+```plaintext
+git clone <https://github.com/EtoileSombre/Vite_et_Gourmand.git>
+cd vite-gourmand/infra
+```
+
+- Créer le fichier .env 📄
+
+```plaintext
+Copiez le modèle et adaptez-le :
+Linux / Mac / WSL2
+cp infra/.env.example infra/.env
+
+Windows PowerShell
+Copy-Item infra/.env.example infra/.env
+```
+
+Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME par vos propres mots de passe ou ports si nécessaire.
+
+- Lancer les conteneurs via Docker 🐋
+
+```plaintext
+cd infra
+docker compose up -d --build
+```
+
+- Accéder aux services 🌐
+
+| Service             | URL                                            | Identifiants          |
+| ------------------- | ---------------------------------------------- | --------------------- |
+| 🍽️ Application PHP | [http://localhost:8080](http://localhost:8080) | -                     |
+| 🗄️ phpMyAdmin      | [http://localhost:8090](http://localhost:8090) | définis dans `.env`   |
+| 📊 Mongo Express    | [http://localhost:8081](http://localhost:8081) | définis dans `.env`   |
+| 📧 MailHog (UI)     | [http://localhost:8025](http://localhost:8025) | définis dans `.env`|

@@ -1,0 +1,302 @@
+<?php
+
+namespace App\Helpers;
+
+use MongoDB\Client;
+use Exception;
+
+/**
+ * Helper pour logger les événements dans MongoDB
+ */
+class MongoLogger
+{
+    private static $client = null;
+    private static $db = null;
+    
+    /**
+     * Initialise la connexion MongoDB
+     */
+    private static function connect()
+    {
+        if (self::$client === null) {
+            try {
+                self::$client = new Client(
+                    "mongodb://vgroot:vgrootpass@mongo:27017",
+                    [],
+                    [
+                        'typeMap' => [
+                            'root' => 'array',
+                            'document' => 'array',
+                            'array' => 'array'
+                        ]
+                    ]
+                );
+                self::$db = self::$client->vg;
+            } catch (Exception $e) {
+                error_log("MongoDB connexion error: " . $e->getMessage());
+                return false;
+            }
+        }
+        return self::$db !== null;
+    }
+    
+    /**
+     * Log une consultation de menu
+     */
+    public static function logMenuView(int $menuId, ?int $userId, string $menuTitre)
+    {
+        if (!self::connect()) return;
+        
+        try {
+            self::$db->menu_views->insertOne([
+                'menu_id' => $menuId,
+                'menu_titre' => $menuTitre,
+                'user_id' => $userId,
+                'user_type' => $userId ? 'connecté' : 'visiteur',
+                'timestamp' => new \MongoDB\BSON\UTCDateTime(),
+                'date' => date('Y-m-d'),
+                'heure' => date('H:i:s')
+            ]);
+        } catch (Exception $e) {
+            error_log("MongoDB logMenuView error: " . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Log une création de commande
+     */
+    public static function logCommande(string $numeroCommande, int $userId, int $menuId, int $nombrePersonnes, float $montantTotal)
+    {
+        if (!self::connect()) return;
+        
+        try {
+            self::$db->commande_stats->insertOne([
+                'numero_commande' => $numeroCommande,
+                'user_id' => $userId,
+                'menu_id' => $menuId,
+                'nombre_personnes' => $nombrePersonnes,
+                'montant_total' => $montantTotal,
+                'timestamp' => new \MongoDB\BSON\UTCDateTime(),
+                'date' => date('Y-m-d'),
+                'heure' => date('H:i:s'),
+                'jour_semaine' => date('l'),
+                'mois' => date('F Y')
+            ]);
+        } catch (Exception $e) {
+            error_log("MongoDB logCommande error: " . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Log une activité utilisateur
+     */
+    public static function logUserActivity(string $action, ?int $userId, array $details = [])
+    {
+        if (!self::connect()) return;
+        
+        try {
+            self::$db->user_activity->insertOne([
+                'action' => $action,
+                'user_id' => $userId,
+                'details' => $details,
+                'timestamp' => new \MongoDB\BSON\UTCDateTime(),
+                'date' => date('Y-m-d'),
+                'heure' => date('H:i:s'),
+                'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
+            ]);
+        } catch (Exception $e) {
+            error_log("MongoDB logUserActivity error: " . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Log la soumission d'un avis
+     */
+    public static function logAvis(int $avisId, int $userId, int $note)
+    {
+        if (!self::connect()) return;
+        
+        try {
+            self::$db->avis_analytics->insertOne([
+                'avis_id' => $avisId,
+                'user_id' => $userId,
+                'note' => $note,
+                'timestamp' => new \MongoDB\BSON\UTCDateTime(),
+                'date' => date('Y-m-d'),
+                'mois' => date('F Y')
+            ]);
+        } catch (Exception $e) {
+            error_log("MongoDB logAvis error: " . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Récupère les statistiques des menus les plus consultés
+     * 
+     * @return array
+     */
+    public static function getTopMenus(int $limit = 10): array
+    {
+        if (!self::connect()) return [];
+        
+        try {
+            $pipeline = [
+                [
+                    '$group' => [
+                        '_id' => '$menu_id',
+                        'titre' => ['$first' => '$menu_titre'],
+                        'total_vues' => ['$sum' => 1],
+                        'vues_connectes' => [
+                            '$sum' => ['$cond' => [['$ne' => ['$user_id', null]], 1, 0]]
+                        ],
+                        'vues_visiteurs' => [
+                            '$sum' => ['$cond' => [['$eq' => ['$user_id', null]], 1, 0]]
+                        ]
+                    ]
+                ],
+                ['$sort' => ['total_vues' => -1]],
+                ['$limit' => $limit]
+            ];
+            
+            return iterator_to_array(self::$db->menu_views->aggregate($pipeline));
+        } catch (Exception $e) {
+            error_log("MongoDB getTopMenus error: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    /**
+     * Récupère les statistiques des commandes par jour
+     * 
+     * @return array
+     */
+    public static function getCommandesParJour(int $jours = 30): array
+    {
+        if (!self::connect()) return [];
+        
+        try {
+            $dateDebut = date('Y-m-d', strtotime("-$jours days"));
+            
+            $pipeline = [
+                ['$match' => ['date' => ['$gte' => $dateDebut]]],
+                [
+                    '$group' => [
+                        '_id' => '$date',
+                        'nombre_commandes' => ['$sum' => 1],
+                        'total_personnes' => ['$sum' => '$nombre_personnes'],
+                        'chiffre_affaires' => ['$sum' => '$montant_total']
+                    ]
+                ],
+                ['$sort' => ['_id' => 1]]
+            ];
+            
+            return iterator_to_array(self::$db->commande_stats->aggregate($pipeline));
+        } catch (Exception $e) {
+            error_log("MongoDB getCommandesParJour error: " . $e->getMessage());
+            return [];
+        }
+    }
+    
+    /**
+     * Récupère les statistiques globales
+     * 
+     * @return array
+     */
+    public static function getStatsGlobales(): array
+    {
+        if (!self::connect()) return [];
+        
+        try {
+            return [
+                'total_vues_menus' => self::$db->menu_views->countDocuments(),
+                'total_commandes' => self::$db->commande_stats->countDocuments(),
+                'total_avis' => self::$db->avis_analytics->countDocuments(),
+                'total_activites' => self::$db->user_activity->countDocuments()
+            ];
+        } catch (Exception $e) {
+            error_log("MongoDB getStatsGlobales error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Log une action de modération d'avis
+     */
+    public static function logAvisModeration(array $data)
+    {
+        if (!self::connect()) return;
+        
+        try {
+            self::$db->avis_moderation->insertOne([
+                'avis_id' => $data['avis_id'] ?? null,
+                'action' => $data['action'] ?? 'inconnu', // 'approuvé' ou 'rejeté'
+                'motif' => $data['motif'] ?? null,
+                'employe_id' => $data['employe_id'] ?? null,
+                'employe_prenom' => $data['employe_prenom'] ?? 'Employé',
+                'timestamp' => new \MongoDB\BSON\UTCDateTime(),
+                'date' => $data['date'] ?? date('Y-m-d H:i:s')
+            ]);
+        } catch (Exception $e) {
+            error_log("MongoDB logAvisModeration error: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * Récupère le chiffre d'affaires par menu avec filtres
+     * 
+     * @return array
+     */
+    public static function getCaParMenu(?int $menuId = null, ?string $dateDebut = null, ?string $dateFin = null): array
+    {
+        if (!self::connect()) return [];
+        
+        try {
+            // Construire les filtres
+            $match = [];
+            
+            if ($menuId !== null) {
+                $match['menu_id'] = $menuId;
+            }
+            
+            if ($dateDebut !== null && $dateFin !== null) {
+                $match['date'] = [
+                    '$gte' => $dateDebut,
+                    '$lte' => $dateFin
+                ];
+            } elseif ($dateDebut !== null) {
+                $match['date'] = ['$gte' => $dateDebut];
+            } elseif ($dateFin !== null) {
+                $match['date'] = ['$lte' => $dateFin];
+            }
+            
+            // Pipeline d'agrégation
+            $pipeline = [];
+            
+            // Ajouter le match si des filtres sont définis
+            if (!empty($match)) {
+                $pipeline[] = ['$match' => $match];
+            }
+            
+            // Grouper par menu
+            $pipeline[] = [
+                '$group' => [
+                    '_id' => '$menu_id',
+                    'chiffre_affaires' => ['$sum' => '$montant_total'],
+                    'nombre_commandes' => ['$sum' => 1],
+                    'total_personnes' => ['$sum' => '$nombre_personnes'],
+                    'montant_moyen' => ['$avg' => '$montant_total']
+                ]
+            ];
+            
+            // Trier par CA décroissant
+            $pipeline[] = ['$sort' => ['chiffre_affaires' => -1]];
+            
+            $results = iterator_to_array(self::$db->commande_stats->aggregate($pipeline));
+            
+            return $results;
+        } catch (Exception $e) {
+            error_log("MongoDB getCaParMenu error: " . $e->getMessage());
+            return [];
+        }
+    }
+}

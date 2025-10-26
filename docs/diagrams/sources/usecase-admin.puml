@@ -1,0 +1,99 @@
+@startuml
+skinparam packageStyle rectangle
+title Cas d'utilisation - Administrateur
+
+actor "Administrateur" as admin
+
+' Package Gestion Contenu
+package "Gestion du contenu" {
+    usecase "Gérer les menus" as UC1
+    usecase "Gérer les plats" as UC2
+    usecase "Gérer les régimes alimentaires" as UC3
+    usecase "Gérer les allergènes" as UC4
+    usecase "Gérer les thèmes" as UC5
+}
+
+' Package Gestion Utilisateurs
+package "Gestion des utilisateurs" {
+    usecase "Gérer les comptes employés" as UC6
+    usecase "Activer/Désactiver un employé" as UC7
+}
+
+' Package Gestion Commandes
+package "Gestion des commandes" {
+    usecase "Consulter toutes les commandes" as UC8
+    usecase "Modifier le statut d'une commande" as UC9
+}
+
+' Package Modération
+package "Modération" {
+    usecase "Modérer les avis clients" as UC10
+}
+
+' Package Contact
+package "Contact" {
+    usecase "Traiter les demandes de contact" as UC11
+}
+
+' Package Statistiques
+package "Statistiques" {
+    usecase "Consulter les statistiques" as UC12
+    usecase "Exporter les données" as UC13
+}
+
+' Package Configuration
+package "Configuration" {
+    usecase "Gérer les horaires d'ouverture" as UC14
+    usecase "Configurer les paramètres RGPD" as UC15
+}
+
+' Relations Admin
+admin --> UC1
+admin --> UC2
+admin --> UC3
+admin --> UC4
+admin --> UC5
+admin --> UC6
+admin --> UC7
+admin --> UC8
+admin --> UC9
+admin --> UC10
+admin --> UC11
+admin --> UC12
+admin --> UC13
+admin --> UC14
+admin --> UC15
+
+note right of admin
+    L'administrateur a tous les droits :
+    - Gestion complète du contenu
+    - Gestion des utilisateurs
+    - Modération et statistiques
+    - Configuration système
+    
+    Rôle : "administrateur"
+end note
+
+note bottom of UC1
+    CRUD complet sur les menus :
+    - Créer/Modifier/Supprimer
+    - Associer plats, régimes, thèmes
+    - Gérer la disponibilité (stock)
+end note
+
+note bottom of UC7
+    Activation/Désactivation :
+    - Met le champ actif = TRUE/FALSE
+    - Bloque/Débloque l'accès
+    - Conserve l'historique
+end note
+
+note bottom of UC12
+    Statistiques disponibles :
+    - Chiffre d'affaires
+    - Commandes par statut
+    - Menus les plus vendus
+    - Notes moyennes des avis
+end note
+
+@enduml

@@ -1,0 +1,149 @@
+@startuml MPD - Vite & Gourmand
+
+title Modèle Physique de Données - Vite & Gourmand
+
+hide circle
+skinparam linetype ortho
+
+!define TABLE class
+
+TABLE utilisateur {
+  utilisateur_id : INT AUTO_INCREMENT
+  --
+  email : VARCHAR(255) NOT NULL
+  password : VARCHAR(255) NOT NULL
+  prenom : VARCHAR(100)
+  nom : VARCHAR(100)
+  adresse_postale : TEXT
+  actif : BOOLEAN
+  role_id : INT
+}
+
+TABLE role {
+  role_id : INT AUTO_INCREMENT
+  --
+  libelle : VARCHAR(50)
+}
+
+TABLE menu {
+  menu_id : INT AUTO_INCREMENT
+  --
+  titre : VARCHAR(255)
+  prix_par_personne : DECIMAL(10,2)
+  nombre_personne_minimum : INT
+  quantite_restante : INT
+  description : TEXT
+  regime_id : INT
+  theme_id : INT
+}
+
+TABLE commande {
+  numero_commande : VARCHAR(50)
+  --
+  date_commande : DATE
+  date_prestation : DATE
+  nombre_personne : INT
+  prix_total : DECIMAL(10,2)
+  statut : VARCHAR(50)
+  utilisateur_id : INT
+  menu_id : INT
+}
+
+TABLE avis {
+  avis_id : INT AUTO_INCREMENT
+  --
+  note : INT
+  description : TEXT
+  statut : VARCHAR(50)
+  numero_commande : VARCHAR(50)
+  utilisateur_id : INT
+}
+
+TABLE plat {
+  plat_id : INT AUTO_INCREMENT
+  --
+  titre_plat : VARCHAR(255)
+  photo : MEDIUMBLOB
+}
+
+TABLE regime {
+  regime_id : INT AUTO_INCREMENT
+  --
+  libelle : VARCHAR(100)
+}
+
+TABLE theme {
+  theme_id : INT AUTO_INCREMENT
+  --
+  libelle : VARCHAR(100)
+}
+
+TABLE allergene {
+  allergene_id : INT AUTO_INCREMENT
+  --
+  libelle : VARCHAR(100)
+}
+
+TABLE suivi_commande {
+  suivi_id : INT AUTO_INCREMENT
+  --
+  ancien_statut : VARCHAR(50)
+  nouveau_statut : VARCHAR(50)
+  date_changement : DATETIME
+  numero_commande : VARCHAR(50)
+}
+
+TABLE contact {
+  contact_id : INT AUTO_INCREMENT
+  --
+  titre : VARCHAR(255)
+  description : TEXT
+  email : VARCHAR(255)
+  traite : BOOLEAN
+}
+
+TABLE horaire {
+  jour : VARCHAR(20)
+  --
+  heure_ouverture : TIME
+  heure_fermeture : TIME
+}
+
+TABLE propose {
+  menu_id : INT
+  plat_id : INT
+}
+
+TABLE associe_theme {
+  menu_id : INT
+  theme_id : INT
+}
+
+TABLE contient {
+  plat_id : INT
+  allergene_id : INT
+}
+
+' Relations (Foreign Keys)
+
+utilisateur "N" --> "1" role
+utilisateur "1" --> "N" commande
+utilisateur "1" --> "N" avis
+
+commande "N" --> "1" menu
+commande "1" --> "N" suivi_commande
+commande "1" --> "0..1" avis
+
+menu "N" --> "0..1" regime
+
+' Relations N:N via tables de liaison
+menu "N" --> "N" propose
+propose "N" --> "N" plat
+
+menu "N" --> "N" associe_theme
+associe_theme "N" --> "N" theme
+
+plat "N" --> "N" contient
+contient "N" --> "N" allergene
+
+@enduml

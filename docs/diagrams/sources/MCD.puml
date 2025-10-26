@@ -1,0 +1,155 @@
+@startuml MCD - Vite & Gourmand
+
+title Modèle Conceptuel de Données - Vite & Gourmand
+
+hide circle
+skinparam linetype ortho
+
+!define ENTITY entity
+!define RELATION diamond
+
+' Entités principales
+
+ENTITY UTILISATEUR {
+  utilisateur_id
+  --
+  email
+  password
+  prenom
+  nom
+  telephone
+  ville
+  pays
+  adresse_postale
+  actif
+  role_id
+}
+
+ENTITY ROLE {
+  role_id
+  --
+  libelle
+}
+
+ENTITY MENU {
+  menu_id
+  --
+  titre
+  prix_par_personne
+  nombre_personne_minimum
+  quantite_restante
+  description
+  conditions
+}
+
+ENTITY COMMANDE {
+  numero_commande
+  --
+  date_commande
+  date_prestation
+  heure_livraison
+  prix_menu
+  nombre_personne
+  lieu_livraison
+  adresse_livraison
+  distance_km
+  frais_livraison
+  reduction_appliquee
+  prix_total
+  statut
+  pret_materiel
+  restitution_materiel
+}
+
+ENTITY AVIS {
+  avis_id
+  --
+  note
+  description
+  statut
+}
+
+ENTITY PLAT {
+  plat_id
+  --
+  titre_plat
+  photo
+}
+
+ENTITY REGIME {
+  regime_id
+  --
+  libelle
+}
+
+ENTITY THEME {
+  theme_id
+  --
+  libelle
+}
+
+ENTITY ALLERGENE {
+  allergene_id
+  --
+  libelle
+}
+
+ENTITY SUIVI_COMMANDE {
+  suivi_id
+  --
+  ancien_statut
+  nouveau_statut
+  date_changement
+  commentaire
+}
+
+ENTITY CONTACT {
+  contact_id
+  --
+  titre
+  description
+  email
+  date_envoi
+  traite
+  reponse
+  date_reponse
+}
+
+ENTITY HORAIRE {
+  jour
+  --
+  heure_ouverture
+  heure_fermeture
+}
+
+' Relations
+
+UTILISATEUR }o--|| ROLE : "possède"
+UTILISATEUR ||--o{ COMMANDE : "passe"
+UTILISATEUR ||--o{ AVIS : "rédige"
+
+COMMANDE ||--|| MENU : "contient"
+COMMANDE ||--o{ SUIVI_COMMANDE : "est suivi par"
+COMMANDE ||--o| AVIS : "génère"
+
+MENU }o--o{ PLAT : "propose"
+MENU }o--o| REGIME : "adapté à"
+MENU }o--o{ THEME : "associé à"
+
+PLAT }o--o{ ALLERGENE : "contient"
+
+note right of UTILISATEUR
+  Rôles possibles :
+  - client
+  - employé
+  - administrateur
+end note
+
+note right of COMMANDE
+  Cardinalités :
+  - 1 utilisateur → N commandes
+  - 1 commande → 1 menu
+  - 1 commande → 0..1 avis
+end note
+
+@enduml

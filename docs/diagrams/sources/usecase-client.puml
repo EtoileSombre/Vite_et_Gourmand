@@ -1,0 +1,86 @@
+@startuml
+skinparam packageStyle rectangle
+title Cas d'utilisation - Client (connecté)
+
+actor "Client" as client
+
+' Package Consultation
+package "Consultation" {
+    usecase "Consulter les menus" as UC1
+    usecase "Filtrer par régime/allergène" as UC2
+    usecase "Voir les avis clients" as UC3
+}
+
+' Package Commandes
+package "Mes commandes" {
+    usecase "Passer une commande" as UC4
+    usecase "Suivre ma commande" as UC5
+    usecase "Consulter l'historique" as UC6
+    usecase "Annuler une commande" as UC7
+}
+
+' Package Avis
+package "Mes avis" {
+    usecase "Laisser un avis" as UC8
+    usecase "Consulter mes avis" as UC9
+}
+
+' Package Compte
+package "Mon compte" {
+    usecase "Gérer mon profil" as UC10
+    usecase "Se déconnecter" as UC11
+}
+
+' Relations Client
+client --> UC1
+client --> UC2
+client --> UC3
+client --> UC4
+client --> UC5
+client --> UC6
+client --> UC7
+client --> UC8
+client --> UC9
+client --> UC10
+client --> UC11
+
+note right of client
+    Le client est un visiteur
+    authentifié qui peut :
+    - Passer des commandes
+    - Suivre ses commandes
+    - Laisser des avis
+    
+    Rôle : "client"
+end note
+
+note bottom of UC4
+    Processus de commande :
+    1. Sélectionner un menu
+    2. Date de prestation (J+2 min)
+    3. Nombre de personnes
+    4. Adresse de livraison
+    
+    Calculs automatiques :
+    - Frais : 5€ + 0.59€/km
+    - Réduction : 10% si ≥ 5 pers.
+end note
+
+note bottom of UC7
+    Annulation possible si statut :
+    - "en attente"
+    - "accepté"
+    
+    Pas d'annulation si :
+    - "en préparation" ou après
+end note
+
+note bottom of UC8
+    Avis possible après livraison
+    (statut "livré" ou "terminée").
+    
+    Note de 1 à 5 étoiles.
+    Modération avant publication.
+end note
+
+@enduml

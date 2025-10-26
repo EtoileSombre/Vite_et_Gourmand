@@ -1,0 +1,37 @@
+@startuml Séquence - Traiter une commande (Employé)
+
+title Diagramme de séquence - Traiter une commande
+
+actor "Employé" as Employe
+participant "Navigateur" as Browser
+participant "traiter-commande.php" as Traiter
+participant "Base de données" as DB
+participant "PHPMailer" as Mail
+
+Employe -> Browser : Consulte les commandes
+Browser -> Traiter : Affiche liste
+Traiter -> DB : SELECT commandes
+DB --> Traiter : Liste des commandes
+Traiter --> Browser : Affiche tableau
+Browser --> Employe : Visualise
+
+Employe -> Browser : Sélectionne une commande
+Browser -> Traiter : Affiche détails
+Traiter -> DB : SELECT commande + suivi
+DB --> Traiter : Détails + historique
+Traiter --> Browser : Affiche formulaire
+Browser --> Employe : Modification possible
+
+Employe -> Browser : Change le statut
+Browser -> Traiter : Envoie nouveau statut
+
+Traiter -> DB : UPDATE commande (statut)
+Traiter -> DB : INSERT suivi_commande
+
+Traiter -> Mail : Prépare notification client
+Mail --> Traiter : Email envoyé
+
+Traiter --> Browser : Confirmation
+Browser --> Employe : Statut mis à jour
+
+@enduml

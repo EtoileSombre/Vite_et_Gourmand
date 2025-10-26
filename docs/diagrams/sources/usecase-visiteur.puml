@@ -1,0 +1,64 @@
+@startuml
+skinparam packageStyle rectangle
+title Cas d'utilisation - Visiteur (non connecté)
+
+actor "Visiteur" as visiteur
+
+' Package Consultation
+package "Consultation" {
+    usecase "Consulter les menus" as UC1
+    usecase "Filtrer par régime/allergène" as UC2
+    usecase "Voir les avis clients" as UC3
+    usecase "Consulter les horaires" as UC4
+}
+
+' Package Authentification
+package "Authentification" {
+    usecase "S'inscrire" as UC5
+    usecase "Se connecter" as UC6
+}
+
+' Package Contact
+package "Contact" {
+    usecase "Envoyer un message" as UC7
+    usecase "Demander un devis" as UC8
+}
+
+' Relations Visiteur
+visiteur --> UC1
+visiteur --> UC2
+visiteur --> UC3
+visiteur --> UC4
+visiteur --> UC5
+visiteur --> UC6
+visiteur --> UC7
+visiteur --> UC8
+
+note right of visiteur
+    Le visiteur peut consulter
+    le site sans authentification.
+    
+    Pour passer commande,
+    il doit s'inscrire ou se connecter.
+end note
+
+note bottom of UC1
+    Affiche les menus disponibles :
+    - Titre et description
+    - Prix par personne
+    - Régime alimentaire
+    - Nombre minimum de personnes
+    - Galerie de photos
+end note
+
+note bottom of UC5
+    Inscription avec :
+    - Email (unique)
+    - Mot de passe (hash bcrypt)
+    - Prénom, Nom
+    - Téléphone et adresse
+    
+    Rôle par défaut : "client"
+end note
+
+@enduml

@@ -1,0 +1,45 @@
+@startuml Séquence - Authentification utilisateur
+
+title Diagramme de séquence - Authentification (scénario nominal)
+
+actor "Utilisateur" as User
+participant "Navigateur" as Browser
+participant "login.php" as Login
+participant "Session PHP" as Session
+participant "Base de données" as DB
+
+== Connexion ==
+
+User -> Browser : Accède à login.php
+Browser -> Login : GET /login.php
+Login --> Browser : Affiche formulaire
+
+User -> Browser : Saisit email et mot de passe
+Browser -> Login : POST (email, password)
+
+Login -> DB : SELECT * FROM utilisateur\nWHERE email = ?
+DB --> Login : Retourne utilisateur
+
+Login -> Login : password_verify(password, password_hash)
+
+Login -> DB : SELECT libelle FROM role\nWHERE role_id = ?
+DB --> Login : Retourne rôle
+
+Login -> Session : session_start()
+Login -> Session : $_SESSION['user_id'] = id
+Login -> Session : $_SESSION['role'] = libelle
+
+Login --> Browser : Redirection selon rôle
+Browser --> User : Page d'accueil
+
+== Déconnexion ==
+
+User -> Browser : Clique sur "Déconnexion"
+Browser -> Login : GET /logout.php
+
+Login -> Session : session_destroy()
+
+Login --> Browser : Redirection vers /index.php
+Browser --> User : Page d'accueil
+
+@enduml

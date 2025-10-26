@@ -1,0 +1,34 @@
+@startuml Séquence - Passer une commande
+
+title Diagramme de séquence - Passer une commande
+
+actor "Client" as Client
+participant "Navigateur" as Browser
+participant "commander.php" as Commander
+participant "Base de données" as DB
+
+Client -> Browser : Consulte les menus
+Browser -> Commander : Affiche les menus disponibles
+Commander -> DB : SELECT menus
+DB --> Commander : Liste des menus
+Commander --> Browser : Affiche galerie
+Browser --> Client : Visualise
+
+Client -> Browser : Sélectionne un menu
+Browser -> Commander : Affiche formulaire
+Commander --> Browser : Formulaire
+Browser --> Client : Saisit informations
+
+Client -> Browser : Valide la commande
+Browser -> Commander : Envoie données
+
+Commander -> Commander : Calcul prix total\n(tarif + frais - réduction)
+
+Commander -> DB : INSERT commande
+Commander -> DB : INSERT suivi
+Commander -> DB : UPDATE stock menu
+
+Commander --> Browser : Confirmation
+Browser --> Client : Commande enregistrée
+
+@enduml

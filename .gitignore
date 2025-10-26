@@ -112,3 +112,14 @@ _ReSharper*/
 *.VisualState.xml
 TestResult.xml
 coverage/
+
+# -----------------------------
+# 📝 Documentation personnelle
+# -----------------------------
+docs/PLAN_ACTION.md
+docs/PRESENTATION_EXAMEN.md
+docs/CONFORMITE_BDD.md
+docs/CHARTE_GRAPHIQUE.md
+docs/ROLE_BOOTSTRAP.md
+docs/diagrams/README-GENERATION.md
+docs/diagrams/*-explications.md

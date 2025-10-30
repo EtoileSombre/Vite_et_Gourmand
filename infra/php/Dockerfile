@@ -6,6 +6,10 @@ RUN apt-get update && apt-get install -y \
  && docker-php-ext-configure gd --with-freetype --with-jpeg \
  && docker-php-ext-install -j$(nproc) pdo_mysql mysqli intl gd opcache zip
 
+# Installation de l'extension MongoDB
+RUN pecl install mongodb \
+ && docker-php-ext-enable mongodb
+
 # Apache + timezone
 RUN a2enmod rewrite \
  && sed -ri 's#DocumentRoot /var/www/html#DocumentRoot /var/www/html/public#g' /etc/apache2/sites-available/000-default.conf \

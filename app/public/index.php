@@ -28,7 +28,7 @@ include __DIR__ . '/../includes/header.php';
     <div class="container">
       <div class="row align-items-center g-4">
         <div class="col-lg-7">
-          <h1>Cuisine maison, <span style="color: var(--vg-bordeaux);">prête en un clic</span>.</h1>
+          <h1>Cuisine maison, <span style="color: var(--vg-bordeaux);"> pour toutes vos occasions</span>.</h1>
           <p class="lead text-muted mb-4">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
           <p class="mb-4">Des plats authentiques préparés avec passion pour vos événements professionnels et familiaux.</p>
           <a class="btn btn-primary btn-lg" href="/menus.php">
@@ -61,6 +61,126 @@ include __DIR__ . '/../includes/header.php';
         <div class="col-md-3 col-6">
           <div class="display-4 fw-bold" style="color: var(--vg-gold);">24h</div>
           <div>Délai de commande</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Présentation de l'entreprise et professionnalisme -->
+  <section class="container py-5">
+    <div class="text-center mb-5">
+      <p class="lead text-muted">Votre traiteur de confiance à Bordeaux depuis 25 ans</p>
+    </div>
+
+    <div class="row mb-5">
+      <div class="col-lg-8 mx-auto">
+        <p class="text-center">
+          Julie et José perpétuent la tradition culinaire bordelaise en proposant des prestations 
+          traiteur d'exception. Notre cuisine allie <strong>authenticité</strong> des recettes du terroir 
+          et <strong>créativité</strong> pour sublimer vos événements professionnels et familiaux.
+        </p>
+        <p class="text-center">
+          Que ce soit pour un repas d'entreprise, un mariage, un anniversaire ou une réception privée, 
+          nous mettons tout notre savoir-faire à votre service.
+        </p>
+      </div>
+    </div>
+
+    <div class="text-center mb-4">
+      <h3 class="h4" style="color: var(--vg-bordeaux);">
+        <i class="bi bi-award"></i> Notre professionnalisme
+      </h3>
+      <p class="text-muted">Ce qui fait notre différence</p>
+    </div>
+
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <i class="bi bi-people-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+            </div>
+            <h5 class="card-title">Équipe qualifiée</h5>
+            <p class="card-text text-muted">
+              Nos chefs et notre équipe de service possèdent plusieurs années d'expérience 
+              dans l'événementiel haut de gamme.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <i class="bi bi-basket-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+            </div>
+            <h5 class="card-title">Produits frais et locaux</h5>
+            <p class="card-text text-muted">
+              Partenariats exclusifs avec des producteurs de la région pour garantir 
+              fraîcheur et qualité exceptionnelle.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <i class="bi bi-house-heart-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+            </div>
+            <h5 class="card-title">Fait maison</h5>
+            <p class="card-text text-muted">
+              Tous nos plats sont préparés dans notre laboratoire aux normes HACCP. 
+              Aucun produit industriel.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <i class="bi bi-gear-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+            </div>
+            <h5 class="card-title">Service personnalisé</h5>
+            <p class="card-text text-muted">
+              Adaptation complète à vos besoins, contraintes alimentaires (allergènes, régimes) 
+              et budget.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <i class="bi bi-clock-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+            </div>
+            <h5 class="card-title">Ponctualité</h5>
+            <p class="card-text text-muted">
+              Respect strict des délais et des horaires. Livraison garantie à l'heure 
+              pour vos événements.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6 col-lg-4">
+        <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
+          <div class="card-body p-4">
+            <div class="mb-3">
+              <i class="bi bi-shield-check-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+            </div>
+            <h5 class="card-title">Hygiène HACCP</h5>
+            <p class="card-text text-muted">
+              Normes sanitaires strictement respectées. Laboratoire certifié et 
+              contrôles réguliers.
+            </p>
+          </div>
         </div>
       </div>
     </div>

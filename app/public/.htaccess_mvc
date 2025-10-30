@@ -1,0 +1,32 @@
+# Active la réécriture d'URL
+RewriteEngine On
+
+# Redirige toutes les requêtes vers index_mvc.php (sauf les fichiers existants)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index_mvc.php [QSA,L]
+
+# Empêche l'accès aux fichiers sensibles
+<FilesMatch "\.(env|sql|log)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Force HTTPS (décommenter en production)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Protection contre les injections
+<IfModule mod_headers.c>
+    # Protection XSS
+    Header set X-XSS-Protection "1; mode=block"
+    
+    # Protection contre le clickjacking
+    Header always append X-Frame-Options SAMEORIGIN
+    
+    # Protection MIME-type sniffing
+    Header set X-Content-Type-Options nosniff
+    
+    # Politique de référent
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

@@ -261,19 +261,6 @@ require_once __DIR__ . '/../includes/header.php';
             </div>
         </div>
     </div>
-</main>
-
-<style>
-    .hover-shadow {
-        transition: all 0.3s ease;
-    }
-    .hover-shadow:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
-    }
-    .transition {
-        transition: all 0.3s ease;
-    }
-</style>
+</div>
 
 <?php require_once __DIR__ . '/../includes/footer.php'; ?>

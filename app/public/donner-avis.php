@@ -254,37 +254,4 @@ include '../includes/header.php';
     </div>
 </div>
 
-<style>
-/* Système de notation par étoiles */
-.star-rating {
-    display: inline-flex;
-    flex-direction: row-reverse;
-    font-size: 2rem;
-}
-
-.star-rating input {
-    display: none;
-}
-
-.star-rating label {
-    color: #ddd;
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.star-rating label:hover,
-.star-rating label:hover ~ label,
-.star-rating input:checked ~ label {
-    color: #ffc107;
-}
-
-.star-rating:hover label {
-    color: #ffc107;
-}
-
-.star-rating label:hover ~ label {
-    color: #ddd;
-}
-</style>
-
 <?php include '../includes/footer.php'; ?>

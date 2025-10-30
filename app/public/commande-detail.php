@@ -283,26 +283,4 @@ include '../includes/header.php';
     </div>
 </div>
 
-<style>
-.timeline-item {
-    position: relative;
-    padding-left: 0;
-}
-
-.timeline-item:not(:last-child)::before {
-    content: '';
-    position: absolute;
-    left: 12px;
-    top: 30px;
-    bottom: -20px;
-    width: 2px;
-    background-color: #e9ecef;
-}
-
-.sticky-top {
-    position: sticky;
-    z-index: 1020;
-}
-</style>
-
 <?php include '../includes/footer.php'; ?>

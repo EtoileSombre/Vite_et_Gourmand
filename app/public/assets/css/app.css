@@ -106,3 +106,66 @@ body{
     black calc(100% - var(--fade-width)),
     transparent 100%);
 }
+
+/* ===== Composants réutilisables ===== */
+
+/* Effet hover sur les cards */
+.hover-shadow {
+  transition: all 0.3s ease;
+}
+.hover-shadow:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.15) !important;
+}
+
+/* Transitions génériques */
+.transition {
+  transition: all 0.3s ease;
+}
+
+/* Timeline pour historique commandes */
+.timeline-item {
+  position: relative;
+  padding-left: 0;
+}
+.timeline-item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  left: 12px;
+  top: 30px;
+  bottom: -20px;
+  width: 2px;
+  background-color: #e9ecef;
+}
+
+/* Sticky sidebar */
+.sticky-top {
+  position: sticky;
+  z-index: 1020;
+}
+
+/* Système de notation par étoiles */
+.star-rating {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  font-size: 2rem;
+}
+.star-rating input {
+  display: none;
+}
+.star-rating label {
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.star-rating label:hover,
+.star-rating label:hover ~ label,
+.star-rating input:checked ~ label {
+  color: #ffc107;
+}
+.star-rating:hover label {
+  color: #ffc107;
+}
+.star-rating label:hover ~ label {
+  color: #ddd;
+}

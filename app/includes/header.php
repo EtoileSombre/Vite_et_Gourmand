@@ -13,6 +13,11 @@
  </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
+<?php
+// Charger le middleware d'authentification
+require_once __DIR__ . '/auth.php';
+$currentUser = getCurrentUser();
+?>
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">
@@ -25,7 +30,34 @@
           <li class="nav-item"><a class="nav-link" href="/index.php">Accueil</a></li>
           <li class="nav-item"><a class="nav-link" href="/menus.php">Menus</a></li>
           <li class="nav-item"><a class="nav-link" href="/contact.php">Contact</a></li>
-          <li class="nav-item"><a class="nav-link" href="/login.php">Connexion</a></li>
+          
+          <?php if (isLoggedIn()): ?>
+            <!-- Menu utilisateur connecté -->
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <strong><?= htmlspecialchars($currentUser['prenom'] ?? 'Utilisateur') ?></strong>
+                <span class="badge bg-secondary"><?= htmlspecialchars($currentUser['role'] ?? 'client') ?></span>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <?php if (hasRole('admin')): ?>
+                  <li><a class="dropdown-item" href="/admin/dashboard.php">📊 Dashboard Admin</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                <?php elseif (hasRole('employe')): ?>
+                  <li><a class="dropdown-item" href="/employe/dashboard.php">📋 Dashboard Employé</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                <?php else: ?>
+                  <li><a class="dropdown-item" href="/mes-commandes.php">📦 Mes commandes</a></li>
+                  <li><a class="dropdown-item" href="/mon-compte.php">👤 Mon compte</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                <?php endif; ?>
+                <li><a class="dropdown-item text-danger" href="/logout.php">🚪 Déconnexion</a></li>
+              </ul>
+            </li>
+          <?php else: ?>
+            <!-- Menu visiteur non connecté -->
+            <li class="nav-item"><a class="nav-link" href="/login.php">Connexion</a></li>
+            <li class="nav-item"><a class="nav-link btn btn-outline-danger btn-sm ms-2" href="/register.php">S'inscrire</a></li>
+          <?php endif; ?>
         </ul>
       </div>
     </div>

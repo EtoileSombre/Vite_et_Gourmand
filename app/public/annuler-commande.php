@@ -259,18 +259,4 @@ include '../includes/header.php';
     </div>
 </div>
 
-<script>
-function updateMotif() {
-    const select = document.getElementById('motif_annulation_select');
-    const textarea = document.getElementById('motif_annulation');
-    
-    if (select.value && select.value !== 'Autre') {
-        textarea.value = select.value;
-    } else if (select.value === 'Autre') {
-        textarea.value = '';
-        textarea.focus();
-    }
-}
-</script>
-
 <?php include '../includes/footer.php'; ?>

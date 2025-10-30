@@ -354,27 +354,4 @@ include '../includes/header.php';
     </div>
 </div>
 
-<script>
-// Mettre à jour les informations du menu sélectionné
-document.getElementById('menu_id').addEventListener('change', function() {
-    const option = this.options[this.selectedIndex];
-    const min = option.dataset.min;
-    const max = option.dataset.max;
-    const personnesInfo = document.getElementById('personnes-info');
-    
-    if (min && max) {
-        personnesInfo.textContent = `Ce menu est prévu pour ${min} à ${max} personnes.`;
-        document.getElementById('nombre_personne').min = min;
-        document.getElementById('nombre_personne').max = max;
-    } else {
-        personnesInfo.textContent = '';
-    }
-});
-
-// Déclencher l'événement au chargement si un menu est déjà sélectionné
-if (document.getElementById('menu_id').value) {
-    document.getElementById('menu_id').dispatchEvent(new Event('change'));
-}
-</script>
-
 <?php include '../includes/footer.php'; ?>

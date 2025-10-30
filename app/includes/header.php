@@ -11,7 +11,8 @@ $currentUser = getCurrentUser();
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="/assets/css/app.css" rel="stylesheet"> 
+  <link href="/assets/css/app.css" rel="stylesheet">
+  <link href="/assets/css/theme-override.css" rel="stylesheet">
 
  <style>
   body{font-family:'Montserrat',system-ui, -apple-system, Segoe UI, Roboto, sans-serif;}

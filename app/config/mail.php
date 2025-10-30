@@ -42,10 +42,11 @@ function getMailer() {
  * @param string $nom Nom de l'expéditeur
  * @param string $email Email de l'expéditeur
  * @param string $telephone Téléphone de l'expéditeur
+ * @param string $titre Titre/sujet du message
  * @param string $message Message
  * @return bool True si envoyé, False sinon
  */
-function sendContactEmail($nom, $email, $telephone, $message) {
+function sendContactEmail($nom, $email, $telephone, $titre, $message) {
     $mail = getMailer();
     
     try {
@@ -56,7 +57,7 @@ function sendContactEmail($nom, $email, $telephone, $message) {
         $mail->addReplyTo($email, $nom);
         
         // Sujet
-        $mail->Subject = "Nouveau message de contact - " . htmlspecialchars($nom);
+        $mail->Subject = htmlspecialchars($titre) . " - Contact de " . htmlspecialchars($nom);
         
         // Corps du message HTML
         $mail->Body = "
@@ -79,6 +80,9 @@ function sendContactEmail($nom, $email, $telephone, $message) {
                     </div>
                     <div class='content'>
                         <div class='info'>
+                            <span class='label'>Titre :</span> " . htmlspecialchars($titre) . "
+                        </div>
+                        <div class='info'>
                             <span class='label'>Nom :</span> " . htmlspecialchars($nom) . "
                         </div>
                         <div class='info'>
@@ -99,6 +103,7 @@ function sendContactEmail($nom, $email, $telephone, $message) {
         
         // Version texte alternatif
         $mail->AltBody = "Nouveau message de contact\n\n"
+                       . "Titre: $titre\n"
                        . "Nom: $nom\n"
                        . "Email: $email\n"
                        . "Téléphone: $telephone\n\n"

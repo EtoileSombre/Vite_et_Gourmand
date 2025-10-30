@@ -58,8 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (empty($password)) {
         $errors[] = "Le mot de passe est obligatoire.";
-    } elseif (strlen($password) < 8) {
-        $errors[] = "Le mot de passe doit contenir au moins 8 caractères.";
+    } elseif (strlen($password) < 10) {
+        $errors[] = "Le mot de passe doit contenir au moins 10 caractères.";
+    } elseif (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/', $password)) {
+        $errors[] = "Le mot de passe doit contenir au moins une majuscule, une minuscule, un chiffre et un caractère spécial (@$!%*?&).";
     }
     
     if ($password !== $password_confirm) {
@@ -235,9 +237,9 @@ require_once __DIR__ . '/../includes/header.php';
                                     id="password" 
                                     name="password" 
                                     required
-                                    minlength="8"
+                                    minlength="10"
                                 >
-                                <div class="form-text">Minimum 8 caractères.</div>
+                                <div class="form-text">Minimum 10 caractères : 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial.</div>
                             </div>
 
                             <div class="mb-3">
@@ -248,7 +250,7 @@ require_once __DIR__ . '/../includes/header.php';
                                     id="password_confirm" 
                                     name="password_confirm" 
                                     required
-                                    minlength="8"
+                                    minlength="10"
                                 >
                             </div>
 

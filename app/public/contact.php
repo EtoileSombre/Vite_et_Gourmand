@@ -7,6 +7,7 @@ $formData = [
     'name' => '',
     'email' => '',
     'telephone' => '',
+    'titre' => '',
     'message' => ''
 ];
 
@@ -15,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = trim($_POST['name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $telephone = trim($_POST['telephone'] ?? '');
+    $titre = trim($_POST['titre'] ?? '');
     $message = trim($_POST['message'] ?? '');
     
     // Sauvegarder pour réafficher en cas d'erreur
@@ -22,11 +24,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'name' => $name,
         'email' => $email,
         'telephone' => $telephone,
+        'titre' => $titre,
         'message' => $message
     ];
     
     // Validations
-    if (empty($name) || empty($email) || empty($telephone) || empty($message)) {
+    if (empty($name) || empty($email) || empty($telephone) || empty($titre) || empty($message)) {
         $error = "Tous les champs sont obligatoires.";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $error = "L'adresse email n'est pas valide.";
@@ -34,10 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Le téléphone doit contenir 10 chiffres.";
     } else {
         // Envoyer l'email via PHPMailer
-        if (sendContactEmail($name, $email, $telephone, $message)) {
+        if (sendContactEmail($name, $email, $telephone, $titre, $message)) {
             $success = true;
             // Réinitialiser le formulaire
-            $formData = ['name' => '', 'email' => '', 'telephone' => '', 'message' => ''];
+            $formData = ['name' => '', 'email' => '', 'telephone' => '', 'titre' => '', 'message' => ''];
         } else {
             $error = "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer.";
         }
@@ -111,6 +114,20 @@ include __DIR__ . "/../includes/header.php"; ?>
             placeholder="0612345678"
           >
           <div class="form-text">10 chiffres sans espaces.</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="titre" class="form-label">Titre/Sujet <span class="text-danger">*</span></label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="titre" 
+            name="titre" 
+            value="<?= htmlspecialchars($formData['titre']) ?>"
+            required
+            maxlength="100"
+            placeholder="Objet de votre demande"
+          >
         </div>
 
         <div class="mb-3">

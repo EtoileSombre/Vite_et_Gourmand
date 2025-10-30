@@ -37,6 +37,7 @@ require_once __DIR__ . '/../config/mail.php';
                             'Jean Test', 
                             'jean.test@example.com', 
                             '0612345678',
+                            'Test envoi email',
                             'Ceci est un message de test pour vérifier que PHPMailer fonctionne correctement avec MailHog.'
                         )) {
                             $testResults[] = ['test' => 'Email de contact', 'status' => 'success'];

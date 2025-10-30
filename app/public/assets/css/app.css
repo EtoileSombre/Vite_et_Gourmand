@@ -53,6 +53,42 @@ body{
   background:var(--vg-bordeaux-600); border-color:var(--vg-bordeaux-600);
 }
 
+/* ===== Chiffres clés ===== */
+.key-figures {
+  background: linear-gradient(135deg, var(--vg-bordeaux-600) 0%, var(--vg-bordeaux-600) 100%);
+}
+
+.key-figures .figure-number {
+  color: var(--vg-gold);
+}
+
+/* ===== Classes utilitaires ===== */
+/* Couleur bordeaux pour textes */
+.text-bordeaux {
+  color: var(--vg-bordeaux) !important;
+}
+
+/* Couleur bordeaux pour icônes */
+.icon-bordeaux {
+  color: var(--vg-bordeaux);
+}
+
+/* Curseur pointer */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Sidebar sticky avec offset */
+.sticky-sidebar {
+  position: sticky;
+  top: 20px;
+}
+
+/* Icône extra-large */
+.icon-xl {
+  font-size: 4rem;
+}
+
 /* ===== Cards sections ===== */
 .card{
   border:0;

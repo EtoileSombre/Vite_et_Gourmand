@@ -28,9 +28,9 @@ include __DIR__ . '/../includes/header.php';
     <div class="container">
       <div class="row align-items-center g-4">
         <div class="col-lg-7">
-          <h1>Cuisine maison, <span style="color: var(--vg-bordeaux);"> pour toutes vos occasions</span>.</h1>
+          <h1>Cuisine maison, <span class="text-bordeaux"> pour toutes vos occasions</span>.</h1>
           <p class="lead text-muted mb-4">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
-          <p class="mb-4">Des plats authentiques préparés avec passion pour vos événements professionnels et familiaux.</p>
+ 
           <a class="btn btn-primary btn-lg" href="/menus.php">
             <i class="bi bi-basket"></i> Découvrir nos menus
           </a>
@@ -43,23 +43,23 @@ include __DIR__ . '/../includes/header.php';
   </section>
 
   <!-- Chiffres clés -->
-  <section class="py-4" style="background: linear-gradient(135deg, var(--vg-bordeaux) 0%, var(--vg-bordeaux-600) 100%);">
+  <section class="py-4 key-figures">
     <div class="container">
       <div class="row text-center text-white">
         <div class="col-md-3 col-6 mb-3 mb-md-0">
-          <div class="display-4 fw-bold" style="color: var(--vg-gold);">25+</div>
+          <div class="display-4 fw-bold figure-number">25+</div>
           <div>Années d'expérience</div>
         </div>
         <div class="col-md-3 col-6 mb-3 mb-md-0">
-          <div class="display-4 fw-bold" style="color: var(--vg-gold);">500+</div>
+          <div class="display-4 fw-bold figure-number">500+</div>
           <div>Événements réalisés</div>
         </div>
         <div class="col-md-3 col-6">
-          <div class="display-4 fw-bold" style="color: var(--vg-gold);">98%</div>
+          <div class="display-4 fw-bold figure-number">98%</div>
           <div>Clients satisfaits</div>
         </div>
         <div class="col-md-3 col-6">
-          <div class="display-4 fw-bold" style="color: var(--vg-gold);">24h</div>
+          <div class="display-4 fw-bold figure-number">24h</div>
           <div>Délai de commande</div>
         </div>
       </div>
@@ -68,26 +68,17 @@ include __DIR__ . '/../includes/header.php';
 
   <!-- Présentation de l'entreprise et professionnalisme -->
   <section class="container py-5">
-    <div class="text-center mb-5">
-      <p class="lead text-muted">Votre traiteur de confiance à Bordeaux depuis 25 ans</p>
-    </div>
-
     <div class="row mb-5">
       <div class="col-lg-8 mx-auto">
         <p class="text-center">
-          Julie et José perpétuent la tradition culinaire bordelaise en proposant des prestations 
-          traiteur d'exception. Notre cuisine allie <strong>authenticité</strong> des recettes du terroir 
+          Notre cuisine allie <strong>authenticité</strong> des recettes du terroir 
           et <strong>créativité</strong> pour sublimer vos événements professionnels et familiaux.
-        </p>
-        <p class="text-center">
-          Que ce soit pour un repas d'entreprise, un mariage, un anniversaire ou une réception privée, 
-          nous mettons tout notre savoir-faire à votre service.
         </p>
       </div>
     </div>
 
     <div class="text-center mb-4">
-      <h3 class="h4" style="color: var(--vg-bordeaux);">
+      <h3 class="h4 text-bordeaux">
         <i class="bi bi-award"></i> Notre professionnalisme
       </h3>
       <p class="text-muted">Ce qui fait notre différence</p>
@@ -98,7 +89,7 @@ include __DIR__ . '/../includes/header.php';
         <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
           <div class="card-body p-4">
             <div class="mb-3">
-              <i class="bi bi-people-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+              <i class="bi bi-people-fill fs-1 icon-bordeaux"></i>
             </div>
             <h5 class="card-title">Équipe qualifiée</h5>
             <p class="card-text text-muted">
@@ -113,7 +104,7 @@ include __DIR__ . '/../includes/header.php';
         <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
           <div class="card-body p-4">
             <div class="mb-3">
-              <i class="bi bi-basket-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+              <i class="bi bi-basket-fill fs-1 icon-bordeaux"></i>
             </div>
             <h5 class="card-title">Produits frais et locaux</h5>
             <p class="card-text text-muted">
@@ -128,7 +119,7 @@ include __DIR__ . '/../includes/header.php';
         <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
           <div class="card-body p-4">
             <div class="mb-3">
-              <i class="bi bi-house-heart-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+              <i class="bi bi-house-heart-fill fs-1 icon-bordeaux"></i>
             </div>
             <h5 class="card-title">Fait maison</h5>
             <p class="card-text text-muted">
@@ -143,7 +134,7 @@ include __DIR__ . '/../includes/header.php';
         <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
           <div class="card-body p-4">
             <div class="mb-3">
-              <i class="bi bi-gear-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+              <i class="bi bi-gear-fill fs-1 icon-bordeaux"></i>
             </div>
             <h5 class="card-title">Service personnalisé</h5>
             <p class="card-text text-muted">
@@ -158,7 +149,7 @@ include __DIR__ . '/../includes/header.php';
         <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
           <div class="card-body p-4">
             <div class="mb-3">
-              <i class="bi bi-clock-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+              <i class="bi bi-clock-fill fs-1 icon-bordeaux"></i>
             </div>
             <h5 class="card-title">Ponctualité</h5>
             <p class="card-text text-muted">
@@ -173,7 +164,7 @@ include __DIR__ . '/../includes/header.php';
         <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
           <div class="card-body p-4">
             <div class="mb-3">
-              <i class="bi bi-shield-check-fill fs-1" style="color: var(--vg-bordeaux);"></i>
+              <i class="bi bi-shield-check-fill fs-1 icon-bordeaux"></i>
             </div>
             <h5 class="card-title">Hygiène HACCP</h5>
             <p class="card-text text-muted">

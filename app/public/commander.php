@@ -358,7 +358,7 @@ require_once __DIR__ . '/../includes/header.php';
                                     value="<?= $menuPreselected ? $menuPreselected['nombre_personne_minimum'] : 1 ?>"
                                     required
                                 >
-                                <div class="form-text" id="reductionInfo" style="display:none;">
+                                <div class="form-text d-none" id="reductionInfo">
                                     <i class="bi bi-tag-fill text-success"></i> 
                                     <strong>Réduction de 10% appliquée !</strong> (5 personnes ou plus au-dessus du minimum)
                                 </div>
@@ -379,7 +379,7 @@ require_once __DIR__ . '/../includes/header.php';
 
             <!-- Résumé -->
             <div class="col-lg-4">
-                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                <div class="card shadow-sm sticky-sidebar">
                     <div class="card-header bg-light">
                         <h5 class="mb-0"><i class="bi bi-calculator"></i> Récapitulatif</h5>
                     </div>

@@ -88,7 +88,7 @@ require_once __DIR__ . '/../includes/header.php';
         <?php if (empty($commandes)): ?>
             <div class="card shadow-sm text-center py-5">
                 <div class="card-body">
-                    <i class="bi bi-cart-x text-muted" style="font-size: 4rem;"></i>
+                    <i class="bi bi-cart-x text-muted icon-xl"></i>
                     <h3 class="mt-3">Aucune commande</h3>
                     <p class="text-muted">Vous n'avez pas encore passé de commande.</p>
                     <a href="/menus.php" class="btn btn-success mt-3">

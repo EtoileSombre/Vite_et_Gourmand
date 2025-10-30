@@ -130,7 +130,7 @@ include __DIR__ . "/../includes/header.php";
             <!-- Aide pour les tests -->
             <div class="mt-4">
               <details>
-                <summary class="text-muted small" style="cursor: pointer;">
+                <summary class="text-muted small cursor-pointer">
                   Comptes de test disponibles
                 </summary>
                 <div class="mt-2 small">

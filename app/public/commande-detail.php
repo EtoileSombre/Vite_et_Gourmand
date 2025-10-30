@@ -222,7 +222,7 @@ include '../includes/header.php';
         <!-- Sidebar -->
         <div class="col-lg-4">
             <!-- Récapitulatif des prix -->
-            <div class="card shadow-sm sticky-top" style="top: 20px;">
+            <div class="card shadow-sm sticky-sidebar">
                 <div class="card-header bg-light">
                     <h5 class="mb-0"><i class="bi bi-receipt"></i> Récapitulatif</h5>
                 </div>

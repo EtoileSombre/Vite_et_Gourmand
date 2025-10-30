@@ -190,7 +190,7 @@ require_once __DIR__ . '/../includes/header.php';
 
             <!-- Sidebar Commande -->
             <div class="col-lg-4">
-                <div class="card shadow-sm sticky-top" style="top: 20px;">
+                <div class="card shadow-sm sticky-sidebar">
                     <div class="card-body">
                         <h5 class="card-title text-success mb-3">Commander ce menu</h5>
                         

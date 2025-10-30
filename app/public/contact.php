@@ -1,16 +1,47 @@
 <?php
+require_once __DIR__ . '/../config/mail.php';
+
+$success = false;
+$error = '';
+$formData = [
+    'name' => '',
+    'email' => '',
+    'telephone' => '',
+    'message' => ''
+];
+
 // Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-  $name = htmlspecialchars($_POST['name']);
-  $email = htmlspecialchars($_POST['email']);
-  $subject = htmlspecialchars($_POST['subject']);
-  $message = htmlspecialchars($_POST['message']);
-
-  // ⚠️ Pour l'instant, on ne fait qu'afficher (pas d'envoi réel)
-  // Plus tard : utiliser PHPMailer ou Mailhog pour tester
-  echo "<div class='alert alert-success text-center m-3'>
-          Merci $name, votre message a bien été envoyé !
-        </div>";
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $telephone = trim($_POST['telephone'] ?? '');
+    $message = trim($_POST['message'] ?? '');
+    
+    // Sauvegarder pour réafficher en cas d'erreur
+    $formData = [
+        'name' => $name,
+        'email' => $email,
+        'telephone' => $telephone,
+        'message' => $message
+    ];
+    
+    // Validations
+    if (empty($name) || empty($email) || empty($telephone) || empty($message)) {
+        $error = "Tous les champs sont obligatoires.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "L'adresse email n'est pas valide.";
+    } elseif (!preg_match('/^[0-9]{10}$/', $telephone)) {
+        $error = "Le téléphone doit contenir 10 chiffres.";
+    } else {
+        // Envoyer l'email via PHPMailer
+        if (sendContactEmail($name, $email, $telephone, $message)) {
+            $success = true;
+            // Réinitialiser le formulaire
+            $formData = ['name' => '', 'email' => '', 'telephone' => '', 'message' => ''];
+        } else {
+            $error = "Une erreur est survenue lors de l'envoi du message. Veuillez réessayer.";
+        }
+    }
 }
 
 include __DIR__ . "/../includes/header.php"; ?>
@@ -20,31 +51,84 @@ include __DIR__ . "/../includes/header.php"; ?>
     <h1 class="mb-4">Contactez-nous</h1>
     <p class="lead">Une question, une commande, un devis ? Remplissez le formulaire ci-dessous 👇</p>
 
+    <?php if ($success): ?>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="bi bi-check-circle"></i>
+            <strong>Message envoyé avec succès !</strong> Nous vous répondrons dans les plus brefs délais.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+    
+    <?php if ($error): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Erreur :</strong> <?= htmlspecialchars($error) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
   <div class="row g-4">
     <!-- Formulaire -->
     <div class="col-lg-6">
       <form class="card shadow-sm p-4" method="post" action="contact.php">
         <div class="mb-3">
-          <label for="name" class="form-label">Nom</label>
-          <input type="text" class="form-control" id="name" name="name" required>
+          <label for="name" class="form-label">Nom complet <span class="text-danger">*</span></label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="name" 
+            name="name" 
+            value="<?= htmlspecialchars($formData['name']) ?>"
+            required
+            maxlength="100"
+          >
         </div>
 
         <div class="mb-3">
-          <label for="email" class="form-label">Adresse email</label>
-          <input type="email" class="form-control" id="email" name="email" required>
+          <label for="email" class="form-label">Adresse email <span class="text-danger">*</span></label>
+          <input 
+            type="email" 
+            class="form-control" 
+            id="email" 
+            name="email" 
+            value="<?= htmlspecialchars($formData['email']) ?>"
+            required
+            maxlength="100"
+          >
         </div>
 
         <div class="mb-3">
-          <label for="subject" class="form-label">Sujet</label>
-          <input type="text" class="form-control" id="subject" name="subject" required>
+          <label for="telephone" class="form-label">Téléphone <span class="text-danger">*</span></label>
+          <input 
+            type="tel" 
+            class="form-control" 
+            id="telephone" 
+            name="telephone" 
+            value="<?= htmlspecialchars($formData['telephone']) ?>"
+            required
+            pattern="[0-9]{10}"
+            maxlength="10"
+            placeholder="0612345678"
+          >
+          <div class="form-text">10 chiffres sans espaces.</div>
         </div>
 
         <div class="mb-3">
-          <label for="message" class="form-label">Message</label>
-          <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+          <label for="message" class="form-label">Message <span class="text-danger">*</span></label>
+          <textarea 
+            class="form-control" 
+            id="message" 
+            name="message" 
+            rows="5" 
+            required
+            maxlength="1000"
+          ><?= htmlspecialchars($formData['message']) ?></textarea>
+          <div class="form-text">Maximum 1000 caractères.</div>
         </div>
 
-        <button type="submit" class="btn btn-danger">Envoyer</button>
+        <button type="submit" class="btn btn-success btn-lg w-100">
+          <i class="bi bi-send"></i> Envoyer le message
+        </button>
       </form>
     </div>
 

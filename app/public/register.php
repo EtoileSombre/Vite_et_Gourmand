@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../config/mail.php';
 
 // Rediriger si déjà connecté
 if (isLoggedIn()) {
@@ -109,6 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ]);
                 
                 $success = true;
+                
+                // Envoyer un email de bienvenue (non bloquant)
+                sendWelcomeEmail($email, $prenom);
                 
                 // Auto-connexion après inscription
                 $userId = $pdo->lastInsertId();

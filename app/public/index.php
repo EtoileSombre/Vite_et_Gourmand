@@ -19,22 +19,6 @@ try {
     $avis = [];
 }
 
-// Récupérer 3 menus populaires pour l'aperçu
-try {
-    $stmtMenus = $pdo->query("
-        SELECT menu_id, titre, description, prix_par_personne, 
-               nombre_personne_minimum, quantite_restante
-        FROM menu
-        WHERE quantite_restante > 0
-        ORDER BY RAND()
-        LIMIT 3
-    ");
-    $menusApercu = $stmtMenus->fetchAll();
-} catch (PDOException $e) {
-    error_log("Erreur récupération menus : " . $e->getMessage());
-    $menusApercu = [];
-}
-
 include __DIR__ . '/../includes/header.php';
 ?>
 
@@ -47,14 +31,9 @@ include __DIR__ . '/../includes/header.php';
           <h1>Cuisine maison, <span style="color: var(--vg-bordeaux);">prête en un clic</span>.</h1>
           <p class="lead text-muted mb-4">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
           <p class="mb-4">Des plats authentiques préparés avec passion pour vos événements professionnels et familiaux.</p>
-          <div class="d-flex gap-2 flex-wrap">
-            <a class="btn btn-primary btn-lg" href="/menus.php">
-              <i class="bi bi-basket"></i> Découvrir nos menus
-            </a>
-            <a class="btn btn-outline-secondary btn-lg" href="#menus">
-              <i class="bi bi-arrow-down-circle"></i> En savoir plus
-            </a>
-          </div>
+          <a class="btn btn-primary btn-lg" href="/menus.php">
+            <i class="bi bi-basket"></i> Découvrir nos menus
+          </a>
         </div>
         <div class="col-lg-5">
           <img class="img-fluid rounded shadow" alt="Assortiment traiteur" src="assets/img/lora.jpg">
@@ -83,62 +62,6 @@ include __DIR__ . '/../includes/header.php';
           <div class="display-4 fw-bold" style="color: var(--vg-gold);">24h</div>
           <div>Délai de commande</div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Aperçu des menus -->
-  <section id="menus" class="py-5" style="background-color: var(--vg-cream);">
-    <div class="container">
-      <div class="text-center mb-4">
-        <h2 class="section-title">Nos menus</h2>
-        <p class="lead text-muted">Des formules adaptées à tous vos événements</p>
-      </div>
-
-      <?php if (!empty($menusApercu)): ?>
-        <div class="row g-4 mb-4">
-          <?php foreach ($menusApercu as $menu): ?>
-            <div class="col-md-4">
-              <div class="card h-100 hover-shadow">
-                <div class="card-body">
-                  <span class="badge bg-primary mb-2">Disponible</span>
-                  <h5 class="card-title fw-bold"><?= htmlspecialchars($menu['titre']) ?></h5>
-                  <p class="card-text text-muted">
-                    <?= htmlspecialchars(substr($menu['description'], 0, 100)) ?>...
-                  </p>
-                  <div class="d-flex justify-content-between align-items-center mt-3">
-                    <div>
-                      <div class="h4 mb-0" style="color: var(--vg-gold);">
-                        <?= number_format($menu['prix_par_personne'], 2, ',', ' ') ?> €
-                      </div>
-                      <small class="text-muted">par personne</small>
-                    </div>
-                    <div class="text-end">
-                      <small class="text-muted d-block">
-                        <i class="bi bi-people"></i> Min. <?= $menu['nombre_personne_minimum'] ?> pers.
-                      </small>
-                    </div>
-                  </div>
-                </div>
-                <div class="card-footer bg-white border-0">
-                  <a href="/menu-detail.php?id=<?= $menu['menu_id'] ?>" class="btn btn-outline-primary w-100">
-                    <i class="bi bi-eye"></i> Voir le détail
-                  </a>
-                </div>
-              </div>
-            </div>
-          <?php endforeach; ?>
-        </div>
-      <?php else: ?>
-        <div class="alert alert-info text-center">
-          <i class="bi bi-info-circle"></i> Nos menus seront bientôt disponibles en ligne.
-        </div>
-      <?php endif; ?>
-
-      <div class="text-center">
-        <a href="/menus.php" class="btn btn-primary btn-lg">
-          <i class="bi bi-grid"></i> Voir tous les menus
-        </a>
       </div>
     </div>
   </section>

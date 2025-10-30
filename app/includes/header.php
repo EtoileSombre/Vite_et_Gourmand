@@ -1,3 +1,8 @@
+<?php
+// Charger le middleware d'authentification AVANT tout HTML
+require_once __DIR__ . '/auth.php';
+$currentUser = getCurrentUser();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -13,11 +18,6 @@
  </style>
 </head>
 <body class="d-flex flex-column min-vh-100">
-<?php
-// Charger le middleware d'authentification
-require_once __DIR__ . '/auth.php';
-$currentUser = getCurrentUser();
-?>
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">

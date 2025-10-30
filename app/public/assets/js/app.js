@@ -74,6 +74,40 @@ document.addEventListener('DOMContentLoaded', function() {
             bsAlert.close();
         }, 5000);
     });
+
+    // Initialiser le carousel d'avis manuellement
+    const carouselElement = document.getElementById('carouselAvis');
+    if (carouselElement) {
+        console.log('🎠 Element carousel trouvé:', carouselElement);
+        
+        // Vérifier si Bootstrap est chargé
+        if (typeof bootstrap === 'undefined') {
+            console.error('❌ Bootstrap n\'est pas chargé !');
+            return;
+        }
+        
+        console.log('✅ Bootstrap chargé, version:', bootstrap);
+        
+        try {
+            const carousel = new bootstrap.Carousel(carouselElement, {
+                interval: 4000,
+                ride: 'carousel',
+                pause: 'hover',
+                wrap: true,
+                touch: true,
+                keyboard: true
+            });
+            console.log('✅ Carousel initialisé avec succès:', carousel);
+            
+            // Démarrer manuellement
+            carousel.cycle();
+            console.log('✅ Carousel démarré (cycle)');
+        } catch (error) {
+            console.error('❌ Erreur initialisation carousel:', error);
+        }
+    } else {
+        console.warn('⚠️ Element #carouselAvis non trouvé dans le DOM');
+    }
 });
 
 // Exposer l'objet global

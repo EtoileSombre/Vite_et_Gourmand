@@ -1,102 +1,197 @@
-<?php include __DIR__ . '/../includes/header.php'; ?>
+<?php
+require_once __DIR__ . '/../config/db.php';
+require_once __DIR__ . '/../includes/auth.php';
+
+// Récupérer les avis validés (note >= 4)
+try {
+    $stmtAvis = $pdo->query("
+        SELECT a.note, a.description, a.created_at,
+               u.prenom, u.nom
+        FROM avis a
+        INNER JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
+        WHERE (a.statut = 'validé' OR a.statut LIKE 'valid%') AND a.note >= 4
+        ORDER BY a.created_at DESC
+        LIMIT 6
+    ");
+    $avis = $stmtAvis->fetchAll();
+} catch (PDOException $e) {
+    error_log("Erreur récupération avis : " . $e->getMessage());
+    $avis = [];
+}
+
+// Récupérer 3 menus populaires pour l'aperçu
+try {
+    $stmtMenus = $pdo->query("
+        SELECT menu_id, titre, description, prix_par_personne, 
+               nombre_personne_minimum, quantite_restante
+        FROM menu
+        WHERE quantite_restante > 0
+        ORDER BY RAND()
+        LIMIT 3
+    ");
+    $menusApercu = $stmtMenus->fetchAll();
+} catch (PDOException $e) {
+    error_log("Erreur récupération menus : " . $e->getMessage());
+    $menusApercu = [];
+}
+
+include __DIR__ . '/../includes/header.php';
+?>
 
 <main class="flex-grow-1">
   <!-- Hero Section -->
-<section class="hero">
-  <div class="container">
-    <div class="row align-items-center g-4">
-      <div class="col-lg-7">
-        <h1>Cuisine maison, <span class="text-danger">prête en un clic</span>.</h1>
-        <p class="lead text-muted-ux mb-4">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
-        <a class="btn btn-primary btn-lg" href="/contact.php">Demander un devis</a>
-        <a class="btn btn-outline-dark btn-lg ms-2" href="/index.php#menus">Voir les menus</a>
-      </div>
-      <div class="col-lg-5">
-        <img class="img-fluid rounded shadow" alt="Assortiment traiteur"
-             src="assets/img/lora.jpg">
+  <section class="hero">
+    <div class="container">
+      <div class="row align-items-center g-4">
+        <div class="col-lg-7">
+          <h1>Cuisine maison, <span style="color: var(--vg-bordeaux);">prête en un clic</span>.</h1>
+          <p class="lead text-muted mb-4">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
+          <p class="mb-4">Des plats authentiques préparés avec passion pour vos événements professionnels et familiaux.</p>
+          <div class="d-flex gap-2 flex-wrap">
+            <a class="btn btn-primary btn-lg" href="/menus.php">
+              <i class="bi bi-basket"></i> Découvrir nos menus
+            </a>
+            <a class="btn btn-outline-secondary btn-lg" href="#menus">
+              <i class="bi bi-arrow-down-circle"></i> En savoir plus
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-5">
+          <img class="img-fluid rounded shadow" alt="Assortiment traiteur" src="assets/img/lora.jpg">
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section class="container py-5">
-  <h2 class="section-title">Petits repas ou grandes fêtes, nous veillons à chaque détail.</h2>
-  <div class="row g-4">
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body text-center">
-          <div class="tag mb-2">Équipe qualifiée</div>
-          <p class="mb-0">Chefs et service expérimentés à votre écoute.</p>
+  <!-- Chiffres clés -->
+  <section class="py-4" style="background: linear-gradient(135deg, var(--vg-bordeaux) 0%, var(--vg-bordeaux-600) 100%);">
+    <div class="container">
+      <div class="row text-center text-white">
+        <div class="col-md-3 col-6 mb-3 mb-md-0">
+          <div class="display-4 fw-bold" style="color: var(--vg-gold);">25+</div>
+          <div>Années d'expérience</div>
+        </div>
+        <div class="col-md-3 col-6 mb-3 mb-md-0">
+          <div class="display-4 fw-bold" style="color: var(--vg-gold);">500+</div>
+          <div>Événements réalisés</div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="display-4 fw-bold" style="color: var(--vg-gold);">98%</div>
+          <div>Clients satisfaits</div>
+        </div>
+        <div class="col-md-3 col-6">
+          <div class="display-4 fw-bold" style="color: var(--vg-gold);">24h</div>
+          <div>Délai de commande</div>
         </div>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body text-center">
-          <div class="tag mb-2">Qualité & hygiène</div>
-          <p class="mb-0">Produits frais, locaux - normes HACCP respectées.</p>
+  </section>
+
+  <!-- Aperçu des menus -->
+  <section id="menus" class="py-5" style="background-color: var(--vg-cream);">
+    <div class="container">
+      <div class="text-center mb-4">
+        <h2 class="section-title">Nos menus</h2>
+        <p class="lead text-muted">Des formules adaptées à tous vos événements</p>
+      </div>
+
+      <?php if (!empty($menusApercu)): ?>
+        <div class="row g-4 mb-4">
+          <?php foreach ($menusApercu as $menu): ?>
+            <div class="col-md-4">
+              <div class="card h-100 hover-shadow">
+                <div class="card-body">
+                  <span class="badge bg-primary mb-2">Disponible</span>
+                  <h5 class="card-title fw-bold"><?= htmlspecialchars($menu['titre']) ?></h5>
+                  <p class="card-text text-muted">
+                    <?= htmlspecialchars(substr($menu['description'], 0, 100)) ?>...
+                  </p>
+                  <div class="d-flex justify-content-between align-items-center mt-3">
+                    <div>
+                      <div class="h4 mb-0" style="color: var(--vg-gold);">
+                        <?= number_format($menu['prix_par_personne'], 2, ',', ' ') ?> €
+                      </div>
+                      <small class="text-muted">par personne</small>
+                    </div>
+                    <div class="text-end">
+                      <small class="text-muted d-block">
+                        <i class="bi bi-people"></i> Min. <?= $menu['nombre_personne_minimum'] ?> pers.
+                      </small>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-footer bg-white border-0">
+                  <a href="/menu-detail.php?id=<?= $menu['menu_id'] ?>" class="btn btn-outline-primary w-100">
+                    <i class="bi bi-eye"></i> Voir le détail
+                  </a>
+                </div>
+              </div>
+            </div>
+          <?php endforeach; ?>
         </div>
+      <?php else: ?>
+        <div class="alert alert-info text-center">
+          <i class="bi bi-info-circle"></i> Nos menus seront bientôt disponibles en ligne.
+        </div>
+      <?php endif; ?>
+
+      <div class="text-center">
+        <a href="/menus.php" class="btn btn-primary btn-lg">
+          <i class="bi bi-grid"></i> Voir tous les menus
+        </a>
       </div>
     </div>
-    <div class="col-md-4">
-      <div class="card h-100">
-        <div class="card-body text-center">
-          <div class="tag mb-2">Réactivité</div>
-          <p class="mb-0">Devis rapides et prestation sur-mesure.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  </section>
 
  <!-- Avis clients -->
 <section id="avis" class="container py-5">
   <h2 class="section-title text-center mb-3">Avis clients (validés)</h2>
-  <p class="text-center text-muted-ux mb-4">Ils nous ont fait confiance pour leurs événements.</p>
+  <p class="text-center text-muted mb-4">Ils nous ont fait confiance pour leurs événements.</p>
 
-  <div id="carouselAvis" class="carousel slide" 
-       data-bs-ride="carousel" 
-       data-bs-interval="6000" 
-       data-bs-pause="hover"
-       data-bs-touch="true"
-       data-bs-wrap="true">
-    
-    <div class="carousel-inner" aria-live="polite">
-
-      <div class="carousel-item active">
-        <div class="card testimonial-card text-center mx-auto">
-          <div class="stars mb-2" aria-hidden="true">★★★★★</div>
-          <p class="quote-text mb-2"><span class="quote-mark">❝ </span>Service impeccable, plats délicieux ! ❞</p>
-          <div class="who"><span class="fw-semibold">Marie</span> · Bordeaux</div>
-        </div>
+  <?php if (!empty($avis)): ?>
+    <div id="carouselAvis" class="carousel slide">
+      
+      <div class="carousel-inner">
+        <?php foreach ($avis as $index => $unAvis): ?>
+          <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+            <div class="card testimonial-card text-center mx-auto">
+              <div class="stars mb-2">
+                <?php 
+                  // Afficher les étoiles pleines et vides
+                  $noteEntiere = (int)$unAvis['note'];
+                  echo str_repeat('★', $noteEntiere);
+                  echo str_repeat('☆', 5 - $noteEntiere);
+                ?>
+              </div>
+              <p class="quote-text mb-2">
+                <span class="quote-mark">❝ </span>
+                <?= htmlspecialchars($unAvis['description']) ?>
+                <span class="quote-mark"> ❞</span>
+              </p>
+              <div class="who">
+                <span class="fw-semibold"><?= htmlspecialchars($unAvis['prenom']) ?></span> · 
+                <?= date('d/m/Y', strtotime($unAvis['created_at'])) ?>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
       </div>
 
-      <div class="carousel-item">
-        <div class="card testimonial-card text-center mx-auto">
-          <div class="stars mb-2" aria-hidden="true">★★★★★</div>
-          <p class="quote-text mb-2"><span class="quote-mark">❝ </span>Organisation parfaite pour notre mariage. ❞</p>
-          <div class="who"><span class="fw-semibold">Lucas</span> · Pessac</div>
-        </div>
-      </div>
-
-      <div class="carousel-item">
-        <div class="card testimonial-card text-center mx-auto">
-          <div class="stars mb-2" aria-hidden="true">★★★★☆</div>
-          <p class="quote-text mb-2"><span class="quote-mark">❝ </span>Très bon rapport qualité/prix, équipe réactive. ❞</p>
-          <div class="who"><span class="fw-semibold">Nadia</span> · Mérignac</div>
-        </div>
-      </div>
-
+      <!-- Contrôles -->
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselAvis" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Précédent</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselAvis" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Suivant</span>
+      </button>
     </div>
-
-    <!-- Contrôles -->
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselAvis" data-bs-slide="prev" aria-label="Précédent">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselAvis" data-bs-slide="next" aria-label="Suivant">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    </button>
-  </div>
+  <?php else: ?>
+    <div class="alert alert-info text-center">
+      <i class="bi bi-info-circle"></i> Aucun avis validé pour le moment.
+    </div>
+  <?php endif; ?>
 </section>
 
 </main>

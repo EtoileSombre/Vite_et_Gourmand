@@ -48,9 +48,11 @@ function getCurrentUser(): ?array
 
     return [
         'id' => $_SESSION['user_id'] ?? null,
+        'utilisateur_id' => $_SESSION['user_id'] ?? null, // Alias pour compatibilité
         'email' => $_SESSION['email'] ?? null,
         'prenom' => $_SESSION['prenom'] ?? null,
         'nom' => $_SESSION['nom'] ?? null,
+        'telephone' => $_SESSION['telephone'] ?? null,
         'role' => $_SESSION['role'] ?? null
     ];
 }
@@ -99,7 +101,7 @@ function hasRole(string $role): bool
 
 /**
  * Connecte un utilisateur (enregistre ses infos en session)
- * @param array $user Données utilisateur (id, email, prenom, nom, role)
+ * @param array $user Données utilisateur (id, email, prenom, nom, telephone, role)
  */
 function login(array $user): void
 {
@@ -109,6 +111,7 @@ function login(array $user): void
     $_SESSION['email'] = $user['email'];
     $_SESSION['prenom'] = $user['prenom'] ?? '';
     $_SESSION['nom'] = $user['nom'] ?? '';
+    $_SESSION['telephone'] = $user['telephone'] ?? '';
     $_SESSION['role'] = $user['role_libelle'] ?? 'client';
 }
 

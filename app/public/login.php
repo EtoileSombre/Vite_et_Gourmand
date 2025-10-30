@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         try {
             // Récupération de l'utilisateur avec son rôle
             $stmt = $pdo->prepare("
-                SELECT u.utilisateur_id, u.email, u.password, u.prenom, u.nom, u.actif, r.libelle as role_libelle
+                SELECT u.utilisateur_id, u.email, u.password, u.prenom, u.nom, u.telephone, u.actif, r.libelle as role_libelle
                 FROM utilisateur u
                 INNER JOIN role r ON u.role_id = r.role_id
                 WHERE u.email = :email

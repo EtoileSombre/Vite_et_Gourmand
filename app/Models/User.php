@@ -6,7 +6,7 @@ use App\Core\Model;
 
 class User extends Model
 {
-    protected $table = 'utilisateurs';
+    protected $table = 'utilisateur';
 
     /**
      * Trouve un utilisateur par son email
@@ -14,10 +14,10 @@ class User extends Model
      * @param string $email
      * @return array|false
      */
-    public static function findByEmail(string $email)
+    public static function findByEmail($email)
     {
         $model = new self();
-        $stmt = $model->db->prepare('SELECT * FROM utilisateurs WHERE email = ?');
+        $stmt = $model->db->prepare('SELECT * FROM utilisateur WHERE email = ?');
         $stmt->execute([$email]);
         return $stmt->fetch();
     }
@@ -28,7 +28,7 @@ class User extends Model
      * @param array $data
      * @return int ID de l'utilisateur créé
      */
-    public function createUser(array $data): int
+    public function createUser($data)
     {
         return $this->create($data);
     }

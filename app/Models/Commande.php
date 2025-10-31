@@ -6,7 +6,7 @@ use App\Core\Model;
 
 class Commande extends Model
 {
-    protected $table = 'commandes';
+    protected $table = 'commande';
 
     /**
      * Trouve toutes les commandes d'un utilisateur
@@ -14,12 +14,12 @@ class Commande extends Model
      * @param int $userId
      * @return array
      */
-    public function findByUser(int $userId): array
+    public function findByUser($userId)
     {
         $stmt = $this->db->prepare('
-            SELECT c.*, m.nom as menu_nom, m.prix as menu_prix 
-            FROM commandes c
-            LEFT JOIN menus m ON c.menu_id = m.id
+            SELECT c.*, m.titre as menu_nom, m.prix_par_personne as menu_prix 
+            FROM commande c
+            LEFT JOIN menu m ON c.menu_id = m.menu_id
             WHERE c.utilisateur_id = ?
             ORDER BY c.date_commande DESC
         ');
@@ -33,14 +33,14 @@ class Commande extends Model
      * @param int $id
      * @return array|null
      */
-    public function findWithDetails(int $id): ?array
+    public function findWithDetails($id)
     {
         $stmt = $this->db->prepare('
-            SELECT c.*, m.nom as menu_nom, m.prix as menu_prix, u.nom as utilisateur_nom
-            FROM commandes c
-            LEFT JOIN menus m ON c.menu_id = m.id
-            LEFT JOIN utilisateurs u ON c.utilisateur_id = u.id
-            WHERE c.id = ?
+            SELECT c.*, m.titre as menu_nom, m.prix_par_personne as menu_prix, u.nom as utilisateur_nom
+            FROM commande c
+            LEFT JOIN menu m ON c.menu_id = m.menu_id
+            LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
+            WHERE c.commande_id = ?
         ');
         $stmt->execute([$id]);
         $result = $stmt->fetch();

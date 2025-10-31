@@ -10,8 +10,8 @@ use App\Core\Model;
  */
 class Menu extends Model
 {
-    protected string $table = 'menu';
-    protected string $primaryKey = 'menu_id';
+    protected $table = 'menu';
+    protected $primaryKey = 'menu_id';
 
     /**
      * Récupère tous les menus actifs (avec stock disponible)

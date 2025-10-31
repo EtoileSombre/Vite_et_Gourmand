@@ -10,8 +10,8 @@ use App\Core\Model;
  */
 class Avis extends Model
 {
-    protected string $table = 'avis';
-    protected string $primaryKey = 'avis_id';
+    protected $table = 'avis';
+    protected $primaryKey = 'avis_id';
 
     /**
      * Récupère les avis validés avec une bonne note pour l'accueil

@@ -21,44 +21,44 @@ $router->get('/menus', 'App\Controllers\MenuController', 'index');
 $router->get('/menu', 'App\Controllers\MenuController', 'show');
 
 // Contact
-// $router->get('/contact', 'App\Controllers\ContactController', 'index');
-// $router->post('/contact', 'App\Controllers\ContactController', 'send');
+$router->get('/contact', 'App\Controllers\ContactController', 'index');
+$router->post('/contact', 'App\Controllers\ContactController', 'index');
+
+// Avis
+$router->get('/donner-avis', 'App\Controllers\AvisController', 'create');
+$router->post('/avis', 'App\Controllers\AvisController', 'store');
 
 // ==========================================
 // ROUTES AUTHENTIFICATION
 // ==========================================
 
 // Connexion
-// $router->get('/login', 'App\Controllers\Auth\LoginController', 'showForm');
-// $router->post('/login', 'App\Controllers\Auth\LoginController', 'login');
+$router->get('/login', 'App\Controllers\AuthController', 'login');
+$router->post('/login', 'App\Controllers\AuthController', 'login');
 
 // Inscription
-// $router->get('/register', 'App\Controllers\Auth\RegisterController', 'showForm');
-// $router->post('/register', 'App\Controllers\Auth\RegisterController', 'register');
+$router->get('/register', 'App\Controllers\AuthController', 'register');
+$router->post('/register', 'App\Controllers\AuthController', 'register');
 
 // Déconnexion
-// $router->get('/logout', 'App\Controllers\Auth\LoginController', 'logout');
+$router->get('/logout', 'App\Controllers\AuthController', 'logout');
 
 // ==========================================
 // ROUTES PROTÉGÉES (CLIENT CONNECTÉ)
 // ==========================================
 
 // Commandes (nécessite authentification)
-// $router->get('/mes-commandes', 'App\Controllers\CommandeController', 'index', [
-//     'App\Middlewares\AuthMiddleware'
+$router->get('/mes-commandes', 'App\Controllers\CommandeController', 'index');
+$router->get('/commande/nouvelle', 'App\Controllers\CommandeController', 'create');
+$router->post('/commande/nouvelle', 'App\Controllers\CommandeController', 'store');
+$router->get('/commande/modifier', 'App\Controllers\CommandeController', 'edit');
+$router->post('/commande/modifier', 'App\Controllers\CommandeController', 'update');
+$router->get('/commande/annuler', 'App\Controllers\CommandeController', 'cancel');
 // ]);
 
-// $router->get('/commande', 'App\Controllers\CommandeController', 'show', [
-//     'App\Middlewares\AuthMiddleware'
-// ]);
-
-// $router->get('/commander', 'App\Controllers\CommandeController', 'create', [
-//     'App\Middlewares\AuthMiddleware'
-// ]);
-
-// $router->post('/commander', 'App\Controllers\CommandeController', 'store', [
-//     'App\Middlewares\AuthMiddleware'
-// ]);
+// Profil utilisateur
+$router->get('/profil', 'App\Controllers\ProfilController', 'index');
+$router->post('/profil', 'App\Controllers\ProfilController', 'index');
 
 // Avis
 // $router->post('/avis', 'App\Controllers\AvisController', 'store', [
@@ -70,16 +70,13 @@ $router->get('/menu', 'App\Controllers\MenuController', 'show');
 // ==========================================
 
 // Dashboard admin
-// $router->get('/admin', 'App\Controllers\Admin\DashboardController', 'index', [
-//     'App\Middlewares\AuthMiddleware',
-//     'App\Middlewares\AdminMiddleware'
-// ]);
+$router->get('/admin', 'App\Controllers\AdminController', 'dashboard');
 
-// Gestion des menus (admin)
-// $router->get('/admin/menus', 'App\Controllers\Admin\MenuAdminController', 'index', [
-//     'App\Middlewares\AuthMiddleware',
-//     'App\Middlewares\AdminMiddleware'
-// ]);
+// Gestion des utilisateurs (admin)
+$router->get('/admin/utilisateurs', 'App\Controllers\AdminController', 'users');
+
+// Gestion des commandes (admin)
+$router->get('/admin/commandes', 'App\Controllers\AdminController', 'commandes');
 
 // $router->get('/admin/menu/create', 'App\Controllers\Admin\MenuAdminController', 'create', [
 //     'App\Middlewares\AuthMiddleware',

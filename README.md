@@ -1,435 +1,555 @@
-# 🍽️ Vite & Gourmand
+# 🍽️ Vite & Gourmand# 🍽️ Vite & Gourmand# 🍽️ Vite & Gourmand
 
-Projet réalisé dans le cadre du **Titre Professionnel Développeur Web & Web Mobile (DWWM)**.
 
-👩‍💻 **Auteur :** [EtoileSombre](https://github.com/EtoileSombre)  
-📍 **Entreprise fictive :** *Vite & Gourmand* – (Julie & José, restaurateurs à Bordeaux)
 
----
+> Projet réalisé dans le cadre du **Titre Professionnel Développeur Web et Web Mobile (DWWM)**
 
-## 🎯 Objectif du projet
 
-Développer une **application web complète** permettant de :
 
-- Présenter les menus et les offres en ligne  
-- Gérer les commandes clients et leurs suivis  
-- Fournir un **back-office** (employé + administrateur)  
-- Gérer les avis et les contacts, dans le respect du RGAA et du RGPD
+**Auteur :** EtoileSombre  > Projet réalisé dans le cadre du **BTS SIO (Services Informatiques aux Organisations)**> Projet réalisé dans le cadre du **Titre Professionnel Développeur Web & Web Mobile (DWWM)**
 
----
+**Contexte :** Application web pour un traiteur bordelais (Julie & José)  
 
-## 🏗️ Architecture MVC POO
+**Date :** 2025
 
-Le projet suit le **design pattern MVC (Model-View-Controller)** avec une approche orientée objet (POO) :
 
-```plaintext
-📐 Architecture MVC
-┌─────────────┐      ┌──────────────┐      ┌─────────────┐
-│   Router    │ ───> │ Controller   │ ───> │    View     │
-│  (routes)   │      │   (logique)  │      │  (template) │
-└─────────────┘      └──────┬───────┘      └─────────────┘
-                             │
-                             ▼
-                      ┌──────────────┐
-                      │    Model     │
-                      │ (données DB) │
-                      └──────────────┘
+
+---**Auteur :** EtoileSombre  **Auteur :** EtoileSombre  
+
+
+
+## 📋 Présentation du projet**Contexte :** Application web pour un traiteur bordelais (Julie & José)  **Contexte :** Application web pour un traiteur bordelais (Julie & José)  
+
+
+
+Application web de gestion de commandes pour un service traiteur permettant :**Date :** 2025**Date :** 2025
+
+
+
+- 🍽️ Consultation des menus disponibles
+
+- 📦 Passation et suivi de commandes
+
+- 💬 Gestion des avis clients------
+
+- 📧 Formulaire de contact
+
+- 🔐 Espace d'administration (gestion menus, commandes, utilisateurs)
+
+
+
+### Technologies utilisées## 📋 Présentation du projet## 📋 Présentation du projet
+
+
+
+- **Front-end :** HTML5, CSS3, Bootstrap 5.3.3, JavaScript
+
+- **Back-end :** PHP 8.3, Architecture MVC (Orientée Objet)
+
+- **Bases de données :** Application web de gestion de commandes pour un service traiteur permettant :Application web de gestion de commandes pour un service traiteur permettant :
+
+  - MySQL 8.0 (données principales)
+
+  - MongoDB 6.0 (statistiques - bonus)
+
+- **Environnement :** Docker, Apache
+
+- **Outils :** Git, Composer- 🍽️ Consultation des menus disponibles- 🍽️ Consultation des menus disponibles
+
+
+
+---- 📦 Passation et suivi de commandes- 📦 Passation et suivi de commandes
+
+
+
+## 🏗️ Architecture MVC- 💬 Gestion des avis clients- 💬 Gestion des avis clients
+
+
+
+Le projet utilise le **pattern MVC (Model-View-Controller)** :- 📧 Formulaire de contact- 📧 Formulaire de contact
+
+
+
+```- 🔐 Espace d'administration (gestion menus, commandes, utilisateurs)- 🔐 Espace d'administration (gestion menus, commandes, utilisateurs)
+
+📁 app/
+
+├── Controllers/     → Traitent les requêtes utilisateur
+
+├── Models/          → Accèdent aux données (MySQL)
+
+├── Views/           → Affichent les pages HTML### Technologies utilisées### Technologies utilisées
+
+├── Core/            → Classes de base (Router, Database, etc.)
+
+├── config/          → Configuration
+
+├── public/          → Point d'entrée (index.php, CSS, JS)
+
+└── sql/             → Base de données- **Front-end :** HTML5, CSS3, Bootstrap 5.3.3, JavaScript- **Front-end :** HTML5, CSS3, Bootstrap 5.3.3, JavaScript
+
 ```
 
-### 🎨 Principes appliqués
+- **Back-end :** PHP 8.3, Architecture MVC (Orientée Objet)- **Back-end :** PHP 8.3, Architecture MVC (Programmation Orientée Objet)
 
-- ✅ **Séparation des responsabilités** (MVC)
-- ✅ **POO** (Classes, héritage, namespaces PSR-4)
-- ✅ **Single Responsibility Principle** (SRP)
-- ✅ **DRY** (Don't Repeat Yourself)
-- ✅ **Routing centralisé** avec middlewares
-- ✅ **Services métier** réutilisables
+**Principe :** Séparer la logique métier (Controller), les données (Model) et l'affichage (View).
+
+- **Bases de données :** - **Bases de données :** 
 
 ---
 
-## ⚙️ Stack technique
+  - MySQL 8.0 (données principales)  - MySQL 8.0 (données relationnelles)
 
-Application **full-stack Dockerisée**, composée des services suivants :
+## 🚀 Installation
 
-| Service | Description | Version |
-|:--|:--|:--:|
-| 🖥️ **app** | Serveur PHP + Apache (frontend & backend) | PHP 8.3 |
-| 🐬 **mysql** | Base de données relationnelle | MySQL 8 |
-| 🗄️ **phpmyadmin** | Interface web pour MySQL | 5.2 |
-| 🍃 **mongo** | Base de données NoSQL (statistiques, logs) | 6.0 |
-| 📊 **mongo-express** | Interface web pour MongoDB | 1.0.0-alpha.4 |
-| 📧 **mailhog** | Serveur SMTP de test + interface d'emails | v1.0.1 |
+  - MongoDB 6.0 (statistiques - bonus)  - MongoDB 6.0 (statistiques NoSQL)
 
----
+### Prérequis
 
-## 📂 Structure du projet (Architecture MVC POO)
+- **Environnement :** Docker, Apache- **Environnement :** Docker, Apache
 
-```plaintext
-📦 VITE_ET_GOURMAND/
-├─ ⚙️ .vscode/                  → Configuration VS Code
-│
-├─ 👨‍💻 app/                     → Code source de l'application
-│  │
-│  ├─ 🎮 Controllers/            → Contrôleurs (logique métier)
-│  │  ├─ HomeController.php
-│  │  ├─ MenuController.php
-│  │  ├─ CommandeController.php
-│  │  ├─ AvisController.php
-│  │  ├─ ContactController.php
-│  │  ├─ Auth/
-│  │  │  ├─ LoginController.php
-│  │  │  └─ RegisterController.php
-│  │  └─ Admin/
-│  │     ├─ DashboardController.php
-│  │     ├─ MenuAdminController.php
-│  │     └─ CommandeAdminController.php
-│  │
-│  ├─ 📊 Models/                 → Modèles (interaction base de données)
-│  │  ├─ User.php
-│  │  ├─ Menu.php
-│  │  ├─ Commande.php
-│  │  ├─ Avis.php
-│  │  └─ Contact.php
-│  │
-│  ├─ 🎨 Views/                  → Templates HTML (présentation)
-│  │  ├─ layouts/
-│  │  │  ├─ header.php
-│  │  │  ├─ footer.php
-│  │  │  └─ admin_layout.php
-│  │  ├─ home/
-│  │  │  └─ index.php
-│  │  ├─ menus/
-│  │  │  ├─ index.php
-│  │  │  └─ show.php
-│  │  ├─ commandes/
-│  │  │  ├─ panier.php
-│  │  │  └─ confirmation.php
-│  │  ├─ auth/
-│  │  │  ├─ login.php
-│  │  │  └─ register.php
-│  │  └─ admin/
-│  │     ├─ dashboard.php
-│  │     └─ menus/
-│  │        ├─ index.php
-│  │        ├─ create.php
-│  │        └─ edit.php
-│  │
-│  ├─ ⚙️ Core/                   → Framework maison (noyau MVC)
-│  │  ├─ Router.php              → Gestionnaire de routes
-│  │  ├─ Controller.php          → Contrôleur de base
-│  │  ├─ Model.php               → Modèle de base
-│  │  ├─ Database.php            → Connexion PDO (Singleton)
-│  │  ├─ Request.php             → Gestion requêtes HTTP
-│  │  ├─ Session.php             → Gestion sessions
-│  │  └─ Validator.php           → Validation formulaires
-│  │
-│  ├─ 🛠️ Services/               → Services métier (logique réutilisable)
-│  │  ├─ EmailService.php        → Envoi emails (PHPMailer + MailHog)
-│  │  ├─ MongoStats.php          → Statistiques MongoDB
-│  │  ├─ AuthService.php         → Authentification
-│  │  └─ PanierService.php       → Gestion du panier
-│  │
-│  ├─ 🔐 Middlewares/            → Contrôle d'accès
-│  │  ├─ AuthMiddleware.php      → Vérifier si connecté
-│  │  └─ AdminMiddleware.php     → Vérifier rôle admin
-│  │
-│  ├─ 🧰 Helpers/                → Fonctions utilitaires
-│  │  ├─ functions.php
-│  │  └─ constants.php
-│  │
-│  ├─ 🗄️ config/                → Configuration
-│  │  ├─ database.php            → Config MySQL
-│  │  ├─ mongodb.php             → Config MongoDB
-│  │  └─ app.php                 → Config générale
-│  │
-│  ├─ 🌐 public/                 → Point d'entrée public
-│  │  ├─ index.php               → Front Controller (routeur)
-│  │  ├─ assets/
-│  │  │  ├─ css/
-│  │  │  ├─ js/
-│  │  │  └─ images/
-│  │  └─ .htaccess               → Réécriture d'URL
-│  │
-│  ├─ 📡 api/                    → API REST (optionnel)
-│  │  └─ menus.php
-│  │
-│  ├─ 🗃️ sql/                    → Scripts SQL
-│  │  └─ init.sql
-│  │
-│  ├─ 🔧 autoload.php            → Autoloader PSR-4
-│  └─ 🗺️ routes.php              → Définition des routes
-│
-├─ 📚 docs/                      → Documentation technique
-│  ├─ diagrams/                  → Diagrammes UML
-│  │  ├─ MCD.puml                → Modèle Conceptuel de Données
-│  │  ├─ MLD.puml                → Modèle Logique de Données
-│  │  └─ MPD.puml                → Modèle Physique de Données
-│  └─ PRESENTATION_EXAMEN.md     → Présentation pour le jury
-│
-├─ 🐳 infra/                     → Environnement Docker
-│  ├─ 📦 php/                    → Dockerfile + php.ini
-│  ├─ 🔧 docker-compose.yml      → Orchestration des services
-│  ├─ 🔒 .env                    → Variables d'environnement (non versionné)
-│  └─ 🧪 .env.example            → Modèle de configuration
-│
-├─ 🚫 .gitignore                 → Fichiers à ne pas versionner
-└─ 📖 README.md                  → Documentation du projet
-```
+- Docker Desktop ([télécharger](https://www.docker.com/products/docker-desktop/))
 
----
+- Git- **Outils :** Git, Composer- **Outils :** Git, Composer, PHPMailer
 
-## 🔄 Flux de fonctionnement MVC
 
-```plaintext
-1️⃣ Requête HTTP → public/index.php (Front Controller)
-                    ↓
-2️⃣ Router.php → Analyse l'URL et trouve la route correspondante
-                    ↓
-3️⃣ Middleware → Vérifie l'authentification / autorisation
-                    ↓
-4️⃣ Controller → Traite la logique métier
-                    ↓
-5️⃣ Model → Récupère/modifie les données (MySQL/MongoDB)
-                    ↓
-6️⃣ View → Affiche le template HTML
-                    ↓
-7️⃣ Réponse HTTP → Retournée au navigateur
-```
 
-### 📝 Exemple concret : Afficher un menu
+### Étapes
 
-**Scénario** : Un client consulte le menu #5
 
-```php
-// 1. Route définie dans routes.php
-$router->get('/menu', 'App\Controllers\MenuController', 'show');
 
-// 2. MenuController.php (Contrôleur)
-public function show(Request $request): void {
-    $id = $request->get('id');
-    
-    // Appel au Model pour récupérer les données
-    $menu = $this->menuModel->findById($id);
-    
-    // Log MongoDB pour statistiques
-    $this->stats->logMenuView($id);
-    
-    // Envoi des données à la Vue
-    $this->render('menus/show', ['menu' => $menu]);
-}
+**1. Cloner le projet**------
 
-// 3. Menu.php (Model)
-public function findById(int $id): ?array {
-    $stmt = $this->db->prepare("SELECT * FROM menus WHERE id = :id AND actif = 1");
-    $stmt->execute(['id' => $id]);
-    return $stmt->fetch();
-}
 
-// 4. views/menus/show.php (Vue)
-<h1><?= htmlspecialchars($menu['titre']) ?></h1>
-<p><?= htmlspecialchars($menu['description']) ?></p>
-<p class="price"><?= number_format($menu['prix'], 2) ?> €</p>
-```
-
----
-
-## 🎓 Compétences du référentiel DWWM démontrées
-
-### CCP1 - Développer la partie front-end d'une application web
-
-| Compétence | Réalisation dans le projet |
-|:--|:--|
-| ✅ **Maquetter une application** | Wireframes et maquettes Figma (responsive) |
-| ✅ **Réaliser une interface statique et adaptable** | HTML5 sémantique, CSS3, Bootstrap 5.3.3 |
-| ✅ **Développer une interface dynamique** | JavaScript ES6+, DOM manipulation, fetch API |
-| ✅ **Réaliser une interface avec un CMS** | Interface d'administration personnalisée |
-
-### CCP2 - Développer la partie back-end d'une application web
-
-| Compétence | Réalisation dans le projet |
-|:--|:--|
-| ✅ **Créer une base de données** | MCD/MLD/MPD, MySQL 8, normalisation 3FN |
-| ✅ **Développer les composants d'accès aux données** | Models POO, PDO, requêtes préparées |
-| ✅ **Développer la partie back-end** | PHP 8.3, Architecture MVC POO, Router, Middlewares |
-| ✅ **Élaborer des composants** | Services réutilisables (Email, Auth, Stats) |
-
-### 🌟 Compétences transversales
-
-| Domaine | Mise en œuvre |
-|:--|:--|
-| 🏗️ **Architecture** | MVC POO, Design Patterns (Singleton, Router, Factory) |
-| 🔒 **Sécurité** | CSRF, XSS, injection SQL, validation, sessions sécurisées |
-| 🐳 **DevOps** | Docker, docker-compose, environnements séparés |
-| 📊 **Bases de données** | MySQL (relationnel) + MongoDB (NoSQL) |
-| 📧 **Services externes** | PHPMailer, MailHog (SMTP de test) |
-| 🔧 **Outils** | Git/GitHub, VS Code, Composer, PSR-4 |
-| 🌐 **API** | REST endpoints JSON pour l'interface publique |
-
----
-
-## 🔒 Sécurité & Bonnes pratiques
-
-| Mesure de sécurité | Implémentation |
-|:--|:--|
-| 🛡️ **Injection SQL** | Requêtes préparées PDO avec paramètres bindés (`execute()`) |
-| 🔐 **XSS (Cross-Site Scripting)** | `htmlspecialchars()` sur toutes les sorties utilisateur |
-| 🎫 **CSRF (Cross-Site Request Forgery)** | Tokens CSRF générés et vérifiés dans les formulaires |
-| 🔑 **Mots de passe** | `password_hash()` avec BCRYPT, `password_verify()` |
-| 🚪 **Sessions** | `session_regenerate_id()` après connexion, timeout |
-| 🔒 **Variables sensibles** | `.env` non versionné, `.gitignore`, variables d'environnement |
-| 🛂 **Contrôle d'accès** | Middlewares (AuthMiddleware, AdminMiddleware) |
-| 📋 **Validation côté serveur** | Classe `Validator` pour tous les formulaires |
-| 🍪 **Cookies sécurisés** | `HttpOnly`, `Secure`, `SameSite=Strict` |
-| 📁 **Fichiers sensibles** | `.htaccess` pour bloquer l'accès aux fichiers config |
-
----
-
-## 🚀 Installation & lancement en local
-
-### 📋 Prérequis
-
-| Outil | Lien | Version minimale |
-|:--|:--|:--:|
-| 🐋 **Docker Desktop** | [docker.com](https://www.docker.com/products/docker-desktop/) | 20.10+ |
-| 💻 **WSL2** (Windows uniquement) | [microsoft.com](https://learn.microsoft.com/fr-fr/windows/wsl/install) | 2 |
-| 🔧 **Git** | [git-scm.com](https://git-scm.com/) | 2.30+ |
-
-### 📥 1. Cloner le projet
 
 ```bash
+
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
-cd Vite_et_Gourmand
+
+cd Vite_et_Gourmand## 🏗️ Architecture MVC## 🏗️ Architecture MVC
+
 ```
 
-### 📄 2. Configurer les variables d'environnement
 
-**Linux / Mac / WSL2**
-```bash
-cp infra/.env.example infra/.env
-```
 
-**Windows PowerShell**
-```powershell
-Copy-Item infra/.env.example infra/.env
-```
+**2. Démarrer Docker**
 
-⚠️ **Important** : Ouvrez `infra/.env` et personnalisez les valeurs :
-- `MYSQL_ROOT_PASSWORD` : Mot de passe root MySQL
-- `MYSQL_PASSWORD` : Mot de passe utilisateur MySQL
-- `MONGO_ROOT_PASSWORD` : Mot de passe root MongoDB
-- `PMA_PASSWORD` : Mot de passe phpMyAdmin
-
-### 🐋 3. Lancer les conteneurs Docker
+Le projet utilise le **pattern MVC (Model-View-Controller)** :Le projet suit le **design pattern MVC (Model-View-Controller)** avec une approche orientée objet :
 
 ```bash
+
 cd infra
+
 docker compose up -d --build
-```
 
-Vérifier que tous les services sont actifs :
-```bash
-docker compose ps
-```
+`````````
 
-### 🗄️ 4. Initialiser la base de données
 
-```bash
-docker exec -i vitegourmand-mysql mysql -u root -p"votre_password" vite_et_gourmand < ../app/sql/vite_et_gourmand.sql
-```
 
-### 🌐 5. Accéder aux services
+**3. Importer la base de données**📁 app/� app/
 
-| Service | URL | Identifiants |
-|:--|:--|:--|
-| 🍽️ **Application web** | [http://localhost:8080](http://localhost:8080) | Voir données de test |
-| 🗄️ **phpMyAdmin** | [http://localhost:8090](http://localhost:8090) | Définis dans `.env` |
-| 📊 **Mongo Express** | [http://localhost:8081](http://localhost:8081) | Définis dans `.env` |
-| 📧 **MailHog (interface)** | [http://localhost:8025](http://localhost:8025) | Aucun |
 
-### 👤 Comptes de test
+
+```bash├── Controllers/     → Traitent les requêtes utilisateur├── Controllers/     → Logique de l'application (traitement des requêtes)
+
+docker exec -i vitegourmand-mysql mysql -u root -proot vite_et_gourmand < ../app/sql/vite_et_gourmand.sql
+
+```├── Models/          → Accèdent aux données (MySQL)├── Models/          → Accès aux données (MySQL, MongoDB)
+
+
+
+**4. Accéder à l'application**├── Views/           → Affichent les pages HTML├── Views/           → Templates d'affichage (HTML/PHP)
+
+
+
+| Service | URL | Port |├── Core/            → Classes de base (Router, Database, etc.)├── Core/            → Classes de base (Router, Database, Validator)
+
+|---------|-----|------|
+
+| 🍽️ Application | http://localhost:8080 | 8080 |├── config/          → Configuration├── config/          → Configuration (BDD, services)
+
+| 🗄️ phpMyAdmin | http://localhost:8090 | 8090 |
+
+| 🍃 Mongo Express | http://localhost:8081 | 8081 |├── public/          → Point d'entrée (index.php, CSS, JS)├── public/          → Point d'entrée (index.php, assets CSS/JS)
+
+| 📧 MailHog | http://localhost:8025 | 8025 |
+
+└── sql/             → Base de données└── sql/             → Scripts de création de base de données
+
+---
+
+``````
+
+## 👤 Comptes de test
+
+
 
 | Rôle | Email | Mot de passe |
-|:--|:--|:--|
-| 👑 **Administrateur** | `admin@vitegourmand.fr` | `Admin123!` |
-| 👔 **Employé** | `employe@vitegourmand.fr` | `Employe123!` |
-| 🧑 **Client** | `client@example.com` | `Client123!` |
+
+|------|-------|--------------|**Principe :** Séparer la logique métier (Controller), les données (Model) et l'affichage (View).**Principe :** Séparation des responsabilités entre la présentation (View), la logique métier (Controller) et les données (Model).
+
+| Administrateur | admin@viteetgourmand.fr | Admin123! |
+
+| Employé | employe@viteetgourmand.fr | Employe123! |
+
+| Client | client@test.fr | Client123! |
+
+------
 
 ---
 
-## 📚 Documentation technique
 
-### 🎯 Diagrammes UML
 
-Les diagrammes sont disponibles dans le dossier `docs/diagrams/` :
+## 📂 Structure du code
 
-- **MCD** (Modèle Conceptuel de Données) : Entités et relations métier
-- **MLD** (Modèle Logique de Données) : Transformation en tables relationnelles
-- **MPD** (Modèle Physique de Données) : Structure SQL avec types et contraintes
-- **Diagrammes de séquence** : Flux d'authentification, passation de commande
-- **Use Cases** : Scénarios utilisateurs (visiteur, client, employé, admin)
+## 🚀 Installation## 🚀 Installation en local
 
-### 🔧 Technologies & ressources
+```text
 
-- [Design pattern MVC](https://refactoring.guru/fr/design-patterns/mvc)
-- [POO en PHP](https://www.php.net/manual/fr/language.oop5.php)
-- [PSR-4 Autoloading](https://www.php-fig.org/psr/psr-4/)
-- [Docker Documentation](https://docs.docker.com/)
-- [PHP 8.3](https://www.php.net/releases/8.3/fr.php)
-- [MySQL 8.0](https://dev.mysql.com/doc/refman/8.0/en/)
-- [MongoDB](https://www.mongodb.com/docs/)
-- [Bootstrap 5.3](https://getbootstrap.com/docs/5.3/)
+app/
 
----
+├── Controllers/        → HomeController, AuthController, MenuController, etc.
 
-## 🧪 Tests
+├── Models/             → User, Menu, Commande, Avis### Prérequis### Prérequis
 
-### Tests manuels
-- Parcours utilisateur complet (inscription → commande → avis)
-- Tests de sécurité (injection SQL, XSS)
-- Tests multi-navigateurs (Chrome, Firefox, Edge, Safari)
-- Tests responsive (mobile, tablette, desktop)
+├── Views/              → Pages HTML (auth, menus, commandes, profil, admin)
 
----
+├── Core/               → Router, Database, Model, Controller, Request, Session
 
-## 📝 Licence
+├── public/
 
-Ce projet est réalisé dans un cadre pédagogique (Titre Professionnel DWWM).  
-Il ne peut être utilisé à des fins commerciales sans autorisation.
+│   ├── index.php       → Point d'entrée unique- Docker Desktop ([télécharger](https://www.docker.com/products/docker-desktop/))- Docker Desktop installé ([télécharger ici](https://www.docker.com/products/docker-desktop/))
 
----
+│   ├── assets/css/     → Styles CSS personnalisés
 
-## 👤 Auteur
+│   └── assets/js/      → Scripts JavaScript- Git- Git installé
 
-**EtoileSombre**  
-🎓 Candidat au Titre Professionnel DWWM  
-📧 Contact : [GitHub](https://github.com/EtoileSombre)  
-📅 Date de réalisation : 2025
+└── routes.php          → Définition des routes
 
----
+```
 
-## 🙏 Remerciements
 
-- 🎓 **Formateurs DWWM** pour leur accompagnement
-- 👥 **Communauté PHP** pour la documentation et les ressources
-- 🐳 **Docker** et l'écosystème open source
-- 📚 **Stack Overflow** et la communauté des développeurs
+
+---### Étapes### Étapes d'installation
+
+
+
+## 🔐 Sécurité
+
+
+
+- **Mots de passe** : `password_hash()` (bcrypt)**1. Cloner le projet****1. Cloner le projet**
+
+- **SQL** : Requêtes préparées PDO
+
+- **XSS** : `htmlspecialchars()` sur les affichages
+
+- **Sessions** : Gestion sécurisée des connexions
+
+```bash```bash
 
 ---
 
-## 📌 Notes pour le jury
+git clone https://github.com/EtoileSombre/Vite_et_Gourmand.gitgit clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 
-### Points forts du projet
+## 🎯 Fonctionnalités principales
 
-✅ **Architecture professionnelle** : MVC POO avec séparation claire des responsabilités  
-✅ **Sécurité renforcée** : Protection contre les principales vulnérabilités web  
-✅ **Base de données hybride** : MySQL (relationnel) + MongoDB (NoSQL)  
-✅ **Environnement reproductible** : Docker pour une installation facilitée  
-✅ **Documentation complète** : README, diagrammes UML, commentaires dans le code  
-✅ **Bonnes pratiques** : PSR-4, design patterns, DRY, SOLID
+cd Vite_et_Gourmandcd Vite_et_Gourmand
 
-### Axes d'amélioration possibles
+### Pour tous
 
-🔄 Tests unitaires automatisés (PHPUnit)  
-🔄 CI/CD avec GitHub Actions  
-🔄 Cache Redis pour les performances  
-🔄 Internationalisation (i18n) multilingue
+- Voir les menus disponibles``````
+
+- Contacter le traiteur
+
+
+
+### Client connecté
+
+- Passer une commande**2. Démarrer Docker****2. Configurer les variables d'environnement**
+
+- Voir ses commandes
+
+- Modifier/annuler une commande
+
+- Donner un avis
+
+```bashCopier le fichier d'exemple :
+
+### Administrateur
+
+- Voir tableau de bordcd infra
+
+- Gérer les utilisateurs
+
+- Gérer les commandesdocker compose up -d --build```bash
+
+- Valider les avis
+
+```cp infra/.env.example infra/.env
+
+---
+
+```
+
+## 📚 Ce que j'ai appris
+
+**3. Importer la base de données**
+
+### Architecture
+
+- ✅ Comprendre et implémenter le pattern MVCÉditer `infra/.env` et personnaliser les mots de passe si nécessaire.
+
+- ✅ Programmation orientée objet en PHP
+
+- ✅ Routing et Front Controller```bash
+
+- ✅ Autoloading PSR-4
+
+docker exec -i vitegourmand-mysql mysql -u root -proot vite_et_gourmand < ../app/sql/vite_et_gourmand.sql**3. Démarrer les conteneurs Docker**
+
+### Base de données
+
+- ✅ Modélisation (MCD, MLD, MPD)```
+
+- ✅ MySQL (requêtes, jointures)
+
+- ✅ MongoDB (introduction NoSQL)```bash
+
+
+
+### Développement web**4. Accéder à l'application**cd infra
+
+- ✅ HTML/CSS responsive avec Bootstrap
+
+- ✅ JavaScript pour interactionsdocker compose up -d --build
+
+- ✅ Formulaires et validation
+
+- ✅ Gestion des sessions| Service | URL | Port |```
+
+
+
+### Outils|---------|-----|------|
+
+- ✅ Git pour le versioning
+
+- ✅ Docker pour l'environnement| 🍽️ Application | http://localhost:8080 | 8080 |**4. Importer la base de données**
+
+- ✅ Composer pour l'autoloading
+
+| 🗄️ phpMyAdmin | http://localhost:8090 | 8090 |
+
+---
+
+| 🍃 Mongo Express | http://localhost:8081 | 8081 |```bash
+
+## 📞 Contact
+
+| 📧 MailHog | http://localhost:8025 | 8025 |docker exec -i vitegourmand-mysql mysql -u root -proot vite_et_gourmand < ../app/sql/vite_et_gourmand.sql
+
+Candidat Titre Professionnel DWWM  
+
+GitHub : [EtoileSombre](https://github.com/EtoileSombre)```
+
+
+
+------
+
+
+
+## 📄 Licence**5. Accéder à l'application**
+
+
+
+Projet pédagogique - DWWM 2025## 👤 Comptes de test
+
+
+| Service | URL | Port |
+
+| Rôle | Email | Mot de passe ||---------|-----|------|
+
+|------|-------|--------------|| 🍽️ Application web | http://localhost:8080 | 8080 |
+
+| Administrateur | admin@viteetgourmand.fr | Admin123! || 🗄️ phpMyAdmin | http://localhost:8090 | 8090 |
+
+| Employé | employe@viteetgourmand.fr | Employe123! || 🍃 Mongo Express | http://localhost:8081 | 8081 |
+
+| Client | client@test.fr | Client123! || 📧 MailHog | http://localhost:8025 | 8025 |
+
+| 🐬 MySQL | localhost:3307 | 3307 |
+
+---| 🍃 MongoDB | localhost:27018 | 27018 |
+
+
+
+## 📂 Structure du code---
+
+
+
+```text## 👤 Comptes de test
+
+app/
+
+├── Controllers/        → HomeController, AuthController, MenuController, etc.| Rôle | Email | Mot de passe |
+
+├── Models/             → User, Menu, Commande, Avis|------|-------|--------------|
+
+├── Views/              → Pages HTML (auth, menus, commandes, profil, admin)| Administrateur | admin@viteetgourmand.fr | Admin123! |
+
+├── Core/               → Router, Database, Model, Controller, Request, Session| Employé | employe@viteetgourmand.fr | Employe123! |
+
+├── public/| Client | client@test.fr | Client123! |
+
+│   ├── index.php       → Point d'entrée unique
+
+│   ├── assets/css/     → Styles CSS personnalisés---
+
+│   └── assets/js/      → Scripts JavaScript
+
+└── routes.php          → Définition des routes## 📂 Structure des fichiers
+
+```
+
+```text
+
+---Vite_et_Gourmand/
+
+├── app/                    → Code source de l'application
+
+## 🔐 Sécurité│   ├── Controllers/        → Contrôleurs MVC (logique métier)
+
+│   ├── Models/             → Modèles (accès aux données)
+
+- **Mots de passe** : `password_hash()` (bcrypt)│   ├── Views/              → Vues (templates HTML)
+
+- **SQL** : Requêtes préparées PDO│   ├── Core/               → Classes de base (Router, Database, Validator)
+
+- **XSS** : `htmlspecialchars()` sur les affichages│   ├── config/             → Configuration (BDD, services)
+
+- **Sessions** : Gestion sécurisée des connexions│   ├── public/             → Point d'entrée web (index.php, assets)
+
+│   │   ├── assets/         → CSS, JavaScript, images
+
+---│   │   └── index.php       → Front Controller
+
+│   └── sql/                → Scripts de création/migration BDD
+
+## 🎯 Fonctionnalités principales├── docs/                   → Documentation
+
+│   ├── *.pdf               → Manuel, charte graphique, docs techniques
+
+### Pour tous│   └── diagrams/           → Diagrammes UML (MCD, MLD, MPD, séquences)
+
+- Voir les menus disponibles├── infra/                  → Configuration Docker
+
+- Contacter le traiteur│   ├── docker-compose.yml  → Orchestration des services
+
+│   └── .env                → Variables d'environnement
+
+### Client connecté└── README.md               → Ce fichier
+
+- Passer une commande```
+
+- Voir ses commandes
+
+- Modifier/annuler une commande---
+
+- Donner un avis
+
+## 🎓 Compétences démontrées
+
+### Administrateur
+
+- Voir tableau de bord### CCP1 - Développer la partie front-end
+
+- Gérer les utilisateurs
+
+- Gérer les commandes- ✅ Maquettage (wireframes et mockups)
+
+- Valider les avis- ✅ Intégration HTML/CSS responsive (Bootstrap)
+
+- ✅ Interfaces dynamiques avec JavaScript
+
+---
+
+### CCP2 - Développer la partie back-end
+
+## 📚 Ce que j'ai appris
+
+- ✅ Conception de base de données (MCD, MLD, MPD)
+
+### Architecture- ✅ Développement en PHP orienté objet
+
+- ✅ Comprendre et implémenter le pattern MVC- ✅ Architecture MVC
+
+- ✅ Programmation orientée objet en PHP- ✅ Sécurité (protection XSS, SQL injection, CSRF)
+
+- ✅ Routing et Front Controller- ✅ Gestion SQL (MySQL) et NoSQL (MongoDB)
+
+- ✅ Autoloading PSR-4
+
+---
+
+### Base de données
+
+- ✅ Modélisation (MCD, MLD, MPD)## 🔒 Sécurité
+
+- ✅ MySQL (requêtes, jointures)
+
+- ✅ MongoDB (introduction NoSQL)- **Mots de passe :** Hashés avec `password_hash()` (bcrypt)
+
+- **Injections SQL :** Requêtes préparées avec PDO
+
+### Développement web- **XSS :** `htmlspecialchars()` sur toutes les sorties
+
+- ✅ HTML/CSS responsive avec Bootstrap- **Sessions :** Régénération d'ID après connexion
+
+- ✅ JavaScript pour interactions- **Validation :** Contrôle des données côté serveur
+
+- ✅ Formulaires et validation
+
+- ✅ Gestion des sessions---
+
+
+
+### Outils## � Documentation
+
+- ✅ Git pour le versioning
+
+- ✅ Docker pour l'environnementTous les documents sont disponibles dans le dossier `docs/` :
+
+- ✅ Composer pour l'autoloading
+
+- � **Manuel d'utilisation** (PDF)
+
+---- 🎨 **Charte graphique** (PDF)
+
+- � **Diagrammes UML** (MCD, MLD, Use Cases, Séquences)
+
+## 📞 Contact- 📝 **Documentation technique**
+
+- 🗂️ **Gestion de projet**
+
+Étudiant BTS SIO  
+
+GitHub : [EtoileSombre](https://github.com/EtoileSombre)---
+
+
+
+---## � Contact
+
+
+
+## 📄 LicenceCandidat au Titre Professionnel DWWM  
+
+GitHub : [EtoileSombre](https://github.com/EtoileSombre)
+
+Projet pédagogique - BTS SIO 2025
+
+---
+
+## � Licence
+
+Projet réalisé dans un cadre pédagogique.  
+Non destiné à un usage commercial.

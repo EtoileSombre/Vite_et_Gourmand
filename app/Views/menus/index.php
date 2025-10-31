@@ -9,35 +9,47 @@
         </div>
     <?php else: ?>
         <div class="row">
-            <?php foreach ($menus as $menu): ?>
+            <?php 
+            $gradientClasses = ['gradient-bordeaux', 'gradient-gold', 'gradient-bordeaux-gold', 'gradient-dark-gold'];
+            $icons = ['🍽️', '🥗', '🍷', '🧀'];
+            $index = 0;
+            foreach ($menus as $menu): 
+                $gradientClass = $gradientClasses[$index % count($gradientClasses)];
+                $icon = $icons[$index % count($icons)];
+                $index++;
+            ?>
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow-sm">
-                        <?php if (!empty($menu['image_url'])): ?>
-                            <img src="<?= htmlspecialchars($menu['image_url']) ?>" 
-                                 class="card-img-top" 
-                                 alt="<?= htmlspecialchars($menu['titre']) ?>"
-                                 onerror="this.src='https://via.placeholder.com/400x300?text=Menu'">
-                        <?php else: ?>
-                            <img src="https://via.placeholder.com/400x300?text=Menu" 
-                                 class="card-img-top" 
-                                 alt="<?= htmlspecialchars($menu['titre']) ?>">
-                        <?php endif; ?>
+                        <!-- Image avec gradient aux couleurs de la charte -->
+                        <div class="card-img-top menu-card-img <?= $gradientClass ?>">
+                            <div class="text-center text-white">
+                                <h1 class="mb-0 menu-icon">
+                                    <?= $icon ?>
+                                </h1>
+                            </div>
+                        </div>
                         
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($menu['titre']) ?></h5>
-                            <p class="card-text"><?= htmlspecialchars($menu['description']) ?></p>
+                            <p class="card-text"><?= htmlspecialchars($menu['description'] ?? '') ?></p>
                             
-                            <?php if (!empty($menu['categorie'])): ?>
+                            <?php if (!empty($menu['regime'])): ?>
                                 <span class="badge bg-secondary mb-2">
-                                    <?= htmlspecialchars($menu['categorie']) ?>
+                                    <?= htmlspecialchars($menu['regime']) ?>
                                 </span>
                             <?php endif; ?>
                             
+                            <?php if (isset($menu['nombre_personne_minimum']) && $menu['nombre_personne_minimum'] > 1): ?>
+                                <p class="text-muted small mb-2">
+                                    <i class="bi bi-people"></i> Minimum <?= $menu['nombre_personne_minimum'] ?> personnes
+                                </p>
+                            <?php endif; ?>
+                            
                             <div class="d-flex justify-content-between align-items-center">
-                                <span class="h4 mb-0 text-primary">
-                                    <?= number_format($menu['prix_par_personne'], 2) ?> €
+                                <span class="h4 mb-0 fw-bold text-bordeaux">
+                                    <?= number_format($menu['prix_par_personne'], 2, ',', ' ') ?> €
                                 </span>
-                                <a href="/index_mvc.php?url=menu&id=<?= $menu['menu_id'] ?>" class="btn btn-outline-primary">
+                                <a href="/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-bordeaux">
                                     <i class="bi bi-eye"></i> Détails
                                 </a>
                             </div>

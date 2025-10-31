@@ -2,41 +2,30 @@
 
 namespace App\Core;
 
-use PDO;
-
 /**
  * Classe Model de base
- * Tous les modèles doivent hériter de cette classe
+ * Tous les modèles héritent de cette classe
  */
 abstract class Model
 {
-    protected PDO $db;
-    protected string $table;
-    protected string $primaryKey = 'id'; // Clé primaire par défaut
+    protected $db;
+    protected $table;
+    protected $primaryKey = 'id';
 
     public function __construct()
     {
         $this->db = Database::getInstance();
     }
 
-    /**
-     * Récupère tous les enregistrements de la table
-     * 
-     * @return array Tableau d'enregistrements
-     */
-    public function findAll(): array
+    // Récupère tous les enregistrements
+    public function findAll()
     {
         $stmt = $this->db->query("SELECT * FROM {$this->table}");
         return $stmt->fetchAll();
     }
 
-    /**
-     * Récupère un enregistrement par son ID
-     * 
-     * @param int $id Identifiant de l'enregistrement
-     * @return array|null Enregistrement trouvé ou null
-     */
-    public function findById(int $id): ?array
+    // Récupère un enregistrement par ID
+    public function findById($id)
     {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$this->primaryKey} = :id");
         $stmt->execute(['id' => $id]);
@@ -44,46 +33,32 @@ abstract class Model
         return $result ?: null;
     }
 
-    /**
-     * Crée un nouvel enregistrement
-     * 
-     * @param array $data Données à insérer
-     * @return int ID de l'enregistrement créé
-     */
-    public function create(array $data): int
+    // Crée un nouvel enregistrement
+    public function create($data)
     {
         $fields = array_keys($data);
-        $placeholders = array_map(fn($field) => ":$field", $fields);
+        $placeholders = array_map(function($field) {
+            return ":$field";
+        }, $fields);
         
-        $sql = sprintf(
-            "INSERT INTO %s (%s) VALUES (%s)",
-            $this->table,
-            implode(', ', $fields),
-            implode(', ', $placeholders)
-        );
+        $sql = "INSERT INTO {$this->table} (" . implode(', ', $fields) . ") 
+                VALUES (" . implode(', ', $placeholders) . ")";
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($data);
         
-        return (int) $this->db->lastInsertId();
+        return $this->db->lastInsertId();
     }
 
-    /**
-     * Met à jour un enregistrement
-     * 
-     * @param int $id ID de l'enregistrement
-     * @param array $data Données à mettre à jour
-     * @return bool Succès de l'opération
-     */
-    public function update(int $id, array $data): bool
+    // Met à jour un enregistrement
+    public function update($id, $data)
     {
-        $fields = array_map(fn($field) => "$field = :$field", array_keys($data));
+        $fields = [];
+        foreach (array_keys($data) as $field) {
+            $fields[] = "$field = :$field";
+        }
         
-        $sql = sprintf(
-            "UPDATE %s SET %s WHERE id = :id",
-            $this->table,
-            implode(', ', $fields)
-        );
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $fields) . " WHERE id = :id";
 
         $data['id'] = $id;
         $stmt = $this->db->prepare($sql);
@@ -91,13 +66,8 @@ abstract class Model
         return $stmt->execute($data);
     }
 
-    /**
-     * Supprime un enregistrement
-     * 
-     * @param int $id ID de l'enregistrement
-     * @return bool Succès de l'opération
-     */
-    public function delete(int $id): bool
+    // Supprime un enregistrement
+    public function delete($id)
     {
         $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE id = :id");
         return $stmt->execute(['id' => $id]);

@@ -8,7 +8,7 @@
                 <h1>Cuisine maison, <span class="text-bordeaux"> pour toutes vos occasions</span>.</h1>
                 <p class="lead text-muted mb-4">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
                 
-                <a class="btn btn-primary btn-lg" href="/index_mvc.php?url=menus">
+                <a class="btn btn-primary btn-lg" href="/menus">
                     <i class="bi bi-basket"></i> Découvrir nos menus
                 </a>
             </div>

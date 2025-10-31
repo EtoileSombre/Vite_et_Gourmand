@@ -13,6 +13,7 @@
 html,body{scroll-behavior:smooth}
 
 body{
+  font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color:var(--vg-ink);
   background:linear-gradient(180deg,#fff 0%, var(--vg-cream) 100%);
 }
@@ -68,6 +69,19 @@ body{
   color: var(--vg-bordeaux) !important;
 }
 
+/* Bouton bordeaux */
+.btn-bordeaux {
+  background-color: var(--vg-bordeaux) !important;
+  border-color: var(--vg-bordeaux) !important;
+  color: white !important;
+}
+
+.btn-bordeaux:hover {
+  background-color: var(--vg-bordeaux-600) !important;
+  border-color: var(--vg-bordeaux-600) !important;
+  color: white !important;
+}
+
 /* Couleur bordeaux pour icônes */
 .icon-bordeaux {
   color: var(--vg-bordeaux);
@@ -97,6 +111,37 @@ body{
 }
 .card .badge{
   font-weight:700;
+}
+
+/* Image de carte menu avec gradient */
+.menu-card-img {
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icône de menu */
+.menu-icon {
+  font-size: 4rem;
+  text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+}
+
+/* Gradients pour les menus */
+.gradient-bordeaux {
+  background: linear-gradient(135deg, #7B1E1E 0%, #6a1919 100%);
+}
+
+.gradient-gold {
+  background: linear-gradient(135deg, #D4AF37 0%, #c4a030 100%);
+}
+
+.gradient-bordeaux-gold {
+  background: linear-gradient(135deg, #7B1E1E 0%, #D4AF37 100%);
+}
+
+.gradient-dark-gold {
+  background: linear-gradient(135deg, #6a1919 0%, #c4a030 100%);
 }
 .badge-gold{
   background:#fff3d1; border:1px dashed #f2c97d; color:#7a5a00;

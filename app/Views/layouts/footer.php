@@ -3,7 +3,7 @@
     <!-- Footer -->
     <footer class="site-footer text-center py-4 mt-5">
         <p class="mb-1"><strong>Horaires :</strong> Lun–Dim 10h–22h</p>
-        <p class="mb-2"><a href="/mentions.php">Mentions légales</a> · <a href="/cgv.php">CGV</a></p>
+        <p class="mb-2"><a href="/contact">Contact</a> · <a href="/">Accueil</a></p>
         <small>© <?= date('Y') ?> Vite & Gourmand</small>
     </footer>
 

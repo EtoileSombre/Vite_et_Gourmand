@@ -3,8 +3,8 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/index_mvc.php">Accueil</a></li>
-            <li class="breadcrumb-item"><a href="/index_mvc.php?url=menus">Menus</a></li>
+            <li class="breadcrumb-item"><a href="/">Accueil</a></li>
+            <li class="breadcrumb-item"><a href="/menus">Menus</a></li>
             <li class="breadcrumb-item active"><?= htmlspecialchars($menu['titre']) ?></li>
         </ol>
     </nav>
@@ -55,10 +55,10 @@
             <?php endif; ?>
 
             <div class="d-grid gap-2">
-                <a href="/commander.php?menu_id=<?= $menu['menu_id'] ?>" class="btn btn-primary btn-lg">
+                <a href="/commande/nouvelle?menu_id=<?= $menu['menu_id'] ?>" class="btn btn-primary btn-lg">
                     <i class="bi bi-cart-plus"></i> Commander ce menu
                 </a>
-                <a href="/index_mvc.php?url=menus" class="btn btn-outline-secondary">
+                <a href="/menus" class="btn btn-outline-secondary">
                     <i class="bi bi-arrow-left"></i> Retour aux menus
                 </a>
             </div>

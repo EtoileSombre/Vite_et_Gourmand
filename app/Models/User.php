@@ -17,7 +17,12 @@ class User extends Model
     public static function findByEmail($email)
     {
         $model = new self();
-        $stmt = $model->db->prepare('SELECT * FROM utilisateur WHERE email = ?');
+        $stmt = $model->db->prepare('
+            SELECT u.*, r.libelle as role 
+            FROM utilisateur u 
+            LEFT JOIN role r ON u.role_id = r.role_id 
+            WHERE u.email = ?
+        ');
         $stmt->execute([$email]);
         return $stmt->fetch();
     }

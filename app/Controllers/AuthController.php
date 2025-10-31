@@ -25,15 +25,13 @@ class AuthController extends Controller
             } else {
                 $user = User::findByEmail($email);
                 
-                if ($user && password_verify($password, $user['mot_de_passe'])) {
-                    Session::set('user', [
-                        'id' => $user['id'],
-                        'nom' => $user['nom'],
-                        'email' => $user['email'],
-                        'role' => $user['role']
-                    ]);
+                if ($user && password_verify($password, $user['password'])) {
+                    Session::set('user_id', $user['utilisateur_id']);
+                    Session::set('user_prenom', $user['prenom']);
+                    Session::set('user_email', $user['email']);
+                    Session::set('user_role', $user['role']);
                     
-                    if ($user['role'] === 'admin') {
+                    if ($user['role'] === 'administrateur') {
                         $this->redirect('/admin');
                     } else {
                         $this->redirect('/');
@@ -84,11 +82,10 @@ class AuthController extends Controller
             if (empty($errors)) {
                 $userModel = new User();
                 $userModel->createUser([
-                    'nom' => $nom,
+                    'prenom' => $nom,
                     'email' => $email,
-                    'mot_de_passe' => password_hash($password, PASSWORD_DEFAULT),
-                    'role' => 'client',
-                    'date_inscription' => date('Y-m-d H:i:s')
+                    'password' => password_hash($password, PASSWORD_DEFAULT),
+                    'role_id' => 1
                 ]);
                 
                 $this->redirect('/login?registered=1');

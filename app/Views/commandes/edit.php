@@ -5,29 +5,29 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h3>Modifier la commande #<?= htmlspecialchars($commande['id']) ?></h3>
+                    <h3>Modifier la commande #<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></h3>
                 </div>
                 <div class="card-body">
                     <form method="post" action="/commande/modifier">
-                        <input type="hidden" name="id" value="<?= htmlspecialchars($commande['id']) ?>">
+                        <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($commande['numero_commande']) ?>">
                         
                         <div class="mb-3">
                             <label class="form-label">Menu</label>
-                            <p class="form-control-plaintext"><strong><?= htmlspecialchars($commande['menu_nom']) ?></strong></p>
+                            <p class="form-control-plaintext"><strong><?= htmlspecialchars($commande['menu_nom'] ?? 'Menu') ?></strong></p>
                             <small class="text-muted">Le menu ne peut pas être modifié. Vous devez annuler et créer une nouvelle commande pour changer de menu.</small>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="quantite" class="form-label">Quantité</label>
-                            <input type="number" class="form-control" id="quantite" name="quantite" 
-                                   min="1" value="<?= htmlspecialchars($commande['quantite']) ?>" required>
+                            <label for="nombre_personnes" class="form-label">Nombre de personnes</label>
+                            <input type="number" class="form-control" id="nombre_personnes" name="nombre_personnes" 
+                                   min="1" value="<?= htmlspecialchars($commande['nombre_personne'] ?? 2) ?>" required>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="date_livraison" class="form-label">Date de livraison souhaitée</label>
+                            <label for="date_livraison" class="form-label">Date de prestation souhaitée</label>
                             <input type="date" class="form-control" id="date_livraison" name="date_livraison" 
                                    min="<?= date('Y-m-d', strtotime('+1 day')) ?>" 
-                                   value="<?= htmlspecialchars($commande['date_livraison']) ?>" required>
+                                   value="<?= htmlspecialchars($commande['date_prestation'] ?? '') ?>" required>
                         </div>
                         
                         <div class="d-flex justify-content-between">

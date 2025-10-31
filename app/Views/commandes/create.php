@@ -14,17 +14,17 @@
                             <select class="form-select" id="menu_id" name="menu_id" required>
                                 <option value="">Sélectionnez un menu...</option>
                                 <?php foreach ($menus as $menu): ?>
-                                    <option value="<?= $menu['id'] ?>">
-                                        <?= htmlspecialchars($menu['nom']) ?> - <?= number_format($menu['prix'], 2) ?> €
+                                    <option value="<?= $menu['menu_id'] ?>">
+                                        <?= htmlspecialchars($menu['titre']) ?> - <?= number_format($menu['prix_par_personne'], 2) ?> € /pers
                                     </option>
                                 <?php endforeach; ?>
                             </select>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="quantite" class="form-label">Quantité</label>
-                            <input type="number" class="form-control" id="quantite" name="quantite" 
-                                   min="1" value="1" required>
+                            <label for="nombre_personnes" class="form-label">Nombre de personnes</label>
+                            <input type="number" class="form-control" id="nombre_personnes" name="nombre_personnes" 
+                                   min="1" value="2" required>
                         </div>
                         
                         <div class="mb-3">

@@ -15,13 +15,13 @@ class CommandeController extends Controller
      */
     public function index()
     {
-        $user = Session::get('user');
-        if (!$user) {
+        $userId = Session::get('user_id');
+        if (!$userId) {
             $this->redirect('/login');
         }
 
         $commandeModel = new Commande();
-        $commandes = $commandeModel->findByUser($user['id']);
+        $commandes = $commandeModel->findByUser($userId);
         
         $this->render('commandes/index', ['commandes' => $commandes]);
     }
@@ -31,8 +31,8 @@ class CommandeController extends Controller
      */
     public function create()
     {
-        $user = Session::get('user');
-        if (!$user) {
+        $userId = Session::get('user_id');
+        if (!$userId) {
             $this->redirect('/login');
         }
 
@@ -47,25 +47,51 @@ class CommandeController extends Controller
      */
     public function store()
     {
-        $user = Session::get('user');
-        if (!$user) {
+        $userId = Session::get('user_id');
+        if (!$userId) {
             $this->redirect('/login');
         }
 
         $request = new Request();
         $menuId = $request->post('menu_id');
-        $quantite = $request->post('quantite');
+        $nombrePersonnes = $request->post('nombre_personnes');
         $dateLivraison = $request->post('date_livraison');
 
+        // Générer un numéro de commande unique
+        $numeroCommande = 'CMD' . date('Ymd') . '-' . str_pad($userId, 4, '0', STR_PAD_LEFT) . '-' . uniqid();
+
+        // Récupérer les infos du menu pour l'email
+        $menuModel = new Menu();
+        $menu = $menuModel->findById($menuId);
+        
+        // Créer la commande
         $commandeModel = new Commande();
         $commandeModel->create([
-            'utilisateur_id' => $user['id'],
+            'numero_commande' => $numeroCommande,
+            'utilisateur_id' => $userId,
             'menu_id' => $menuId,
-            'quantite' => $quantite,
-            'date_livraison' => $dateLivraison,
-            'date_commande' => date('Y-m-d H:i:s'),
-            'statut' => 'en_attente'
+            'nombre_personne' => $nombrePersonnes,
+            'date_commande' => date('Y-m-d'),
+            'date_prestation' => $dateLivraison,
+            'statut' => 'en attente'
         ]);
+
+        // Envoyer l'email de confirmation
+        $userEmail = Session::get('user_email');
+        $userPrenom = Session::get('user_prenom');
+        
+        if ($userEmail && $userPrenom && $menu) {
+            require_once __DIR__ . '/../config/mail.php';
+            
+            $detailsCommande = [
+                'menu_nom' => $menu['titre'],
+                'nombre_personne' => $nombrePersonnes,
+                'date_prestation' => $dateLivraison,
+                'prix_par_personne' => $menu['prix_par_personne']
+            ];
+            
+            sendOrderConfirmationEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
+        }
 
         $this->redirect('/mes-commandes');
     }
@@ -75,19 +101,19 @@ class CommandeController extends Controller
      */
     public function edit()
     {
-        $user = Session::get('user');
-        if (!$user) {
+        $userId = Session::get('user_id');
+        if (!$userId) {
             $this->redirect('/login');
         }
 
         $request = new Request();
-        $id = $request->get('id');
+        $numeroCommande = $request->get('numero');
 
         $commandeModel = new Commande();
-        $commande = $commandeModel->findWithDetails((int)$id);
+        $commande = $commandeModel->findByNumero($numeroCommande);
 
         // Vérifier que la commande appartient à l'utilisateur
-        if (!$commande || $commande['utilisateur_id'] != $user['id']) {
+        if (!$commande || $commande['utilisateur_id'] != $userId) {
             $this->redirect('/mes-commandes');
         }
 
@@ -105,28 +131,46 @@ class CommandeController extends Controller
      */
     public function update()
     {
-        $user = Session::get('user');
-        if (!$user) {
+        $userId = Session::get('user_id');
+        if (!$userId) {
             $this->redirect('/login');
         }
 
         $request = new Request();
-        $id = $request->post('id');
-        $quantite = $request->post('quantite');
+        $numeroCommande = $request->post('numero_commande');
+        $nombrePersonnes = $request->post('nombre_personnes');
         $dateLivraison = $request->post('date_livraison');
 
         $commandeModel = new Commande();
-        $commande = $commandeModel->findById((int)$id);
+        $commande = $commandeModel->findByNumero($numeroCommande);
 
         // Vérifier que la commande appartient à l'utilisateur
-        if (!$commande || $commande['utilisateur_id'] != $user['id']) {
+        if (!$commande || $commande['utilisateur_id'] != $userId) {
             $this->redirect('/mes-commandes');
         }
 
-        $commandeModel->update((int)$id, [
-            'quantite' => $quantite,
-            'date_livraison' => $dateLivraison
+        // Mettre à jour la commande
+        $commandeModel->updateByNumero($numeroCommande, [
+            'nombre_personne' => $nombrePersonnes,
+            'date_prestation' => $dateLivraison
         ]);
+
+        // Envoyer l'email de modification
+        $userEmail = Session::get('user_email');
+        $userPrenom = Session::get('user_prenom');
+        
+        if ($userEmail && $userPrenom) {
+            require_once __DIR__ . '/../config/mail.php';
+            
+            $detailsCommande = [
+                'menu_nom' => $commande['menu_nom'],
+                'nombre_personne' => $nombrePersonnes,
+                'date_prestation' => $dateLivraison,
+                'prix_par_personne' => $commande['menu_prix']
+            ];
+            
+            sendOrderUpdateEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
+        }
 
         $this->redirect('/mes-commandes');
     }
@@ -136,24 +180,24 @@ class CommandeController extends Controller
      */
     public function cancel()
     {
-        $user = Session::get('user');
-        if (!$user) {
+        $userId = Session::get('user_id');
+        if (!$userId) {
             $this->redirect('/login');
         }
 
         $request = new Request();
-        $id = $request->get('id');
+        $numeroCommande = $request->get('numero');
 
         $commandeModel = new Commande();
-        $commande = $commandeModel->findById((int)$id);
+        $commande = $commandeModel->findByNumero($numeroCommande);
 
         // Vérifier que la commande appartient à l'utilisateur
-        if (!$commande || $commande['utilisateur_id'] != $user['id']) {
+        if (!$commande || $commande['utilisateur_id'] != $userId) {
             $this->redirect('/mes-commandes');
         }
 
         // Mettre à jour le statut au lieu de supprimer
-        $commandeModel->update((int)$id, ['statut' => 'annulee']);
+        $commandeModel->updateByNumero($numeroCommande, ['statut' => 'annulée']);
 
         $this->redirect('/mes-commandes');
     }

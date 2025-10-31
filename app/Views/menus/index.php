@@ -3,12 +3,47 @@
 <div class="container">
     <h1 class="mb-4"><i class="bi bi-card-list"></i> Nos Menus</h1>
 
+    <!-- Filtres -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title mb-3"><i class="bi bi-funnel"></i> Filtres</h5>
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="filterRegime" class="form-label">Type de menu</label>
+                    <select class="form-select" id="filterRegime">
+                        <option value="">Tous les régimes</option>
+                        <option value="Omnivore">Omnivore</option>
+                        <option value="Végétarien">Végétarien</option>
+                        <option value="Végétalien">Végétalien</option>
+                        <option value="Sans gluten">Sans gluten</option>
+                        <option value="Sans lactose">Sans lactose</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="filterPersonnes" class="form-label">Nombre de personnes</label>
+                    <select class="form-select" id="filterPersonnes">
+                        <option value="">Toutes les quantités</option>
+                        <option value="2">2 personnes minimum</option>
+                        <option value="4">4 personnes minimum</option>
+                        <option value="6">6 personnes minimum</option>
+                        <option value="8">8 personnes minimum</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button class="btn btn-secondary w-100" id="btnResetFilters">
+                        <i class="bi bi-x-circle"></i> Réinitialiser
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <?php if (empty($menus)): ?>
         <div class="alert alert-info">
             <i class="bi bi-info-circle"></i> Aucun menu disponible pour le moment.
         </div>
     <?php else: ?>
-        <div class="row">
+        <div class="row" id="menusContainer">
             <?php 
             $gradientClasses = ['gradient-bordeaux', 'gradient-gold', 'gradient-bordeaux-gold', 'gradient-dark-gold'];
             $icons = ['🍽️', '🥗', '🍷', '🧀'];
@@ -18,7 +53,9 @@
                 $icon = $icons[$index % count($icons)];
                 $index++;
             ?>
-                <div class="col-md-6 col-lg-4 mb-4">
+                <div class="col-md-6 col-lg-4 mb-4 menu-item" 
+                     data-regime="<?= htmlspecialchars($menu['regime'] ?? '') ?>"
+                     data-min-personnes="<?= $menu['nombre_personne_minimum'] ?? 1 ?>">
                     <div class="card h-100 shadow-sm">
                         <!-- Image avec gradient aux couleurs de la charte -->
                         <div class="card-img-top menu-card-img <?= $gradientClass ?>">
@@ -58,7 +95,69 @@
                 </div>
             <?php endforeach; ?>
         </div>
+        
+        <div id="noResults" class="alert alert-warning d-none">
+            <i class="bi bi-exclamation-triangle"></i> Aucun menu ne correspond à vos critères.
+        </div>
     <?php endif; ?>
 </div>
+
+<script>
+// Filtres des menus
+document.addEventListener('DOMContentLoaded', function() {
+    const filterRegime = document.getElementById('filterRegime');
+    const filterPersonnes = document.getElementById('filterPersonnes');
+    const btnReset = document.getElementById('btnResetFilters');
+    const menuItems = document.querySelectorAll('.menu-item');
+    const noResults = document.getElementById('noResults');
+
+    function filterMenus() {
+        const selectedRegime = filterRegime.value;
+        const selectedPersonnes = parseInt(filterPersonnes.value) || 0;
+        let visibleCount = 0;
+
+        menuItems.forEach(item => {
+            const regime = item.dataset.regime;
+            const minPersonnes = parseInt(item.dataset.minPersonnes) || 1;
+            
+            let showItem = true;
+            
+            // Filtre par régime
+            if (selectedRegime && regime !== selectedRegime) {
+                showItem = false;
+            }
+            
+            // Filtre par nombre de personnes (afficher si le menu peut servir au moins ce nombre)
+            if (selectedPersonnes > 0 && minPersonnes > selectedPersonnes) {
+                showItem = false;
+            }
+            
+            if (showItem) {
+                item.classList.remove('d-none');
+                visibleCount++;
+            } else {
+                item.classList.add('d-none');
+            }
+        });
+
+        // Afficher le message "aucun résultat"
+        if (visibleCount === 0) {
+            noResults.classList.remove('d-none');
+        } else {
+            noResults.classList.add('d-none');
+        }
+    }
+
+    // Événements
+    filterRegime.addEventListener('change', filterMenus);
+    filterPersonnes.addEventListener('change', filterMenus);
+    
+    btnReset.addEventListener('click', function() {
+        filterRegime.value = '';
+        filterPersonnes.value = '';
+        filterMenus();
+    });
+});
+</script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

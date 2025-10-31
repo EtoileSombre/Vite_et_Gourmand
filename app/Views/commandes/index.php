@@ -25,34 +25,35 @@
                 <tbody>
                     <?php foreach ($commandes as $commande): ?>
                         <tr>
-                            <td>#<?= htmlspecialchars($commande['id']) ?></td>
-                            <td><?= htmlspecialchars($commande['menu_nom']) ?></td>
-                            <td><?= htmlspecialchars($commande['quantite']) ?></td>
-                            <td><?= date('d/m/Y', strtotime($commande['date_livraison'])) ?></td>
+                            <td>#<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($commande['menu_nom'] ?? 'Menu supprimé') ?></td>
+                            <td><?= htmlspecialchars($commande['nombre_personne'] ?? 0) ?> pers.</td>
+                            <td><?= $commande['date_prestation'] ? date('d/m/Y', strtotime($commande['date_prestation'])) : 'Non définie' ?></td>
                             <td>
                                 <?php
-                                $statutClass = match($commande['statut']) {
-                                    'en_attente' => 'warning',
-                                    'validee' => 'success',
-                                    'annulee' => 'danger',
-                                    'livree' => 'info',
+                                $statut = $commande['statut'] ?? 'en attente';
+                                $statutClass = match($statut) {
+                                    'en attente' => 'warning',
+                                    'validée' => 'success',
+                                    'annulée' => 'danger',
+                                    'livrée' => 'info',
                                     default => 'secondary'
                                 };
-                                $statutText = match($commande['statut']) {
-                                    'en_attente' => 'En attente',
-                                    'validee' => 'Validée',
-                                    'annulee' => 'Annulée',
-                                    'livree' => 'Livrée',
-                                    default => $commande['statut']
-                                };
+                                $statutText = ucfirst($statut);
                                 ?>
                                 <span class="badge bg-<?= $statutClass ?>"><?= $statutText ?></span>
                             </td>
-                            <td><?= number_format($commande['menu_prix'] * $commande['quantite'], 2) ?> €</td>
                             <td>
-                                <?php if ($commande['statut'] === 'en_attente'): ?>
-                                    <a href="/commande/modifier?id=<?= $commande['id'] ?>" class="btn btn-sm btn-primary">Modifier</a>
-                                    <a href="/commande/annuler?id=<?= $commande['id'] ?>" class="btn btn-sm btn-danger" 
+                                <?php 
+                                $prixMenu = $commande['menu_prix'] ?? 0;
+                                $nbPersonnes = $commande['nombre_personne'] ?? 0;
+                                echo number_format($prixMenu * $nbPersonnes, 2, ',', ' ') . ' €';
+                                ?>
+                            </td>
+                            <td>
+                                <?php if ($statut === 'en attente'): ?>
+                                    <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-sm btn-primary">Modifier</a>
+                                    <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-sm btn-danger" 
                                        onclick="return confirm('Êtes-vous sûr de vouloir annuler cette commande ?');">Annuler</a>
                                 <?php else: ?>
                                     <span class="text-muted">-</span>

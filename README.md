@@ -1,4 +1,4 @@
-# 🍽️ Vite & Gourmand# 🍽️ Vite & Gourmand# 🍽️ Vite & Gourmand
+# 🍽️ Vite & Gourmand# 🍽️ Vite & Gourmand# 🍽️ Vite & Gourmand# 🍽️ Vite & Gourmand
 
 
 
@@ -6,7 +6,7 @@
 
 
 
-**Auteur :** EtoileSombre  > Projet réalisé dans le cadre du **BTS SIO (Services Informatiques aux Organisations)**> Projet réalisé dans le cadre du **Titre Professionnel Développeur Web & Web Mobile (DWWM)**
+**Auteur :** EtoileSombre  > Projet réalisé dans le cadre du **Titre Professionnel Développeur Web et Web Mobile (DWWM)**
 
 **Contexte :** Application web pour un traiteur bordelais (Julie & José)  
 
@@ -14,15 +14,15 @@
 
 
 
----**Auteur :** EtoileSombre  **Auteur :** EtoileSombre  
+---**Auteur :** EtoileSombre  > Projet réalisé dans le cadre du **BTS SIO (Services Informatiques aux Organisations)**> Projet réalisé dans le cadre du **Titre Professionnel Développeur Web & Web Mobile (DWWM)**
 
 
 
-## 📋 Présentation du projet**Contexte :** Application web pour un traiteur bordelais (Julie & José)  **Contexte :** Application web pour un traiteur bordelais (Julie & José)  
+## 📋 Présentation du projet**Contexte :** Application web pour un traiteur bordelais (Julie & José)  
 
 
 
-Application web de gestion de commandes pour un service traiteur permettant :**Date :** 2025**Date :** 2025
+Application web de gestion de commandes pour un service traiteur permettant :**Date :** 2025
 
 
 
@@ -30,7 +30,7 @@ Application web de gestion de commandes pour un service traiteur permettant :**D
 
 - 📦 Passation et suivi de commandes
 
-- 💬 Gestion des avis clients------
+- 💬 Gestion des avis clients---**Auteur :** EtoileSombre  **Auteur :** EtoileSombre  
 
 - 📧 Formulaire de contact
 
@@ -38,79 +38,79 @@ Application web de gestion de commandes pour un service traiteur permettant :**D
 
 
 
-### Technologies utilisées## 📋 Présentation du projet## 📋 Présentation du projet
+### Technologies utilisées## 📋 Présentation du projet**Contexte :** Application web pour un traiteur bordelais (Julie & José)  **Contexte :** Application web pour un traiteur bordelais (Julie & José)  
 
 
 
 - **Front-end :** HTML5, CSS3, Bootstrap 5.3.3, JavaScript
 
-- **Back-end :** PHP 8.3, Architecture MVC (Orientée Objet)
+- **Back-end :** PHP 8.3, Architecture MVC (Programmation Orientée Objet)
 
-- **Bases de données :** Application web de gestion de commandes pour un service traiteur permettant :Application web de gestion de commandes pour un service traiteur permettant :
+- **Bases de données :**Application web de gestion de commandes pour un service traiteur permettant :**Date :** 2025**Date :** 2025
 
-  - MySQL 8.0 (données principales)
+  - MySQL 8.0 (données relationnelles)
 
-  - MongoDB 6.0 (statistiques - bonus)
+  - MongoDB 6.0 (statistiques NoSQL)
 
 - **Environnement :** Docker, Apache
 
-- **Outils :** Git, Composer- 🍽️ Consultation des menus disponibles- 🍽️ Consultation des menus disponibles
+- **Outils :** Git, Composer, PHPMailer- 🍽️ Consultation des menus disponibles
 
 
 
----- 📦 Passation et suivi de commandes- 📦 Passation et suivi de commandes
+---- 📦 Passation et suivi de commandes
 
 
 
-## 🏗️ Architecture MVC- 💬 Gestion des avis clients- 💬 Gestion des avis clients
+## 🏗️ Architecture MVC- 💬 Gestion des avis clients------
 
 
 
-Le projet utilise le **pattern MVC (Model-View-Controller)** :- 📧 Formulaire de contact- 📧 Formulaire de contact
+Le projet suit le **design pattern MVC (Model-View-Controller)** avec une approche orientée objet :- 📧 Formulaire de contact
 
 
 
-```- 🔐 Espace d'administration (gestion menus, commandes, utilisateurs)- 🔐 Espace d'administration (gestion menus, commandes, utilisateurs)
+```- 🔐 Espace d'administration (gestion menus, commandes, utilisateurs)
 
 📁 app/
 
-├── Controllers/     → Traitent les requêtes utilisateur
+├── Controllers/     → Logique de l'application (traitement des requêtes)
 
-├── Models/          → Accèdent aux données (MySQL)
+├── Models/          → Accès aux données (MySQL, MongoDB)
 
-├── Views/           → Affichent les pages HTML### Technologies utilisées### Technologies utilisées
+├── Views/           → Templates d'affichage (HTML/PHP)### Technologies utilisées## 📋 Présentation du projet## 📋 Présentation du projet
 
-├── Core/            → Classes de base (Router, Database, etc.)
+├── Core/            → Classes de base (Router, Database, Model, Controller)
 
-├── config/          → Configuration
+├── config/          → Configuration (BDD, services)
 
-├── public/          → Point d'entrée (index.php, CSS, JS)
+├── public/          → Point d'entrée (index.php, assets CSS/JS)
 
-└── sql/             → Base de données- **Front-end :** HTML5, CSS3, Bootstrap 5.3.3, JavaScript- **Front-end :** HTML5, CSS3, Bootstrap 5.3.3, JavaScript
+└── sql/             → Scripts de création de base de données- **Front-end :** HTML5, CSS3, Bootstrap 5.3.3, JavaScript
 
 ```
 
-- **Back-end :** PHP 8.3, Architecture MVC (Orientée Objet)- **Back-end :** PHP 8.3, Architecture MVC (Programmation Orientée Objet)
+- **Back-end :** PHP 8.3, Architecture MVC (Orientée Objet)
 
-**Principe :** Séparer la logique métier (Controller), les données (Model) et l'affichage (View).
+**Principe :** Séparation des responsabilités entre la présentation (View), la logique métier (Controller) et les données (Model).
 
-- **Bases de données :** - **Bases de données :** 
+- **Bases de données :** Application web de gestion de commandes pour un service traiteur permettant :Application web de gestion de commandes pour un service traiteur permettant :
 
 ---
 
-  - MySQL 8.0 (données principales)  - MySQL 8.0 (données relationnelles)
+  - MySQL 8.0 (données principales)
 
 ## 🚀 Installation
 
-  - MongoDB 6.0 (statistiques - bonus)  - MongoDB 6.0 (statistiques NoSQL)
+  - MongoDB 6.0 (statistiques - bonus)
 
 ### Prérequis
 
-- **Environnement :** Docker, Apache- **Environnement :** Docker, Apache
+- **Environnement :** Docker, Apache
 
 - Docker Desktop ([télécharger](https://www.docker.com/products/docker-desktop/))
 
-- Git- **Outils :** Git, Composer- **Outils :** Git, Composer, PHPMailer
+- Git- **Outils :** Git, Composer- 🍽️ Consultation des menus disponibles- 🍽️ Consultation des menus disponibles
 
 
 
@@ -118,7 +118,7 @@ Le projet utilise le **pattern MVC (Model-View-Controller)** :- 📧 Formulaire 
 
 
 
-**1. Cloner le projet**------
+**1. Cloner le projet**---- 📦 Passation et suivi de commandes- 📦 Passation et suivi de commandes
 
 
 
@@ -126,7 +126,7 @@ Le projet utilise le **pattern MVC (Model-View-Controller)** :- 📧 Formulaire 
 
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 
-cd Vite_et_Gourmand## 🏗️ Architecture MVC## 🏗️ Architecture MVC
+cd Vite_et_Gourmand## 🏗️ Architecture MVC- 💬 Gestion des avis clients- 💬 Gestion des avis clients
 
 ```
 
@@ -134,7 +134,7 @@ cd Vite_et_Gourmand## 🏗️ Architecture MVC## 🏗️ Architecture MVC
 
 **2. Démarrer Docker**
 
-Le projet utilise le **pattern MVC (Model-View-Controller)** :Le projet suit le **design pattern MVC (Model-View-Controller)** avec une approche orientée objet :
+Le projet utilise le **pattern MVC (Model-View-Controller)** :- 📧 Formulaire de contact- 📧 Formulaire de contact
 
 ```bash
 
@@ -142,139 +142,416 @@ cd infra
 
 docker compose up -d --build
 
-`````````
+``````- 🔐 Espace d'administration (gestion menus, commandes, utilisateurs)- 🔐 Espace d'administration (gestion menus, commandes, utilisateurs)
 
 
 
-**3. Importer la base de données**📁 app/� app/
+**3. Importer la base de données**📁 app/
 
 
 
-```bash├── Controllers/     → Traitent les requêtes utilisateur├── Controllers/     → Logique de l'application (traitement des requêtes)
+```bash├── Controllers/     → Traitent les requêtes utilisateur
 
 docker exec -i vitegourmand-mysql mysql -u root -proot vite_et_gourmand < ../app/sql/vite_et_gourmand.sql
 
-```├── Models/          → Accèdent aux données (MySQL)├── Models/          → Accès aux données (MySQL, MongoDB)
+```├── Models/          → Accèdent aux données (MySQL)
 
 
 
-**4. Accéder à l'application**├── Views/           → Affichent les pages HTML├── Views/           → Templates d'affichage (HTML/PHP)
+**4. Accéder à l'application**├── Views/           → Affichent les pages HTML### Technologies utilisées### Technologies utilisées
 
 
 
-| Service | URL | Port |├── Core/            → Classes de base (Router, Database, etc.)├── Core/            → Classes de base (Router, Database, Validator)
+| Service | URL | Port |├── Core/            → Classes de base (Router, Database, etc.)
 
 |---------|-----|------|
 
-| 🍽️ Application | http://localhost:8080 | 8080 |├── config/          → Configuration├── config/          → Configuration (BDD, services)
+| 🍽️ Application | http://localhost:8080 | 8080 |├── config/          → Configuration
 
 | 🗄️ phpMyAdmin | http://localhost:8090 | 8090 |
 
-| 🍃 Mongo Express | http://localhost:8081 | 8081 |├── public/          → Point d'entrée (index.php, CSS, JS)├── public/          → Point d'entrée (index.php, assets CSS/JS)
+| 🍃 Mongo Express | http://localhost:8081 | 8081 |├── public/          → Point d'entrée (index.php, CSS, JS)
 
 | 📧 MailHog | http://localhost:8025 | 8025 |
 
-└── sql/             → Base de données└── sql/             → Scripts de création de base de données
+└── sql/             → Base de données- **Front-end :** HTML5, CSS3, Bootstrap 5.3.3, JavaScript- **Front-end :** HTML5, CSS3, Bootstrap 5.3.3, JavaScript
 
 ---
-
-``````
-
-## 👤 Comptes de test
-
-
-
-| Rôle | Email | Mot de passe |
-
-|------|-------|--------------|**Principe :** Séparer la logique métier (Controller), les données (Model) et l'affichage (View).**Principe :** Séparation des responsabilités entre la présentation (View), la logique métier (Controller) et les données (Model).
-
-| Administrateur | admin@viteetgourmand.fr | Admin123! |
-
-| Employé | employe@viteetgourmand.fr | Employe123! |
-
-| Client | client@test.fr | Client123! |
-
-------
-
----
-
-
-
-## 📂 Structure du code
-
-## 🚀 Installation## 🚀 Installation en local
-
-```text
-
-app/
-
-├── Controllers/        → HomeController, AuthController, MenuController, etc.
-
-├── Models/             → User, Menu, Commande, Avis### Prérequis### Prérequis
-
-├── Views/              → Pages HTML (auth, menus, commandes, profil, admin)
-
-├── Core/               → Router, Database, Model, Controller, Request, Session
-
-├── public/
-
-│   ├── index.php       → Point d'entrée unique- Docker Desktop ([télécharger](https://www.docker.com/products/docker-desktop/))- Docker Desktop installé ([télécharger ici](https://www.docker.com/products/docker-desktop/))
-
-│   ├── assets/css/     → Styles CSS personnalisés
-
-│   └── assets/js/      → Scripts JavaScript- Git- Git installé
-
-└── routes.php          → Définition des routes
 
 ```
 
+## 👤 Comptes de test
 
+- **Back-end :** PHP 8.3, Architecture MVC (Orientée Objet)- **Back-end :** PHP 8.3, Architecture MVC (Programmation Orientée Objet)
 
----### Étapes### Étapes d'installation
+| Rôle | Email | Mot de passe |
 
+|------|-------|--------------|**Principe :** Séparer la logique métier (Controller), les données (Model) et l'affichage (View).
 
+| Administrateur | `admin@viteetgourmand.fr` | Admin123! |
 
-## 🔐 Sécurité
+| Employé | `employe@viteetgourmand.fr` | Employe123! |- **Bases de données :** - **Bases de données :** 
 
-
-
-- **Mots de passe** : `password_hash()` (bcrypt)**1. Cloner le projet****1. Cloner le projet**
-
-- **SQL** : Requêtes préparées PDO
-
-- **XSS** : `htmlspecialchars()` sur les affichages
-
-- **Sessions** : Gestion sécurisée des connexions
-
-```bash```bash
+| Client | `client@test.fr` | Client123! |
 
 ---
 
-git clone https://github.com/EtoileSombre/Vite_et_Gourmand.gitgit clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
+---
+
+  - MySQL 8.0 (données principales)  - MySQL 8.0 (données relationnelles)
+
+## 📚 Ce que j'ai appris
+
+## 🚀 Installation
+
+### Programmation Orientée Objet (POO)
+
+  - MongoDB 6.0 (statistiques - bonus)  - MongoDB 6.0 (statistiques NoSQL)
+
+- Classes et héritage (Controller, Model)
+
+- Encapsulation et visibilité (private, protected, public)### Prérequis
+
+- Namespaces et autoloading PSR-4
+
+- Singleton pattern (Database)- **Environnement :** Docker, Apache- **Environnement :** Docker, Apache
+
+
+
+### Architecture MVC- Docker Desktop ([télécharger](https://www.docker.com/products/docker-desktop/))
+
+
+
+- Séparation des responsabilités- Git- **Outils :** Git, Composer- **Outils :** Git, Composer, PHPMailer
+
+- Routage des URL vers les Controllers
+
+- Communication Model ↔ Controller ↔ View
+
+- Gestion des requêtes HTTP
+
+### Étapes
+
+### Bases de données
+
+
+
+- **MySQL :** Requêtes SQL (SELECT, JOIN, INSERT, UPDATE, DELETE)
+
+- **MongoDB :** NoSQL pour les statistiques (bonus)**1. Cloner le projet**------
+
+- PDO et requêtes préparées (sécurité)
+
+- Modélisation (MCD, MLD, MPD)
+
+
+
+### Sécurité```bash
+
+
+
+- Validation des données utilisateurgit clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
+
+- Protection contre les injections SQL (PDO)
+
+- Hashage des mots de passe (password_hash)cd Vite_et_Gourmand## 🏗️ Architecture MVC## 🏗️ Architecture MVC
+
+- Sessions et authentification
+
+- Protection XSS (htmlspecialchars)```
+
+
+
+### Outils professionnels
+
+
+
+- Git et GitHub (versionning)**2. Démarrer Docker**
+
+- Docker (conteneurisation)
+
+- Composer (gestion des dépendances)Le projet utilise le **pattern MVC (Model-View-Controller)** :Le projet suit le **design pattern MVC (Model-View-Controller)** avec une approche orientée objet :
+
+- Bootstrap (framework CSS responsive)
+
+```bash
+
+---
+
+cd infra
 
 ## 🎯 Fonctionnalités principales
 
-cd Vite_et_Gourmandcd Vite_et_Gourmand
+docker compose up -d --build
 
-### Pour tous
+### Partie publique (visiteurs)
 
-- Voir les menus disponibles``````
+`````````
 
-- Contacter le traiteur
+- Consultation des menus disponibles
+
+- Formulaire de contact
+
+- Inscription et connexion
+
+**3. Importer la base de données**📁 app/� app/
+
+### Partie cliente (utilisateur connecté)
 
 
 
-### Client connecté
+- Passer une commande
 
-- Passer une commande**2. Démarrer Docker****2. Configurer les variables d'environnement**
+- Consulter l'historique des commandes```bash├── Controllers/     → Traitent les requêtes utilisateur├── Controllers/     → Logique de l'application (traitement des requêtes)
 
-- Voir ses commandes
+- Modifier une commande (si statut = "en attente")
 
-- Modifier/annuler une commande
+- Annuler une commandedocker exec -i vitegourmand-mysql mysql -u root -proot vite_et_gourmand < ../app/sql/vite_et_gourmand.sql
 
-- Donner un avis
+- Donner un avis après une commande terminée
 
-```bashCopier le fichier d'exemple :
+```├── Models/          → Accèdent aux données (MySQL)├── Models/          → Accès aux données (MySQL, MongoDB)
+
+### Partie administration (admin/employé)
+
+
+
+- Gérer les menus (CRUD)
+
+- Gérer les commandes (validation, suivi)**4. Accéder à l'application**├── Views/           → Affichent les pages HTML├── Views/           → Templates d'affichage (HTML/PHP)
+
+- Gérer les utilisateurs
+
+- Modérer les avis clients
+
+- Consulter les statistiques (MongoDB)
+
+| Service | URL | Port |├── Core/            → Classes de base (Router, Database, etc.)├── Core/            → Classes de base (Router, Database, Validator)
+
+---
+
+|---------|-----|------|
+
+## 🗂️ Structure de la base de données
+
+| 🍽️ Application | http://localhost:8080 | 8080 |├── config/          → Configuration├── config/          → Configuration (BDD, services)
+
+### Tables principales (MySQL)
+
+| 🗄️ phpMyAdmin | http://localhost:8090 | 8090 |
+
+- **utilisateur** : Comptes clients, employés, admin
+
+- **role** : Rôles (client, employé, administrateur)| 🍃 Mongo Express | http://localhost:8081 | 8081 |├── public/          → Point d'entrée (index.php, CSS, JS)├── public/          → Point d'entrée (index.php, assets CSS/JS)
+
+- **menu** : Menus proposés par le traiteur
+
+- **commande** : Commandes passées| 📧 MailHog | http://localhost:8025 | 8025 |
+
+- **avis** : Avis clients sur les menus
+
+- **plat** : Plats individuels└── sql/             → Base de données└── sql/             → Scripts de création de base de données
+
+- **composer** : Association menu ↔ plats
+
+- **regime** : Régimes alimentaires (végétarien, sans gluten, etc.)---
+
+- **theme** : Thèmes des événements
+
+``````
+
+### Collections MongoDB
+
+## 👤 Comptes de test
+
+- **statistiques_commandes** : Données agrégées sur les commandes
+
+- **logs** : Logs d'activité
+
+
+
+---| Rôle | Email | Mot de passe |
+
+
+
+## 📦 Dépendances (Composer)|------|-------|--------------|**Principe :** Séparer la logique métier (Controller), les données (Model) et l'affichage (View).**Principe :** Séparation des responsabilités entre la présentation (View), la logique métier (Controller) et les données (Model).
+
+
+
+```json| Administrateur | admin@viteetgourmand.fr | Admin123! |
+
+{
+
+  "require": {| Employé | employe@viteetgourmand.fr | Employe123! |
+
+    "phpmailer/phpmailer": "^6.9",
+
+    "mongodb/mongodb": "^1.20"| Client | client@test.fr | Client123! |
+
+  }
+
+}------
+
+```
+
+---
+
+- **PHPMailer** : Envoi d'emails (confirmations de commande, contact)
+
+- **MongoDB** : Driver PHP pour MongoDB
+
+
+
+---## 📂 Structure du code
+
+
+
+## 🔧 Configuration Docker## 🚀 Installation## 🚀 Installation en local
+
+
+
+Le projet utilise Docker Compose pour orchestrer les services :```text
+
+
+
+- **PHP 8.3** avec Apacheapp/
+
+- **MySQL 8.3** (base de données principale)
+
+- **MongoDB 6.0** (statistiques)├── Controllers/        → HomeController, AuthController, MenuController, etc.
+
+- **phpMyAdmin** (interface MySQL)
+
+- **Mongo Express** (interface MongoDB)├── Models/             → User, Menu, Commande, Avis### Prérequis### Prérequis
+
+- **MailHog** (capture des emails en développement)
+
+├── Views/              → Pages HTML (auth, menus, commandes, profil, admin)
+
+Fichier : `infra/docker-compose.yml`
+
+├── Core/               → Router, Database, Model, Controller, Request, Session
+
+---
+
+├── public/
+
+## 🎨 Charte graphique
+
+│   ├── index.php       → Point d'entrée unique- Docker Desktop ([télécharger](https://www.docker.com/products/docker-desktop/))- Docker Desktop installé ([télécharger ici](https://www.docker.com/products/docker-desktop/))
+
+- **Couleurs principales :**
+
+  - Bordeaux : `#9B1C1C`│   ├── assets/css/     → Styles CSS personnalisés
+
+  - Vert : `#10B981`
+
+  - Jaune : `#FBBF24`│   └── assets/js/      → Scripts JavaScript- Git- Git installé
+
+- **Typographie :** Bootstrap + polices système
+
+- **Framework CSS :** Bootstrap 5.3.3└── routes.php          → Définition des routes
+
+- **Responsive :** Mobile-first
+
+```
+
+Documentation complète : `docs/CHARTE_GRAPHIQUE.md`
+
+
+
+---
+
+---### Étapes### Étapes d'installation
+
+## 📖 Documentation
+
+
+
+Le dossier `docs/` contient :
+
+## 🔐 Sécurité
+
+- **CHARTE_GRAPHIQUE.md** : Guide de style
+
+- **CONFORMITE_BDD.md** : Vérification du modèle de données
+
+- **PLAN_ACTION.md** : Roadmap du projet
+
+- **PRESENTATION_EXAMEN.md** : Script de présentation pour le jury- **Mots de passe** : `password_hash()` (bcrypt)**1. Cloner le projet****1. Cloner le projet**
+
+- **PRESENTATION_MONGODB.md** : Justification de l'utilisation de MongoDB
+
+- **ROLE_BOOTSTRAP.md** : Utilisation de Bootstrap- **SQL** : Requêtes préparées PDO
+
+- **diagrams/** : Diagrammes UML (cas d'utilisation, séquence, classes, MCD/MLD/MPD)
+
+- **XSS** : `htmlspecialchars()` sur les affichages
+
+---
+
+- **Sessions** : Gestion sécurisée des connexions
+
+## 🚀 Améliorations futures
+
+```bash```bash
+
+- Système de paiement en ligne
+
+- Notifications push pour les clients---
+
+- Export PDF des commandes
+
+- Tableau de bord avec graphiques (Chart.js)git clone https://github.com/EtoileSombre/Vite_et_Gourmand.gitgit clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
+
+- API REST pour une application mobile
+
+- Système de réservation de créneaux## 🎯 Fonctionnalités principales
+
+
+
+---cd Vite_et_Gourmandcd Vite_et_Gourmand
+
+
+
+## 📜 Licence### Pour tous
+
+
+
+Projet réalisé à des fins pédagogiques dans le cadre du Titre Professionnel DWWM.- Voir les menus disponibles``````
+
+
+
+---- Contacter le traiteur
+
+
+
+## 👨‍💻 Auteur
+
+
+
+**EtoileSombre**  ### Client connecté
+
+GitHub : [EtoileSombre](https://github.com/EtoileSombre)  
+
+Projet : [Vite_et_Gourmand](https://github.com/EtoileSombre/Vite_et_Gourmand)- Passer une commande**2. Démarrer Docker****2. Configurer les variables d'environnement**
+
+
+
+---- Voir ses commandes
+
+
+
+## 🙏 Remerciements- Modifier/annuler une commande
+
+
+
+- Formateurs et équipe pédagogique- Donner un avis
+
+- Communauté PHP et ressources en ligne
+
+- Bootstrap, PHPMailer, MongoDB```bashCopier le fichier d'exemple :
+
 
 ### Administrateur
 

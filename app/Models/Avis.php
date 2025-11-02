@@ -65,11 +65,9 @@ class Avis extends Model
     public function findPending(): array
     {
         $stmt = $this->db->prepare("
-            SELECT a.*, u.prenom, u.nom, u.email,
-                   m.titre as menu_titre
+            SELECT a.*, u.prenom, u.nom, u.email
             FROM {$this->table} a
             INNER JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
-            LEFT JOIN menu m ON a.menu_id = m.menu_id
             WHERE a.statut = 'en attente'
             ORDER BY a.created_at DESC
         ");
@@ -87,13 +85,12 @@ class Avis extends Model
     {
         $stmt = $this->db->prepare("
             INSERT INTO {$this->table} 
-            (utilisateur_id, menu_id, note, description, statut, created_at)
-            VALUES (:user_id, :menu_id, :note, :description, 'en attente', NOW())
+            (utilisateur_id, note, description, statut, created_at)
+            VALUES (:user_id, :note, :description, 'en attente', NOW())
         ");
         
         $stmt->execute([
             'user_id' => $data['utilisateur_id'],
-            'menu_id' => $data['menu_id'] ?? null,
             'note' => $data['note'],
             'description' => $data['description']
         ]);

@@ -72,6 +72,9 @@ $router->post('/profil', 'App\Controllers\ProfilController', 'index');
 // Dashboard admin
 $router->get('/admin', 'App\Controllers\AdminController', 'dashboard');
 
+// Statistiques MongoDB (admin)
+$router->get('/admin/stats', 'App\Controllers\StatsController', 'index');
+
 // Gestion des utilisateurs (admin)
 $router->get('/admin/utilisateurs', 'App\Controllers\AdminController', 'users');
 

@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
 use App\Models\Avis;
+use App\Helpers\MongoLogger;
 
 class AvisController extends Controller
 {
@@ -21,9 +22,10 @@ class AvisController extends Controller
      */
     public function store()
     {
-        $user = Session::get('user');
-        if (!$user) {
+        $userId = Session::get('user_id');
+        if (!$userId) {
             $this->redirect('/login');
+            return;
         }
 
         $request = new Request();
@@ -34,24 +36,26 @@ class AvisController extends Controller
         // Validation
         if (!$note || !$commentaire || $note < 1 || $note > 5) {
             Session::set('error', 'Données invalides. Note requise entre 1 et 5.');
-            $this->redirect('/avis/create');
+            $this->redirect('/donner-avis');
         }
 
         // Créer l'avis via le modèle
         try {
-            $this->avisModel->createAvis([
-                'utilisateur_id' => $user['utilisateur_id'],
-                'menu_id' => $menuId,
+            $avisId = $this->avisModel->createAvis([
+                'utilisateur_id' => $userId,
                 'note' => $note,
                 'description' => htmlspecialchars($commentaire)
             ]);
+            
+            // Logger l'avis dans MongoDB
+            MongoLogger::logAvis($avisId, $userId, (int)$note);
             
             Session::set('success', 'Votre avis a été enregistré et sera publié après validation.');
             $this->redirect('/');
         } catch (\Exception $e) {
             error_log("Erreur création avis : " . $e->getMessage());
             Session::set('error', 'Erreur lors de l\'enregistrement de votre avis.');
-            $this->redirect('/avis/create');
+            $this->redirect('/donner-avis');
         }
     }
 
@@ -60,9 +64,10 @@ class AvisController extends Controller
      */
     public function create()
     {
-        $user = Session::get('user');
-        if (!$user) {
+        $userId = Session::get('user_id');
+        if (!$userId) {
             $this->redirect('/login');
+            return;
         }
 
         $this->render('avis/create');

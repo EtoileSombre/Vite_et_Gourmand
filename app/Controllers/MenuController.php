@@ -4,8 +4,9 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Request;
+use App\Core\Session;
 use App\Models\Menu;
-use App\Services\MongoStats;
+use App\Helpers\MongoLogger;
 
 /**
  * Contrôleur Menu
@@ -14,17 +15,10 @@ use App\Services\MongoStats;
 class MenuController extends Controller
 {
     private Menu $menuModel;
-    private MongoStats $stats;
 
     public function __construct()
     {
         $this->menuModel = new Menu();
-        
-        // Charger MongoStats si disponible
-        if (class_exists('MongoStats')) {
-            require_once __DIR__ . '/../config/MongoStats.php';
-            $this->stats = new MongoStats();
-        }
     }
 
     /**
@@ -38,13 +32,10 @@ class MenuController extends Controller
         // Récupérer tous les menus actifs
         $menus = $this->menuModel->findActive();
 
-        // Logger la consultation dans MongoDB (si disponible)
-        if (isset($this->stats) && $this->stats->isAvailable()) {
-            $this->stats->logMenuView('liste_menus', [
-                'count' => count($menus),
-                'timestamp' => date('Y-m-d H:i:s')
-            ]);
-        }
+        // Logger la consultation dans MongoDB
+        MongoLogger::logUserActivity('view_menus_list', Session::get('user_id'), [
+            'count' => count($menus)
+        ]);
 
         // Afficher la vue
         $this->render('menus/index', [
@@ -77,14 +68,8 @@ class MenuController extends Controller
             return;
         }
 
-        // Logger la consultation dans MongoDB (si disponible)
-        if (isset($this->stats) && $this->stats->isAvailable()) {
-            $this->stats->logMenuView($id, [
-                'titre' => $menu['titre'],
-                'prix' => $menu['prix'],
-                'timestamp' => date('Y-m-d H:i:s')
-            ]);
-        }
+        // Logger la consultation du menu dans MongoDB
+        MongoLogger::logMenuView((int)$id, Session::get('user_id'), $menu['titre']);
 
         // Afficher la vue
         $this->render('menus/show', [

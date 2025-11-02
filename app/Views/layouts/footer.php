@@ -15,5 +15,6 @@
     <script src="/assets/js/validation.js"></script>
     <script src="/assets/js/commandes.js"></script>
     <script src="/assets/js/avis.js"></script>
+    <script src="/assets/js/menus.js"></script>
 </body>
 </html>

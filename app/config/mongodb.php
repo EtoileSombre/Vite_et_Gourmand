@@ -8,9 +8,9 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
-    // Connexion MongoDB
+    // Connexion MongoDB avec les bons identifiants
     $mongoClient = new MongoDB\Client(
-        "mongodb://root:rootpassword@mongo:27017",
+        "mongodb://vgroot:vgrootpass@mongo:27017",
         [],
         [
             'typeMap' => [
@@ -22,7 +22,7 @@ try {
     );
 
     // Sélection de la base de données
-    $mongodb = $mongoClient->vite_et_gourmand_stats;
+    $mongodb = $mongoClient->vg;
 
     // Collections principales
     $mongoCollections = [

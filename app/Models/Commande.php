@@ -9,6 +9,23 @@ class Commande extends Model
     protected $table = 'commande';
 
     /**
+     * Récupère toutes les commandes avec détails
+     * 
+     * @return array
+     */
+    public function findAll()
+    {
+        $stmt = $this->db->prepare('
+            SELECT c.*, m.titre as menu_nom, m.prix_par_personne as menu_prix 
+            FROM commande c
+            LEFT JOIN menu m ON c.menu_id = m.menu_id
+            ORDER BY c.date_commande DESC
+        ');
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
      * Trouve toutes les commandes d'un utilisateur
      * 
      * @param int $userId

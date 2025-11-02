@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Models\User;
 use App\Core\Request;
 use App\Core\Session;
+use App\Helpers\MongoLogger;
 
 class AuthController extends Controller
 {
@@ -30,6 +31,12 @@ class AuthController extends Controller
                     Session::set('user_prenom', $user['prenom']);
                     Session::set('user_email', $user['email']);
                     Session::set('user_role', $user['role']);
+                    
+                    // Logger la connexion dans MongoDB
+                    MongoLogger::logUserActivity('login', $user['utilisateur_id'], [
+                        'role' => $user['role'],
+                        'email' => $user['email']
+                    ]);
                     
                     if ($user['role'] === 'administrateur') {
                         $this->redirect('/admin');

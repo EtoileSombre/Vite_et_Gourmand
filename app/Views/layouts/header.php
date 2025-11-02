@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $title ?? 'Vite & Gourmand' ?></title>
     
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     
@@ -40,14 +43,16 @@
                                 <span class="badge bg-secondary"><?= htmlspecialchars($_SESSION['user_role'] ?? 'client') ?></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <?php if (($_SESSION['user_role'] ?? '') === 'admin'): ?>
+                                <?php if (($_SESSION['user_role'] ?? '') === 'administrateur'): ?>
                                     <li><a class="dropdown-item" href="/admin">📊 Dashboard Admin</a></li>
+                                    <li><a class="dropdown-item" href="/admin/stats">📈 Statistiques MongoDB</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php elseif (($_SESSION['user_role'] ?? '') === 'employe'): ?>
                                     <li><a class="dropdown-item" href="/employe">📋 Dashboard Employé</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php else: ?>
                                     <li><a class="dropdown-item" href="/mes-commandes">📦 Mes commandes</a></li>
+                                    <li><a class="dropdown-item" href="/donner-avis">⭐ Donner un avis</a></li>
                                     <li><a class="dropdown-item" href="/profil">👤 Mon compte</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php endif; ?>
@@ -63,6 +68,32 @@
             </div>
         </div>
     </nav>
+
+    <!-- Messages flash -->
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="container mt-3">
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['success']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    <?php 
+        unset($_SESSION['success']);
+    endif;
+    
+    if (isset($_SESSION['error'])): ?>
+        <div class="container mt-3">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['error']) ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    <?php 
+        unset($_SESSION['error']);
+    endif;
+    ?>
 
     <!-- Contenu principal -->
     <main class="flex-grow-1">

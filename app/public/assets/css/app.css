@@ -293,3 +293,161 @@ body{
 .star-rating label:hover ~ label {
   color: #ddd;
 }
+
+/* ========================================
+   MEDIA QUERIES RESPONSIVE
+   ======================================== */
+
+/* 📱 Mobile Portrait (< 576px) */
+@media (max-width: 575.98px) {
+  /* Titre hero plus petit sur mobile */
+  .hero h1 {
+    font-size: 28px !important;
+    line-height: 1.2;
+  }
+
+  /* Padding réduit sur hero mobile */
+  .hero {
+    padding: 30px 0 20px;
+  }
+
+  /* Cartes menus occupent toute la largeur */
+  .card {
+    margin-bottom: 1rem;
+  }
+
+  /* Étoiles de notation plus petites sur mobile */
+  .star-rating {
+    font-size: 1.5rem;
+  }
+
+  /* Boutons pleine largeur sur mobile */
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Navbar brand plus compact */
+  .navbar-brand {
+    font-size: 1.1rem !important;
+  }
+
+  /* Timeline centrée sur mobile */
+  .timeline-item {
+    padding-left: 30px;
+  }
+}
+
+/* 📱 Mobile Landscape / Tablette Portrait (576px - 768px) */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  /* Titre hero ajusté pour tablette portrait */
+  .hero h1 {
+    font-size: 36px;
+  }
+
+  /* Container légèrement plus large */
+  .container {
+    max-width: 540px;
+  }
+
+  /* Cartes en 2 colonnes sur petite tablette */
+  .card-deck .card {
+    flex: 0 0 48%;
+    margin-bottom: 1rem;
+  }
+}
+
+/* 💻 Tablette Landscape (768px - 992px) */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  /* Titre hero taille moyenne */
+  .hero h1 {
+    font-size: 42px;
+  }
+
+  /* Navbar sticky avec ombre sur tablette */
+  .navbar {
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Sidebar ne colle pas sur tablette (économie d'espace) */
+  .sticky-sidebar {
+    position: static;
+  }
+}
+
+/* 🖥️ Desktop (992px - 1200px) */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  /* Container ajusté pour desktop moyen */
+  .container {
+    max-width: 960px;
+  }
+
+  /* Hero avec plus d'espace */
+  .hero {
+    padding: 80px 0 60px;
+  }
+}
+
+/* 🖥️ Large Desktop (> 1200px) */
+@media (min-width: 1200px) {
+  /* Container maximal */
+  .container {
+    max-width: 1100px;
+  }
+
+  /* Hero pleine hauteur sur grand écran */
+  .hero {
+    padding: 100px 0 80px;
+  }
+
+  /* Titre hero taille maximale */
+  .hero h1 {
+    font-size: 56px;
+  }
+
+  /* Cartes avec plus d'espacement */
+  .card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  /* Effet hover sur cartes (seulement desktop) */
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* 🎨 Mode paysage mobile (orientation landscape) */
+@media (max-width: 767.98px) and (orientation: landscape) {
+  /* Réduire le padding vertical en mode paysage */
+  .hero {
+    padding: 20px 0;
+  }
+
+  /* Navbar plus compacte en paysage mobile */
+  .navbar {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
+}
+
+/* 🖨️ Mode impression */
+@media print {
+  /* Cacher navbar et footer à l'impression */
+  .navbar,
+  footer,
+  .btn {
+    display: none !important;
+  }
+
+  /* Fond blanc pour économiser l'encre */
+  body {
+    background: white;
+  }
+
+  /* Bordures noires pour les cartes */
+  .card {
+    border: 1px solid #000;
+    page-break-inside: avoid;
+  }
+}

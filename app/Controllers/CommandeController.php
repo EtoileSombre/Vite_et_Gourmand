@@ -7,6 +7,7 @@ use App\Models\Commande;
 use App\Models\Menu;
 use App\Core\Request;
 use App\Core\Session;
+use App\Helpers\MongoLogger;
 
 class CommandeController extends Controller
 {
@@ -93,6 +94,11 @@ class CommandeController extends Controller
             sendOrderConfirmationEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
         }
 
+        // Logger la commande dans MongoDB
+        $montantTotal = $menu['prix_par_personne'] * $nombrePersonnes;
+        MongoLogger::logCommande($numeroCommande, $userId, $menuId, $nombrePersonnes, $montantTotal);
+
+        Session::set('success', 'Votre commande a été enregistrée avec succès ! Un email de confirmation vous a été envoyé.');
         $this->redirect('/mes-commandes');
     }
 

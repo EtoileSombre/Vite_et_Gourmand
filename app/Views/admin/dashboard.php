@@ -1,7 +1,12 @@
 <?php include __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="container mt-5">
-    <h2>Administration - Dashboard</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Administration - Dashboard</h2>
+        <a href="/admin/stats" class="btn btn-primary">
+            <i class="bi bi-graph-up"></i> Statistiques MongoDB
+        </a>
+    </div>
     
     <div class="row mt-4">
         <div class="col-md-4">
@@ -51,23 +56,23 @@
                     <tbody>
                         <?php foreach ($dernieresCommandes as $commande): ?>
                             <tr>
-                                <td>#<?= htmlspecialchars($commande['id']) ?></td>
-                                <td><?= htmlspecialchars($commande['utilisateur_id']) ?></td>
-                                <td><?= htmlspecialchars($commande['menu_id']) ?></td>
-                                <td><?= htmlspecialchars($commande['quantite']) ?></td>
+                                <td>#<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($commande['utilisateur_id'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($commande['menu_nom'] ?? $commande['menu_id'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($commande['nombre_personne'] ?? 'N/A') ?></td>
                                 <td>
                                     <?php
-                                    $statutClass = match($commande['statut']) {
-                                        'en_attente' => 'warning',
-                                        'validee' => 'success',
-                                        'annulee' => 'danger',
-                                        'livree' => 'info',
+                                    $statutClass = match($commande['statut'] ?? 'en attente') {
+                                        'en_attente', 'en attente' => 'warning',
+                                        'validee', 'validée' => 'success',
+                                        'annulee', 'annulée' => 'danger',
+                                        'livree', 'livrée', 'en cours' => 'info',
                                         default => 'secondary'
                                     };
                                     ?>
-                                    <span class="badge bg-<?= $statutClass ?>"><?= htmlspecialchars($commande['statut']) ?></span>
+                                    <span class="badge bg-<?= $statutClass ?>"><?= htmlspecialchars($commande['statut'] ?? 'en attente') ?></span>
                                 </td>
-                                <td><?= date('d/m/Y H:i', strtotime($commande['date_commande'])) ?></td>
+                                <td><?= isset($commande['date_commande']) ? date('d/m/Y', strtotime($commande['date_commande'])) : 'N/A' ?></td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>

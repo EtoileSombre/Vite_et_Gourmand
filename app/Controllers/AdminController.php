@@ -15,9 +15,10 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        $user = Session::get('user');
-        if (!$user || $user['role'] !== 'admin') {
+        $userRole = Session::get('user_role');
+        if (!$userRole || $userRole !== 'administrateur') {
             $this->redirect('/');
+            return;
         }
 
         // Récupérer les statistiques
@@ -47,9 +48,10 @@ class AdminController extends Controller
      */
     public function users()
     {
-        $user = Session::get('user');
-        if (!$user || $user['role'] !== 'admin') {
+        $userRole = Session::get('user_role');
+        if (!$userRole || $userRole !== 'administrateur') {
             $this->redirect('/');
+            return;
         }
 
         $userModel = new User();
@@ -63,9 +65,10 @@ class AdminController extends Controller
      */
     public function commandes()
     {
-        $user = Session::get('user');
-        if (!$user || $user['role'] !== 'admin') {
+        $userRole = Session::get('user_role');
+        if (!$userRole || $userRole !== 'administrateur') {
             $this->redirect('/');
+            return;
         }
 
         $commandeModel = new Commande();

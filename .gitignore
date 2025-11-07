@@ -1,0 +1,121 @@
+# ============================================================
+# 🎯 GITIGNORE — Projet Vite & Gourmand (DWWM / Docker / PHP)
+# ============================================================
+
+# -----------------------------
+# 🧠 VS / VS Code
+# -----------------------------
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# -----------------------------
+# 🧾 Logs & Historique
+# -----------------------------
+*.log
+logs/
+.history/
+.vshistory/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# -----------------------------
+# 🧱 Build / Cache
+# -----------------------------
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+dist/
+build/
+tmp/
+.cache/
+coverage/
+
+# -----------------------------
+# ⚙️ Node.js / Frontend
+# -----------------------------
+node_modules/
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# -----------------------------
+# 🐘 PHP / Composer
+# -----------------------------
+vendor/
+# Note: composer.lock devrait être versionné pour garantir les mêmes versions
+composer.phar
+
+# -----------------------------
+# 🐳 Docker
+# -----------------------------
+# Volumes, images, data persistantes
+data/
+volumes/
+**/tmp/
+**/cache/
+
+# Images / exports
+*.tar
+*.pid
+*.seed
+*.bak
+
+# -----------------------------
+# 🔐 Environnements
+# -----------------------------
+# ⚠️ NE PAS versionner les fichiers sensibles
+.env
+*.env
+infra/.env
+
+# ✅ Garder le modèle versionné
+!infra/.env.example
+
+# -----------------------------
+# 🗃️ Base de données locales
+# -----------------------------
+# Ignorer les dumps et backups, mais garder les fichiers de migration
+*.sqlite
+dump.sql
+backup.sql
+**/dump*.sql
+**/backup*.sql
+
+# -----------------------------
+# 🖼️ Fichiers temporaires / OS
+# -----------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# -----------------------------
+# 🧩 IDE / outils annexes
+# -----------------------------
+.idea/
+*.iml
+_ReSharper*/
+*.DotSettings.user
+
+# -----------------------------
+# 🧪 Tests / rapports
+# -----------------------------
+[Tt]est[Rr]esult*/
+*.trx
+*.VisualState.xml
+TestResult.xml
+coverage/
+
+# -----------------------------
+# 📝 Documentation (temporaire)
+# -----------------------------
+docs/

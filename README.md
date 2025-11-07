@@ -30,9 +30,9 @@ Application full-stack exécutée avec Docker Compose :
 | 📊 mongo-express | Interface web pour gérer MongoDB         | mongo-express:1.0.0-alpha.4 |
 | mailhog       | Serveur SMTP de test + interface web     | mailhog/mailhog:v1.0.1 |
 
-🚀 Installation & lancement en local
+## 🚀 Installation & lancement en local
 
-- Prérequis 💻
+### Prérequis 💻
 
 | Outil             | Lien officiel                                                                                   |
 | ----------------- | ----------------------------------------------------------------------------------------------- |
@@ -40,38 +40,139 @@ Application full-stack exécutée avec Docker Compose :
 | 💻 WSL2 (Windows) | [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) |
 | 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
 
-- Cloner le projet 📥
+### 1️⃣ Cloner le projet 📥
 
-```plaintext
-git clone <https://github.com/EtoileSombre/Vite_et_Gourmand.git>
-cd vite-gourmand/infra
+```bash
+git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git  
+cd Vite_et_Gourmand
 ```
 
-- Créer le fichier .env 📄
+### 2️⃣ Créer le fichier .env 📄
 
-```plaintext
-Copiez le modèle et adaptez-le :
-Linux / Mac / WSL2
+**Linux / Mac / WSL2 :**
+```bash
 cp infra/.env.example infra/.env
+```
 
-Windows PowerShell
+**Windows PowerShell :**
+```powershell
 Copy-Item infra/.env.example infra/.env
 ```
 
-Ensuite ouvrez le fichier infra/.env et remplacez les valeurs CHANGE_ME par vos propres mots de passe ou ports si nécessaire.
+> 💡 Ensuite, ouvrez le fichier `infra/.env` et remplacez les valeurs `CHANGE_ME` par vos propres mots de passe ou ports si nécessaire.
 
-- Lancer les conteneurs via Docker 🐋
+### 3️⃣ Lancer les conteneurs via Docker 🐋
 
-```plaintext
+```bash
 cd infra
 docker compose up -d --build
 ```
 
 - Accéder aux services 🌐
 
-| Service             | URL                                            | Identifiants          |
-| ------------------- | ---------------------------------------------- | --------------------- |
-| 🍽️ Application PHP | [http://localhost:8080](http://localhost:8080) | -                     |
-| 🗄️ phpMyAdmin      | [http://localhost:8090](http://localhost:8090) | définis dans `.env`   |
-| 📊 Mongo Express    | [http://localhost:8081](http://localhost:8081) | définis dans `.env`   |
-| MailHog (UI)     | [http://localhost:8025](http://localhost:8025) | SMTP : `mailhog:1025` |
+Une fois les conteneurs démarrés, les services sont accessibles aux URLs suivantes :
+
+| Service             | URL                        | Identifiants        |
+| ------------------- | -------------------------- | ------------------- |
+| 🍽️ Application PHP | http://localhost:8080      | -                   |
+| 🗄️ phpMyAdmin      | http://localhost:8090      | définis dans `.env` |
+| 📊 Mongo Express    | http://localhost:8081      | définis dans `.env` |
+| MailHog (UI)     | http://localhost:8025      | -                   |
+
+---
+
+## 📦 Commandes utiles
+
+### Arrêter les conteneurs
+
+```bash
+cd infra
+docker compose down
+```
+
+### Redémarrer les conteneurs
+
+```bash
+cd infra
+docker compose restart
+```
+
+### Voir les logs
+
+```bash
+cd infra
+docker compose logs -f app
+```
+
+### Supprimer tout (conteneurs + volumes)
+
+```bash
+cd infra
+docker compose down -v
+```
+
+---
+
+## 🗂️ Structure du projet
+
+```
+Vite_et_Gourmand/
+├── app/                    # Code source PHP
+│   ├── Controllers/        # Contrôleurs MVC
+│   ├── Core/              # Classes du framework (Router, Model, etc.)
+│   ├── Models/            # Modèles de données
+│   ├── Views/             # Templates PHP
+│   ├── config/            # Configuration (DB, MongoDB, Mail)
+│   └── public/            # Point d'entrée + assets
+├── docs/                  # Documentation
+├── infra/                 # Configuration Docker
+│   ├── docker-compose.yml
+│   └── php/Dockerfile
+└── sql/                   # Scripts SQL
+```
+
+---
+
+## 👥 Comptes de test
+
+### Compte Administrateur
+
+- Email : `admin@viteetgourmand.fr`
+- Mot de passe : `Admin123!`
+
+### Compte Employé
+
+- Email : `employe@viteetgourmand.fr`
+- Mot de passe : `Employe123!`
+
+### Compte Client
+
+- Email : `client@viteetgourmand.fr`
+- Mot de passe : `Client123!`
+
+---
+
+## 📚 Documentation
+
+- [Documentation Technique](docs/DOCUMENTATION_TECHNIQUE.md)
+- [Manuel Utilisateur](docs/MANUEL_UTILISATEUR.md)
+- [Charte Graphique](docs/CHARTE_GRAPHIQUE.md)
+- [Questions Fréquentes du Jury](docs/QUESTIONS_JURY_FAQ.md)
+
+---
+
+## 🤝 Contribution
+
+Ce projet est réalisé dans le cadre d'une formation. Les contributions ne sont pas acceptées.
+
+---
+
+## 📝 Licence
+
+Projet pédagogique - Tous droits réservés © 2025 EtoileSombre
+
+---
+
+## Contact
+
+Pour toute question : [GitHub - EtoileSombre](https://github.com/EtoileSombre)

@@ -4,6 +4,8 @@
  * Fonctions simples pour logger et récupérer des stats
  */
 
+use Exception;
+
 class MongoStats
 {
     private $mongodb;
@@ -38,11 +40,11 @@ class MongoStats
 
         try {
             $this->collections['menu_views']->insertOne([
+            $this->collections['menu_views']->insertOne([
                 'menu_id' => $menuId,
                 'menu_titre' => $menuData['titre'] ?? null,
-                'timestamp' => new MongoDB\BSON\UTCDateTime(),
+                'timestamp' => new \MongoDB\BSON\UTCDateTime(),
                 'date' => date('Y-m-d'),
-                'heure' => date('H:i:s'),
                 'user_ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
             ]);
             return true;
@@ -67,12 +69,12 @@ class MongoStats
 
         try {
             $this->collections['user_activity']->insertOne([
+            $this->collections['user_activity']->insertOne([
                 'action' => $action,
                 'utilisateur_id' => $utilisateurId,
                 'details' => $details,
-                'timestamp' => new MongoDB\BSON\UTCDateTime(),
+                'timestamp' => new \MongoDB\BSON\UTCDateTime(),
                 'date' => date('Y-m-d'),
-                'heure' => date('H:i:s'),
                 'user_ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
                 'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
             ]);
@@ -97,14 +99,14 @@ class MongoStats
 
         try {
             $this->collections['commande_stats']->insertOne([
+            $this->collections['commande_stats']->insertOne([
                 'numero_commande' => $numeroCommande,
                 'menu_id' => $commandeData['menu_id'] ?? null,
                 'prix_total' => $commandeData['prix_total'] ?? 0,
                 'nombre_personne' => $commandeData['nombre_personne'] ?? 0,
                 'statut' => $commandeData['statut'] ?? 'en attente',
-                'timestamp' => new MongoDB\BSON\UTCDateTime(),
+                'timestamp' => new \MongoDB\BSON\UTCDateTime(),
                 'date' => date('Y-m-d')
-            ]);
             return true;
         } catch (Exception $e) {
             error_log("Erreur logCommande : " . $e->getMessage());

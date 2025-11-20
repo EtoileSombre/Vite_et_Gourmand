@@ -16,13 +16,13 @@ class Database
     public static function getInstance()
     {
         if (self::$instance === null) {
-            $host = 'mysql';
+            $host = getenv('MYSQL_HOST') ?: 'mysql';
             $dbname = 'vite_et_gourmand';
-            $username = 'vg';
-            $password = 'vgpass';
+            $username = getenv('MYSQL_USER') ?: 'root';
+            $password = getenv('MYSQL_PASSWORD') ?: 'rootpass';
             
             self::$instance = new PDO(
-                "mysql:host=$host;dbname=$dbname;charset=utf8",
+                "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
                 $username,
                 $password
             );

@@ -88,10 +88,13 @@ cp infra/.env.example infra/.env
 
 ```bash
 cd infra
-docker compose up -d
+docker compose build
+docker compose up
+```
+Vérifiez que tous les services sont actifs (dans un autre terminal) :
+```bash
 docker compose ps
 ```
-
 Tous les services doivent apparaître comme **Up**.
 
 ### 🗄️ 4. Importer la base de données

@@ -7,8 +7,8 @@
 // Chargement des variables d'environnement depuis Docker
 $host = getenv('MYSQL_HOST') ?: 'mysql';
 $dbname = 'vite_et_gourmand'; // Nom de la base créée dans le SQL
-$username = getenv('MYSQL_USER') ?: 'vg';
-$password = getenv('MYSQL_PASSWORD') ?: 'vgpass';
+$username = getenv('MYSQL_USER') ?: 'root';
+$password = getenv('MYSQL_PASSWORD') ?: 'rootpass';
 $port = getenv('MYSQL_PORT') ?: 3306;
 
 // Options PDO pour sécurité et performance

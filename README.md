@@ -1,134 +1,153 @@
 # 🍽️ Vite & Gourmand
 
-Projet réalisé dans le cadre du Titre Professionnel Développeur Web & Web Mobile (DWWM).  
+Projet ECF - Titre Professionnel Développeur Web et Web Mobile (DWWM)
 
-👩‍💻 Auteur : [EtoileSombre](https://github.com/EtoileSombre)  
-📍 Entreprise fictive : Vite & Gourmand – (Julie & José – Restaurateurs à Bordeaux)
+Application web de restaurant et menus en ligne avec gestion des
+commandes, des utilisateurs, des avis et des statistiques.
+
+- 🔗 **Dépôt GitHub** : [https://github.com/EtoileSombre/Vite_et_Gourmand](https://github.com/EtoileSombre/Vite_et_Gourmand)
+- 🌐 **Application déployée** : 
+- 🎨 **Maquettes Figma** : 
+- 📋 **Gestion de projet** :
+
+## 📋 Contexte du projet
+
+Julie et José, restaurateurs à Bordeaux gèrent leurs commandes par emails
+mais afin de gagner en productivité et en visibilité ils souhaitent :
+
+- Présenter leurs menus en ligne
+- Automatiser la prise de commandes
+- Suivre leurs statistiques de vente
+- Recueillir les avis clients
+
+## Solution développée
+
+Application web full-stack avec :
+
+- 🍴 Catalogue de menus avec filtres dynamiques
+- 📦 Système de commandes en ligne
+- 👥 Gestion multi-rôles (client, employé, administrateur)
+- ⭐ Module d'avis clients
+- 📊 Tableau de bord statistiques (graphiques temps réel)  
+---
+
+## ⚙️ Technologies
+
+| Catégorie | Technologie | Utilisation |
+|-----------|-------------|-------------|
+| **Frontend** | HTML5, CSS3, Bootstrap 5 | Interface responsive |
+| | JavaScript (Vanilla) | Logique client & interactions |
+| | Chart.js | Graphiques statistiques |
+| **Backend** | PHP 8.3 | Logique métier (MVC) |
+| | Apache 2.4 | Serveur web |
+| | Composer | Gestion dépendances |
+| **Bases de données** | MySQL 8.0 | Données relationnelles |
+| | MongoDB 6.0 | Logs & statistiques |
+| **DevOps** | Docker Compose | Conteneurisation |
+| | Git / GitHub | Versioning |
+
+### Architecture MVC
+
+```
+app/
+├── Controllers/     → 14 contrôleurs (logique métier)
+├── Models/          → 4 modèles (accès données)
+├── Views/           → Templates HTML par fonctionnalité
+├── Core/            → Router, Database, Session
+├── config/          → Configuration MySQL & MongoDB
+└── public/index.php → Point d'entrée
+```
+---
+## 🚀 Installation
+
+### ✔️ Prérequis
+
+- **Docker Desktop 20.10+**
+- **Git 2.30+**
 
 ---
 
-🎯 Objectif
-
-Développer une application web pour l’entreprise **Vite & Gourmand** afin de :
-
-- Présenter les menus en ligne  
-- Gérer les commandes  
-- Disposer d’un back-office pour l’administration  
-
----
-
-⚙️ Stack technique
-
-Application full-stack exécutée avec Docker Compose :
-
-| Service          | Description                              | Version |
-|------------------|------------------------------------------|---------|
-| 🖥️ app           | PHP + Apache (frontend & backend)        | PHP 8.3 |
-| 🐬 mysql         | Base de données relationnelle            | MySQL 8 |
-| 🗄️ phpmyadmin    | Interface web pour gérer MySQL           | phpmyadmin:5.2 |
-| 🍃 mongo         | Base de données NoSQL                    | MongoDB 6 |
-| 📊 mongo-express | Interface web pour gérer MongoDB         | mongo-express:1.0.0-alpha.4 |
-| mailhog       | Serveur SMTP de test + interface web     | mailhog/mailhog:v1.0.1 |
-
-## 🚀 Installation & lancement en local
-
-### Prérequis 💻
-
-| Outil             | Lien officiel                                                                                   |
-| ----------------- | ----------------------------------------------------------------------------------------------- |
-| 🐋 Docker Desktop | [docker.com/products/docker-desktop](https://www.docker.com/products/docker-desktop/)           |
-| 💻 WSL2 (Windows) | [docs.microsoft.com/windows/wsl/install](https://learn.microsoft.com/fr-fr/windows/wsl/install) |
-| 🔧 Git            | [git-scm.com](https://git-scm.com/)                                                             |
-
-### 1️⃣ Cloner le projet 📥
+### ⚙️ 1. Cloner le projet
 
 ```bash
-git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git  
+git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd Vite_et_Gourmand
 ```
 
-### 2️⃣ Créer le fichier .env 📄
+### 📁 2. Configuration de l'environnement
 
-**Linux / Mac / WSL2 :**
 ```bash
+# Copier le fichier d'exemple (déjà pré-configuré pour le développement)
 cp infra/.env.example infra/.env
 ```
 
-**Windows PowerShell :**
-```powershell
-Copy-Item infra/.env.example infra/.env
-```
+> ℹ️ Les valeurs par défaut sont déjà configurées et prêtes à l'emploi.  
+> Pour un usage en production, pensez à modifier les mots de passe dans `infra/.env`
 
-> 💡 Ensuite, ouvrez le fichier `infra/.env` et remplacez les valeurs `CHANGE_ME` par vos propres mots de passe ou ports si nécessaire.
-
-### 3️⃣ Lancer les conteneurs via Docker 🐋
+### 🐳 3. Lancer l'environnement Docker
 
 ```bash
 cd infra
-docker compose up -d --build
+docker compose up -d
+docker compose ps
 ```
 
-- Accéder aux services 🌐
+Tous les services doivent apparaître comme **Up**.
 
-Une fois les conteneurs démarrés, les services sont accessibles aux URLs suivantes :
+### 🗄️ 4. Importer la base de données
 
-| Service             | URL                        | Identifiants        |
-| ------------------- | -------------------------- | ------------------- |
-| 🍽️ Application PHP | http://localhost:8080      | -                   |
-| 🗄️ phpMyAdmin      | http://localhost:8090      | définis dans `.env` |
-| 📊 Mongo Express    | http://localhost:8081      | définis dans `.env` |
-| MailHog (UI)     | http://localhost:8025      | -                   |
+**Méthode recommandée : via phpMyAdmin**
+
+1. Ouvrir : <http://localhost:8090>
+2. Se connecter avec les identifiants présents dans `infra/.env`
+3. Cliquer sur **Importer**
+4. Sélectionner le fichier : `app/sql/vite_et_gourmand.sql`
+5. Cliquer sur **Exécuter**
+
+✔️ La base de données est maintenant installée.
+
+### Accès
+
+| Service | URL | Description |
+|---------|-----|-------------|
+| 🍽️ Application | <http://localhost:8080> | Site principal |
+| 🗄️ phpMyAdmin | <http://localhost:8090> | Gestion MySQL |
+| 📊 Mongo Express | <http://localhost:8081> | Gestion MongoDB |
+| MailHog | <http://localhost:8025> | Visualisation des emails |
+
+### Comptes de test
+
+Une fois l'application installée, vous pouvez vous connecter avec :
+
+| Rôle | Email | Mot de passe | Accès |
+|------|-------|--------------|-------|
+| 👑 Admin | `admin@viteetgourmand.fr` | `Admin123!` | Gestion complète |
+| 👷 Employé | `employe@viteetgourmand.fr` | `Employe123!` | Commandes & avis |
+| 👤 Client | `client@test.fr` | `Client123!` | Commandes & profil |
+
+⚠️ Ces identifiants sont fournis uniquement à des fins de démonstration
+et d'évaluation. En production, les mots de passe ne doivent jamais être
+exposés publiquement.
 
 ---
 
-## 📦 Commandes utiles
+## 🎓 Compétences DWWM appliquées
 
-### Arrêter les conteneurs
+### CCP 1 - Développer la partie front-end
 
-```bash
-cd infra
-docker compose down
-```
+- ✅ **Maquetter une application** : Design responsive
+- ✅ **Réaliser une interface web statique** : HTML5, CSS3, Bootstrap 5
+- ✅ **Développer une interface dynamique** : JavaScript (filtres, validation)
 
-### Redémarrer les conteneurs
+### CCP 2 - Développer la partie back-end
 
-```bash
-cd infra
-docker compose restart
-```
+- ✅ **Créer une base de données** : MySQL (relationnel) + MongoDB (NoSQL)
+- ✅ **Développer les composants d'accès aux données** : Classes PHP avec PDO
+- ✅ **Développer la partie back-end** : Architecture MVC en PHP 8.3
+- ✅ **Élaborer des composants métier** : 14 contrôleurs métier
 
-### Voir les logs
+### Compétences transversales
 
-```bash
-cd infra
-docker compose logs -f app
-```
-
-### Supprimer tout (conteneurs + volumes)
-
-```bash
-cd infra
-docker compose down -v
-```
-
----
-
-## 🗂️ Structure du projet
-
-```
-Vite_et_Gourmand/
-├── app/                    # Code source PHP
-│   ├── Controllers/        # Contrôleurs MVC
-│   ├── Core/              # Classes du framework (Router, Model, etc.)
-│   ├── Models/            # Modèles de données
-│   ├── Views/             # Templates PHP
-│   ├── config/            # Configuration (DB, MongoDB, Mail)
-│   └── public/            # Point d'entrée + assets
-├── docs/                  # Documentation
-├── infra/                 # Configuration Docker
-│   ├── docker-compose.yml
-│   └── php/Dockerfile
-└── sql/                   # Scripts SQL
-```
-
----
+- ✅ **Sécurité** : XSS, injection SQL, hashage bcrypt
+- ✅ **Gestion de projet** : Git, documentation technique
+- ✅ **Déploiement** : Docker Compose

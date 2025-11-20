@@ -4,7 +4,6 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Request;
-use App\Core\Validator;
 
 class ContactController extends Controller
 {
@@ -23,13 +22,11 @@ class ContactController extends Controller
             $message = $request->post('message');
 
             // Validation
-            $validator = new Validator();
-
             if (empty($nom)) {
                 $errors[] = "Le nom est obligatoire.";
             }
 
-            if (!$validator->email($email)) {
+            if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
                 $errors[] = "L'email n'est pas valide.";
             }
 

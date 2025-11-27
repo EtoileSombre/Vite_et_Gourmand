@@ -13,11 +13,11 @@
                     <label for="filterRegime" class="form-label">Type de menu</label>
                     <select class="form-select" id="filterRegime">
                         <option value="">Tous les régimes</option>
-                        <option value="Omnivore">Omnivore</option>
-                        <option value="Végétarien">Végétarien</option>
-                        <option value="Végétalien">Végétalien</option>
-                        <option value="Sans gluten">Sans gluten</option>
-                        <option value="Sans lactose">Sans lactose</option>
+                        <?php if (isset($regimes)): foreach ($regimes as $regime): ?>
+                            <option value="<?= htmlspecialchars($regime['libelle']) ?>">
+                                <?= htmlspecialchars($regime['libelle']) ?>
+                            </option>
+                        <?php endforeach; endif; ?>
                     </select>
                 </div>
 

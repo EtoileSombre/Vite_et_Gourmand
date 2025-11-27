@@ -35,6 +35,9 @@ class MenuController extends Controller
         // Récupérer tous les thèmes pour le filtre
         $themes = $this->menuModel->getAllThemes();
 
+        // Récupérer tous les régimes pour le filtre
+        $regimes = $this->menuModel->getAllRegimes();
+
         // Logger la consultation dans MongoDB
         MongoLogger::logUserActivity('view_menus_list', Session::get('user_id'), [
             'count' => count($menus)
@@ -44,6 +47,7 @@ class MenuController extends Controller
         $this->render('menus/index', [
             'menus' => $menus,
             'themes' => $themes,
+            'regimes' => $regimes,
             'title' => 'Nos Menus'
         ]);
     }

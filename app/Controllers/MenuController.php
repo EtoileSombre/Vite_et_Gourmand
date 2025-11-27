@@ -31,6 +31,9 @@ class MenuController extends Controller
         // Récupérer tous les menus actifs
         $menus = $this->menuModel->findActive();
 
+        // Récupérer tous les thèmes pour le filtre
+        $themes = $this->menuModel->getAllThemes();
+
         // Logger la consultation dans MongoDB
         MongoLogger::logUserActivity('view_menus_list', Session::get('user_id'), [
             'count' => count($menus)
@@ -39,6 +42,7 @@ class MenuController extends Controller
         // Afficher la vue
         $this->render('menus/index', [
             'menus' => $menus,
+            'themes' => $themes,
             'title' => 'Nos Menus'
         ]);
     }

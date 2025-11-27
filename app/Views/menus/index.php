@@ -33,11 +33,17 @@
                     </select>
                 </div>
 
-                <!-- Filtre Thème (recherche texte) -->
+                <!-- Filtre Thème -->
                 <div class="col-md-4">
-                    <label for="filterTheme" class="form-label">Thème</label>
-                    <input type="text" class="form-control" id="filterTheme" 
-                           placeholder="Ex: terroir, festif...">
+                    <label for="filterTheme" class="form-label">Thèmes</label>
+                    <select class="form-select" id="filterTheme">
+                        <option value="">Tous les thèmes</option>
+                        <?php foreach ($themes as $theme): ?>
+                            <option value="<?= htmlspecialchars($theme['libelle']) ?>">
+                                <?= htmlspecialchars($theme['libelle']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <!-- Filtre Prix maximum -->

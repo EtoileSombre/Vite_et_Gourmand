@@ -63,10 +63,9 @@ abstract class Model
         $data['id'] = $id;
         $stmt = $this->db->prepare($sql);
         
-        return $stmt->execute($data);
+        return $stmt->execute();
     }
 
-    // Supprime un enregistrement
     public function delete($id)
     {
         $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id");

@@ -13,11 +13,11 @@
                     <label for="filterRegime" class="form-label">Type de menu</label>
                     <select class="form-select" id="filterRegime">
                         <option value="">Tous les régimes</option>
-                        <option value="Omnivore">Omnivore</option>
-                        <option value="Végétarien">Végétarien</option>
-                        <option value="Végétalien">Végétalien</option>
-                        <option value="Sans gluten">Sans gluten</option>
-                        <option value="Sans lactose">Sans lactose</option>
+                        <?php if (isset($regimes)): foreach ($regimes as $regime): ?>
+                            <option value="<?= htmlspecialchars($regime['libelle']) ?>">
+                                <?= htmlspecialchars($regime['libelle']) ?>
+                            </option>
+                        <?php endforeach; endif; ?>
                     </select>
                 </div>
 
@@ -33,11 +33,17 @@
                     </select>
                 </div>
 
-                <!-- Filtre Thème (recherche texte) -->
+                <!-- Filtre Thème -->
                 <div class="col-md-4">
-                    <label for="filterTheme" class="form-label">Thème</label>
-                    <input type="text" class="form-control" id="filterTheme" 
-                           placeholder="Ex: terroir, festif...">
+                    <label for="filterTheme" class="form-label">Thèmes</label>
+                    <select class="form-select" id="filterTheme">
+                        <option value="">Tous les thèmes</option>
+                        <?php foreach ($themes as $theme): ?>
+                            <option value="<?= htmlspecialchars($theme['libelle']) ?>">
+                                <?= htmlspecialchars($theme['libelle']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <!-- Filtre Prix maximum -->

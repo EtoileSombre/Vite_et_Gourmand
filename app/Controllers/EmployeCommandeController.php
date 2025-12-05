@@ -6,7 +6,7 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
 use App\Models\Commande;
-use App\Helpers\MongoLogger;
+use App\Config\MongoStats;
 
 /**
  * Contrôleur Employé - Gestion des Commandes
@@ -159,7 +159,9 @@ class EmployeCommandeController extends Controller
 
         if ($success) {
             // Logger dans MongoDB
-            MongoLogger::logUserActivity('change_order_status', Session::get('user_id'), [
+            require_once __DIR__ . '/../config/mongodb.php';
+            $mongoStats = new \App\Config\MongoStats();
+            $mongoStats->logUserActivity('change_order_status', Session::get('user_id'), [
                 'numero_commande' => $numeroCommande,
                 'ancien_statut' => $commande['statut'],
                 'nouveau_statut' => $nouveauStatut,

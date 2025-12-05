@@ -33,16 +33,16 @@ class Commande extends Model
         return $stmt->fetchAll();
     }
 
-    public function findWithDetails($id)
+    public function findWithDetails($numeroCommande)
     {
         $stmt = $this->db->prepare('
             SELECT c.*, m.titre as menu_nom, m.prix_par_personne as menu_prix, u.nom as utilisateur_nom
             FROM commande c
             LEFT JOIN menu m ON c.menu_id = m.menu_id
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-            WHERE c.commande_id = ?
+            WHERE c.numero_commande = ?
         ');
-        $stmt->execute([$id]);
+        $stmt->execute([$numeroCommande]);
         $result = $stmt->fetch();
         return $result ?: null;
     }

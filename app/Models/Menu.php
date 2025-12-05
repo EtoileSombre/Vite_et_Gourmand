@@ -4,20 +4,11 @@ namespace App\Models;
 
 use App\Core\Model;
 
-/**
- * Modèle Menu
- * Gère les interactions avec la table menus
- */
 class Menu extends Model
 {
     protected $table = 'menu';
     protected $primaryKey = 'menu_id';
 
-    /**
-     * Récupère tous les menus actifs (avec stock disponible)
-     * 
-     * @return array
-     */
     public function findActive(): array
     {
         $stmt = $this->db->query("
@@ -30,11 +21,6 @@ class Menu extends Model
         return $stmt->fetchAll();
     }
 
-    /**
-     * Récupère un menu actif par son ID avec toutes ses informations
-     * 
-     * @return array|null
-     */
     public function findActiveById(int $id): ?array
     {
         // Récupérer les informations du menu avec thème et régime

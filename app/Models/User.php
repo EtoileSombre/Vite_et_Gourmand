@@ -8,11 +8,6 @@ class User extends Model
 {
     protected $table = 'utilisateur';
 
-    /**
-     * Trouve un utilisateur par son email
-     * 
-     * @return array|false
-     */
     public static function findByEmail($email)
     {
         $model = new self();
@@ -26,21 +21,11 @@ class User extends Model
         return $stmt->fetch();
     }
 
-    /**
-     * Crée un nouvel utilisateur
-     * 
-     * @return int ID de l'utilisateur créé
-     */
     public function createUser($data)
     {
         return $this->create($data);
     }
 
-    /**
-     * Récupère tous les utilisateurs avec leur rôle
-     * 
-     * @return array
-     */
     public function findAllWithRole()
     {
         $stmt = $this->db->query('
@@ -52,11 +37,6 @@ class User extends Model
         return $stmt->fetchAll();
     }
 
-    /**
-     * Active ou désactive un utilisateur
-     * 
-     * @return bool
-     */
     public function toggleActive($userId, $actif)
     {
         $stmt = $this->db->prepare('

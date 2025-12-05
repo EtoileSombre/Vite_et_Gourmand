@@ -1,27 +1,20 @@
 <?php
-/**
- * Configuration PHPMailer avec MailHog
- * MailHog capture tous les emails en local pour les tests
- * Interface web: http://localhost:8025
- */
+// PHPMailer avec MailHog (capture emails en local)
+// Interface: http://localhost:8025
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-/**
- * Créer une instance PHPMailer configurée pour MailHog
- * @return PHPMailer
- */
 function getMailer() {
     $mail = new PHPMailer(true);
     
     try {
         // Configuration serveur SMTP (MailHog)
         $mail->isSMTP();
-        $mail->Host = 'vitegourmand-mailhog';  // Nom du service Docker
-        $mail->Port = 1025;                     // Port SMTP de MailHog
+        $mail->Host = getenv('MAILHOG_HOST') ?: 'mailhog';  // Nom du service Docker
+        $mail->Port = 1025;                                  // Port SMTP de MailHog
         $mail->SMTPAuth = false;                // MailHog ne nécessite pas d'authentification
         $mail->SMTPAutoTLS = false;             // Désactiver TLS pour MailHog
         
@@ -37,10 +30,7 @@ function getMailer() {
     return $mail;
 }
 
-/**
- * Envoyer un email de contact au restaurant
- * @return bool True si envoyé, False sinon
- */
+// Email de contact vers le restaurant
 function sendContactEmail($nom, $email, $telephone, $titre, $message) {
     $mail = getMailer();
     

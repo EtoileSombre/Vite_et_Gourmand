@@ -1,17 +1,12 @@
 <?php
-/**
- * Configuration de la connexion à la base de données MySQL
- * PDO avec gestion d'erreurs
- */
+// Connexion MySQL via PDO
 
-// Chargement des variables d'environnement depuis Docker
 $host = getenv('MYSQL_HOST') ?: 'mysql';
-$dbname = 'vite_et_gourmand'; // Nom de la base créée dans le SQL
+$dbname = getenv('MYSQL_DATABASE') ?: 'vite_et_gourmand';
 $username = getenv('MYSQL_USER') ?: 'root';
 $password = getenv('MYSQL_PASSWORD') ?: 'rootpass';
 $port = getenv('MYSQL_PORT') ?: 3306;
 
-// Options PDO pour sécurité et performance
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,      // Lance des exceptions en cas d'erreur
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, // Retourne des tableaux associatifs
@@ -20,7 +15,6 @@ $options = [
 ];
 
 try {
-    // Création de la connexion PDO
     $pdo = new PDO(
         "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8mb4",
         $username,

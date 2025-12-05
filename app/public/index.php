@@ -1,20 +1,13 @@
 <?php
-/**
- * Front Controller - Point d'entrée unique de l'application MVC
- * Toutes les requêtes passent par ce fichier
- */
+// Point d'entrée unique (Front Controller)
 
-// Démarrer le buffer de sortie
 ob_start();
 
-// Démarrer la session
 session_start();
 
-// Activer l'affichage des erreurs en développement
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Définir le timezone
 date_default_timezone_set('Europe/Paris');
 
 // Charger l'autoloader PSR-4

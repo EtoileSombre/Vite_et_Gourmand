@@ -2,10 +2,6 @@
 
 namespace App\Core;
 
-/**
- * Classe Request
- * Gère les requêtes HTTP
- */
 class Request
 {
     public function getMethod()
@@ -25,6 +21,7 @@ class Request
     {
         return $_POST[$key] ?? $default;
     }
+
     public function isPost()
     {
         return $this->getMethod() === 'POST';

@@ -24,7 +24,7 @@ const ViteGourmand = {
      */
     showToast: function(message, type = 'info') {
         // À implémenter avec Bootstrap Toast si besoin
-        console.log(`[${type.toUpperCase()}] ${message}`);
+        // console.log(`[${type.toUpperCase()}] ${message}`);
     },
 
     /**
@@ -63,8 +63,6 @@ const ViteGourmand = {
  * Initialisation au chargement du DOM
  */
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('🍽️ Vite & Gourmand - Application chargée');
-    
     // Auto-dismiss des alertes après 5 secondes
     const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
     alerts.forEach(alert => {
@@ -76,17 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialiser le carousel d'avis manuellement
     const carouselElement = document.getElementById('carouselAvis');
-    if (carouselElement) {
-        console.log('🎠 Element carousel trouvé:', carouselElement);
-        
-        // Vérifier si Bootstrap est chargé
-        if (typeof bootstrap === 'undefined') {
-            console.error('❌ Bootstrap n\'est pas chargé !');
-            return;
-        }
-        
-        console.log('✅ Bootstrap chargé, version:', bootstrap);
-        
+    if (carouselElement && typeof bootstrap !== 'undefined') {
         try {
             const carousel = new bootstrap.Carousel(carouselElement, {
                 interval: 4000,
@@ -96,16 +84,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 touch: true,
                 keyboard: true
             });
-            console.log('✅ Carousel initialisé avec succès:', carousel);
-            
-            // Démarrer manuellement
             carousel.cycle();
-            console.log('✅ Carousel démarré (cycle)');
         } catch (error) {
-            console.error('❌ Erreur initialisation carousel:', error);
+            console.error('Erreur initialisation carousel:', error);
         }
-    } else {
-        console.warn('⚠️ Element #carouselAvis non trouvé dans le DOM');
     }
 });
 

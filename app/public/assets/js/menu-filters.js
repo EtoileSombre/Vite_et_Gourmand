@@ -152,6 +152,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialisation : afficher le compteur au chargement
     updateMenuCount(totalMenus);
-
-    console.log('✅ Filtres dynamiques menus initialisés:', totalMenus, 'menus');
 });

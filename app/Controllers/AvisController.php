@@ -6,7 +6,6 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
 use App\Models\Avis;
-use App\Helpers\MongoLogger;
 
 class AvisController extends Controller
 {
@@ -17,9 +16,6 @@ class AvisController extends Controller
         $this->avisModel = new Avis();
     }
 
-    /**
-     * Enregistre un nouvel avis
-     */
     public function store()
     {
         $userId = Session::get('user_id');
@@ -47,9 +43,6 @@ class AvisController extends Controller
                 'description' => htmlspecialchars($commentaire)
             ]);
             
-            // Logger l'avis dans MongoDB
-            MongoLogger::logAvis($avisId, $userId, (int)$note);
-            
             Session::set('success', 'Votre avis a été enregistré et sera publié après validation.');
             $this->redirect('/');
         } catch (\Exception $e) {
@@ -59,9 +52,6 @@ class AvisController extends Controller
         }
     }
 
-    /**
-     * Affiche la page pour donner un avis
-     */
     public function create()
     {
         $userId = Session::get('user_id');

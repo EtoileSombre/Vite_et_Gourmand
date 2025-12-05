@@ -23,14 +23,12 @@ class Menu extends Model
 
     public function findActiveById(int $id): ?array
     {
-        // Récupérer les informations du menu avec thème et régime
+        // Récupérer les informations du menu avec thème
         $stmt = $this->db->prepare("
             SELECT m.*, 
-                   t.libelle as theme_libelle,
-                   r.libelle as regime_libelle
+                   t.libelle as theme_libelle
             FROM {$this->table} m
             LEFT JOIN theme t ON m.theme_id = t.theme_id
-            LEFT JOIN regime r ON m.regime_id = r.regime_id
             WHERE m.{$this->primaryKey} = :id 
             AND m.quantite_restante > 0
         ");
@@ -41,17 +39,28 @@ class Menu extends Model
             return null;
         }
 
+        // Récupérer les régimes adaptés
+        $stmt = $this->db->prepare("
+            SELECT GROUP_CONCAT(r.libelle SEPARATOR ', ') as regimes
+            FROM adapte a
+            JOIN regime r ON a.regime_id = r.regime_id
+            WHERE a.menu_id = :menu_id
+        ");
+        $stmt->execute(['menu_id' => $id]);
+        $regimes = $stmt->fetch();
+        $menu['regime_libelle'] = $regimes['regimes'] ?? null;
+
         // Récupérer les plats du menu avec leurs allergènes
         $stmt = $this->db->prepare("
-            SELECT p.plat_id, p.titre_plat,
+            SELECT p.plat_id, p.titre_plat, p.description, p.type_plat, pr.ordre,
                    GROUP_CONCAT(DISTINCT a.libelle SEPARATOR ', ') as allergenes
             FROM propose pr
             JOIN plat p ON pr.plat_id = p.plat_id
-            LEFT JOIN consent c ON p.plat_id = c.plat_id
+            LEFT JOIN contient c ON p.plat_id = c.plat_id
             LEFT JOIN allergene a ON c.allergene_id = a.allergene_id
             WHERE pr.menu_id = :menu_id
-            GROUP BY p.plat_id, p.titre_plat
-            ORDER BY p.plat_id
+            GROUP BY p.plat_id, p.titre_plat, p.description, p.type_plat, pr.ordre
+            ORDER BY pr.ordre, p.plat_id
         ");
         $stmt->execute(['menu_id' => $id]);
         $menu['plats'] = $stmt->fetchAll();

@@ -17,7 +17,7 @@ class Avis extends Model
                    u.prenom, u.nom
             FROM {$this->table} a
             INNER JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
-            WHERE (a.statut = 'validé' OR a.statut LIKE 'valid%') 
+            WHERE a.statut = 'publié'
             AND a.note >= :minNote
             ORDER BY a.created_at DESC
             LIMIT :limit

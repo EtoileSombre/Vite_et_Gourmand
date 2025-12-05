@@ -2,15 +2,10 @@
 
 namespace App\Core;
 
-/**
- * Classe Router
- * Gère le routage de l'application
- */
 class Router
 {
     private $routes = [];
 
-    // Ajoute une route GET
     public function get($path, $controller, $method)
     {
         $this->routes[] = [
@@ -21,7 +16,6 @@ class Router
         ];
     }
 
-    // Ajoute une route POST
     public function post($path, $controller, $method)
     {
         $this->routes[] = [

@@ -21,24 +21,30 @@ class MenuController extends Controller
         $this->menuModel = new Menu();
     }
 
-    /**
-     * Affiche la liste des menus
-     * 
-     * @return void
-     */
+    // Liste des menus disponibles
     public function index(Request $request): void
     {
         // Récupérer tous les menus actifs
         $menus = $this->menuModel->findActive();
 
+        // Récupérer tous les thèmes pour le filtre
+        $themes = $this->menuModel->getAllThemes();
+
+        // Récupérer tous les régimes pour le filtre
+        $regimes = $this->menuModel->getAllRegimes();
+
         // Logger la consultation dans MongoDB
-        MongoLogger::logUserActivity('view_menus_list', Session::get('user_id'), [
+        require_once __DIR__ . '/../config/mongodb.php';
+        $mongoStats = new \App\Config\MongoStats();
+        $mongoStats->logUserActivity('view_menus_list', Session::get('user_id'), [
             'count' => count($menus)
         ]);
 
         // Afficher la vue
         $this->render('menus/index', [
             'menus' => $menus,
+            'themes' => $themes,
+            'regimes' => $regimes,
             'title' => 'Nos Menus'
         ]);
     }
@@ -67,7 +73,9 @@ class MenuController extends Controller
         }
 
         // Logger la consultation du menu dans MongoDB
-        MongoLogger::logMenuView((int)$id, Session::get('user_id'), $menu['titre']);
+        require_once __DIR__ . '/../config/mongodb.php';
+        $mongoStats = new \App\Config\MongoStats();
+        $mongoStats->logMenuView((int)$id, ['titre' => $menu['titre']]);
 
         // Afficher la vue
         $this->render('menus/show', [

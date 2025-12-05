@@ -6,7 +6,6 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
 use App\Models\Avis;
-use App\Helpers\MongoLogger;
 
 /**
  * Contrôleur pour la modération des avis par les employés
@@ -15,7 +14,6 @@ use App\Helpers\MongoLogger;
 class EmployeAvisController extends Controller
 {
     private Avis $avisModel;
-    private MongoLogger $mongoLogger;
 
     public function __construct()
     {
@@ -28,7 +26,6 @@ class EmployeAvisController extends Controller
         }
 
         $this->avisModel = new Avis();
-        $this->mongoLogger = new MongoLogger();
     }
 
     /**
@@ -39,50 +36,13 @@ class EmployeAvisController extends Controller
         // Récupérer les filtres
         $statut = $request->get('statut', 'en attente');
         
-        // Récupérer les avis selon le statut
+        // Récupérer les avis selon le statut via le modèle
         if ($statut === 'tous') {
-            // Tous les avis avec détails
-            $stmt = $this->avisModel->getDb()->prepare("
-                SELECT a.*, 
-                       u.prenom as client_prenom,
-                       u.nom as client_nom,
-                       u.email as client_email,
-                       c.numero_commande,
-                       m.titre as menu_titre
-                FROM avis a
-                LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
-                LEFT JOIN commande c ON a.numero_commande = c.numero_commande
-                LEFT JOIN menu m ON c.menu_id = m.menu_id
-                ORDER BY a.created_at DESC
-            ");
-            $stmt->execute();
-            $avis = $stmt->fetchAll();
+            $avis = $this->avisModel->findAllWithDetails();
         } else {
-            // Avis par statut avec détails
-            $stmt = $this->avisModel->getDb()->prepare("
-                SELECT a.*, 
-                       u.prenom as client_prenom,
-                       u.nom as client_nom,
-                       u.email as client_email,
-                       c.numero_commande,
-                       m.titre as menu_titre
-                FROM avis a
-                LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
-                LEFT JOIN commande c ON a.numero_commande = c.numero_commande
-                LEFT JOIN menu m ON c.menu_id = m.menu_id
-                WHERE a.statut = :statut
-                ORDER BY a.created_at DESC
-            ");
-            $stmt->execute(['statut' => $statut]);
-            $avis = $stmt->fetchAll();
+            $avis = $this->avisModel->findByStatutWithDetails($statut);
         }
-        $stmt = $this->avisModel->getDb()->prepare("
-            SELECT COUNT(*) as total 
-            FROM avis 
-            WHERE statut = 'en attente'
-        ");
-        $stmt->execute();
-        $countEnAttente = $stmt->fetch()['total'] ?? 0;
+        $countEnAttente = $this->avisModel->countByStatut('en attente');
 
         $this->render('employe/avis/index', [
             'title' => 'Modération des Avis',
@@ -107,15 +67,6 @@ class EmployeAvisController extends Controller
         $success = $this->avisModel->updateStatus((int)$avisId, 'publié');
 
         if ($success) {
-            // Logger dans MongoDB
-            $this->mongoLogger->logAvisModeration([
-                'avis_id' => (int)$avisId,
-                'action' => 'approuvé',
-                'employe_id' => Session::get('user_id'),
-                'employe_prenom' => Session::get('user_prenom'),
-                'date' => date('Y-m-d H:i:s')
-            ]);
-
             Session::set('success', 'Avis approuvé et publié avec succès.');
         } else {
             Session::set('error', 'Erreur lors de l\'approbation de l\'avis.');
@@ -141,16 +92,6 @@ class EmployeAvisController extends Controller
         $success = $this->avisModel->updateStatus((int)$avisId, 'rejeté');
 
         if ($success) {
-            // Logger dans MongoDB avec motif
-            $this->mongoLogger->logAvisModeration([
-                'avis_id' => (int)$avisId,
-                'action' => 'rejeté',
-                'motif' => $motif,
-                'employe_id' => Session::get('user_id'),
-                'employe_prenom' => Session::get('user_prenom'),
-                'date' => date('Y-m-d H:i:s')
-            ]);
-
             Session::set('success', 'Avis rejeté.');
         } else {
             Session::set('error', 'Erreur lors du rejet de l\'avis.');

@@ -8,11 +8,6 @@ class Commande extends Model
 {
     protected $table = 'commande';
 
-    /**
-     * Récupère toutes les commandes avec détails
-     * 
-     * @return array
-     */
     public function findAll()
     {
         $stmt = $this->db->prepare('
@@ -25,11 +20,6 @@ class Commande extends Model
         return $stmt->fetchAll();
     }
 
-    /**
-     * Trouve toutes les commandes d'un utilisateur
-     * 
-     * @return array
-     */
     public function findByUser($userId)
     {
         $stmt = $this->db->prepare('
@@ -43,11 +33,6 @@ class Commande extends Model
         return $stmt->fetchAll();
     }
 
-    /**
-     * Trouve une commande avec son détail
-     * 
-     * @return array|null
-     */
     public function findWithDetails($id)
     {
         $stmt = $this->db->prepare('
@@ -62,11 +47,6 @@ class Commande extends Model
         return $result ?: null;
     }
 
-    /**
-     * Trouve une commande par son numéro
-     * 
-     * @return array|null
-     */
     public function findByNumero($numeroCommande)
     {
         $stmt = $this->db->prepare('

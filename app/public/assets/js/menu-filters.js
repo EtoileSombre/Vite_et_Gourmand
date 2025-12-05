@@ -66,11 +66,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 matchPersonnes = minPersonnes <= personnesValue;
             }
 
-            // Filtre Thème (recherche dans thème, titre et description)
+            // Filtre Thème
             if (themeValue !== '') {
-                matchTheme = theme.includes(themeValue) || 
-                            titre.includes(themeValue) || 
-                            description.includes(themeValue);
+                matchTheme = theme === themeValue;
             }
 
             // Filtre Prix (fourchette min-max)
@@ -154,6 +152,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialisation : afficher le compteur au chargement
     updateMenuCount(totalMenus);
-
-    console.log('✅ Filtres dynamiques menus initialisés:', totalMenus, 'menus');
 });

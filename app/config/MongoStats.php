@@ -1,8 +1,7 @@
 <?php
-/**
- * MongoStats - Helper pour gérer les statistiques avec MongoDB
- * Fonctions simples pour logger et récupérer des stats
- */
+// Helper MongoDB pour les statistiques
+
+namespace App\Config;
 
 use Exception;
 
@@ -18,17 +17,11 @@ class MongoStats
         $this->collections = $mongoCollections;
     }
 
-    /**
-     * Vérifie si MongoDB est disponible
-     */
     public function isAvailable(): bool
     {
         return $this->mongodb !== null;
     }
 
-    /**
-     * Enregistre une vue de menu
-     */
     public function logMenuView(int $menuId, array $menuData = []): bool
     {
         if (!$this->isAvailable()) {
@@ -36,7 +29,6 @@ class MongoStats
         }
 
         try {
-            $this->collections['menu_views']->insertOne([
             $this->collections['menu_views']->insertOne([
                 'menu_id' => $menuId,
                 'menu_titre' => $menuData['titre'] ?? null,
@@ -51,9 +43,6 @@ class MongoStats
         }
     }
 
-    /**
-     * Enregistre une activité utilisateur
-     */
     public function logUserActivity(string $action, ?int $utilisateurId = null, array $details = []): bool
     {
         if (!$this->isAvailable()) {
@@ -61,7 +50,6 @@ class MongoStats
         }
 
         try {
-            $this->collections['user_activity']->insertOne([
             $this->collections['user_activity']->insertOne([
                 'action' => $action,
                 'utilisateur_id' => $utilisateurId,
@@ -89,7 +77,6 @@ class MongoStats
 
         try {
             $this->collections['commande_stats']->insertOne([
-            $this->collections['commande_stats']->insertOne([
                 'numero_commande' => $numeroCommande,
                 'menu_id' => $commandeData['menu_id'] ?? null,
                 'prix_total' => $commandeData['prix_total'] ?? 0,
@@ -97,6 +84,7 @@ class MongoStats
                 'statut' => $commandeData['statut'] ?? 'en attente',
                 'timestamp' => new \MongoDB\BSON\UTCDateTime(),
                 'date' => date('Y-m-d')
+            ]);
             return true;
         } catch (Exception $e) {
             error_log("Erreur logCommande : " . $e->getMessage());
@@ -130,7 +118,15 @@ class MongoStats
             ];
 
             $result = $this->collections['menu_views']->aggregate($pipeline);
-            return iterator_to_array($result);
+            $data = [];
+            foreach ($result as $row) {
+                $data[] = [
+                    'menu_id' => $row['_id'],
+                    'titre' => $row['menu_titre'] ?? null,
+                    'count' => $row['total_vues']
+                ];
+            }
+            return $data;
 
         } catch (Exception $e) {
             error_log("Erreur getTopMenus : " . $e->getMessage());
@@ -162,7 +158,14 @@ class MongoStats
             ];
 
             $result = $this->collections['menu_views']->aggregate($pipeline);
-            return iterator_to_array($result);
+            $data = [];
+            foreach ($result as $row) {
+                $data[] = [
+                    'date' => $row['_id'],
+                    'count' => $row['total_vues']
+                ];
+            }
+            return $data;
 
         } catch (Exception $e) {
             error_log("Erreur getViewsPerDay : " . $e->getMessage());

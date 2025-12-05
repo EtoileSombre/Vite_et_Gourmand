@@ -6,7 +6,6 @@
 
 use App\Core\Router;
 
-// Créer une instance du routeur
 $router = new Router();
 
 // ROUTES PUBLIQUES

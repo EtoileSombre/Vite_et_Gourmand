@@ -1,28 +1,19 @@
--- ================================================
--- STRUCTURE DE LA BASE DE DONNÉES
--- Application : Vite & Gourmand
--- Version : 1.0
--- Date : 4 décembre 2025
--- ================================================
-
 DROP DATABASE IF EXISTS `vite_et_gourmand`;
 CREATE DATABASE `vite_et_gourmand`
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 USE `vite_et_gourmand`;
 
--- ================================================
 -- TABLE : role
--- ================================================
+
 CREATE TABLE `role` (
     `role_id` INT AUTO_INCREMENT PRIMARY KEY,
     `libelle` VARCHAR(80) NOT NULL UNIQUE,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : utilisateur
--- ================================================
+
 CREATE TABLE `utilisateur` (
     `utilisateur_id` INT AUTO_INCREMENT PRIMARY KEY,
     `email` VARCHAR(80) NOT NULL UNIQUE,
@@ -44,9 +35,8 @@ CREATE TABLE `utilisateur` (
     INDEX `idx_actif` (`actif`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : password_resets
--- ================================================
+
 CREATE TABLE `password_resets` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `email` VARCHAR(80) NOT NULL,
@@ -56,9 +46,9 @@ CREATE TABLE `password_resets` (
     INDEX `idx_token` (`token`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
+
 -- TABLE : regime
--- ================================================
+
 CREATE TABLE `regime` (
     `regime_id` INT AUTO_INCREMENT PRIMARY KEY,
     `libelle` VARCHAR(80) NOT NULL UNIQUE,
@@ -66,9 +56,9 @@ CREATE TABLE `regime` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
+
 -- TABLE : theme
--- ================================================
+
 CREATE TABLE `theme` (
     `theme_id` INT AUTO_INCREMENT PRIMARY KEY,
     `libelle` VARCHAR(50) NOT NULL UNIQUE,
@@ -76,18 +66,16 @@ CREATE TABLE `theme` (
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : allergene
--- ================================================
+
 CREATE TABLE `allergene` (
     `allergene_id` INT AUTO_INCREMENT PRIMARY KEY,
     `libelle` VARCHAR(80) NOT NULL UNIQUE,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : menu
--- ================================================
+
 CREATE TABLE `menu` (
     `menu_id` INT AUTO_INCREMENT PRIMARY KEY,
     `titre` VARCHAR(100) NOT NULL,
@@ -109,9 +97,8 @@ CREATE TABLE `menu` (
     INDEX `idx_regime` (`regime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : menu_theme
--- ================================================
+
 CREATE TABLE `menu_theme` (
     `menu_id` INT NOT NULL,
     `theme_id` INT NOT NULL,
@@ -120,9 +107,8 @@ CREATE TABLE `menu_theme` (
     FOREIGN KEY (`theme_id`) REFERENCES `theme`(`theme_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : plat
--- ================================================
+
 CREATE TABLE `plat` (
     `plat_id` INT AUTO_INCREMENT PRIMARY KEY,
     `titre_plat` VARCHAR(100) NOT NULL,
@@ -134,9 +120,9 @@ CREATE TABLE `plat` (
     INDEX `idx_type` (`type_plat`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
+
 -- TABLE : propose
--- ================================================
+
 CREATE TABLE `propose` (
     `menu_id` INT NOT NULL,
     `plat_id` INT NOT NULL,
@@ -146,9 +132,8 @@ CREATE TABLE `propose` (
     FOREIGN KEY (`plat_id`) REFERENCES `plat`(`plat_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : adapte
--- ================================================
+
 CREATE TABLE `adapte` (
     `menu_id` INT NOT NULL,
     `regime_id` INT NOT NULL,
@@ -157,9 +142,8 @@ CREATE TABLE `adapte` (
     FOREIGN KEY (`regime_id`) REFERENCES `regime`(`regime_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : contient
--- ================================================
+
 CREATE TABLE `contient` (
     `plat_id` INT NOT NULL,
     `allergene_id` INT NOT NULL,
@@ -168,9 +152,8 @@ CREATE TABLE `contient` (
     FOREIGN KEY (`allergene_id`) REFERENCES `allergene`(`allergene_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : commande
--- ================================================
+
 CREATE TABLE `commande` (
     `numero_commande` VARCHAR(50) PRIMARY KEY,
     `date_commande` DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -213,9 +196,8 @@ CREATE TABLE `commande` (
     INDEX `idx_menu` (`menu_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : suivi_commande
--- ================================================
+
 CREATE TABLE `suivi_commande` (
     `suivi_id` INT AUTO_INCREMENT PRIMARY KEY,
     `numero_commande` VARCHAR(50) NOT NULL,
@@ -230,9 +212,8 @@ CREATE TABLE `suivi_commande` (
     INDEX `idx_date` (`date_changement`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : avis
--- ================================================
+
 CREATE TABLE `avis` (
     `avis_id` INT AUTO_INCREMENT PRIMARY KEY,
     `note` INT NOT NULL CHECK (`note` BETWEEN 1 AND 5),
@@ -249,9 +230,8 @@ CREATE TABLE `avis` (
     INDEX `idx_commande` (`numero_commande`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : contact
--- ================================================
+
 CREATE TABLE `contact` (
     `contact_id` INT AUTO_INCREMENT PRIMARY KEY,
     `nom` VARCHAR(100),
@@ -264,9 +244,8 @@ CREATE TABLE `contact` (
     INDEX `idx_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : horaire
--- ================================================
+
 CREATE TABLE `horaire` (
     `jour` ENUM(
         'Lundi', 'Mardi', 'Mercredi',
@@ -279,9 +258,8 @@ CREATE TABLE `horaire` (
         ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : boisson
--- ================================================
+
 CREATE TABLE `boisson` (
     `boisson_id` INT AUTO_INCREMENT PRIMARY KEY,
     `nom` VARCHAR(100) NOT NULL,
@@ -301,9 +279,8 @@ CREATE TABLE `boisson` (
     INDEX `idx_disponible` (`disponible`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : materiel
--- ================================================
+
 CREATE TABLE `materiel` (
     `materiel_id` INT AUTO_INCREMENT PRIMARY KEY,
     `nom` VARCHAR(100) NOT NULL,
@@ -327,9 +304,8 @@ CREATE TABLE `materiel` (
     INDEX `idx_quantite` (`quantite_disponible`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : galerie_menu
--- ================================================
+
 CREATE TABLE `galerie_menu` (
     `galerie_id` INT AUTO_INCREMENT PRIMARY KEY,
     `menu_id` INT NOT NULL,
@@ -342,9 +318,8 @@ CREATE TABLE `galerie_menu` (
     INDEX `idx_ordre` (`ordre`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : promotion
--- ================================================
+
 CREATE TABLE `promotion` (
     `promotion_id` INT AUTO_INCREMENT PRIMARY KEY,
     `code` VARCHAR(50) NOT NULL UNIQUE,
@@ -370,9 +345,8 @@ CREATE TABLE `promotion` (
     )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : zone_livraison
--- ================================================
+
 CREATE TABLE `zone_livraison` (
     `zone_id` INT AUTO_INCREMENT PRIMARY KEY,
     `nom_zone` VARCHAR(100) NOT NULL,
@@ -392,9 +366,8 @@ CREATE TABLE `zone_livraison` (
     INDEX `idx_actif` (`actif`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : inclut
--- ================================================
+
 CREATE TABLE `inclut` (
     `menu_id` INT NOT NULL,
     `boisson_id` INT NOT NULL,
@@ -404,9 +377,8 @@ CREATE TABLE `inclut` (
     FOREIGN KEY (`boisson_id`) REFERENCES `boisson`(`boisson_id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : prete
--- ================================================
+
 CREATE TABLE `prete` (
     `commande_numero` VARCHAR(50) NOT NULL,
     `materiel_id` INT NOT NULL,
@@ -423,9 +395,8 @@ CREATE TABLE `prete` (
     INDEX `idx_date_retour` (`date_retour_prevue`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ================================================
 -- TABLE : utilise_promotion
--- ================================================
+
 CREATE TABLE `utilise_promotion` (
     `commande_numero` VARCHAR(50) NOT NULL,
     `promotion_id` INT NOT NULL,
@@ -435,7 +406,3 @@ CREATE TABLE `utilise_promotion` (
     FOREIGN KEY (`commande_numero`) REFERENCES `commande`(`numero_commande`) ON DELETE CASCADE,
     FOREIGN KEY (`promotion_id`) REFERENCES `promotion`(`promotion_id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- ================================================
--- FIN DE LA STRUCTURE
--- ================================================

@@ -1,24 +1,15 @@
--- ================================================================
--- DONNÉES DE RÉFÉRENCE - VITE & GOURMAND
--- ================================================================
--- Version : 1.0 - Stable
--- Date    : 4 décembre 2025
--- ================================================================
-
 USE `vite_et_gourmand`;
 
--- ================================================================
 -- TABLE : role
--- ================================================================
+
 INSERT INTO `role` (`libelle`)
 VALUES
     ('client'),
     ('employé'),
     ('administrateur');
 
--- ================================================================
 -- TABLE : theme
--- ================================================================
+
 INSERT INTO `theme` (`libelle`, `description`)
 VALUES
     ('Noël', 'Menu festif pour les fêtes de fin d''année'),
@@ -26,18 +17,16 @@ VALUES
     ('Classique', 'Menu traditionnel pour toute occasion'),
     ('Évènement', 'Menu personnalisable pour événements spéciaux');
 
--- ================================================================
 -- TABLE : regime
--- ================================================================
+
 INSERT INTO `regime` (`libelle`, `description`)
 VALUES
     ('Végétarien', 'Exclut la viande et le poisson'),
     ('Vegan', 'Exclut tous les produits d''origine animale'),
     ('Classique', 'Tous types d''aliments');
 
--- ================================================================
 -- TABLE : allergene
--- ================================================================
+
 INSERT INTO `allergene` (`libelle`)
 VALUES
     ('Gluten'),
@@ -48,9 +37,8 @@ VALUES
     ('Fruits à coque'),
     ('Céleri');
 
--- ================================================================
 -- TABLE : horaire
--- ================================================================
+
 INSERT INTO `horaire`
 (`jour`, `heure_ouverture`, `heure_fermeture`, `ferme`)
 VALUES
@@ -62,9 +50,8 @@ VALUES
     ('Samedi', '10:00:00', '16:00:00', FALSE),
     ('Dimanche', NULL, NULL, TRUE);
 
--- ================================================================
 -- TABLE : zone_livraison
--- ================================================================
+
 INSERT INTO `zone_livraison`
 (
     `nom_zone`,
@@ -82,9 +69,8 @@ VALUES
     ('Gironde Proche', NULL, '33000', '33999', 50, 5.00, 0.59, 3),
     ('Aquitaine', NULL, '24000', '64999', 100, 15.00, 0.80, 4);
 
--- ================================================================
 -- TABLE : boisson
--- ================================================================
+
 INSERT INTO `boisson`
 (`nom`, `description`, `type_boisson`, `prix_unitaire`, `contenance`)
 VALUES
@@ -93,9 +79,8 @@ VALUES
     ('Jus d''orange', '100% pur jus', 'Jus', 4.50, '1L'),
     ('Café', 'Café filtre arabica', 'Soft', 2.00, 'Tasse');
 
--- ================================================================
 -- TABLE : materiel
--- ================================================================
+
 INSERT INTO `materiel`
 (
     `nom`,
@@ -113,9 +98,8 @@ VALUES
     ('Plat de service', 'Grand plat ovale', 'Service', 30, 30, 10.00, 25.00),
     ('Nappe blanche', 'Nappe tissu 150x300cm', 'Table', 40, 40, 15.00, 35.00);
 
--- ================================================================
 -- TABLE : promotion
--- ================================================================
+
 INSERT INTO `promotion`
 (
     `code`,
@@ -131,9 +115,8 @@ VALUES
     ('NOEL2025', 'Promotion de Noël - 15%', 'pourcentage', 15.00, '2025-12-01', '2025-12-26', 100, 100.00),
     ('BIENVENUE', 'Première commande - 10€ offerts', 'montant_fixe', 10.00, '2025-01-01', '2025-12-31', NULL, 50.00);
 
--- ================================================================
 -- TABLE : utilisateur
--- ================================================================
+
 INSERT INTO `utilisateur`
 (
     `email`,
@@ -149,15 +132,14 @@ INSERT INTO `utilisateur`
     `actif`
 )
 VALUES
-    ('jose@viteetgourmand.fr',    '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'José',   'Martinez', '0556123456', 'Bordeaux', 'France', '10 Rue du Commerce', '33000', 3, TRUE),
-    ('julie@viteetgourmand.fr',   '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Julie',  'Dupont',   '0556789012', 'Bordeaux', 'France', '10 Rue du Commerce', '33000', 2, TRUE),
-    ('client1@test.fr',          '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Marie',  'Dubois',   '0612345678', 'Bordeaux', 'France', '15 Avenue de la Liberté', '33000', 1, TRUE),
-    ('client2@test.fr',          '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Pierre', 'Martin',   '0623456789', 'Mérignac', 'France', '8 Rue des Fleurs', '33700', 1, TRUE),
-    ('client3@test.fr',          '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Sophie', 'Bernard',  '0634567890', 'Pessac',   'France', '22 Boulevard Wilson', '33600', 1, TRUE);
+    ('admin@viteetgourmand.fr',    '$2y$10$Xc.PsI5kBvXwj0mQS1wWRONnLbokrhwxjMm5kaRyiwkQLnLjp4jwa', 'José',   'Martinez', '0556123456', 'Bordeaux', 'France', '10 Rue du Commerce', '33000', 3, TRUE),
+    ('employe@viteetgourmand.fr',  '$2y$10$EMRNE3NG0QXbjDf7X5olbemZ8UzxxGL.5bibnzOZn3avySl4fsb/q', 'Julie',  'Dupont',   '0556789012', 'Bordeaux', 'France', '10 Rue du Commerce', '33000', 2, TRUE),
+    ('client@test.fr',             '$2y$10$yqOdnSyjaY4V1dJ01he0c.gS2BT6uZBkX/VZ1fvzSBZpQMFfwearG', 'Marie',  'Dubois',   '0612345678', 'Bordeaux', 'France', '15 Avenue de la Liberté', '33000', 1, TRUE),
+    ('client2@test.fr',            '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Pierre', 'Martin',   '0623456789', 'Mérignac', 'France', '8 Rue des Fleurs', '33700', 1, TRUE),
+    ('client3@test.fr',            '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Sophie', 'Bernard',  '0634567890', 'Pessac',   'France', '22 Boulevard Wilson', '33600', 1, TRUE);
 
--- ================================================================
 -- TABLE : plat
--- ================================================================
+
 INSERT INTO `plat`
 (`titre_plat`, `description`, `type_plat`)
 VALUES
@@ -174,9 +156,8 @@ VALUES
     ('Crème brûlée', 'Crème vanille caramélisée', 'Dessert'),
     ('Fondant au chocolat', 'Cœur coulant, glace vanille', 'Dessert');
 
--- ================================================================
 -- TABLE : menu
--- ================================================================
+
 INSERT INTO `menu`
 (
     `titre`,
@@ -195,9 +176,8 @@ VALUES
     ('Menu Terroir', 2, 38.00, 'Classique', 'Terrine, confit de canard et crème brûlée.', 'Commande 48h avant.', 50, 3, TRUE),
     ('Menu Végétarien', 2, 32.00, 'Végétarien', 'Salade de chèvre chaud, risotto et fondant chocolat.', 'Commande 48h avant.', 35, 3, TRUE);
 
--- ================================================================
 -- TABLE : propose
--- ================================================================
+
 INSERT INTO `propose`
 (`menu_id`, `plat_id`, `ordre`)
 VALUES
@@ -214,9 +194,8 @@ VALUES
     (4, 8, 2),
     (4, 12, 3);
 
--- ================================================================
 -- TABLE : adapte
--- ================================================================
+
 INSERT INTO `adapte`
 (`menu_id`, `regime_id`)
 VALUES
@@ -225,9 +204,8 @@ VALUES
     (3, 3),
     (4, 1);
 
--- ================================================================
 -- TABLE : inclut
--- ================================================================
+
 INSERT INTO `inclut`
 (`menu_id`, `boisson_id`, `quantite_par_personne`)
 VALUES
@@ -240,9 +218,8 @@ VALUES
     (4, 1, 0.50),
     (4, 3, 0.25);
 
--- ================================================================
 -- TABLE : contient
--- ================================================================
+
 INSERT INTO `contient`
 (`plat_id`, `allergene_id`)
 VALUES
@@ -258,7 +235,3 @@ VALUES
     (10, 1), (10, 2), (10, 5),
     (11, 2), (11, 5),
     (12, 1), (12, 2), (12, 5);
-
--- ================================================================
--- FIN DU FICHIER DE DONNÉES
--- ================================================================

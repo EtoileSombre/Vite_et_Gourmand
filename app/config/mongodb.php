@@ -1,10 +1,6 @@
 <?php
-/**
- * Configuration de la connexion MongoDB
- * Utilisé pour les statistiques, logs et cache
- */
+// Connexion MongoDB pour statistiques
 
-// Charger l'autoloader Composer
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {

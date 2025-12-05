@@ -11,9 +11,6 @@ use App\Helpers\MongoLogger;
 
 class CommandeController extends Controller
 {
-    /**
-     * Liste des commandes de l'utilisateur
-     */
     public function index()
     {
         $userId = Session::get('user_id');
@@ -27,9 +24,6 @@ class CommandeController extends Controller
         $this->render('commandes/index', ['commandes' => $commandes]);
     }
 
-    /**
-     * Formulaire de création de commande
-     */
     public function create()
     {
         $userId = Session::get('user_id');
@@ -43,9 +37,6 @@ class CommandeController extends Controller
         $this->render('commandes/create', ['menus' => $menus]);
     }
 
-    /**
-     * Enregistrement d'une nouvelle commande
-     */
     public function store()
     {
         $userId = Session::get('user_id');
@@ -151,7 +142,14 @@ class CommandeController extends Controller
         // LOGGING MONGODB
         // ==========================================
         
-        MongoLogger::logCommande($numeroCommande, $userId, $menuId, $nombrePersonnes, $prixTotal);
+        require_once __DIR__ . '/../config/mongodb.php';
+        $mongoStats = new \App\Config\MongoStats();
+        $mongoStats->logCommande($numeroCommande, [
+            'menu_id' => $menuId,
+            'prix_total' => $prixTotal,
+            'nombre_personne' => $nombrePersonnes,
+            'statut' => 'validée'
+        ]);
 
         // Message de succès avec détails
         $message = 'Votre commande a été enregistrée avec succès ! Un email de confirmation vous a été envoyé.';

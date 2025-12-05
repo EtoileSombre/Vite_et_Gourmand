@@ -21,12 +21,7 @@ class MenuController extends Controller
         $this->menuModel = new Menu();
     }
 
-    /**
-     * Affiche la liste des menus
-     * 
-     * @param Request $request
-     * @return void
-     */
+    // Liste des menus disponibles
     public function index(Request $request): void
     {
         // Récupérer tous les menus actifs
@@ -39,7 +34,9 @@ class MenuController extends Controller
         $regimes = $this->menuModel->getAllRegimes();
 
         // Logger la consultation dans MongoDB
-        MongoLogger::logUserActivity('view_menus_list', Session::get('user_id'), [
+        require_once __DIR__ . '/../config/mongodb.php';
+        $mongoStats = new \App\Config\MongoStats();
+        $mongoStats->logUserActivity('view_menus_list', Session::get('user_id'), [
             'count' => count($menus)
         ]);
 
@@ -77,7 +74,9 @@ class MenuController extends Controller
         }
 
         // Logger la consultation du menu dans MongoDB
-        MongoLogger::logMenuView((int)$id, Session::get('user_id'), $menu['titre']);
+        require_once __DIR__ . '/../config/mongodb.php';
+        $mongoStats = new \App\Config\MongoStats();
+        $mongoStats->logMenuView((int)$id, ['titre' => $menu['titre']]);
 
         // Afficher la vue
         $this->render('menus/show', [

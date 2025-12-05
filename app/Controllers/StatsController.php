@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Core\Session;
-use App\Helpers\MongoLogger;
+use App\Config\MongoStats;
 use App\Models\Menu;
 
 class StatsController extends Controller
@@ -27,12 +27,15 @@ class StatsController extends Controller
         $filtreDateFin = isset($_GET['date_fin']) && $_GET['date_fin'] !== '' ? $_GET['date_fin'] : null;
 
         // Récupérer les statistiques MongoDB
-        $statsGlobales = MongoLogger::getStatsGlobales();
-        $topMenus = MongoLogger::getTopMenus(5);
-        $commandesParJour = MongoLogger::getCommandesParJour(30);
+        require_once __DIR__ . '/../config/mongodb.php';
+        $mongoStats = new \App\Config\MongoStats();
+        
+        $statsGlobales = $mongoStats->getGlobalStats();
+        $topMenus = $mongoStats->getTopMenus(5);
+        $commandesParJour = [];
         
         // Récupérer le CA par menu avec filtres
-        $caParMenu = MongoLogger::getCaParMenu($filtreMenuId, $filtreDateDebut, $filtreDateFin);
+        $caParMenu = [];
 
         // Récupérer tous les menus pour le dropdown
         $menuModel = new Menu();

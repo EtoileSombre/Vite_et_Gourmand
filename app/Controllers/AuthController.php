@@ -4,13 +4,12 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\User;
+use App\Models\PasswordReset;
 use App\Core\Request;
 use App\Core\Session;
-use App\Helpers\MongoLogger;
 
 class AuthController extends Controller
 {
-    // Connexion
     public function login()
     {
         $errors = [];
@@ -32,12 +31,6 @@ class AuthController extends Controller
                     Session::set('user_email', $user['email']);
                     Session::set('user_role', $user['role']);
                     
-                    // Logger la connexion dans MongoDB
-                    MongoLogger::logUserActivity('login', $user['utilisateur_id'], [
-                        'role' => $user['role'],
-                        'email' => $user['email']
-                    ]);
-                    
                     if ($user['role'] === 'administrateur') {
                         $this->redirect('/admin');
                     } else {
@@ -52,7 +45,6 @@ class AuthController extends Controller
         $this->render('auth/login', ['errors' => $errors]);
     }
 
-    // Inscription
     public function register()
     {
         $errors = [];
@@ -109,9 +101,6 @@ class AuthController extends Controller
         $this->redirect('/');
     }
 
-    /**
-     * Affiche le formulaire de demande de réinitialisation de mot de passe
-     */
     public function forgotPassword()
     {
         $errors = [];
@@ -133,17 +122,9 @@ class AuthController extends Controller
                     $token = bin2hex(random_bytes(32));
                     $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
                     
-                    // Stocker le token en BDD
-                    $db = \App\Core\Database::getInstance();
-                    $stmt = $db->prepare("
-                        INSERT INTO password_resets (email, token, expires_at)
-                        VALUES (:email, :token, :expires_at)
-                    ");
-                    $stmt->execute([
-                        'email' => $email,
-                        'token' => $token,
-                        'expires_at' => $expiresAt
-                    ]);
+                    // Stocker le token via le modèle PasswordReset
+                    $passwordResetModel = new PasswordReset();
+                    $passwordResetModel->createToken($email, $token, $expiresAt);
                     
                     // Envoyer l'email avec le lien de réinitialisation
                     require_once __DIR__ . '/../config/mail.php';
@@ -167,9 +148,6 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Traite la réinitialisation du mot de passe avec le token
-     */
     public function resetPassword()
     {
         $errors = [];
@@ -183,17 +161,9 @@ class AuthController extends Controller
             return;
         }
         
-        // Vérifier la validité du token
-        $db = \App\Core\Database::getInstance();
-        $stmt = $db->prepare("
-            SELECT * FROM password_resets 
-            WHERE token = :token 
-            AND used = FALSE 
-            AND expires_at > NOW()
-            LIMIT 1
-        ");
-        $stmt->execute(['token' => $token]);
-        $resetRequest = $stmt->fetch();
+        // Vérifier la validité du token via le modèle
+        $passwordResetModel = new PasswordReset();
+        $resetRequest = $passwordResetModel->findValidToken($token);
         
         if (!$resetRequest) {
             $errors[] = "Ce lien de réinitialisation est invalide ou a expiré.";
@@ -233,33 +203,17 @@ class AuthController extends Controller
             }
             
             if (empty($errors)) {
-                // Mettre à jour le mot de passe
+                // Mettre à jour le mot de passe via le modèle User
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $db->prepare("
-                    UPDATE utilisateur 
-                    SET password = :password 
-                    WHERE email = :email
-                ");
-                $stmt->execute([
-                    'password' => $hashedPassword,
-                    'email' => $resetRequest['email']
-                ]);
+                $user = User::findByEmail($resetRequest['email']);
+                
+                if ($user) {
+                    $userModel = new User();
+                    $userModel->update($user['utilisateur_id'], ['password' => $hashedPassword]);
+                }
                 
                 // Marquer le token comme utilisé
-                $stmt = $db->prepare("
-                    UPDATE password_resets 
-                    SET used = TRUE 
-                    WHERE token = :token
-                ");
-                $stmt->execute(['token' => $token]);
-                
-                // Logger dans MongoDB
-                $user = User::findByEmail($resetRequest['email']);
-                if ($user) {
-                    MongoLogger::logUserActivity('password_reset', $user['utilisateur_id'], [
-                        'email' => $user['email']
-                    ]);
-                }
+                $passwordResetModel->markTokenAsUsed($token);
                 
                 $success = "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.";
             }

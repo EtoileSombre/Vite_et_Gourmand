@@ -4,22 +4,12 @@ namespace App\Models;
 
 use App\Core\Model;
 
-/**
- * Modèle Avis
- * Gère les interactions avec la table avis
- */
 class Avis extends Model
 {
     protected $table = 'avis';
     protected $primaryKey = 'avis_id';
 
-    /**
-     * Récupère les avis validés avec une bonne note pour l'accueil
-     * 
-     * @param int $minNote Note minimum (par défaut 4)
-     * @param int $limit Nombre d'avis à récupérer
-     * @return array
-     */
+    // Avis validés avec note minimum (pour affichage accueil)
     public function findValidatedWithGoodRating(int $minNote = 4, int $limit = 6): array
     {
         $stmt = $this->db->prepare("
@@ -40,12 +30,6 @@ class Avis extends Model
         return $stmt->fetchAll();
     }
 
-    /**
-     * Récupère tous les avis d'un utilisateur
-     * 
-     * @param int $userId
-     * @return array
-     */
     public function findByUser(int $userId): array
     {
         $stmt = $this->db->prepare("
@@ -138,5 +122,72 @@ class Avis extends Model
         ");
         $stmt->execute([$statut]);
         return $stmt->fetchAll();
+    }
+
+    /**
+     * Récupère tous les avis avec détails complets (pour employés)
+     * 
+     * @return array
+     */
+    public function findAllWithDetails(): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT a.*, 
+                   u.prenom as client_prenom,
+                   u.nom as client_nom,
+                   u.email as client_email,
+                   c.numero_commande,
+                   m.titre as menu_titre
+            FROM {$this->table} a
+            LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
+            LEFT JOIN commande c ON a.numero_commande = c.numero_commande
+            LEFT JOIN menu m ON c.menu_id = m.menu_id
+            ORDER BY a.created_at DESC
+        ");
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Récupère les avis par statut avec détails complets
+     * 
+     * @param string $statut
+     * @return array
+     */
+    public function findByStatutWithDetails(string $statut): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT a.*, 
+                   u.prenom as client_prenom,
+                   u.nom as client_nom,
+                   u.email as client_email,
+                   c.numero_commande,
+                   m.titre as menu_titre
+            FROM {$this->table} a
+            LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
+            LEFT JOIN commande c ON a.numero_commande = c.numero_commande
+            LEFT JOIN menu m ON c.menu_id = m.menu_id
+            WHERE a.statut = :statut
+            ORDER BY a.created_at DESC
+        ");
+        $stmt->execute(['statut' => $statut]);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Compte les avis par statut
+     * 
+     * @param string $statut
+     * @return int
+     */
+    public function countByStatut(string $statut): int
+    {
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*) as total 
+            FROM {$this->table}
+            WHERE statut = :statut
+        ");
+        $stmt->execute(['statut' => $statut]);
+        return (int) ($stmt->fetch()['total'] ?? 0);
     }
 }

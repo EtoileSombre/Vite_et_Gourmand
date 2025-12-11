@@ -36,8 +36,14 @@
                         </div>
                         
                         <div class="mb-3">
+                            <label for="sujet" class="form-label">Sujet</label>
+                            <input type="text" class="form-control" id="sujet" name="sujet" placeholder="Demande de renseignements, devis..." required>
+                        </div>
+                        
+                        <div class="mb-3">
                             <label for="message" class="form-label">Message</label>
-                            <textarea class="form-control" id="message" name="message" rows="5" required></textarea>
+                            <textarea class="form-control" id="message" name="message" rows="5" placeholder="Décrivez votre demande..." required minlength="10"></textarea>
+                            <small class="form-text text-muted">Minimum 10 caractères</small>
                         </div>
                         
                         <button type="submit" class="btn btn-primary w-100">Envoyer</button>

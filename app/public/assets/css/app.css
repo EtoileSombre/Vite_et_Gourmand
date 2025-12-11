@@ -10,6 +10,87 @@
   --vg-shadow:0 10px 30px rgba(0,0,0,.10);
 }
 
+/* Remplacer bg-success par bordeaux */
+.bg-success {
+    background-color: var(--vg-bordeaux) !important;
+}
+
+/* Remplacer text-success par bordeaux */
+.text-success {
+    color: var(--vg-bordeaux) !important;
+}
+
+/* Remplacer border-success par bordeaux */
+.border-success {
+    border-color: var(--vg-bordeaux) !important;
+}
+
+/* Boutons success => bordeaux */
+.btn-success {
+    background-color: var(--vg-bordeaux);
+    border-color: var(--vg-bordeaux);
+    color: #fff;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+    background-color: var(--vg-bordeaux-600);
+    border-color: var(--vg-bordeaux-600);
+}
+
+.btn-outline-success {
+    color: var(--vg-bordeaux);
+    border-color: var(--vg-bordeaux);
+}
+
+.btn-outline-success:hover,
+.btn-outline-success:focus {
+    background-color: var(--vg-bordeaux);
+    border-color: var(--vg-bordeaux);
+    color: #fff;
+}
+
+/* Alert success => bordeaux avec fond clair */
+.alert-success {
+    background-color: rgba(123, 30, 30, 0.1);
+    border-color: var(--vg-bordeaux);
+    color: var(--vg-bordeaux);
+}
+
+/* Badge success */
+.badge.bg-success {
+    background-color: var(--vg-bordeaux) !important;
+}
+
+/* Card header success */
+.card-header.bg-success {
+    background-color: var(--vg-bordeaux) !important;
+}
+
+/* Sections avec bg-success */
+section.bg-success {
+    background-color: var(--vg-bordeaux) !important;
+}
+
+/* Accents dorés pour certains éléments importants */
+.text-gold {
+    color: var(--vg-gold) !important;
+}
+
+.bg-gold {
+    background-color: var(--vg-gold) !important;
+}
+
+/* Prix et éléments mis en avant => or */
+.price-highlight,
+.display-4.text-success,
+h4.text-success,
+.h4.text-success {
+    color: var(--vg-gold) !important;
+}
+
+/* ===== STYLES DE BASE ===== */
+
 html,body{scroll-behavior:smooth}
 
 body{
@@ -22,7 +103,11 @@ body{
 .container{max-width:1100px}
 
 /* ===== Navbar / Brand ===== */
-.navbar{backdrop-filter:saturate(1.2) blur(6px)}
+.navbar{
+  -webkit-backdrop-filter:saturate(1.2) blur(6px);
+  backdrop-filter:saturate(1.2) blur(6px);
+  z-index: 1030;
+}
 .navbar-light .navbar-brand{
   font-weight:800; letter-spacing:.2px;
   color:var(--vg-bordeaux) !important;
@@ -32,6 +117,11 @@ body{
 }
 .navbar-light .nav-link:hover{
   background:#f5f5f7;
+}
+
+/* Fix dropdown qui passe derrière */
+.dropdown-menu {
+  z-index: 1040 !important;
 }
 
 /* ===== Hero ===== */
@@ -176,12 +266,12 @@ body{
 /* Dégradé de masque pour le carousel d'avis */
 #carouselAvis {
   --fade-width: 80px;
-  mask-image: linear-gradient(to right,
+  -webkit-mask-image: linear-gradient(to right,
     transparent 0,
     black var(--fade-width),
     black calc(100% - var(--fade-width)),
     transparent 100%);
-  -webkit-mask-image: linear-gradient(to right,
+  mask-image: linear-gradient(to right,
     transparent 0,
     black var(--fade-width),
     black calc(100% - var(--fade-width)),
@@ -450,4 +540,74 @@ body{
     border: 1px solid #000;
     page-break-inside: avoid;
   }
+}
+
+/* Icônes grande taille */
+.icon-large {
+    font-size: 3rem;
+    color: #ccc;
+}
+
+/* Progress bar petite */
+.progress-sm {
+    height: 5px;
+}
+
+.progress-xs {
+    height: 3px;
+}
+
+/* Sections masquées par défaut */
+.hidden-section {
+    display: none;
+}
+
+/* Styles pour les états vides (empty states) */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+}
+
+/* Animations douces */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Badges personnalisés de statut */
+.badge-status-en-attente {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-status-validee {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.badge-status-terminee {
+    background-color: #17a2b8;
+    color: #fff;
+}
+
+.badge-status-annulee {
+    background-color: #dc3545;
+    color: #fff;
 }

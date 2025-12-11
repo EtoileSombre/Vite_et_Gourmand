@@ -50,8 +50,12 @@ class CommandeController extends Controller
         $dateLivraison = $request->post('date_livraison');
         $heureLivraison = $request->post('heure_livraison');
         $adresseLivraison = $request->post('adresse_livraison');
-        $lieuLivraison = $request->post('lieu_livraison');
-        $distanceKm = floatval($request->post('distance_km'));
+        $lieuLivraison = $adresseLivraison; 
+
+        $villeLivraison = $request->post('ville_livraison') ?: 'Bordeaux'; 
+
+        $codePostalLivraison = $request->post('code_postal_livraison') ?: '';
+        $distanceKm = floatval($request->post('distance_km') ?: 0);
         $pretMateriel = $request->post('pret_materiel') ? 1 : 0;
 
         // Générer un numéro de commande unique
@@ -93,16 +97,15 @@ class CommandeController extends Controller
             'utilisateur_id' => $userId,
             'menu_id' => $menuId,
             'nombre_personne' => $nombrePersonnes,
-            'date_commande' => date('Y-m-d'),
+            'date_commande' => date('Y-m-d H:i:s'),
             'date_prestation' => $dateLivraison,
             'heure_livraison' => $heureLivraison,
             'lieu_livraison' => $lieuLivraison,
-            'adresse_livraison' => $adresseLivraison,
+            'ville_livraison' => $villeLivraison,
+            'code_postal_livraison' => $codePostalLivraison,
             'distance_km' => $distanceKm,
             'prix_menu' => $prixMenu,
-            'frais_livraison' => $fraisLivraison,
-            'reduction_appliquee' => $reductionAppliquee,
-            'prix_total' => $prixTotal,
+            'prix_livraison' => $fraisLivraison,
             'pret_materiel' => $pretMateriel,
             'statut' => 'en attente'
         ]);
@@ -131,7 +134,7 @@ class CommandeController extends Controller
             
             sendOrderConfirmationEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
         }
-
+=
         // LOGGING MONGODB
         
         require_once __DIR__ . '/../config/mongodb.php';

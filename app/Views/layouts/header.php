@@ -19,10 +19,7 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
-    <!-- CSS personnalisé -->
     <link rel="stylesheet" href="/assets/css/app.css">
-    <link rel="stylesheet" href="/assets/css/theme-override.css">
-    <link rel="stylesheet" href="/assets/css/utilities.css">
 </head>
 <body class="d-flex flex-column min-vh-100">
     <!-- Navbar -->

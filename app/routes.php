@@ -1,8 +1,5 @@
 <?php
-/**
- * Fichier de routes
- * Définit toutes les routes de l'application
- */
+/** Fichier de routes / Définit toutes les routes de l'application */
 
 use App\Core\Router;
 
@@ -59,17 +56,10 @@ $router->post('/commande/nouvelle', 'App\Controllers\CommandeController', 'store
 $router->get('/commande/modifier', 'App\Controllers\CommandeController', 'edit');
 $router->post('/commande/modifier', 'App\Controllers\CommandeController', 'update');
 $router->get('/commande/annuler', 'App\Controllers\CommandeController', 'cancel');
-// ]);
 
 // Profil utilisateur
 $router->get('/profil', 'App\Controllers\ProfilController', 'index');
 $router->post('/profil', 'App\Controllers\ProfilController', 'index');
-
-// Avis
-// $router->post('/avis', 'App\Controllers\AvisController', 'store', [
-//     'App\Middlewares\AuthMiddleware'
-// ]);
-
 // ROUTES ADMIN (NÉCESSITE RÔLE ADMIN)
 
 // Dashboard admin
@@ -78,11 +68,20 @@ $router->get('/admin', 'App\Controllers\AdminController', 'dashboard');
 // Statistiques MongoDB (admin)
 $router->get('/admin/stats', 'App\Controllers\StatsController', 'index');
 
+// Gestion des messages de contact (admin)
+$router->get('/admin/contacts', 'App\Controllers\AdminContactController', 'index');
+$router->post('/admin/contacts/change-status', 'App\Controllers\AdminContactController', 'changeStatus');
+$router->post('/admin/contacts/delete', 'App\Controllers\AdminContactController', 'delete');
+
 // Gestion des utilisateurs (admin)
 $router->get('/admin/utilisateurs', 'App\Controllers\AdminController', 'users');
 
 // Gestion des commandes (admin)
 $router->get('/admin/commandes', 'App\Controllers\AdminController', 'commandes');
+
+// Gestion des horaires (admin)
+$router->get('/admin/horaires', 'App\Controllers\HoraireController', 'index');
+$router->post('/admin/horaires/update', 'App\Controllers\HoraireController', 'update');
 
 // ROUTES EMPLOYÉ (NÉCESSITE RÔLE EMPLOYÉ OU ADMIN)
 
@@ -99,7 +98,6 @@ $router->get('/employe/commandes/view', 'App\Controllers\EmployeCommandeControll
 $router->get('/employe/avis', 'App\Controllers\EmployeAvisController', 'index');
 $router->post('/employe/avis/approve', 'App\Controllers\EmployeAvisController', 'approve');
 $router->post('/employe/avis/reject', 'App\Controllers\EmployeAvisController', 'reject');
-
 // ROUTES ADMIN/EMPLOYÉ - GESTION MENUS
 
 // Liste des menus (admin/employé)
@@ -117,19 +115,20 @@ $router->post('/admin/menus/update', 'App\Controllers\MenuAdminController', 'upd
 $router->post('/admin/menus/delete', 'App\Controllers\MenuAdminController', 'delete');
 $router->post('/admin/menus/activate', 'App\Controllers\MenuAdminController', 'activate');
 
-// $router->get('/admin/menu/create', 'App\Controllers\Admin\MenuAdminController', 'create', [
-//     'App\Middlewares\AuthMiddleware',
-//     'App\Middlewares\AdminMiddleware'
-// ]);
+// ROUTES ADMIN/EMPLOYÉ - GESTION PLATS
 
-// $router->post('/admin/menu', 'App\Controllers\Admin\MenuAdminController', 'store', [
-//     'App\Middlewares\AuthMiddleware',
-//     'App\Middlewares\AdminMiddleware'
-// ]);
+// Liste des plats (admin/employé)
+$router->get('/admin/plats', 'App\Controllers\PlatController', 'index');
 
-// API REST (optionnel)
+// Créer un plat
+$router->get('/admin/plats/create', 'App\Controllers\PlatController', 'create');
+$router->post('/admin/plats/store', 'App\Controllers\PlatController', 'store');
 
-// $router->get('/api/menus', 'App\Controllers\Api\MenuApiController', 'index');
-// $router->get('/api/menu', 'App\Controllers\Api\MenuApiController', 'show');
+// Modifier un plat
+$router->get('/admin/plats/edit', 'App\Controllers\PlatController', 'edit');
+$router->post('/admin/plats/update', 'App\Controllers\PlatController', 'update');
+
+// Supprimer un plat
+$router->post('/admin/plats/delete', 'App\Controllers\PlatController', 'delete');
 
 return $router;

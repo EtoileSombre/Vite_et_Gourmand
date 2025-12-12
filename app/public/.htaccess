@@ -1,3 +1,6 @@
+# Configuration UTF-8
+AddDefaultCharset UTF-8
+
 # Active la réécriture d'URL
 RewriteEngine On
 

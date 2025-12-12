@@ -1,4 +1,4 @@
-﻿DROP DATABASE IF EXISTS `vite_et_gourmand`;
+DROP DATABASE IF EXISTS `vite_et_gourmand`;
 CREATE DATABASE `vite_et_gourmand`
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;

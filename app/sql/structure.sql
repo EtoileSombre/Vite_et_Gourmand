@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS `vite_et_gourmand`;
+﻿DROP DATABASE IF EXISTS `vite_et_gourmand`;
 CREATE DATABASE `vite_et_gourmand`
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
@@ -171,13 +171,13 @@ CREATE TABLE `commande` (
     `instructions_speciales` TEXT,
     `statut` ENUM(
         'en attente',
-        'validée',
-        'en préparation',
+        'validÃ©e',
+        'en prÃ©paration',
         'en cours de livraison',
-        'livrée',
-        'en attente du retour de matériel',
-        'terminée',
-        'annulée'
+        'livrÃ©e',
+        'en attente du retour de matÃ©riel',
+        'terminÃ©e',
+        'annulÃ©e'
     ) DEFAULT 'en attente',
     `motif_annulation` TEXT,
     `pret_materiel` BOOLEAN DEFAULT FALSE,
@@ -218,7 +218,7 @@ CREATE TABLE `avis` (
     `avis_id` INT AUTO_INCREMENT PRIMARY KEY,
     `note` INT NOT NULL CHECK (`note` BETWEEN 1 AND 5),
     `description` TEXT,
-    `statut` ENUM('en attente', 'publié', 'rejeté') DEFAULT 'en attente',
+    `statut` ENUM('en attente', 'publiÃ©', 'rejetÃ©') DEFAULT 'en attente',
     `utilisateur_id` INT NOT NULL,
     `numero_commande` VARCHAR(50),
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -238,7 +238,7 @@ CREATE TABLE `contact` (
     `email` VARCHAR(100) NOT NULL,
     `sujet` VARCHAR(255) NOT NULL,
     `message` TEXT NOT NULL,
-    `statut` ENUM('nouveau', 'en cours', 'traité') DEFAULT 'nouveau',
+    `statut` ENUM('nouveau', 'en cours', 'traitÃ©') DEFAULT 'nouveau',
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     INDEX `idx_statut` (`statut`),
     INDEX `idx_email` (`email`)
@@ -266,7 +266,7 @@ CREATE TABLE `boisson` (
     `description` TEXT,
     `type_boisson` ENUM(
         'Eau', 'Vin', 'Jus', 'Soft',
-        'Alcool', 'Café', 'Thé', 'Autre'
+        'Alcool', 'CafÃ©', 'ThÃ©', 'Autre'
     ) DEFAULT 'Autre',
     `prix_unitaire` DECIMAL(10,2) NOT NULL CHECK (`prix_unitaire` >= 0),
     `contenance` VARCHAR(20),
@@ -287,7 +287,7 @@ CREATE TABLE `materiel` (
     `description` TEXT,
     `categorie` ENUM(
         'Vaisselle', 'Couverts', 'Service',
-        'Chauffe-plat', 'Décoration',
+        'Chauffe-plat', 'DÃ©coration',
         'Table', 'Autre'
     ) DEFAULT 'Autre',
     `quantite_totale` INT NOT NULL DEFAULT 0 CHECK (`quantite_totale` >= 0),
@@ -387,7 +387,7 @@ CREATE TABLE `prete` (
     `date_pret` DATETIME,
     `date_retour_prevue` DATETIME,
     `date_retour_effective` DATETIME,
-    `etat_retour` ENUM('bon', 'abîmé', 'manquant', 'cassé') DEFAULT 'bon',
+    `etat_retour` ENUM('bon', 'abÃ®mÃ©', 'manquant', 'cassÃ©') DEFAULT 'bon',
     `commentaire` TEXT,
     PRIMARY KEY (`commande_numero`, `materiel_id`),
     FOREIGN KEY (`commande_numero`) REFERENCES `commande`(`numero_commande`) ON DELETE CASCADE,

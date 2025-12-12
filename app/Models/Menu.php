@@ -117,5 +117,61 @@ class Menu extends Model
         $stmt = $this->db->query("SELECT regime_id, libelle FROM regime ORDER BY libelle ASC");
         return $stmt->fetchAll();
     }
+
+    /**
+     * Récupère toutes les boissons disponibles groupées par type
+     * 
+     * @return array
+     */
+    public function getAllBoissons(): array
+    {
+        $stmt = $this->db->query("
+            SELECT boisson_id, nom, type_boisson, prix_unitaire, contenance, description
+            FROM boisson
+            WHERE disponible = 1
+            ORDER BY type_boisson, nom
+        ");
+        $boissons = $stmt->fetchAll();
+        
+        // Grouper par type
+        $grouped = [];
+        foreach ($boissons as $boisson) {
+            $type = $boisson['type_boisson'];
+            if (!isset($grouped[$type])) {
+                $grouped[$type] = [];
+            }
+            $grouped[$type][] = $boisson;
+        }
+        
+        return $grouped;
+    }
+
+    /**
+     * Récupère tout le matériel disponible groupé par catégorie
+     * 
+     * @return array
+     */
+    public function getAllMateriel(): array
+    {
+        $stmt = $this->db->query("
+            SELECT materiel_id, nom, categorie, prix_caution, quantite_disponible, description
+            FROM materiel
+            WHERE actif = 1 AND quantite_disponible > 0
+            ORDER BY categorie, nom
+        ");
+        $materiels = $stmt->fetchAll();
+        
+        // Grouper par catégorie
+        $grouped = [];
+        foreach ($materiels as $materiel) {
+            $categorie = $materiel['categorie'];
+            if (!isset($grouped[$categorie])) {
+                $grouped[$categorie] = [];
+            }
+            $grouped[$categorie][] = $materiel;
+        }
+        
+        return $grouped;
+    }
 }
 

@@ -34,7 +34,43 @@ class CommandeController extends Controller
         $menuModel = new Menu();
         $menus = $menuModel->findAll();
         
-        $this->render('commandes/create', ['menus' => $menus]);
+        // Récupérer les boissons et matériels depuis l'URL
+        $request = new Request();
+        $boissonsIds = $request->get('boissons');
+        $materielsIds = $request->get('materiels');
+        
+        $boissonsSelectionnees = [];
+        $materielsSelectionnes = [];
+        
+        // Récupérer les détails des boissons
+        if ($boissonsIds) {
+            $ids = explode(',', $boissonsIds);
+            require_once __DIR__ . '/../Core/Database.php';
+            $db = \App\Core\Database::getInstance()->getConnection();
+            
+            $placeholders = implode(',', array_fill(0, count($ids), '?'));
+            $stmt = $db->prepare("SELECT * FROM boisson WHERE boisson_id IN ($placeholders)");
+            $stmt->execute($ids);
+            $boissonsSelectionnees = $stmt->fetchAll();
+        }
+        
+        // Récupérer les détails du matériel
+        if ($materielsIds) {
+            $ids = explode(',', $materielsIds);
+            require_once __DIR__ . '/../Core/Database.php';
+            $db = \App\Core\Database::getInstance()->getConnection();
+            
+            $placeholders = implode(',', array_fill(0, count($ids), '?'));
+            $stmt = $db->prepare("SELECT * FROM materiel WHERE materiel_id IN ($placeholders)");
+            $stmt->execute($ids);
+            $materielsSelectionnes = $stmt->fetchAll();
+        }
+        
+        $this->render('commandes/create', [
+            'menus' => $menus,
+            'boissonsSelectionnees' => $boissonsSelectionnees,
+            'materielsSelectionnes' => $materielsSelectionnes
+        ]);
     }
 
     public function store()
@@ -134,7 +170,7 @@ class CommandeController extends Controller
             
             sendOrderConfirmationEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
         }
-=
+
         // LOGGING MONGODB
         
         require_once __DIR__ . '/../config/mongodb.php';

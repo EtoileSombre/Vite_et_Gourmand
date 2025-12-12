@@ -72,6 +72,12 @@ class MenuController extends Controller
             return;
         }
 
+        // Récupérer toutes les boissons disponibles
+        $boissons = $this->menuModel->getAllBoissons();
+
+        // Récupérer tout le matériel disponible
+        $materiels = $this->menuModel->getAllMateriel();
+
         // Logger la consultation du menu dans MongoDB
         require_once __DIR__ . '/../config/mongodb.php';
         $mongoStats = new \App\Config\MongoStats();
@@ -80,6 +86,8 @@ class MenuController extends Controller
         // Afficher la vue
         $this->render('menus/show', [
             'menu' => $menu,
+            'boissons' => $boissons,
+            'materiels' => $materiels,
             'title' => $menu['titre']
         ]);
     }

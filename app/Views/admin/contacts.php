@@ -76,7 +76,7 @@
                                         <?= htmlspecialchars($msg['sujet']) ?>
                                         <small class="text-muted">#<?= $msg['contact_id'] ?></small>
                                     </h5>
-                                    <p class="card-text" style="white-space: pre-wrap;"><?= nl2br(htmlspecialchars($msg['message'])) ?></p>
+                                    <p class="card-text pre-wrap"><?= nl2br(htmlspecialchars($msg['message'])) ?></p>
                                 </div>
 
                                 <div class="card-footer bg-light">

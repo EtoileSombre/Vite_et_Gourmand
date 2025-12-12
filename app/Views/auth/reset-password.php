@@ -75,7 +75,7 @@
                             <!-- Indicateur de force du mot de passe -->
                             <div class="mb-3">
                                 <div class="progress progress-sm">
-                                    <div id="passwordStrength" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                    <div id="passwordStrength" class="progress-bar w-0" role="progressbar"></div>
                                 </div>
                                 <small id="passwordStrengthText" class="form-text"></small>
                             </div>

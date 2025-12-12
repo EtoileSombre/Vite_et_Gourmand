@@ -1,0 +1,287 @@
+/* Utilitaire overflow hidden */
+.overflow-hidden {
+    overflow: hidden !important;
+}
+.w-30 { width: 30% !important; }
+/* Utilitaire max-width 200px */
+.mw-200 {
+    max-width: 200px !important;
+}
+/* Utilitaires de largeur pour les colonnes d'admin/plats */
+.w-5 { width: 5% !important; }
+.w-8 { width: 8% !important; }
+.w-12 { width: 12% !important; }
+.w-15 { width: 15% !important; }
+.w-25 { width: 25% !important; }
+.w-35 { width: 35% !important; }
+
+/* Images plats */
+.img-plat-cover {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+}
+.img-plat-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+}
+
+/* Utilitaire display inline */
+.d-inline {
+    display: inline !important;
+}
+/* Utilitaire pour largeur 0% (progress bar) */
+.w-0 {
+    width: 0% !important;
+}
+/* Utilitaire pour conserver les retours à la ligne */
+.pre-wrap {
+    white-space: pre-wrap;
+}
+/* Utilitaire Bootstrap-like pour masquer un élément */
+.d-none {
+    display: none !important;
+}
+/* Styles pour les options boissons/matériel */
+.menu-option-nom {
+    color: #7c1e3f;
+    font-size: 1.05rem;
+    font-weight: 600;
+}
+.menu-option-prix {
+    color: #c49b63;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+.menu-option-description {
+    color: #666;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+.menu-option-contenance {
+    font-size: 0.75rem;
+    color: #999;
+}
+.menu-option-caution {
+    color: #999;
+    font-size: 0.7rem;
+    font-weight: 400;
+    font-style: italic;
+}
+.menu-option-quantite {
+    font-size: 0.7rem;
+    color: #aaa;
+}
+.menu-btn-commande-wrap {
+    border-top: 2px solid rgba(196, 155, 99, 0.3);
+    background: linear-gradient(135deg, #fdfaf5 0%, #ffffff 100%);
+}
+.menu-btn-retour-wrap {
+    border-top: 1px solid rgba(196, 155, 99, 0.2);
+    border-bottom: 1px solid rgba(196, 155, 99, 0.2);
+    background: linear-gradient(135deg, #fdfaf5 0%, #ffffff 100%);
+}
+.menu-info-icon {
+    color: #c49b63;
+    margin-right: 0.5rem;
+}
+.menu-card-body-boisson {
+    background: linear-gradient(180deg, #ffffff 0%, #fdf9f3 100%);
+    padding: 1.5rem;
+}
+.menu-card-body-materiel {
+    background: linear-gradient(180deg, #ffffff 0%, #fdf9f3 100%);
+    padding: 1.5rem;
+}
+.menu-chevron-icon {
+    font-size: 1rem;
+}
+/* Checkbox custom */
+.checkbox-boisson {
+    position: absolute;
+    bottom: 0.8rem;
+    right: 0.8rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+    border: 1.5px solid #c49b63;
+    accent-color: #7c1e3f;
+}
+.checkbox-materiel {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    width: 1.1rem;
+    height: 1.1rem;
+    cursor: pointer;
+    border: 2px solid #c49b63;
+    border-radius: 4px;
+    accent-color: #7c1e3f;
+}
+/* Titre page menus (index.php) */
+.menus-title {
+    font-family: 'Montserrat', 'Segoe UI', Arial, sans-serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #7c1e3f;
+    letter-spacing: 0.5px;
+}
+.menus-title-spacer {
+    margin-top: 0.5rem;
+}
+/* Fil d'Ariane custom */
+.breadcrumb-vg a {
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+.breadcrumb-vg a:hover {
+    color: #c49b63;
+}
+.breadcrumb-vg .active {
+    color: #c49b63;
+}
+
+/* Prix par personne */
+.menu-prix-par-personne {
+    font-size: 0.9rem;
+    color: #666;
+    font-weight: 400;
+}
+
+/* Allergenes texte */
+.menu-allergenes-texte {
+    color: #666;
+}
+/*
+ * Styles personnalisés pour la page de détail d'un menu (menus/show.php)*/
+
+.menu-card-gradient {
+    background: linear-gradient(135deg, #c49b63 0%, #7c1e3f 100%);
+    color: #fff;
+}
+
+.menu-badge {
+    background: linear-gradient(135deg, #c49b63 0%, #7c1e3f 100%);
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+    letter-spacing: 0.5px;
+    border-radius: 8px;
+    color: #fff;
+}
+
+.menu-price-card {
+    background: linear-gradient(135deg, #fdf9f3 0%, #fff 100%);
+    border-left: 5px solid #7c1e3f !important;
+    box-shadow: 0 2px 8px rgba(124,30,63,0.04);
+}
+
+.menu-price {
+    color: #7c1e3f;
+    font-weight: 600;
+    font-size: 1.4rem;
+}
+
+.menu-price .bi-tag-fill {
+    color: #c49b63;
+}
+
+.menu-allergenes {
+    background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+    border-left: 4px solid #c49b63 !important;
+    color: #7c1e3f;
+}
+
+.menu-options-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(196,155,99,0.04);
+}
+
+.menu-section-header {
+    background: linear-gradient(135deg, #c49b63 0%, #7c1e3f 100%);
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.menu-section-header:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.menu-option-box {
+    background: linear-gradient(145deg, #fff 0%, #fdfaf5 100%);
+    border: 1px solid rgba(196,155,99,0.2);
+    border-radius: 8px;
+    padding: 1rem 1.25rem 2.5rem 1.25rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.menu-option-box:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(124,30,63,0.08);
+    border-color: rgba(196,155,99,0.35);
+}
+
+.menu-recap {
+    background-color: #fdf9f3;
+    border-color: #c49b63;
+    color: #7c1e3f;
+}
+
+.menu-btn-commande {
+    background: linear-gradient(135deg, #c49b63 0%, #d4af6f 100%);
+    color: #fff;
+    border: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 0.65rem 2.5rem;
+    transition: all 0.3s ease;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.menu-btn-commande:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(196,155,99,0.3);
+}
+
+.menu-btn-retour {
+    border: 1px solid rgba(196,155,99,0.3);
+    color: #999;
+    background: #fff;
+    font-size: 0.85rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1.5rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.menu-btn-retour:hover {
+    color: #c49b63;
+    border-color: #c49b63;
+    box-shadow: 0 4px 8px rgba(196,155,99,0.2);
+}
+
+.menu-info-box {
+    background: linear-gradient(135deg, #fff8f0 0%, #fff 100%);
+    padding: 1rem 1.5rem;
+    border-left: 4px solid #c49b63;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    color: #5a5a5a;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.menu-info-box .text-muted {
+    color: #999 !important;
+    font-size: 0.85rem;
+}

@@ -73,7 +73,7 @@
                                         <img src="<?= htmlspecialchars($plat['photo']) ?>" 
                                              alt="Aperçu" 
                                              class="img-thumbnail" 
-                                             style="max-width: 200px;">
+                                             class="mw-200">
                                     </div>
                                 <?php endif; ?>
                             </div>

@@ -266,7 +266,7 @@ CREATE TABLE `boisson` (
     `description` TEXT,
     `type_boisson` ENUM(
         'Eau', 'Vin', 'Jus', 'Soft',
-        'Alcool', 'CafÃ©', 'ThÃ©', 'Autre'
+        'Alcool', 'Café', 'Thé', 'Autre'
     ) DEFAULT 'Autre',
     `prix_unitaire` DECIMAL(10,2) NOT NULL CHECK (`prix_unitaire` >= 0),
     `contenance` VARCHAR(20),
@@ -406,3 +406,13 @@ CREATE TABLE `utilise_promotion` (
     FOREIGN KEY (`commande_numero`) REFERENCES `commande`(`numero_commande`) ON DELETE CASCADE,
     FOREIGN KEY (`promotion_id`) REFERENCES `promotion`(`promotion_id`) ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- CORRECTIONS ENCODAGE ET DONNÉES
+SET NAMES utf8mb4;
+SET CHARACTER SET utf8mb4;
+
+UPDATE boisson SET nom = 'Café', description = 'Cafetière' WHERE boisson_id = 4;
+UPDATE boisson SET description = 'Bordeaux Supérieur' WHERE boisson_id = 2;
+UPDATE boisson SET nom = 'Eau minérale' WHERE boisson_id = 1;
+UPDATE materiel SET nom = 'Verre à vin', description = 'Verre à vin 35cl' WHERE materiel_id = 6;
+UPDATE boisson SET nom = 'Vin blanc', description = 'Bordeaux Sauvignon', type_boisson = 'Vin', prix_unitaire = 12.00, contenance = '75cl' WHERE boisson_id = 3;

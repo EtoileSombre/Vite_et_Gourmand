@@ -20,10 +20,10 @@
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th scope="col" style="width: 15%;">Jour</th>
-                                    <th scope="col" style="width: 30%;">Heure d'ouverture</th>
-                                    <th scope="col" style="width: 30%;">Heure de fermeture</th>
-                                    <th scope="col" style="width: 15%;" class="text-center">Fermé</th>
+                                    <th scope="col" class="w-15">Jour</th>
+                                    <th scope="col" class="w-30">Heure d'ouverture</th>
+                                    <th scope="col" class="w-30">Heure de fermeture</th>
+                                    <th scope="col" class="w-15 text-center">Fermé</th>
                                 </tr>
                             </thead>
                             <tbody>

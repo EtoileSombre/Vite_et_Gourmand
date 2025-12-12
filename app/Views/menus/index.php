@@ -1,13 +1,18 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="container">
-    <h1 class="mb-4"><i class="bi bi-card-list"></i> Nos Menus</h1>
+    <!-- Titre page menus --> 
+    <div class="menus-title-spacer"></div>
+    <h2 class="mb-4 text-center menus-title">
+        Nos Menus
+    </h2>
 
     <!-- Filtres -->
     <div class="card mb-4">
         <div class="card-body">
             <h5 class="card-title mb-3"><i class="bi bi-funnel"></i> Filtres</h5>
             <div class="row g-3">
+                
                 <!-- Filtre Régime -->
                 <div class="col-md-4">
                     <label for="filterRegime" class="form-label">Type de menu</label>

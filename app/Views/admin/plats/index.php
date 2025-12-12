@@ -70,12 +70,12 @@
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th scope="col" style="width: 5%;">ID</th>
-                                    <th scope="col" style="width: 8%;">Photo</th>
-                                    <th scope="col" style="width: 25%;">Titre</th>
-                                    <th scope="col" style="width: 35%;">Description</th>
-                                    <th scope="col" style="width: 12%;">Type</th>
-                                    <th scope="col" style="width: 15%;" class="text-end">Actions</th>
+                                    <th scope="col" class="w-5">ID</th>
+                                    <th scope="col" class="w-8">Photo</th>
+                                    <th scope="col" class="w-25">Titre</th>
+                                    <th scope="col" class="w-35">Description</th>
+                                    <th scope="col" class="w-12">Type</th>
+                                    <th scope="col" class="w-15 text-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -87,10 +87,10 @@
                                             <img src="<?= htmlspecialchars($plat['photo']) ?>" 
                                                  alt="<?= htmlspecialchars($plat['titre_plat']) ?>" 
                                                  class="img-thumbnail" 
-                                                 style="width: 60px; height: 60px; object-fit: cover;">
+                                                 class="img-plat-cover">
                                         <?php else: ?>
                                             <div class="bg-light d-flex align-items-center justify-content-center" 
-                                                 style="width: 60px; height: 60px; border-radius: 4px;">
+                                                 class="img-plat-placeholder">
                                                 <span class="text-muted" aria-hidden="true">🍽️</span>
                                             </div>
                                         <?php endif; ?>
@@ -128,7 +128,7 @@
                                         
                                         <form method="POST" 
                                               action="/admin/plats/delete" 
-                                              style="display: inline;" 
+                                              class="d-inline" 
                                               onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce plat ?');">
                                             <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">

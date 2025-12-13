@@ -3,7 +3,7 @@
 <link rel="stylesheet" href="/assets/css/menu-show.css">
 
 <div class="container">
-    <nav aria-label="breadcrumb">
+    <nav aria-label="breadcrumb" class="mt-4">
         <ol class="breadcrumb breadcrumb-vg">
             <li class="breadcrumb-item"><a href="/">Accueil</a></li>
             <li class="breadcrumb-item"><a href="/menus">Menus</a></li>
@@ -12,22 +12,56 @@
     </nav>
 
     <div class="row">
-        <div class="col-md-3"></div>
-        <div class="col-md-3 mb-4">
-            <?php if (!empty($menu['image_url'])): ?>
+        <div class="col-md-5 mb-4 menu-carousel-col">
+            <?php if (!empty($photos)): ?>
+                <div id="menuCarousel" class="carousel slide shadow-lg rounded-3 overflow-hidden" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <?php foreach ($photos as $index => $photo): ?>
+                            <button type="button" data-bs-target="#menuCarousel" data-bs-slide-to="<?= $index ?>" 
+                                    <?= $index === 0 ? 'class="active" aria-current="true"' : '' ?> 
+                                    aria-label="Slide <?= $index + 1 ?>"></button>
+                        <?php endforeach; ?>
+                    </div>
+                    <div class="carousel-inner">
+                        <?php foreach ($photos as $index => $photo): ?>
+                            <div class="carousel-item <?= $index === 0 ? 'active' : '' ?> carousel-item-clickable">
+                                <img src="<?= htmlspecialchars($photo['image_url']) ?>" 
+                                     class="d-block w-100 carousel-img-menu" 
+                                     alt="<?= htmlspecialchars($photo['legende'] ?? $menu['titre']) ?>">
+                                <?php if (!empty($photo['legende'])): ?>
+                                    <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-2">
+                                        <p class="mb-0 fw-bold"><?= htmlspecialchars($photo['legende']) ?></p>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#menuCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon carousel-control-icon-shadow" aria-hidden="true"></span>
+                        <span class="visually-hidden">Précédent</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#menuCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon carousel-control-icon-shadow" aria-hidden="true"></span>
+                        <span class="visually-hidden">Suivant</span>
+                    </button>
+                </div>
+                <p class="text-center mt-3 text-muted">
+                    <i class="bi bi-zoom-in fs-5"></i> <strong>Cliquez sur l'image pour l'agrandir</strong>
+                </p>
+            <?php elseif (!empty($menu['image_url'])): ?>
                 <img src="<?= htmlspecialchars($menu['image_url']) ?>" 
-                     class="img-fluid rounded shadow" 
+                     class="img-fluid rounded-3 shadow-lg menu-img-fallback" 
                      alt="<?= htmlspecialchars($menu['titre']) ?>"
-                     onerror="this.src='https://via.placeholder.com/600x400?text=Menu'">
+                     onerror="this.src='https://via.placeholder.com/800x600?text=Menu'">
             <?php else: ?>
-                <img src="https://via.placeholder.com/600x400?text=Menu" 
-                     class="img-fluid rounded shadow" 
+                <img src="https://via.placeholder.com/800x600?text=Menu" 
+                     class="img-fluid rounded-3 shadow-lg menu-img-fallback" 
                      alt="<?= htmlspecialchars($menu['titre']) ?>">
             <?php endif; ?>
         </div>
 
-        <div class="col-md-6">
-            <h1><?= htmlspecialchars($menu['titre']) ?></h1>
+        <div class="col-md-6 offset-md-1">
+            <h2><?= htmlspecialchars($menu['titre']) ?></h2>
             
             <?php if (!empty($menu['categorie'])): ?>
                 <span class="menu-badge mb-3">
@@ -203,150 +237,46 @@
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const checkboxesBoissons = document.querySelectorAll('.boisson-checkbox');
-    const checkboxesMateriel = document.querySelectorAll('.materiel-checkbox');
-    const recapBoissons = document.getElementById('recapBoissons');
-    const recapMateriel = document.getElementById('recapMateriel');
-    const listeBoissonsSelectionnees = document.getElementById('listeBoissonsSelectionnees');
-    const listeMaterielSelectionne = document.getElementById('listeMaterielSelectionne');
-    const totalBoissons = document.getElementById('totalBoissons');
-    const totalCaution = document.getElementById('totalCaution');
-    const btnCommander = document.getElementById('btnCommander');
-    
-    // Animation des chevrons pour les sections déroulantes
-    const collapseBoissons = document.getElementById('collapseBoissons');
-    const collapseMateriel = document.getElementById('collapseMateriel');
-    
-    if (collapseBoissons) {
-        collapseBoissons.addEventListener('show.bs.collapse', function () {
-            const chevron = document.querySelector('[data-bs-target="#collapseBoissons"] .bi-chevron-down');
-            if (chevron) chevron.classList.replace('bi-chevron-down', 'bi-chevron-up');
-        });
-        collapseBoissons.addEventListener('hide.bs.collapse', function () {
-            const chevron = document.querySelector('[data-bs-target="#collapseBoissons"] .bi-chevron-up');
-            if (chevron) chevron.classList.replace('bi-chevron-up', 'bi-chevron-down');
-        });
-    }
-    
-    if (collapseMateriel) {
-        collapseMateriel.addEventListener('show.bs.collapse', function () {
-            const chevron = document.querySelector('[data-bs-target="#collapseMateriel"] .bi-chevron-down');
-            if (chevron) chevron.classList.replace('bi-chevron-down', 'bi-chevron-up');
-        });
-        collapseMateriel.addEventListener('hide.bs.collapse', function () {
-            const chevron = document.querySelector('[data-bs-target="#collapseMateriel"] .bi-chevron-up');
-            if (chevron) chevron.classList.replace('bi-chevron-up', 'bi-chevron-down');
-        });
-    }
-    
-    // Mettre à jour le récapitulatif des boissons
-    checkboxesBoissons.forEach(checkbox => {
-        checkbox.addEventListener('change', mettreAJourRecapBoissons);
-    });
-    
-    // Mettre à jour le récapitulatif du matériel
-    checkboxesMateriel.forEach(checkbox => {
-        checkbox.addEventListener('change', mettreAJourRecapMateriel);
-    });
-    
-    function mettreAJourRecapBoissons() {
-        const boissonsSelectionnees = [];
-        let total = 0;
-        
-        checkboxesBoissons.forEach(checkbox => {
-            if (checkbox.checked) {
-                const boisson = {
-                    id: checkbox.value,
-                    nom: checkbox.dataset.nom,
-                    prix: parseFloat(checkbox.dataset.prix),
-                    contenance: checkbox.dataset.contenance
-                };
-                boissonsSelectionnees.push(boisson);
-                total += boisson.prix;
-            }
-        });
-        
-        if (boissonsSelectionnees.length === 0) {
-            recapBoissons.classList.add('d-none');
-            return;
-        }
-        recapBoissons.classList.remove('d-none');
-        listeBoissonsSelectionnees.innerHTML = '';
-        
-        boissonsSelectionnees.forEach(boisson => {
-            const li = document.createElement('li');
-            li.textContent = `${boisson.nom} (${boisson.contenance}) - ${boisson.prix.toFixed(2)} €`;
-            listeBoissonsSelectionnees.appendChild(li);
-        });
-        
-        totalBoissons.textContent = total.toFixed(2);
-    }
-    
-    function mettreAJourRecapMateriel() {
-        const materielsSelectionnes = [];
-        let totalCaut = 0;
-        
-        checkboxesMateriel.forEach(checkbox => {
-            if (checkbox.checked) {
-                const materiel = {
-                    id: checkbox.value,
-                    nom: checkbox.dataset.nom,
-                    caution: parseFloat(checkbox.dataset.caution)
-                };
-                materielsSelectionnes.push(materiel);
-                totalCaut += materiel.caution;
-            }
-        });
-        
-        if (materielsSelectionnes.length === 0) {
-            recapMateriel.classList.add('d-none');
-            return;
-        }
-        recapMateriel.classList.remove('d-none');
-        listeMaterielSelectionne.innerHTML = '';
-        
-        materielsSelectionnes.forEach(materiel => {
-            const li = document.createElement('li');
-            li.textContent = `${materiel.nom} - Caution: ${materiel.caution.toFixed(2)} €`;
-            listeMaterielSelectionne.appendChild(li);
-        });
-        
-        totalCaution.textContent = totalCaut.toFixed(2);
-    }
-    
-    // Rediriger vers la commande avec les boissons et matériel sélectionnés
-    btnCommander?.addEventListener('click', function() {
-        const menuId = <?= $menu['menu_id'] ?>;
-        const boissonsIds = [];
-        const materielsIds = [];
-        
-        checkboxesBoissons.forEach(checkbox => {
-            if (checkbox.checked) {
-                boissonsIds.push(checkbox.value);
-            }
-        });
-        
-        checkboxesMateriel.forEach(checkbox => {
-            if (checkbox.checked) {
-                materielsIds.push(checkbox.value);
-            }
-        });
-        
-        let url = `/commande/nouvelle?menu_id=${menuId}`;
-        
-        if (boissonsIds.length > 0) {
-            url += `&boissons=${boissonsIds.join(',')}`;
-        }
-        
-        if (materielsIds.length > 0) {
-            url += `&materiels=${materielsIds.join(',')}`;
-        }
-        
-        window.location.href = url;
-    });
-});
-</script>
+<!-- Lightbox pour agrandir les photos -->
+<div id="lightbox" class="modal fade" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content bg-dark">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-white" id="lightboxTitle"></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+            </div>
+            <div class="modal-body text-center p-0">
+                <div id="lightboxCarousel" class="carousel slide" data-bs-ride="false">
+                    <div class="carousel-inner">
+                        <?php if (!empty($photos)): ?>
+                            <?php foreach ($photos as $index => $photo): ?>
+                                <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
+                                    <img src="<?= htmlspecialchars($photo['image_url']) ?>" 
+                                         class="d-block w-100 lightbox-img"
+                                         alt="<?= htmlspecialchars($photo['legende'] ?? $menu['titre']) ?>">
+                                    <?php if (!empty($photo['legende'])): ?>
+                                        <div class="carousel-caption">
+                                            <p class="bg-dark bg-opacity-75 d-inline-block px-3 py-2 rounded"><?= htmlspecialchars($photo['legende']) ?></p>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                    <?php if (count($photos) > 1): ?>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#lightboxCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Précédent</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#lightboxCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Suivant</span>
+                        </button>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

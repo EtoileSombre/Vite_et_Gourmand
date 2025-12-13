@@ -247,11 +247,9 @@
     </div>
 </div>
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="/assets/js/stats-charts.js"></script>
 <script>
-    // Initialisation des graphiques avec les données du serveur
     const chartData = <?= json_encode($chartData) ?>;
     initStatsCharts(chartData);
 </script>

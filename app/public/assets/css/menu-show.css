@@ -15,6 +15,52 @@
 .w-25 { width: 25% !important; }
 .w-35 { width: 35% !important; }
 
+/* Carrousel photos menu */
+.menu-carousel-col {
+    margin-top: 80px;
+}
+
+.carousel-item-clickable {
+    cursor: pointer;
+}
+
+.carousel-img-menu {
+    height: 550px;
+    object-fit: cover;
+}
+
+.carousel-control-icon-shadow {
+    filter: drop-shadow(0 0 3px rgba(0,0,0,0.7));
+}
+
+.menu-img-fallback {
+    height: 550px;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Lightbox */
+.lightbox-img {
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+/* Galerie miniatures */
+.galerie-miniature {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+/* Bloc debug */
+.debug-block {
+    background: #ffe;
+    border: 2px solid #f90;
+    padding: 15px;
+    margin: 15px 0;
+}
+
 /* Images plats */
 .img-plat-cover {
     width: 60px;

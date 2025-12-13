@@ -90,6 +90,92 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Erreur initialisation carousel:', error);
         }
     }
+
+    // Auto-submit des formulaires avec data-auto-submit
+    document.querySelectorAll('select[data-auto-submit]').forEach(select => {
+        select.addEventListener('change', function() {
+            this.form.submit();
+        });
+    });
+
+    // Confirmation des formulaires avec data-confirm
+    document.querySelectorAll('form[data-confirm]').forEach(form => {
+        form.addEventListener('submit', function(e) {
+            if (!confirm(this.dataset.confirm)) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    });
+
+    // Gestion horaires admin
+    const checkboxesFerme = document.querySelectorAll('.toggle-ferme');
+    checkboxesFerme.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const jour = this.dataset.jour;
+            const ouvertureInput = document.getElementById('ouverture_' + jour);
+            const fermetureInput = document.getElementById('fermeture_' + jour);
+
+            if (!ouvertureInput || !fermetureInput) return;
+
+            if (this.checked) {
+                ouvertureInput.disabled = true;
+                fermetureInput.disabled = true;
+                ouvertureInput.value = '';
+                fermetureInput.value = '';
+            } else {
+                ouvertureInput.disabled = false;
+                fermetureInput.disabled = false;
+                if (!ouvertureInput.value) ouvertureInput.value = '10:00';
+                if (!fermetureInput.value) fermetureInput.value = '22:00';
+            }
+        });
+    });
+
+    // Gestion changement statut commande employé
+    const selectStatut = document.getElementById('nouveau_statut');
+    const contactSection = document.getElementById('contactClientSection');
+    const formChangeStatus = document.getElementById('formChangeStatus');
+
+    if (selectStatut && contactSection && formChangeStatus) {
+        const statutActuel = selectStatut.dataset.statutActuel;
+
+        selectStatut.addEventListener('change', function() {
+            const statut = this.value;
+            const requiresContact = ['refusée', 'annulée'].includes(statut) ||
+                (statutActuel !== 'en attente' && statut !== statutActuel);
+
+            contactSection.style.display = requiresContact ? 'block' : 'none';
+            document.getElementById('contacte_client').required = requiresContact;
+            document.getElementById('motif_contact').required = requiresContact;
+        });
+
+        formChangeStatus.addEventListener('submit', function(e) {
+            if (contactSection.style.display !== 'none') {
+                const contacte = document.getElementById('contacte_client').checked;
+                const modeContact = document.querySelector('input[name="mode_contact"]:checked');
+                const motif = document.getElementById('motif_contact').value.trim();
+
+                if (!contacte) {
+                    e.preventDefault();
+                    alert('❌ Vous devez confirmer avoir contacté le client');
+                    return false;
+                }
+
+                if (!modeContact) {
+                    e.preventDefault();
+                    alert('❌ Veuillez sélectionner un mode de contact');
+                    return false;
+                }
+
+                if (!motif) {
+                    e.preventDefault();
+                    alert('❌ Veuillez indiquer le motif du contact');
+                    return false;
+                }
+            }
+        });
+    }
 });
 
 // Exposer l'objet global

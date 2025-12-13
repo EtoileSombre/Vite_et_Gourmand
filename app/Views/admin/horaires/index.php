@@ -132,32 +132,4 @@
     </div>
 </main>
 
-<script>
-// Gestion de l'activation/désactivation des champs horaires quand "Fermé" est coché
-document.addEventListener('DOMContentLoaded', function() {
-    const checkboxes = document.querySelectorAll('.toggle-ferme');
-    
-    checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const jour = this.dataset.jour;
-            const ouvertureInput = document.getElementById('ouverture_' + jour);
-            const fermetureInput = document.getElementById('fermeture_' + jour);
-            
-            if (this.checked) {
-                ouvertureInput.disabled = true;
-                fermetureInput.disabled = true;
-                ouvertureInput.value = '';
-                fermetureInput.value = '';
-            } else {
-                ouvertureInput.disabled = false;
-                fermetureInput.disabled = false;
-                // Remettre des valeurs par défaut
-                if (!ouvertureInput.value) ouvertureInput.value = '10:00';
-                if (!fermetureInput.value) fermetureInput.value = '22:00';
-            }
-        });
-    });
-});
-</script>
-
 <?php require_once __DIR__ . '/../../layouts/footer.php'; ?>

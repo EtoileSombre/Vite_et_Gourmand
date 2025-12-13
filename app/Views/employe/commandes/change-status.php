@@ -108,7 +108,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <label for="nouveau_statut" class="form-label fw-bold">
                                 Nouveau Statut <span class="text-danger">*</span>
                             </label>
-                            <select name="nouveau_statut" id="nouveau_statut" class="form-select" required>
+                            <select name="nouveau_statut" id="nouveau_statut" class="form-select" data-statut-actuel="<?= htmlspecialchars($commande['statut']) ?>" required>
                                 <option value="">-- Sélectionner --</option>
                                 <?php if ($commande['statut'] === 'en attente'): ?>
                                     <option value="validée">✅ Validée</option>
@@ -190,57 +190,5 @@ require_once __DIR__ . '/../../layouts/header.php';
         </div>
     </div>
 </div>
-
-<script>
-// Afficher/masquer la section contact client selon le statut choisi
-document.getElementById('nouveau_statut').addEventListener('change', function() {
-    const statut = this.value;
-    const contactSection = document.getElementById('contactClientSection');
-    const statutActuel = '<?= $commande['statut'] ?>';
-    
-    // Statuts nécessitant un contact client
-    const requiresContact = ['refusée', 'annulée'].includes(statut) || 
-                           (statutActuel !== 'en attente' && statut !== statutActuel);
-    
-    if (requiresContact) {
-        contactSection.style.display = 'block';
-        document.getElementById('contacte_client').required = true;
-        document.getElementById('motif_contact').required = true;
-    } else {
-        contactSection.style.display = 'none';
-        document.getElementById('contacte_client').required = false;
-        document.getElementById('motif_contact').required = false;
-    }
-});
-
-// Validation avant envoi
-document.getElementById('formChangeStatus').addEventListener('submit', function(e) {
-    const contactSection = document.getElementById('contactClientSection');
-    
-    if (contactSection.style.display !== 'none') {
-        const contacte = document.getElementById('contacte_client').checked;
-        const modeContact = document.querySelector('input[name="mode_contact"]:checked');
-        const motif = document.getElementById('motif_contact').value.trim();
-        
-        if (!contacte) {
-            e.preventDefault();
-            alert('❌ Vous devez confirmer avoir contacté le client');
-            return false;
-        }
-        
-        if (!modeContact) {
-            e.preventDefault();
-            alert('❌ Veuillez sélectionner le mode de contact (GSM ou Email)');
-            return false;
-        }
-        
-        if (motif.length < 10) {
-            e.preventDefault();
-            alert('❌ Le motif doit contenir au moins 10 caractères');
-            return false;
-        }
-    }
-});
-</script>
 
 <?php require_once __DIR__ . '/../../layouts/footer.php'; ?>

@@ -93,7 +93,7 @@
     </div>
 </div>
 
-<script>
+<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
 // Validation et indicateur de force du mot de passe
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('resetPasswordForm');

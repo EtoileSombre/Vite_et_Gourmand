@@ -36,7 +36,7 @@
                 <form method="GET" action="/admin/plats" class="row g-3">
                     <div class="col-md-4">
                         <label for="type" class="form-label">Filtrer par type</label>
-                        <select name="type" id="type" class="form-select" onchange="this.form.submit()">
+                        <select name="type" id="type" class="form-select" data-auto-submit>
                             <option value="">Tous les types</option>
                             <?php foreach ($typesPlat as $type): ?>
                                 <option value="<?= htmlspecialchars($type) ?>" <?= $typeFiltre === $type ? 'selected' : '' ?>>
@@ -129,7 +129,7 @@
                                         <form method="POST" 
                                               action="/admin/plats/delete" 
                                               class="d-inline" 
-                                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce plat ?');">
+                                              data-confirm="Êtes-vous sûr de vouloir supprimer ce plat ?">
                                             <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
                                             <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">
                                                 <span aria-hidden="true">🗑️</span>

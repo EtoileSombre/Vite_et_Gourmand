@@ -14,7 +14,7 @@
                     <form method="GET" action="/admin/contacts" class="row g-3 align-items-end">
                         <div class="col-md-4">
                             <label for="statut" class="form-label">Statut</label>
-                            <select name="statut" id="statut" class="form-select" onchange="this.form.submit()">
+                            <select name="statut" id="statut" class="form-select" data-auto-submit>
                                 <option value="nouveau" <?= ($statut_filtre ?? '') === 'nouveau' ? 'selected' : '' ?>>
                                     Nouveaux (<?= $count_nouveau ?? 0 ?>)
                                 </option>
@@ -103,7 +103,7 @@
                                                 <i class="bi bi-reply-fill"></i> Répondre
                                             </a>
                                             <form method="POST" action="/admin/contacts/delete" class="d-inline" 
-                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?')">
+                                                  data-confirm="Êtes-vous sûr de vouloir supprimer ce message ?">
                                                 <input type="hidden" name="contact_id" value="<?= $msg['contact_id'] ?>">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger">
                                                     <i class="bi bi-trash-fill"></i> Supprimer

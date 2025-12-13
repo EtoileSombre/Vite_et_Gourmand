@@ -21,6 +21,42 @@ class Menu extends Model
         return $stmt->fetchAll();
     }
 
+    // Menus actifs avec photos (1 seule requête pour toutes les photos)
+    public function findActiveWithPhotos(): array
+    {
+        $menus = $this->findActive();
+        
+        if (empty($menus)) {
+            return [];
+        }
+        
+        // Charger toutes les photos en une fois
+        $menuIds = array_column($menus, 'menu_id');
+        $placeholders = str_repeat('?,', count($menuIds) - 1) . '?';
+        
+        $stmt = $this->db->prepare("
+            SELECT menu_id, image_url, legende, ordre
+            FROM galerie_menu
+            WHERE menu_id IN ($placeholders)
+            ORDER BY menu_id, ordre ASC, galerie_id ASC
+        ");
+        $stmt->execute($menuIds);
+        $photos = $stmt->fetchAll();
+        
+        // Grouper les photos par menu_id
+        $photosParMenu = [];
+        foreach ($photos as $photo) {
+            $photosParMenu[$photo['menu_id']][] = $photo;
+        }
+        
+        // Associer les photos aux menus
+        foreach ($menus as &$menu) {
+            $menu['photos'] = $photosParMenu[$menu['menu_id']] ?? [];
+        }
+        
+        return $menus;
+    }
+
     public function findActiveById(int $id): ?array
     {
         // Récupérer les informations du menu avec thème
@@ -68,11 +104,85 @@ class Menu extends Model
         return $menu;
     }
 
-    /**
-     * Récupère les menus par thème
-     * 
-     * @return array
-     */
+    // Photos d'un menu
+    public function getPhotosMenu(int $menuId): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT image_url, legende, ordre
+            FROM galerie_menu
+            WHERE menu_id = :menu_id
+            ORDER BY ordre ASC, galerie_id ASC
+        ");
+        $stmt->execute(['menu_id' => $menuId]);
+        return $stmt->fetchAll();
+    }
+
+    // Import des photos depuis le dossier du menu
+    public function importPhotosFromDirectory(int $menuId, string $menuTitre, string $imgBaseDir): int
+    {
+        $menuDir = $imgBaseDir . $menuTitre;
+        
+        if (!is_dir($menuDir)) {
+            return 0;
+        }
+        
+        // Exclure les photos de boissons
+        $boissonsExclues = ['bordeaux', 'rouge', 'blanc', 'vin', 'café', 'cafe', 'eau', 'minérale', 'minerale', 'sauvignon'];
+        
+        $files = scandir($menuDir);
+        $photosMenu = [];
+        $ordre = 1;
+        
+        foreach ($files as $file) {
+            $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+            $fileName = strtolower(pathinfo($file, PATHINFO_FILENAME));
+            
+            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                // Vérifier si c'est une photo de boisson
+                $estBoisson = false;
+                foreach ($boissonsExclues as $motExclu) {
+                    if (strpos($fileName, $motExclu) !== false) {
+                        $estBoisson = true;
+                        break;
+                    }
+                }
+                
+                if (!$estBoisson) {
+                    $photosMenu[] = [
+                        'url' => '/assets/img/' . $menuTitre . '/' . $file,
+                        'ordre' => $ordre++
+                    ];
+                }
+            }
+        }
+        
+        if (empty($photosMenu)) {
+            return 0;
+        }
+        
+        // Supprimer les anciennes photos
+        $stmt = $this->db->prepare("DELETE FROM galerie_menu WHERE menu_id = :menu_id");
+        $stmt->execute(['menu_id' => $menuId]);
+        
+        // Insérer les nouvelles photos
+        $stmt = $this->db->prepare("
+            INSERT INTO galerie_menu (menu_id, image_url, legende, ordre) 
+            VALUES (:menu_id, :image_url, :legende, :ordre)
+        ");
+        
+        foreach ($photosMenu as $photo) {
+            $stmt->execute([
+                'menu_id' => $menuId,
+                'image_url' => $photo['url'],
+                'legende' => null,
+                'ordre' => $photo['ordre']
+            ]);
+        }
+        
+        return count($photosMenu);
+    }
+
+    // Menus d'un thème
     public function findByTheme(int $themeId): array
     {
         $stmt = $this->db->prepare("
@@ -84,44 +194,28 @@ class Menu extends Model
         return $stmt->fetchAll();
     }
 
-    /**
-     * Récupère tous les menus (pour admin)
-     * 
-     * @return array
-     */
+    // Tous les menus (admin)
     public function findAll(): array
     {
         $stmt = $this->db->query("SELECT * FROM {$this->table} ORDER BY {$this->primaryKey} DESC");
         return $stmt->fetchAll();
     }
 
-    /**
-     * Récupère tous les thèmes disponibles
-     * 
-     * @return array
-     */
+    // Liste des thèmes
     public function getAllThemes(): array
     {
         $stmt = $this->db->query("SELECT theme_id, libelle FROM theme ORDER BY libelle ASC");
         return $stmt->fetchAll();
     }
 
-    /**
-     * Récupère tous les régimes disponibles
-     * 
-     * @return array
-     */
+    // Liste des régimes
     public function getAllRegimes(): array
     {
         $stmt = $this->db->query("SELECT regime_id, libelle FROM regime ORDER BY libelle ASC");
         return $stmt->fetchAll();
     }
 
-    /**
-     * Récupère toutes les boissons disponibles groupées par type
-     * 
-     * @return array
-     */
+    // Boissons groupées par type
     public function getAllBoissons(): array
     {
         $stmt = $this->db->query("

@@ -1,14 +1,10 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
-<div class="container">
-    <!-- Titre page menus --> 
-    <div class="menus-title-spacer"></div>
-    <h2 class="mb-4 text-center menus-title">
-        Nos Menus
-    </h2>
-
-    <!-- Filtres -->
+<div class="container mt-5">
     <div class="card mb-4">
+        <div class="card-header">
+            <h3>Nos Menus</h3>
+        </div>
         <div class="card-body">
             <h5 class="card-title mb-3"><i class="bi bi-funnel"></i> Filtres</h5>
             <div class="row g-3">
@@ -67,7 +63,7 @@
 
                 <!-- Bouton Réinitialiser -->
                 <div class="col-md-4 d-flex align-items-end">
-                    <button class="btn btn-secondary w-100" id="btnResetFilters">
+                    <button class="btn btn-success w-100" id="btnResetFilters">
                         <i class="bi bi-x-circle"></i> Réinitialiser
                     </button>
                 </div>
@@ -96,6 +92,7 @@
             foreach ($menus as $menu): 
                 $gradientClass = $gradientClasses[$index % count($gradientClasses)];
                 $icon = $icons[$index % count($icons)];
+                $menuPhotos = $menu['photos'] ?? [];
                 $index++;
             ?>
                 <div class="col-md-6 col-lg-4 mb-4 menu-item" 
@@ -106,14 +103,21 @@
                      data-prix="<?= $menu['prix_par_personne'] ?? 0 ?>"
                      data-min-personnes="<?= $menu['nombre_personne_minimum'] ?? 1 ?>">
                     <div class="card h-100 shadow-sm">
-                        <!-- Image avec gradient aux couleurs de la charte -->
-                        <div class="card-img-top menu-card-img <?= $gradientClass ?>">
-                            <div class="text-center text-white">
-                                <h1 class="mb-0 menu-icon">
-                                    <?= $icon ?>
-                                </h1>
+                        <?php if (!empty($menuPhotos)): ?>
+                            <!-- Photo du menu -->
+                            <img src="<?= htmlspecialchars($menuPhotos[0]['image_url']) ?>" 
+                                 class="card-img-top menu-card-single-img" 
+                                 alt="<?= htmlspecialchars($menuPhotos[0]['legende'] ?? $menu['titre']) ?>">
+                        <?php else: ?>
+                            <!-- Fallback : gradient si pas de photos -->
+                            <div class="card-img-top menu-card-img <?= $gradientClass ?>">
+                                <div class="text-center text-white">
+                                    <h1 class="mb-0 menu-icon">
+                                        <?= $icon ?>
+                                    </h1>
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                         
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($menu['titre']) ?></h5>

@@ -116,7 +116,7 @@
                                     <div class="card-footer bg-light">
                                         <div class="row g-2">
                                             <div class="col-6">
-                                                <form method="POST" action="/employe/avis/approve" onsubmit="return confirm('Approuver cet avis et le publier ?');">
+                                                <form method="POST" action="/employe/avis/approve" data-confirm="Approuver cet avis et le publier ?">
                                                     <input type="hidden" name="avis_id" value="<?= $item['avis_id'] ?>">
                                                     <button type="submit" class="btn btn-success btn-sm w-100">
                                                         <i class="bi bi-check-circle me-1"></i>

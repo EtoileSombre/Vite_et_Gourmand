@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../layouts/header.php';
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
         <div>
-            <?php if (!in_array($commande['statut'], ['terminée', 'refusée', 'annulée'])): ?>
+            <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
                 <a href="/employe/commandes/change-status?id=<?= $commande['numero_commande'] ?>" class="btn btn-warning">
                     <i class="bi bi-pencil"></i> Changer statut
                 </a>
@@ -54,31 +54,45 @@ require_once __DIR__ . '/../../layouts/header.php';
             </div>
         </div>
 
-        <!-- Informations Menu -->
-        <div class="col-md-6 mb-4">
+        <!-- Informations Menus -->
+        <div class="col-md-12 mb-4">
             <div class="card h-100">
                 <div class="card-header bg-success text-white">
-                    <h5 class="mb-0"><i class="bi bi-card-list"></i> Menu Commandé</h5>
+                    <h5 class="mb-0"><i class="bi bi-card-list"></i> Menus Commandés</h5>
                 </div>
                 <div class="card-body">
-                    <dl class="row mb-0">
-                        <dt class="col-sm-4">Menu :</dt>
-                        <dd class="col-sm-8"><strong><?= htmlspecialchars($commande['menu_titre'] ?? 'N/A') ?></strong></dd>
-
-                        <dt class="col-sm-4">Description :</dt>
-                        <dd class="col-sm-8"><?= htmlspecialchars($commande['menu_description'] ?? 'Aucune description') ?></dd>
-
-                        <dt class="col-sm-4">Prix/personne :</dt>
-                        <dd class="col-sm-8"><?= number_format($commande['prix_menu'], 2) ?> €</dd>
-
-                        <dt class="col-sm-4">Nb personnes :</dt>
-                        <dd class="col-sm-8"><?= htmlspecialchars($commande['nombre_personne']) ?></dd>
-
-                        <dt class="col-sm-4">Régime :</dt>
-                        <dd class="col-sm-8">
-                            <?= !empty($commande['menu_regime']) ? htmlspecialchars($commande['menu_regime']) : '<span class="text-muted">Standard</span>' ?>
-                        </dd>
-                    </dl>
+                    <?php if (!empty($lignesMenus)): ?>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Menu</th>
+                                    <th>Nb Personnes</th>
+                                    <th>Prix/personne</th>
+                                    <th>Réduction</th>
+                                    <th>Total ligne</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($lignesMenus as $ligne): ?>
+                                    <tr>
+                                        <td><strong><?= htmlspecialchars($ligne['menu_nom']) ?></strong></td>
+                                        <td><?= htmlspecialchars($ligne['nombre_personne']) ?></td>
+                                        <td><?= number_format($ligne['prix_par_personne'], 2) ?> €</td>
+                                        <td><?= number_format($ligne['reduction'], 2) ?> €</td>
+                                        <td><strong><?= number_format($ligne['total_ligne'], 2) ?> €</strong></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-end"><strong>Total personnes :</strong></td>
+                                    <td><strong><?= $totalPersonnes ?></strong></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    <?php else: ?>
+                        <p class="text-muted">Aucun menu commandé</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -126,10 +140,10 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <dd class="col-sm-7">
                             <span class="badge <?= match($commande['statut']) {
                                 'en attente' => 'bg-warning',
-                                'validée' => 'bg-info',
-                                'en préparation' => 'bg-primary',
-                                'terminée' => 'bg-success',
-                                'refusée', 'annulée' => 'bg-danger',
+                                'validee' => 'bg-info',
+                                'en_preparation' => 'bg-primary',
+                                'terminee' => 'bg-success',
+                                'refusee', 'annulee' => 'bg-danger',
                                 default => 'bg-secondary'
                             } ?> fs-6">
                                 <?= ucfirst($commande['statut']) ?>
@@ -170,14 +184,14 @@ require_once __DIR__ . '/../../layouts/header.php';
                     <div class="row">
                         <div class="col-md-6">
                             <dl class="row">
-                                <dt class="col-sm-6">Prix menu :</dt>
-                                <dd class="col-sm-6"><?= number_format($commande['prix_menu'], 2) ?> € × <?= $commande['nombre_personne'] ?> = 
-                                    <strong><?= number_format($commande['prix_menu'] * $commande['nombre_personne'], 2) ?> €</strong>
+                                <dt class="col-sm-6">Total menus :</dt>
+                                <dd class="col-sm-6">
+                                    <strong><?= number_format($commande['total_menus'] ?? 0, 2) ?> €</strong>
                                 </dd>
 
-                                <?php if (!empty($commande['reduction'])): ?>
+                                <?php if (!empty($commande['reduction_appliquee']) && $commande['reduction_appliquee'] > 0): ?>
                                     <dt class="col-sm-6 text-success">Réduction :</dt>
-                                    <dd class="col-sm-6 text-success">- <?= number_format($commande['reduction'], 2) ?> €</dd>
+                                    <dd class="col-sm-6 text-success">- <?= number_format($commande['reduction_appliquee'], 2) ?> €</dd>
                                 <?php endif; ?>
                             </dl>
                         </div>
@@ -191,7 +205,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                 <dt class="col-sm-6"><strong>TOTAL :</strong></dt>
                                 <dd class="col-sm-6">
                                     <strong class="fs-4 text-primary">
-                                        <?= number_format($commande['prix_total'] ?? 0, 2) ?> €
+                                        <?= number_format($commande['total_final'] ?? 0, 2) ?> €
                                     </strong>
                                 </dd>
                             </dl>

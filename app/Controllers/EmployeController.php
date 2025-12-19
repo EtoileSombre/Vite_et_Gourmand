@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Session;
 use App\Models\Commande;
+use App\Models\CommandeMenu;
 use App\Models\Avis;
 
 /**
@@ -42,6 +43,17 @@ class EmployeController extends Controller
         
         // Commandes en attente (tous statuts sauf annulée et terminée)
         $commandesEnAttente = $this->getCommandesEnAttente($commandeModel);
+        
+        // Enrichir avec lignesMenus
+        $commandeMenuModel = new CommandeMenu();
+        foreach ($commandesEnAttente as &$cmd) {
+            $cmd['lignesMenus'] = $commandeMenuModel->findByCommande($cmd['numero_commande']);
+            $cmd['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($cmd['numero_commande']);
+            // Afficher le premier menu comme menu_nom
+            if (!empty($cmd['lignesMenus'])) {
+                $cmd['menu_nom'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
+            }
+        }
         
         // Commandes du jour
         $commandesDuJour = $this->getCommandesDuJour($commandeModel, $aujourdhui);

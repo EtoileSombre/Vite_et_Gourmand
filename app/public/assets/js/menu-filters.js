@@ -38,22 +38,28 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function applyFilters() {
         // Récupération des valeurs des filtres
-        const regimeValue = filterRegime ? filterRegime.value.toLowerCase() : '';
+        const regimeValue = filterRegime ? filterRegime.value.toLowerCase().trim() : '';
         const personnesValue = filterPersonnes ? parseInt(filterPersonnes.value) || 0 : 0;
         const themeValue = filterTheme ? filterTheme.value.toLowerCase().trim() : '';
         const prixMaxValue = filterPrixMax ? parseFloat(filterPrixMax.value) || Infinity : Infinity;
         const prixMinValue = filterPrixMin ? parseFloat(filterPrixMin.value) || 0 : 0;
 
+        console.log('Filtres appliqués:', { regimeValue, personnesValue, themeValue, prixMaxValue, prixMinValue });
+
         let visibleCount = 0;
 
         // Parcours de chaque menu et application des filtres
-        menuItems.forEach(function(item) {
-            const regime = item.dataset.regime ? item.dataset.regime.toLowerCase() : '';
+        menuItems.forEach(function(item, index) {
+            const regime = (item.dataset.regime || '').toLowerCase().trim();
             const minPersonnes = parseInt(item.dataset.minPersonnes) || 1;
             const prix = parseFloat(item.dataset.prix) || 0;
-            const theme = item.dataset.theme ? item.dataset.theme.toLowerCase() : '';
-            const titre = item.dataset.titre ? item.dataset.titre.toLowerCase() : '';
-            const description = item.dataset.description ? item.dataset.description.toLowerCase() : '';
+            const theme = (item.dataset.theme || '').toLowerCase().trim();
+            const titre = (item.dataset.titre || '').toLowerCase().trim();
+            const description = (item.dataset.description || '').toLowerCase().trim();
+
+            if (index === 0) {
+                console.log('Premier menu - données:', { regime, theme, minPersonnes, prix, titre });
+            }
 
             // Conditions de filtrage
             let matchRegime = true;
@@ -61,9 +67,13 @@ document.addEventListener('DOMContentLoaded', function() {
             let matchTheme = true;
             let matchPrix = true;
 
-            // Filtre Régime
+            // Filtre Régime (supporte plusieurs régimes séparés par virgules)
             if (regimeValue !== '') {
-                matchRegime = regime === regimeValue;
+                // Vérifier si le régime recherché est dans la liste des régimes du menu
+                matchRegime = regime.includes(regimeValue);
+                if (index === 0) {
+                    console.log('Match régime:', matchRegime, 'regime:', regime, 'cherché:', regimeValue);
+                }
             }
 
             // Filtre Nombre de personnes (le menu doit accepter au moins ce nombre)
@@ -71,9 +81,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 matchPersonnes = minPersonnes <= personnesValue;
             }
 
-            // Filtre Thème
+            // Filtre Thème (supporte plusieurs thèmes séparés par virgules)
             if (themeValue !== '') {
-                matchTheme = theme === themeValue;
+                // Vérifier si le thème recherché est dans la liste des thèmes du menu
+                matchTheme = theme.includes(themeValue);
+                if (index === 0) {
+                    console.log('Match thème:', matchTheme, 'theme:', theme, 'cherché:', themeValue);
+                }
             }
 
             // Filtre Prix (fourchette min-max)
@@ -140,8 +154,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (filterTheme) {
-        // Utilisation de 'input' pour filtrage en temps réel pendant la frappe
-        filterTheme.addEventListener('input', applyFilters);
+        // Utilisation de 'change' pour les select
+        filterTheme.addEventListener('change', applyFilters);
     }
     
     if (filterPrixMax) {

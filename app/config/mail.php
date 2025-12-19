@@ -184,13 +184,42 @@ function sendOrderConfirmationEmail($email, $prenom, $numeroCommande, $detailsCo
         $mail->addAddress($email, $prenom);
         $mail->Subject = "Confirmation de votre commande #$numeroCommande - Vite & Gourmand";
         
-        $menuNom = $detailsCommande['menu_nom'] ?? 'Menu';
-        $nbPersonnes = $detailsCommande['nombre_personne'] ?? 0;
+        $lignesMenus = $detailsCommande['lignesMenus'] ?? [];
         $datePrestation = $detailsCommande['date_prestation'] ?? 'À définir';
-        $prixUnitaire = $detailsCommande['prix_par_personne'] ?? 0;
-        $prixTotal = $prixUnitaire * $nbPersonnes;
+        $prixTotal = $detailsCommande['prix_total'] ?? 0;
+        $fraisLivraison = $detailsCommande['frais_livraison'] ?? 0;
         
         $dateFormatee = date('d/m/Y', strtotime($datePrestation));
+        
+        // Construire le HTML des lignes de menus
+        $htmlMenus = '';
+        $totalMenus = 0;
+        foreach ($lignesMenus as $ligne) {
+            $menuNom = $ligne['menu_nom'] ?? 'Menu';
+            $nbPersonnes = $ligne['nombre_personne'] ?? 0;
+            $prixUnitaire = $ligne['prix_par_personne'] ?? 0;
+            $totalLigne = $ligne['total_ligne'] ?? 0;
+            $totalMenus += $totalLigne;
+            
+            $htmlMenus .= "
+                <div class='detail-row'>
+                    <span class='detail-label'>Menu :</span>
+                    <span>$menuNom</span>
+                </div>
+                <div class='detail-row'>
+                    <span class='detail-label'>Nombre de personnes :</span>
+                    <span>$nbPersonnes personne(s)</span>
+                </div>
+                <div class='detail-row'>
+                    <span class='detail-label'>Prix unitaire :</span>
+                    <span>" . number_format($prixUnitaire, 2, ',', ' ') . " €</span>
+                </div>
+                <div class='detail-row'>
+                    <span class='detail-label'>Sous-total :</span>
+                    <span>" . number_format($totalLigne, 2, ',', ' ') . " €</span>
+                </div>
+            ";
+        }
         
         $mail->Body = "
         <!DOCTYPE html>
@@ -227,21 +256,14 @@ function sendOrderConfirmationEmail($email, $prenom, $numeroCommande, $detailsCo
                             <span class='detail-label'>Numéro de commande :</span>
                             <span>#$numeroCommande</span>
                         </div>
-                        <div class='detail-row'>
-                            <span class='detail-label'>Menu :</span>
-                            <span>$menuNom</span>
-                        </div>
-                        <div class='detail-row'>
-                            <span class='detail-label'>Nombre de personnes :</span>
-                            <span>$nbPersonnes personne(s)</span>
-                        </div>
+                        $htmlMenus
                         <div class='detail-row'>
                             <span class='detail-label'>Date de prestation :</span>
                             <span>$dateFormatee</span>
                         </div>
                         <div class='detail-row'>
-                            <span class='detail-label'>Prix unitaire :</span>
-                            <span>" . number_format($prixUnitaire, 2, ',', ' ') . " €</span>
+                            <span class='detail-label'>Frais de livraison :</span>
+                            <span>" . number_format($fraisLivraison, 2, ',', ' ') . " €</span>
                         </div>
                         <div class='total'>
                             <div class='detail-row'>
@@ -270,10 +292,17 @@ function sendOrderConfirmationEmail($email, $prenom, $numeroCommande, $detailsCo
         </html>
         ";
         
+        // Construire texte alternatif avec lignesMenus
+        $altBodyMenus = '';
+        foreach ($lignesMenus as $ligne) {
+            $altBodyMenus .= "Menu : " . ($ligne['menu_nom'] ?? 'Menu') . "\n";
+            $altBodyMenus .= "Nombre de personnes : " . ($ligne['nombre_personne'] ?? 0) . "\n";
+            $altBodyMenus .= "Prix ligne : " . number_format($ligne['total_ligne'] ?? 0, 2, ',', ' ') . " €\n\n";
+        }
+        
         $mail->AltBody = "Bonjour $prenom,\n\n"
                        . "Nous avons bien reçu votre commande #$numeroCommande !\n\n"
-                       . "Menu : $menuNom\n"
-                       . "Nombre de personnes : $nbPersonnes\n"
+                       . $altBodyMenus
                        . "Date de prestation : $dateFormatee\n"
                        . "Prix total : " . number_format($prixTotal, 2, ',', ' ') . " €\n\n"
                        . "Statut : En attente de validation\n\n"
@@ -304,13 +333,30 @@ function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande
         $mail->addAddress($email, $prenom);
         $mail->Subject = "Modification de votre commande #$numeroCommande - Vite & Gourmand";
         
-        $menuNom = $detailsCommande['menu_nom'] ?? 'Menu';
-        $nbPersonnes = $detailsCommande['nombre_personne'] ?? 0;
+        $lignesMenus = $detailsCommande['lignesMenus'] ?? [];
         $datePrestation = $detailsCommande['date_prestation'] ?? 'À définir';
-        $prixUnitaire = $detailsCommande['prix_par_personne'] ?? 0;
-        $prixTotal = $prixUnitaire * $nbPersonnes;
         
         $dateFormatee = date('d/m/Y', strtotime($datePrestation));
+        
+        // Construire le HTML des lignes de menus
+        $htmlMenus = '';
+        foreach ($lignesMenus as $ligne) {
+            $menuNom = $ligne['menu_nom'] ?? 'Menu';
+            $nbPersonnes = $ligne['nombre_personne'] ?? 0;
+            $prixUnitaire = $ligne['prix_par_personne'] ?? 0;
+            $totalLigne = $ligne['total_ligne'] ?? 0;
+            
+            $htmlMenus .= "
+                <div class='detail-row'>
+                    <span class='detail-label'>Menu :</span>
+                    <span>$menuNom</span>
+                </div>
+                <div class='detail-row'>
+                    <span class='detail-label'>Nombre de personnes :</span>
+                    <span>$nbPersonnes personne(s)</span>
+                </div>
+            ";
+        }
         
         $mail->Body = "
         <!DOCTYPE html>
@@ -353,27 +399,10 @@ function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande
                             <span class='detail-label'>Numéro de commande :</span>
                             <span>#$numeroCommande</span>
                         </div>
-                        <div class='detail-row'>
-                            <span class='detail-label'>Menu :</span>
-                            <span>$menuNom</span>
-                        </div>
-                        <div class='detail-row'>
-                            <span class='detail-label'>Nombre de personnes :</span>
-                            <span>$nbPersonnes personne(s)</span>
-                        </div>
+                        $htmlMenus
                         <div class='detail-row'>
                             <span class='detail-label'>Date de prestation :</span>
                             <span>$dateFormatee</span>
-                        </div>
-                        <div class='detail-row'>
-                            <span class='detail-label'>Prix unitaire :</span>
-                            <span>" . number_format($prixUnitaire, 2, ',', ' ') . " €</span>
-                        </div>
-                        <div class='total'>
-                            <div class='detail-row'>
-                                <span class='detail-label'>TOTAL :</span>
-                                <span>" . number_format($prixTotal, 2, ',', ' ') . " €</span>
-                            </div>
                         </div>
                     </div>
                     
@@ -395,13 +424,19 @@ function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande
         </html>
         ";
         
+        // Construire texte alternatif avec lignesMenus
+        $altBodyMenus = '';
+        foreach ($lignesMenus as $ligne) {
+            $altBodyMenus .= "Menu : " . ($ligne['menu_nom'] ?? 'Menu') . "\n";
+            $altBodyMenus .= "Nombre de personnes : " . ($ligne['nombre_personne'] ?? 0) . "\n";
+            $altBodyMenus .= "Prix ligne : " . number_format($ligne['total_ligne'] ?? 0, 2, ',', ' ') . " €\n\n";
+        }
+        
         $mail->AltBody = "Bonjour $prenom,\n\n"
                        . "Votre commande #$numeroCommande a été modifiée avec succès !\n\n"
                        . "DÉTAILS MIS À JOUR :\n"
-                       . "Menu : $menuNom\n"
-                       . "Nombre de personnes : $nbPersonnes\n"
-                       . "Date de prestation : $dateFormatee\n"
-                       . "Prix total : " . number_format($prixTotal, 2, ',', ' ') . " €\n\n"
+                       . $altBodyMenus
+                       . "Date de prestation : $dateFormatee\n\n"
                        . "Si vous n'êtes pas à l'origine de cette modification, veuillez nous contacter.\n\n"
                        . "À bientôt chez Vite & Gourmand !\n"
                        . "L'équipe Vite & Gourmand";

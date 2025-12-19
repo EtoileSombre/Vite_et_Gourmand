@@ -12,10 +12,16 @@ class Menu extends Model
     public function findActive(): array
     {
         $stmt = $this->db->query("
-            SELECT m.*, t.libelle as theme
+            SELECT m.*,
+                   GROUP_CONCAT(DISTINCT t.libelle SEPARATOR ', ') as theme,
+                   GROUP_CONCAT(DISTINCT r.libelle SEPARATOR ', ') as regime
             FROM {$this->table} m
-            LEFT JOIN theme t ON m.theme_id = t.theme_id
-            WHERE m.quantite_restante > 0 
+            LEFT JOIN menu_theme mt ON m.menu_id = mt.menu_id
+            LEFT JOIN theme t ON mt.theme_id = t.theme_id
+            LEFT JOIN adapte a ON m.menu_id = a.menu_id
+            LEFT JOIN regime r ON a.regime_id = r.regime_id
+            WHERE m.quantite_restante > 0
+            GROUP BY m.menu_id
             ORDER BY m.{$this->primaryKey} DESC
         ");
         return $stmt->fetchAll();
@@ -59,14 +65,19 @@ class Menu extends Model
 
     public function findActiveById(int $id): ?array
     {
-        // Récupérer les informations du menu avec thème
+        // Récupérer les informations du menu avec thèmes et régimes
         $stmt = $this->db->prepare("
             SELECT m.*, 
-                   t.libelle as theme_libelle
+                   GROUP_CONCAT(DISTINCT t.libelle SEPARATOR ', ') as theme_libelle,
+                   GROUP_CONCAT(DISTINCT r.libelle SEPARATOR ', ') as regime
             FROM {$this->table} m
-            LEFT JOIN theme t ON m.theme_id = t.theme_id
+            LEFT JOIN menu_theme mt ON m.menu_id = mt.menu_id
+            LEFT JOIN theme t ON mt.theme_id = t.theme_id
+            LEFT JOIN adapte a ON m.menu_id = a.menu_id
+            LEFT JOIN regime r ON a.regime_id = r.regime_id
             WHERE m.{$this->primaryKey} = :id 
             AND m.quantite_restante > 0
+            GROUP BY m.menu_id
         ");
         $stmt->execute(['id' => $id]);
         $menu = $stmt->fetch();
@@ -74,17 +85,6 @@ class Menu extends Model
         if (!$menu) {
             return null;
         }
-
-        // Récupérer les régimes adaptés
-        $stmt = $this->db->prepare("
-            SELECT GROUP_CONCAT(r.libelle SEPARATOR ', ') as regimes
-            FROM adapte a
-            JOIN regime r ON a.regime_id = r.regime_id
-            WHERE a.menu_id = :menu_id
-        ");
-        $stmt->execute(['menu_id' => $id]);
-        $regimes = $stmt->fetch();
-        $menu['regime_libelle'] = $regimes['regimes'] ?? null;
 
         // Récupérer les plats du menu avec leurs allergènes
         $stmt = $this->db->prepare("
@@ -186,9 +186,11 @@ class Menu extends Model
     public function findByTheme(int $themeId): array
     {
         $stmt = $this->db->prepare("
-            SELECT * FROM {$this->table} 
-            WHERE theme_id = :theme_id 
-            AND quantite_restante > 0
+            SELECT m.* 
+            FROM {$this->table} m
+            JOIN menu_theme mt ON m.menu_id = mt.menu_id
+            WHERE mt.theme_id = :theme_id 
+            AND m.quantite_restante > 0
         ");
         $stmt->execute(['theme_id' => $themeId]);
         return $stmt->fetchAll();

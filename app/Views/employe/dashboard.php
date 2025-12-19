@@ -143,7 +143,7 @@ require_once __DIR__ . '/../layouts/header.php';
                                         <br><small class="text-muted"><?= htmlspecialchars($cmd['client_email'] ?? '') ?></small>
                                     </td>
                                     <td><?= htmlspecialchars($cmd['menu_nom'] ?? 'N/A') ?></td>
-                                    <td><?= htmlspecialchars($cmd['nombre_personne'] ?? 0) ?></td>
+                                    <td><?= htmlspecialchars($cmd['totalPersonnes'] ?? 0) ?></td>
                                     <td>
                                         <?php 
                                         $datePresta = $cmd['date_prestation'] ? date('d/m/Y', strtotime($cmd['date_prestation'])) : 'N/A';
@@ -157,8 +157,8 @@ require_once __DIR__ . '/../layouts/header.php';
                                         <?php
                                         $badges = [
                                             'en attente' => 'warning',
-                                            'validée' => 'success',
-                                            'en préparation' => 'info'
+                                            'validee' => 'success',
+                                            'en_preparation' => 'info'
                                         ];
                                         $statut = $cmd['statut'] ?? 'en attente';
                                         $badgeClass = $badges[$statut] ?? 'secondary';

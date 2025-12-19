@@ -1,6 +1,9 @@
 <?php
 // Point d'entrée unique (Front Controller)
 
+// Configuration de l'encodage HTTP
+header('Content-Type: text/html; charset=utf-8');
+
 ob_start();
 
 session_start();

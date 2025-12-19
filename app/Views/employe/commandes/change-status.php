@@ -51,8 +51,16 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <?php endif; ?>
                         </dd>
 
-                        <dt class="col-sm-5">Menu :</dt>
-                        <dd class="col-sm-7"><strong><?= htmlspecialchars($commande['menu_titre'] ?? 'N/A') ?></strong></dd>
+                        <dt class="col-sm-5">Menu(s) :</dt>
+                        <dd class="col-sm-7">
+                            <?php if (!empty($commande['lignesMenus'])): ?>
+                                <?php foreach ($commande['lignesMenus'] as $ligne): ?>
+                                    <strong><?= htmlspecialchars($ligne['menu_nom']) ?></strong> (<?= $ligne['nombre_personne'] ?> pers.)<br>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <span class="text-muted">Aucun menu</span>
+                            <?php endif; ?>
+                        </dd>
 
                         <dt class="col-sm-5">Date prestation :</dt>
                         <dd class="col-sm-7">
@@ -62,14 +70,14 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <?php endif; ?>
                         </dd>
 
-                        <dt class="col-sm-5">Nb personnes :</dt>
-                        <dd class="col-sm-7"><?= htmlspecialchars($commande['nombre_personne'] ?? 0) ?></dd>
+                        <dt class="col-sm-5">Total personnes :</dt>
+                        <dd class="col-sm-7"><?= htmlspecialchars($commande['totalPersonnes'] ?? 0) ?></dd>
 
                         <dt class="col-sm-5">Lieu :</dt>
                         <dd class="col-sm-7"><?= htmlspecialchars($commande['lieu_livraison'] ?? 'Non renseigné') ?></dd>
 
                         <dt class="col-sm-5">Montant :</dt>
-                        <dd class="col-sm-7"><strong><?= number_format($commande['prix_total'] ?? 0, 2) ?> €</strong></dd>
+                        <dd class="col-sm-7"><strong><?= number_format($commande['total_final'] ?? 0, 2) ?> €</strong></dd>
 
                         <dt class="col-sm-5">Statut actuel :</dt>
                         <dd class="col-sm-7">

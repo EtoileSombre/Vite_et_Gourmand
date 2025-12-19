@@ -6,6 +6,7 @@ use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
 use App\Models\Commande;
+use App\Models\CommandeMenu;
 use App\Config\MongoStats;
 
 /**
@@ -60,6 +61,17 @@ class EmployeCommandeController extends Controller
             });
         }
 
+        // Enrichir chaque commande avec ses lignes de menus
+        $commandeMenuModel = new CommandeMenu();
+        foreach ($commandes as &$cmd) {
+            $cmd['lignesMenus'] = $commandeMenuModel->findByCommande($cmd['numero_commande']);
+            $cmd['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($cmd['numero_commande']);
+            // Afficher le premier menu comme info principale
+            if (!empty($cmd['lignesMenus'])) {
+                $cmd['menu_titre'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
+            }
+        }
+
         $this->render('employe/commandes/index', [
             'title' => 'Gestion des Commandes',
             'commandes' => $commandes,
@@ -90,6 +102,11 @@ class EmployeCommandeController extends Controller
             $this->redirect('/employe/commandes');
             return;
         }
+
+        // Enrichir avec lignesMenus
+        $commandeMenuModel = new CommandeMenu();
+        $commande['lignesMenus'] = $commandeMenuModel->findByCommande($numeroCommande);
+        $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($numeroCommande);
 
         // Si POST : traiter le changement de statut
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -123,8 +140,8 @@ class EmployeCommandeController extends Controller
         }
 
         // OBLIGATION ECF : Vérifier le contact client pour modifications/annulations
-        $requiresContact = in_array($nouveauStatut, ['refusée', 'annulée']) || 
-                          ($commande['statut'] !== 'en attente' && $nouveauStatut !== $commande['statut']);
+        $requiresContact = in_array($nouveauStatut, ['refusee', 'annulee']) || 
+                          ($commande['statut'] !== 'en_attente' && $nouveauStatut !== $commande['statut']);
 
         if ($requiresContact) {
             if (!$contacteClient) {
@@ -171,7 +188,7 @@ class EmployeCommandeController extends Controller
             require_once __DIR__ . '/../config/mail.php';
             
             // Email #1 : Commande acceptée (validée)
-            if ($nouveauStatut === 'validée') {
+            if ($nouveauStatut === 'validee') {
                 error_log("Envoi email commande validée à: " . $commande['client_email']);
                 $emailSent = sendOrderAcceptedEmail(
                     $commande['client_email'],
@@ -183,7 +200,7 @@ class EmployeCommandeController extends Controller
             }
             
             // Email #2 : Commande terminée (avec invitation avis)
-            if ($nouveauStatut === 'terminée') {
+            if ($nouveauStatut === 'terminee') {
                 error_log("Envoi email commande terminée à: " . $commande['client_email']);
                 $emailSent = sendOrderCompletedEmail(
                     $commande['client_email'],
@@ -225,9 +242,16 @@ class EmployeCommandeController extends Controller
             return;
         }
 
+        // Récupérer les lignes de menus de cette commande
+        $commandeMenuModel = new \App\Models\CommandeMenu();
+        $lignesMenus = $commandeMenuModel->findByCommande($numeroCommande);
+        $totalPersonnes = $commandeMenuModel->getTotalPersonnes($numeroCommande);
+
         $this->render('employe/commandes/view', [
             'title' => 'Détails de la Commande',
-            'commande' => $commande
+            'commande' => $commande,
+            'lignesMenus' => $lignesMenus,
+            'totalPersonnes' => $totalPersonnes
         ]);
     }
 }

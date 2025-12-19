@@ -59,7 +59,7 @@
                                 <td>#<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($commande['utilisateur_id'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($commande['menu_nom'] ?? $commande['menu_id'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($commande['nombre_personne'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($commande['totalPersonnes'] ?? 'N/A') ?></td>
                                 <td>
                                     <?php
                                     $statutClass = match($commande['statut'] ?? 'en attente') {

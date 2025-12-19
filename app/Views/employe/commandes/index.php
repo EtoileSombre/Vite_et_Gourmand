@@ -37,11 +37,11 @@ require_once __DIR__ . '/../../layouts/header.php';
                     <select name="statut" id="statut" class="form-select">
                         <option value="all" <?= $filterStatut === 'all' ? 'selected' : '' ?>>Tous</option>
                         <option value="en attente" <?= $filterStatut === 'en attente' ? 'selected' : '' ?>>En attente</option>
-                        <option value="validée" <?= $filterStatut === 'validée' ? 'selected' : '' ?>>Validée</option>
-                        <option value="en préparation" <?= $filterStatut === 'en préparation' ? 'selected' : '' ?>>En préparation</option>
-                        <option value="terminée" <?= $filterStatut === 'terminée' ? 'selected' : '' ?>>Terminée</option>
-                        <option value="refusée" <?= $filterStatut === 'refusée' ? 'selected' : '' ?>>Refusée</option>
-                        <option value="annulée" <?= $filterStatut === 'annulée' ? 'selected' : '' ?>>Annulée</option>
+                        <option value="validee" <?= $filterStatut === 'validee' ? 'selected' : '' ?>>Validée</option>
+                        <option value="en_preparation" <?= $filterStatut === 'en_preparation' ? 'selected' : '' ?>>En préparation</option>
+                        <option value="terminee" <?= $filterStatut === 'terminee' ? 'selected' : '' ?>>Terminée</option>
+                        <option value="refusee" <?= $filterStatut === 'refusee' ? 'selected' : '' ?>>Refusée</option>
+                        <option value="annulee" <?= $filterStatut === 'annulee' ? 'selected' : '' ?>>Annulée</option>
                     </select>
                 </div>
                 <div class="col-md-3">
@@ -116,8 +116,8 @@ require_once __DIR__ . '/../../layouts/header.php';
                                         <?= date('d/m/Y', strtotime($cmd['date_prestation'])) ?>
                                         <br><small class="text-muted"><?= htmlspecialchars($cmd['heure_livraison'] ?? '') ?></small>
                                     </td>
-                                    <td class="text-center"><?= htmlspecialchars($cmd['nombre_personne'] ?? 0) ?></td>
-                                    <td><strong><?= number_format($cmd['prix_total'] ?? 0, 2) ?> €</strong></td>
+                                    <td class="text-center"><?= htmlspecialchars($cmd['totalPersonnes'] ?? 0) ?></td>
+                                    <td><strong><?= number_format($cmd['total_final'] ?? 0, 2) ?> €</strong></td>
                                     <td>
                                         <span class="badge <?= $badgeClass ?>">
                                             <?= ucfirst($cmd['statut']) ?>

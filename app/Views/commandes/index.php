@@ -26,40 +26,39 @@
                     <?php foreach ($commandes as $commande): ?>
                         <tr>
                             <td>#<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></td>
-                            <td><?= htmlspecialchars($commande['menu_nom'] ?? 'Menu supprimé') ?></td>
-                            <td><?= htmlspecialchars($commande['nombre_personne'] ?? 0) ?> pers.</td>
+                            <td>
+                                <?php if (isset($commande['lignesMenus']) && count($commande['lignesMenus']) > 0): ?>
+                                    <?php foreach ($commande['lignesMenus'] as $ligne): ?>
+                                        <?= htmlspecialchars($ligne['menu_nom']) ?> (<?= $ligne['nombre_personne'] ?> pers.)<br>
+                                    <?php endforeach; ?>
+                                <?php else: ?>
+                                    -
+                                <?php endif; ?>
+                            </td>
+                            <td><?= htmlspecialchars($commande['totalPersonnes'] ?? 0) ?> pers.</td>
                             <td><?= $commande['date_prestation'] ? date('d/m/Y', strtotime($commande['date_prestation'])) : 'Non définie' ?></td>
                             <td>
                                 <?php
-                                $statut = $commande['statut'] ?? 'en attente';
+                                $statut = $commande['statut'] ?? 'en_attente';
                                 $statutClass = match($statut) {
-                                    'en attente' => 'warning',
-                                    'validée' => 'success',
-                                    'annulée' => 'danger',
-                                    'livrée' => 'info',
+                                    'en_attente' => 'warning',
+                                    'validee' => 'success',
+                                    'annulee' => 'danger',
+                                    'terminee' => 'info',
                                     default => 'secondary'
                                 };
-                                $statutText = ucfirst($statut);
+                                $statutText = ucfirst(str_replace('_', ' ', $statut));
                                 ?>
                                 <span class="badge bg-<?= $statutClass ?>"><?= $statutText ?></span>
                             </td>
                             <td>
-                                <?php 
-                                // Utiliser prix_total si disponible, sinon calculer à partir de prix_menu
-                                if (isset($commande['prix_total']) && $commande['prix_total'] > 0) {
-                                    echo number_format($commande['prix_total'], 2, ',', ' ') . ' €';
-                                } else {
-                                    $prixMenu = $commande['menu_prix'] ?? 0;
-                                    $nbPersonnes = $commande['nombre_personne'] ?? 0;
-                                    echo number_format($prixMenu * $nbPersonnes, 2, ',', ' ') . ' €';
-                                }
-                                ?>
+                                <?= number_format($commande['total_final'] ?? 0, 2, ',', ' ') ?> €
                                 <?php if (isset($commande['reduction_appliquee']) && $commande['reduction_appliquee'] > 0): ?>
-                                    <br><small class="text-success">-10% appliqué</small>
+                                    <br><small class="text-success">-<?= number_format($commande['reduction_appliquee'], 2, ',', ' ') ?> € de réduction</small>
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php if ($statut === 'en attente'): ?>
+                                <?php if ($statut === 'en_attente'): ?>
                                     <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-sm btn-primary">Modifier</a>
                                     <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-sm btn-danger btn-annuler-commande">Annuler</a>
                                 <?php else: ?>

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Core\Controller;
 use App\Models\Commande;
+use App\Models\CommandeMenu;
 use App\Models\Menu;
 use App\Core\Request;
 use App\Core\Session;
@@ -19,7 +20,14 @@ class CommandeController extends Controller
         }
 
         $commandeModel = new Commande();
+        $commandeMenuModel = new CommandeMenu();
         $commandes = $commandeModel->findByUser($userId);
+        
+        // Enrichir chaque commande avec ses lignes de menus
+        foreach ($commandes as &$commande) {
+            $commande['lignesMenus'] = $commandeMenuModel->findByCommande($commande['numero_commande']);
+            $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($commande['numero_commande']);
+        }
         
         $this->render('commandes/index', ['commandes' => $commandes]);
     }
@@ -46,7 +54,7 @@ class CommandeController extends Controller
         if ($boissonsIds) {
             $ids = explode(',', $boissonsIds);
             require_once __DIR__ . '/../Core/Database.php';
-            $db = \App\Core\Database::getInstance()->getConnection();
+            $db = \App\Core\Database::getInstance();
             
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
             $stmt = $db->prepare("SELECT * FROM boisson WHERE boisson_id IN ($placeholders)");
@@ -58,7 +66,7 @@ class CommandeController extends Controller
         if ($materielsIds) {
             $ids = explode(',', $materielsIds);
             require_once __DIR__ . '/../Core/Database.php';
-            $db = \App\Core\Database::getInstance()->getConnection();
+            $db = \App\Core\Database::getInstance();
             
             $placeholders = implode(',', array_fill(0, count($ids), '?'));
             $stmt = $db->prepare("SELECT * FROM materiel WHERE materiel_id IN ($placeholders)");
@@ -123,28 +131,37 @@ class CommandeController extends Controller
         $fraisLivraison = 5.00 + ($distanceKm * 0.59);
 
         // 4. Prix total = Prix menu - Réduction + Frais de livraison
-        $prixTotal = $prixMenu - $reductionAppliquee + $fraisLivraison;
+        $totalMenus = $prixMenu - $reductionAppliquee;
+        $prixTotal = $totalMenus + $fraisLivraison;
 
-        // CRÉATION DE LA COMMANDE
+        // CRÉATION DE LA COMMANDE (EN-TÊTE)
         
         $commandeModel = new Commande();
         $commandeModel->create([
             'numero_commande' => $numeroCommande,
             'utilisateur_id' => $userId,
-            'menu_id' => $menuId,
-            'nombre_personne' => $nombrePersonnes,
-            'date_commande' => date('Y-m-d H:i:s'),
             'date_prestation' => $dateLivraison,
             'heure_livraison' => $heureLivraison,
             'lieu_livraison' => $lieuLivraison,
             'ville_livraison' => $villeLivraison,
             'code_postal_livraison' => $codePostalLivraison,
             'distance_km' => $distanceKm,
-            'prix_menu' => $prixMenu,
             'prix_livraison' => $fraisLivraison,
+            'total_final' => $prixTotal,
             'pret_materiel' => $pretMateriel,
-            'statut' => 'en attente'
+            'statut' => 'en_attente'
         ]);
+
+        // AJOUT DES LIGNES DE MENU
+        
+        $commandeMenuModel = new \App\Models\CommandeMenu();
+        $commandeMenuModel->addMenuToCommande(
+            $numeroCommande,
+            $menuId,
+            $nombrePersonnes,
+            $menu['prix_par_personne'],
+            $reductionAppliquee
+        );
 
         // ENVOI EMAIL DE CONFIRMATION
         
@@ -154,14 +171,19 @@ class CommandeController extends Controller
         if ($userEmail && $userPrenom && $menu) {
             require_once __DIR__ . '/../config/mail.php';
             
-            $detailsCommande = [
+            // Préparer les lignes de menus pour l'email
+            $lignesMenus = [[
                 'menu_nom' => $menu['titre'],
                 'nombre_personne' => $nombrePersonnes,
+                'prix_par_personne' => $menu['prix_par_personne'],
+                'total_ligne' => $totalMenus
+            ]];
+            
+            $detailsCommande = [
+                'lignesMenus' => $lignesMenus,
                 'date_prestation' => $dateLivraison,
                 'heure_livraison' => $heureLivraison,
                 'adresse_livraison' => $adresseLivraison,
-                'prix_par_personne' => $menu['prix_par_personne'],
-                'prix_menu' => $prixMenu,
                 'reduction' => $reductionAppliquee,
                 'frais_livraison' => $fraisLivraison,
                 'prix_total' => $prixTotal,
@@ -179,7 +201,7 @@ class CommandeController extends Controller
             'menu_id' => $menuId,
             'prix_total' => $prixTotal,
             'nombre_personne' => $nombrePersonnes,
-            'statut' => 'validée'
+            'statut' => 'en_attente'
         ]);
 
         // Message de succès avec détails
@@ -213,6 +235,11 @@ class CommandeController extends Controller
             $this->redirect('/mes-commandes');
         }
 
+        // Enrichir avec lignesMenus
+        $commandeMenuModel = new CommandeMenu();
+        $commande['lignesMenus'] = $commandeMenuModel->findByCommande($numeroCommande);
+        $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($numeroCommande);
+
         $menuModel = new Menu();
         $menus = $menuModel->findAll();
 
@@ -244,10 +271,31 @@ class CommandeController extends Controller
         if (!$commande || $commande['utilisateur_id'] != $userId) {
             $this->redirect('/mes-commandes');
         }
+
+        // Récupérer les lignes de menus
+        $commandeMenuModel = new \App\Models\CommandeMenu();
+        $lignesMenus = $commandeMenuModel->findByCommande($numeroCommande);
         $commandeModel->updateByNumero($numeroCommande, [
-            'nombre_personne' => $nombrePersonnes,
             'date_prestation' => $dateLivraison
         ]);
+
+        // Si nombre de personnes changé, mettre à jour la première ligne de menu
+        if (!empty($lignesMenus) && $nombrePersonnes != $lignesMenus[0]['nombre_personne']) {
+            $commandeMenuModel->updateLigne(
+                $lignesMenus[0]['commande_menu_id'],
+                $nombrePersonnes,
+                $lignesMenus[0]['prix_par_personne'],
+                $lignesMenus[0]['reduction']
+            );
+            
+            // Recalculer le total de la commande
+            $totalMenus = $commandeMenuModel->getTotalMenus($numeroCommande);
+            $nouveauTotal = $totalMenus + $commande['prix_livraison'];
+            
+            $commandeModel->updateByNumero($numeroCommande, [
+                'total_final' => $nouveauTotal
+            ]);
+        }
 
         // Envoyer l'email de modification
         $userEmail = Session::get('user_email');
@@ -256,11 +304,11 @@ class CommandeController extends Controller
         if ($userEmail && $userPrenom) {
             require_once __DIR__ . '/../config/mail.php';
             
+            $lignesMenus = $commandeMenuModel->findByCommande($numeroCommande);
+            
             $detailsCommande = [
-                'menu_nom' => $commande['menu_nom'],
-                'nombre_personne' => $nombrePersonnes,
-                'date_prestation' => $dateLivraison,
-                'prix_par_personne' => $commande['menu_prix']
+                'lignesMenus' => $lignesMenus,
+                'date_prestation' => $dateLivraison
             ];
             
             sendOrderUpdateEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
@@ -289,7 +337,7 @@ class CommandeController extends Controller
         if (!$commande || $commande['utilisateur_id'] != $userId) {
             $this->redirect('/mes-commandes');
         }
-        $commandeModel->updateByNumero($numeroCommande, ['statut' => 'annulée']);
+        $commandeModel->updateByNumero($numeroCommande, ['statut' => 'annulee']);
 
         $this->redirect('/mes-commandes');
     }

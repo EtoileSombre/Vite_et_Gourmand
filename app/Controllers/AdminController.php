@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Models\User;
 use App\Models\Commande;
+use App\Models\CommandeMenu;
 use App\Models\Menu;
 use App\Core\Session;
 
@@ -34,6 +35,17 @@ class AdminController extends Controller
         $dernieresCommandes = $commandeModel->findAll();
         // Limiter aux 10 dernières
         $dernieresCommandes = array_slice($dernieresCommandes, 0, 10);
+        
+        // Enrichir avec lignesMenus
+        $commandeMenuModel = new CommandeMenu();
+        foreach ($dernieresCommandes as &$cmd) {
+            $cmd['lignesMenus'] = $commandeMenuModel->findByCommande($cmd['numero_commande']);
+            $cmd['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($cmd['numero_commande']);
+            // Afficher le premier menu comme menu_nom
+            if (!empty($cmd['lignesMenus'])) {
+                $cmd['menu_nom'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
+            }
+        }
 
         $this->render('admin/dashboard', [
             'totalUsers' => $totalUsers,

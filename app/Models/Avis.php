@@ -132,12 +132,10 @@ class Avis extends Model
                    u.prenom as client_prenom,
                    u.nom as client_nom,
                    u.email as client_email,
-                   c.numero_commande,
-                   m.titre as menu_titre
+                   c.numero_commande
             FROM {$this->table} a
             LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
             LEFT JOIN commande c ON a.numero_commande = c.numero_commande
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             ORDER BY a.created_at DESC
         ");
         $stmt->execute();
@@ -156,12 +154,10 @@ class Avis extends Model
                    u.prenom as client_prenom,
                    u.nom as client_nom,
                    u.email as client_email,
-                   c.numero_commande,
-                   m.titre as menu_titre
+                   c.numero_commande
             FROM {$this->table} a
             LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
             LEFT JOIN commande c ON a.numero_commande = c.numero_commande
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             WHERE a.statut = :statut
             ORDER BY a.created_at DESC
         ");

@@ -21,8 +21,8 @@ require_once __DIR__ . '/../../layouts/header.php';
     <div class="row">
         <!-- Informations commande -->
         <div class="col-md-5">
-            <div class="card mb-4">
-                <div class="card-header bg-info text-white">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-vg-gold text-vg-bordeaux">
                     <h5 class="mb-0"><i class="bi bi-info-circle"></i> Informations Commande</h5>
                 </div>
                 <div class="card-body">
@@ -79,23 +79,27 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <dt class="col-sm-5">Statut actuel :</dt>
                         <dd class="col-sm-7">
                             <span class="badge <?= match($commande['statut']) {
-                                'en attente' => 'bg-warning',
-                                'acceptee' => 'bg-info',
-                                'en préparation' => 'bg-primary',
-                                'terminée' => 'bg-success',
+                                'en_attente' => 'bg-warning text-dark',
+                                'acceptee' => 'bg-success',
+                                'en_preparation' => 'bg-primary',
+                                'en_cours_livraison' => 'bg-purple',
+                                'livree' => 'bg-orange text-dark',
+                                'attente_retour_materiel' => 'bg-brown text-white',
+                                'terminee' => 'bg-dark-green text-white',
+                                'annulee' => 'bg-danger',
                                 default => 'bg-secondary'
-                            } ?>">
-                                <?= ucfirst($commande['statut']) ?>
+                            } ?> fs-6">
+                                <?= ucfirst(str_replace('_', ' ', $commande['statut'])) ?>
                             </span>
                         </dd>
                     </dl>
                 </div>
             </div>
 
-            <!-- Alerte ECF -->
+            <!-- Alerte -->
             <div class="alert alert-warning">
-                <i class="bi bi-exclamation-triangle-fill"></i> <strong>Rappel ECF :</strong>
-                <p class="mb-0 mt-2">Vous DEVEZ contacter l'utilisateur par téléphone ou email avant de modifier ou annuler une commande.</p>
+                <i class="bi bi-exclamation-triangle-fill"></i> <strong>Rappel:</strong>
+                <p class="mb-0 mt-2">Vous devez contacter l'utilisateur par téléphone ou email avant de modifier ou annuler une commande.</p>
             </div>
         </div>
 
@@ -115,19 +119,32 @@ require_once __DIR__ . '/../../layouts/header.php';
                             </label>
                             <select name="nouveau_statut" id="nouveau_statut" class="form-select" data-statut-actuel="<?= htmlspecialchars($commande['statut']) ?>" required>
                                 <option value="">-- Sélectionner --</option>
-                                <?php if ($commande['statut'] === 'en attente'): ?>
+                                <?php if ($commande['statut'] === 'en_attente'): ?>
                                     <option value="acceptee">✅ Acceptée</option>
-                                    <option value="refusée">❌ Refusée</option>
+                                    <option value="annulee">❌ Refusée</option>
                                 <?php endif; ?>
                                 
                                 <?php if ($commande['statut'] === 'acceptee'): ?>
-                                    <option value="en préparation">🔄 En préparation</option>
-                                    <option value="annulée">❌ Annulée</option>
+                                    <option value="en_preparation">🔄 En préparation</option>
+                                    <option value="annulee">❌ Annulée</option>
                                 <?php endif; ?>
                                 
-                                <?php if ($commande['statut'] === 'en préparation'): ?>
-                                    <option value="terminée">✅ Terminée</option>
-                                    <option value="annulée">❌ Annulée</option>
+                                <?php if ($commande['statut'] === 'en_preparation'): ?>
+                                    <option value="en_cours_livraison">🚚 En cours de livraison</option>
+                                    <option value="annulee">❌ Annulée</option>
+                                <?php endif; ?>
+                                
+                                <?php if ($commande['statut'] === 'en_cours_livraison'): ?>
+                                    <option value="livree">📦 Livrée</option>
+                                <?php endif; ?>
+                                
+                                <?php if ($commande['statut'] === 'livree'): ?>
+                                    <option value="attente_retour_materiel">⏳ Attente retour matériel</option>
+                                    <option value="terminee">✅ Terminée</option>
+                                <?php endif; ?>
+                                
+                                <?php if ($commande['statut'] === 'attente_retour_materiel'): ?>
+                                    <option value="terminee">✅ Terminée</option>
                                 <?php endif; ?>
                             </select>
                         </div>
@@ -183,7 +200,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <!-- Boutons -->
                         <div class="d-flex gap-2">
                             <button type="submit" class="btn btn-warning flex-fill">
-                                <i class="bi bi-check-circle"></i> Valider le changement
+                                <i class="bi bi-check-circle"></i> Valider
                             </button>
                             <a href="/employe/commandes" class="btn btn-outline-secondary">
                                 Annuler

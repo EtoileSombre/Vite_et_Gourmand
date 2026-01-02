@@ -1,10 +1,8 @@
 <?php
 /**
- * Script CRON - Rappel restitution matériel
- * ECF DWWM - Email automatique #3
+ * Script CRON - Rappel restitution matériel - Email automatique #3
  * 
- * À exécuter quotidiennement pour envoyer des rappels aux clients
- * qui n'ont pas restitué le matériel 10 jours après la prestation
+ * À exécuter quotidiennement pour envoyer des rappels aux utilisateurs qui n'ont pas restitué le matériel 10 jours après la prestation
  * 
  * Commande cron recommandée : 0 9 * * * php /var/www/html/scripts/rappel-materiel.php
  */

@@ -11,7 +11,7 @@ use App\Config\MongoStats;
 
 /**
  * Contrôleur Employé - Gestion des Commandes
- * Changement de statuts avec obligation de contacter le client
+ * Changement de statuts avec obligation de contacter l'utilisateur
  */
 class EmployeCommandeController extends Controller
 {
@@ -34,17 +34,11 @@ class EmployeCommandeController extends Controller
         $this->commandeModel = new Commande();
     }
 
-    /**
-     * Liste des commandes avec filtres
-     */
     public function index(Request $request): void
     {
-        // Récupérer les filtres
         $filterStatut = $request->get('statut') ?? 'all';
-        $filterClient = $request->get('client') ?? '';
+        $filterUtilisateur = $request->get('utilisateur') ?? '';
         $filterAujourdhui = $request->get('filter') === 'aujourdhui';
-
-        // Construire la requête selon les filtres
         if ($filterAujourdhui) {
             $commandes = $this->commandeModel->findByDate(date('Y-m-d'));
         } elseif ($filterStatut !== 'all') {
@@ -53,11 +47,11 @@ class EmployeCommandeController extends Controller
             $commandes = $this->commandeModel->findAllWithDetails();
         }
 
-        // Filtrer par client si nécessaire
-        if (!empty($filterClient)) {
-            $commandes = array_filter($commandes, function($cmd) use ($filterClient) {
-                return stripos($cmd['client_prenom'] ?? '', $filterClient) !== false ||
-                       stripos($cmd['client_email'] ?? '', $filterClient) !== false;
+        // Filtrer par utilisateur si nécessaire
+        if (!empty($filterUtilisateur)) {
+            $commandes = array_filter($commandes, function($cmd) use ($filterUtilisateur) {
+                return stripos($cmd['utilisateur_prenom'] ?? '', $filterUtilisateur) !== false ||
+                       stripos($cmd['utilisateur_email'] ?? '', $filterUtilisateur) !== false;
             });
         }
 
@@ -76,14 +70,13 @@ class EmployeCommandeController extends Controller
             'title' => 'Gestion des Commandes',
             'commandes' => $commandes,
             'filterStatut' => $filterStatut,
-            'filterClient' => $filterClient,
+            'filterUtilisateur' => $filterUtilisateur,
             'filterAujourdhui' => $filterAujourdhui
         ]);
     }
 
     /**
-     * Formulaire de changement de statut
-     * OBLIGATION ECF : Contacter le client AVANT toute modification
+     * Formulaire de changement de statut - Contacter l'utilisateur AVANT toute modification
      */
     public function changeStatus(Request $request): void
     {
@@ -122,7 +115,7 @@ class EmployeCommandeController extends Controller
     }
 
     /**
-     * Traiter le changement de statut avec validation du contact client
+     * Traiter le changement de statut avec validation du contact utilisateur
      */
     private function processStatusChange(string $numeroCommande, array $commande): void
     {
@@ -132,20 +125,20 @@ class EmployeCommandeController extends Controller
         $nouveauStatut = $_POST['nouveau_statut'] ?? '';
         $motifContact = trim($_POST['motif_contact'] ?? '');
         $modeContact = $_POST['mode_contact'] ?? '';
-        $contacteClient = isset($_POST['contacte_client']);
+        $contacteUtilisateur = isset($_POST['contacte_utilisateur']);
 
         // Validation
         if (empty($nouveauStatut)) {
             $errors[] = "Le nouveau statut est obligatoire";
         }
 
-        // OBLIGATION ECF : Vérifier le contact client pour modifications/annulations
+        // Vérifier le contact utilisateur pour modifications/annulations
         $requiresContact = in_array($nouveauStatut, ['refusee', 'annulee']) || 
                           ($commande['statut'] !== 'en_attente' && $nouveauStatut !== $commande['statut']);
 
         if ($requiresContact) {
-            if (!$contacteClient) {
-                $errors[] = "Vous devez confirmer avoir contacté le client avant de modifier cette commande";
+            if (!$contacteUtilisateur) {
+                $errors[] = "Vous devez confirmer avoir contacté l'utilisateur avant de modifier cette commande";
             }
             if (empty($motifContact)) {
                 $errors[] = "Le motif de contact est obligatoire";
@@ -187,12 +180,12 @@ class EmployeCommandeController extends Controller
             // Envoyer les emails automatiques selon le nouveau statut
             require_once __DIR__ . '/../config/mail.php';
             
-            // Email #1 : Commande acceptée (validée)
-            if ($nouveauStatut === 'validee') {
-                error_log("Envoi email commande validée à: " . $commande['client_email']);
+            // Email #1 : Commande acceptée
+            if ($nouveauStatut === 'acceptee') {
+                error_log("Envoi email commande acceptée à: " . $commande['utilisateur_email']);
                 $emailSent = sendOrderAcceptedEmail(
-                    $commande['client_email'],
-                    $commande['client_prenom'],
+                    $commande['utilisateur_email'],
+                    $commande['utilisateur_prenom'],
                     $numeroCommande,
                     $commande['date_prestation']
                 );
@@ -201,10 +194,10 @@ class EmployeCommandeController extends Controller
             
             // Email #2 : Commande terminée (avec invitation avis)
             if ($nouveauStatut === 'terminee') {
-                error_log("Envoi email commande terminée à: " . $commande['client_email']);
+                error_log("Envoi email commande terminée à: " . $commande['utilisateur_email']);
                 $emailSent = sendOrderCompletedEmail(
-                    $commande['client_email'],
-                    $commande['client_prenom'],
+                    $commande['utilisateur_email'],
+                    $commande['utilisateur_prenom'],
                     $numeroCommande,
                     $commande['menu_titre'] ?? 'Menu'
                 );

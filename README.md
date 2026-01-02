@@ -22,7 +22,7 @@ ils souhaitent :
 - ✅ Présenter leurs menus en ligne
 - ✅ Automatiser la prise de commandes
 - ✅ Suivre leurs statistiques de vente
-- ✅ Gérer les avis clients
+- ✅ Gérer les avis utilisateurs
 - ✅ Améliorer leur visibilité numérique
 
 ---
@@ -110,7 +110,7 @@ docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/donnees.sql
 | ---- | ----- | ------------ | ----- |
 | 👑 **Admin** | `admin@viteetgourmand.fr` | `Admin123!` | Stats |
 | 👷 **Employé** | `employe@viteetgourmand.fr` | `Employe123!` | Modération |
-| 👤 **Client** | `client@test.fr` | `Client123!` | Profil |
+| 👤 **Utilisateur** | `utilisateur@test.fr` | `Utilisateur123!` | Profil |
 
 ⚠️ _Identifiants fournis à des fins de démonstration uniquement._
 
@@ -118,7 +118,7 @@ docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/donnees.sql
 
 ## 🎯 Fonctionnalités principales
 
-### 👤 Espace Client
+### 👤 Espace Utilisateur
 - Inscription / Connexion sécurisée (bcrypt)
 - Réinitialisation de mot de passe par email
 - Consultation des menus avec filtres (thème, régime, prix)
@@ -154,7 +154,7 @@ docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/donnees.sql
 - ✅ Échappement HTML (`htmlspecialchars`) contre XSS
 - ✅ Sessions PHP sécurisées
 - ✅ Tokens de réinitialisation avec expiration (24h)
-- ✅ Gestion des rôles (client, employé, administrateur)
+- ✅ Gestion des rôles (utilisateur, employé, administrateur)
 - ✅ Headers de sécurité Apache (.htaccess)
 - ✅ Variables d'environnement pour credentials
 

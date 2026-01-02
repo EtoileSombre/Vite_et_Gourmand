@@ -82,7 +82,7 @@ class EmployeController extends Controller
     private function getCommandesEnAttente(Commande $model): array
     {
         // Utiliser une méthode du modèle plutôt qu'accéder directement à $db
-        return $model->findByStatuts(['en attente', 'validée', 'en préparation']);
+        return $model->findByStatuts(['en attente', 'acceptee', 'en préparation']);
     }
 
     /**

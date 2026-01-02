@@ -64,7 +64,7 @@
                                     <?php
                                     $statutClass = match($commande['statut'] ?? 'en attente') {
                                         'en_attente', 'en attente' => 'warning',
-                                        'validee', 'validée' => 'success',
+                                        'acceptee' => 'success',
                                         'annulee', 'annulée' => 'danger',
                                         'livree', 'livrée', 'en cours' => 'info',
                                         default => 'secondary'

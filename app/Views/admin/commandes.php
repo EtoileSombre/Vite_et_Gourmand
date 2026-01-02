@@ -29,7 +29,7 @@
                             <?php
                             $statutClass = match($commande['statut']) {
                                 'en_attente' => 'warning',
-                                'validee' => 'success',
+                                'acceptee' => 'success',
                                 'annulee' => 'danger',
                                 'livree' => 'info',
                                 default => 'secondary'

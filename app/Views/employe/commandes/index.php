@@ -1,8 +1,4 @@
 <?php
-/**
- * Vue : Liste des commandes (Employé)
- * Gestion et changement de statut des commandes
- */
 require_once __DIR__ . '/../../layouts/header.php';
 ?>
 
@@ -37,7 +33,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                     <select name="statut" id="statut" class="form-select">
                         <option value="all" <?= $filterStatut === 'all' ? 'selected' : '' ?>>Tous</option>
                         <option value="en attente" <?= $filterStatut === 'en attente' ? 'selected' : '' ?>>En attente</option>
-                        <option value="validee" <?= $filterStatut === 'validee' ? 'selected' : '' ?>>Validée</option>
+                        <option value="acceptee" <?= $filterStatut === 'acceptee' ? 'selected' : '' ?>>Acceptée</option>
                         <option value="en_preparation" <?= $filterStatut === 'en_preparation' ? 'selected' : '' ?>>En préparation</option>
                         <option value="terminee" <?= $filterStatut === 'terminee' ? 'selected' : '' ?>>Terminée</option>
                         <option value="refusee" <?= $filterStatut === 'refusee' ? 'selected' : '' ?>>Refusée</option>
@@ -45,9 +41,9 @@ require_once __DIR__ . '/../../layouts/header.php';
                     </select>
                 </div>
                 <div class="col-md-3">
-                    <label for="client" class="form-label">Client</label>
-                    <input type="text" name="client" id="client" class="form-control" 
-                           placeholder="Nom ou email..." value="<?= htmlspecialchars($filterClient) ?>">
+                    <label for="utilisateur" class="form-label">Utilisateur</label>
+                    <input type="text" name="utilisateur" id="utilisateur" class="form-control" 
+                           placeholder="Nom ou email..." value="<?= htmlspecialchars($filterUtilisateur) ?>">
                 </div>
                 <div class="col-md-3 d-flex align-items-end">
                     <div class="form-check">
@@ -81,7 +77,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <thead>
                             <tr>
                                 <th>N° Commande</th>
-                                <th>Client</th>
+                                <th>Utilisateur</th>
                                 <th>Menu</th>
                                 <th>Date Commande</th>
                                 <th>Date Prestation</th>
@@ -97,7 +93,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                 // Badge selon le statut
                                 $badgeClass = match($cmd['statut']) {
                                     'en attente' => 'bg-warning',
-                                    'validée' => 'bg-info',
+                                    'acceptee' => 'bg-info',
                                     'en préparation' => 'bg-primary',
                                     'terminée' => 'bg-success',
                                     'refusée', 'annulée' => 'bg-danger',
@@ -107,8 +103,8 @@ require_once __DIR__ . '/../../layouts/header.php';
                                 <tr>
                                     <td><strong>#<?= htmlspecialchars($cmd['numero_commande']) ?></strong></td>
                                     <td>
-                                        <?= htmlspecialchars($cmd['client_prenom'] ?? 'N/A') ?><br>
-                                        <small class="text-muted"><?= htmlspecialchars($cmd['client_email'] ?? '') ?></small>
+                                        <?= htmlspecialchars($cmd['utilisateur_prenom'] ?? 'N/A') ?><br>
+                                        <small class="text-muted"><?= htmlspecialchars($cmd['utilisateur_email'] ?? '') ?></small>
                                     </td>
                                     <td><?= htmlspecialchars($cmd['menu_titre'] ?? 'N/A') ?></td>
                                     <td><?= date('d/m/Y', strtotime($cmd['date_commande'])) ?></td>

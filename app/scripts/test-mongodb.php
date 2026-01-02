@@ -48,7 +48,7 @@ echo "\n";
 // 3. Insérer des activités utilisateurs
 echo "3. Insertion d'activités utilisateurs...\n";
 $activites = [
-    ['action' => 'login', 'user_id' => 2, 'details' => ['role' => 'client']],
+    ['action' => 'login', 'user_id' => 2, 'details' => ['role' => 'utilisateur']],
     ['action' => 'view_menu', 'user_id' => 2, 'details' => ['menu_id' => 1]],
     ['action' => 'add_to_cart', 'user_id' => 2, 'details' => ['menu_id' => 1, 'nb_personnes' => 4]],
     ['action' => 'login', 'user_id' => 3, 'details' => ['role' => 'employe']],

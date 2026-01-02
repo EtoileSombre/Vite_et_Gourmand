@@ -38,7 +38,7 @@
                     <h2 class="h4 mb-3">2. Hébergeur du site</h2>
                     <p><strong>Nom :</strong> OVH SAS</p>
                     <p><strong>Adresse :</strong> 2 rue Kellermann, 59100 Roubaix, France</p>
-                    <p><strong>Téléphone :</strong> 1007 (Service client)</p>
+                    <p><strong>Téléphone :</strong> 1007 (Service utilisateur)</p>
                     <p><strong>Site web :</strong> <a href="https://www.ovhcloud.com" target="_blank" rel="noopener">www.ovhcloud.com</a></p>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                     <p>Les données personnelles sont collectées pour :</p>
                     <ul>
                         <li>La gestion des commandes</li>
-                        <li>La création et la gestion de votre compte client</li>
+                        <li>La création et la gestion de votre compte utilisateur</li>
                         <li>L'envoi de communications relatives à vos commandes</li>
                         <li>L'amélioration de nos services</li>
                         <li>Le respect de nos obligations légales</li>

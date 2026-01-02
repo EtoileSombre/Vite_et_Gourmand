@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Gestion changement statut commande employé
     const selectStatut = document.getElementById('nouveau_statut');
-    const contactSection = document.getElementById('contactClientSection');
+    const contactSection = document.getElementById('contactUtilisateurSection');
     const formChangeStatus = document.getElementById('formChangeStatus');
 
     if (selectStatut && contactSection && formChangeStatus) {
@@ -145,19 +145,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 (statutActuel !== 'en attente' && statut !== statutActuel);
 
             contactSection.style.display = requiresContact ? 'block' : 'none';
-            document.getElementById('contacte_client').required = requiresContact;
+            document.getElementById('contacte_utilisateur').required = requiresContact;
             document.getElementById('motif_contact').required = requiresContact;
         });
 
         formChangeStatus.addEventListener('submit', function(e) {
             if (contactSection.style.display !== 'none') {
-                const contacte = document.getElementById('contacte_client').checked;
+                const contacte = document.getElementById('contacte_utilisateur').checked;
                 const modeContact = document.querySelector('input[name="mode_contact"]:checked');
                 const motif = document.getElementById('motif_contact').value.trim();
 
                 if (!contacte) {
                     e.preventDefault();
-                    alert('❌ Vous devez confirmer avoir contacté le client');
+                    alert('❌ Vous devez confirmer avoir contacté l\'utilisateur');
                     return false;
                 }
 

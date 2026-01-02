@@ -109,8 +109,8 @@ class Avis extends Model
     {
         $stmt = $this->db->prepare("
             SELECT a.*, 
-                   u.prenom as client_prenom,
-                   u.email as client_email
+                   u.prenom as utilisateur_prenom,
+                   u.email as utilisateur_email
             FROM {$this->table} a
             LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
             WHERE a.statut = ?
@@ -129,9 +129,9 @@ class Avis extends Model
     {
         $stmt = $this->db->prepare("
             SELECT a.*, 
-                   u.prenom as client_prenom,
-                   u.nom as client_nom,
-                   u.email as client_email,
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
                    c.numero_commande
             FROM {$this->table} a
             LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
@@ -151,9 +151,9 @@ class Avis extends Model
     {
         $stmt = $this->db->prepare("
             SELECT a.*, 
-                   u.prenom as client_prenom,
-                   u.nom as client_nom,
-                   u.email as client_email,
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
                    c.numero_commande
             FROM {$this->table} a
             LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id

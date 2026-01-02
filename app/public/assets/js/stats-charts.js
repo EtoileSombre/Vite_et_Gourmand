@@ -1,30 +1,29 @@
-/**
- * Gestion des graphiques Chart.js pour la page de statistiques
- * Séparation du JavaScript de la vue PHP pour respecter les bonnes pratiques MVC
- */
+/* Gestion des graphiques Chart.js pour la page de statistiques*/
 
 /**
  * Initialise tous les graphiques de la page stats
  */
 function initStatsCharts(chartData) {
+    console.log('Initialisation des graphiques avec:', chartData);
+    
     // Graphique des menus les plus consultés (Doughnut)
     if (chartData.menus && chartData.menus.data && chartData.menus.data.length > 0) {
         initMenusChart(chartData.menus);
     }
     
-    // Graphique de l'évolution des commandes (Line)
-    if (chartData.commandes && chartData.commandes.data && chartData.commandes.data.length > 0) {
-        initCommandesChart(chartData.commandes);
+    // Graphique Commandes par Menu (Bar Chart comparatif)
+    if (chartData.commandesParMenu && chartData.commandesParMenu.commandes && chartData.commandesParMenu.commandes.length > 0) {
+        initCommandesChart(chartData.commandesParMenu);
     }
     
-    // Graphique du CA par menu (Bar)
+    // Graphique du CA par menu (Bar horizontal)
     if (chartData.ca && chartData.ca.data && chartData.ca.data.length > 0) {
         initCAChart(chartData.ca);
     }
 }
 
 /**
- * Initialise le graphique des menus les plus consultés (Doughnut/Pie)
+ * Initialise le graphique des menus les plus consultés
  */
 function initMenusChart(data) {
     const ctx = document.getElementById('chartMenus');
@@ -57,32 +56,45 @@ function initMenusChart(data) {
 }
 
 /**
- * Initialise le graphique de l'évolution des commandes (Line)
+ *Initialise le graphique Commandes par Menu (Bar)
  */
 function initCommandesChart(data) {
     const ctx = document.getElementById('chartCommandes');
     if (!ctx) return;
 
     new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: data.labels,
-            datasets: [{
-                label: 'Nombre de commandes',
-                data: data.data,
-                borderColor: '#17a2b8',
-                backgroundColor: 'rgba(23, 162, 184, 0.1)',
-                tension: 0.4,
-                fill: true
-            }]
+            datasets: [
+                {
+                    label: 'Nombre de Commandes',
+                    data: data.commandes,
+                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 2
+                },
+                {
+                    label: 'Total Personnes',
+                    data: data.personnes,
+                    backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                    borderColor: 'rgba(255, 206, 86, 1)',
+                    borderWidth: 2
+                }
+            ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: true,
+            interaction: {
+                mode: 'index',
+                intersect: false
+            },
             scales: {
                 y: {
                     beginAtZero: true,
                     ticks: {
+                        precision: 0,
                         stepSize: 1
                     }
                 }
@@ -91,6 +103,14 @@ function initCommandesChart(data) {
                 legend: {
                     display: true,
                     position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Comparaison des Commandes par Menu (MongoDB)',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    }
                 }
             }
         }
@@ -98,7 +118,7 @@ function initCommandesChart(data) {
 }
 
 /**
- * Initialise le graphique du CA par menu (Bar)
+ * Initialise le graphique du CA par menu (Bar horizontal)
  */
 function initCAChart(data) {
     const ctx = document.getElementById('chartCA');
@@ -111,16 +131,17 @@ function initCAChart(data) {
             datasets: [{
                 label: 'Chiffre d\'Affaires (€)',
                 data: data.data,
-                backgroundColor: data.colors.slice(0, data.labels.length),
-                borderColor: data.colors.slice(0, data.labels.length).map(c => c.replace('0.8', '1')),
+                backgroundColor: 'rgba(40, 167, 69, 0.7)',
+                borderColor: 'rgba(40, 167, 69, 1)',
                 borderWidth: 2
             }]
         },
         options: {
+            indexAxis: 'y', // Horizontal
             responsive: true,
             maintainAspectRatio: true,
             scales: {
-                y: {
+                x: {
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
@@ -133,10 +154,18 @@ function initCAChart(data) {
                 legend: {
                     display: false
                 },
+                title: {
+                    display: true,
+                    text: 'Chiffre d\'Affaires par Menu (MongoDB)',
+                    font: {
+                        size: 14,
+                        weight: 'bold'
+                    }
+                },
                 tooltip: {
                     callbacks: {
                         label: function(context) {
-                            const ca = context.parsed.y.toLocaleString('fr-FR', {
+                            const ca = context.parsed.x.toLocaleString('fr-FR', {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2
                             });

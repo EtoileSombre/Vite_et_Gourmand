@@ -132,7 +132,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                             </div>
                                             <div class="modal-body">
                                                 <p>Voulez-vous vraiment désactiver le menu <strong>"<?= htmlspecialchars($menu['titre']) ?>"</strong> ?</p>
-                                                <p class="text-muted small">Le menu ne sera plus visible par les clients mais restera dans la base de données.</p>
+                                                <p class="text-muted small">Le menu ne sera plus visible par les utilisateurs mais restera dans la base de données.</p>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

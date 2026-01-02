@@ -7,6 +7,7 @@ use App\Core\Model;
 class User extends Model
 {
     protected $table = 'utilisateur';
+    protected $primaryKey = 'utilisateur_id';
 
     public static function findByEmail($email)
     {

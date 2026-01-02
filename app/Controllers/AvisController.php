@@ -27,21 +27,29 @@ class AvisController extends Controller
         $request = new Request();
         $note = $request->post('note');
         $commentaire = $request->post('commentaire');
-        $menuId = $request->post('menu_id');
+        $numeroCommande = $request->post('numero_commande');
 
         // Validation
         if (!$note || !$commentaire || $note < 1 || $note > 5) {
             Session::set('error', 'Données invalides. Note requise entre 1 et 5.');
-            $this->redirect('/donner-avis');
+            $this->redirect('/avis/create');
+            return;
         }
 
         // Créer l'avis via le modèle
         try {
-            $avisId = $this->avisModel->createAvis([
+            $avisData = [
                 'utilisateur_id' => $userId,
                 'note' => $note,
                 'description' => htmlspecialchars($commentaire)
-            ]);
+            ];
+            
+            // Ajouter le numéro de commande si fourni
+            if ($numeroCommande) {
+                $avisData['numero_commande'] = $numeroCommande;
+            }
+            
+            $avisId = $this->avisModel->createAvis($avisData);
             
             Session::set('success', 'Votre avis a été enregistré et sera publié après validation.');
             $this->redirect('/');
@@ -60,6 +68,38 @@ class AvisController extends Controller
             return;
         }
 
-        $this->render('avis/create');
+        $request = new Request();
+        $numeroCommande = $request->get('commande');
+
+        // Si un numéro de commande est fourni, vérifier qu'il appartient à l'utilisateur
+        if ($numeroCommande) {
+            $commandeModel = new \App\Models\Commande();
+            $commande = $commandeModel->findByNumero($numeroCommande);
+            
+            if (!$commande || $commande['utilisateur_id'] != $userId) {
+                Session::set('error', 'Commande introuvable.');
+                $this->redirect('/mes-commandes');
+                return;
+            }
+            
+            // Vérifier que la commande est terminée
+            if ($commande['statut'] !== 'terminee') {
+                Session::set('error', 'Vous ne pouvez donner un avis que pour une commande terminée.');
+                $this->redirect('/mes-commandes');
+                return;
+            }
+            
+            // Vérifier qu'un avis n'a pas déjà été donné
+            $avisExistant = $this->avisModel->findByCommandeAndUser($numeroCommande, $userId);
+            if ($avisExistant) {
+                Session::set('error', 'Vous avez déjà donné votre avis pour cette commande.');
+                $this->redirect('/mes-commandes');
+                return;
+            }
+        }
+
+        $this->render('avis/create', [
+            'numeroCommande' => $numeroCommande
+        ]);
     }
 }

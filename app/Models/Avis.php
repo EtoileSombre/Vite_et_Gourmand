@@ -66,17 +66,33 @@ class Avis extends Model
      */
     public function createAvis(array $data): int
     {
-        $stmt = $this->db->prepare("
-            INSERT INTO {$this->table} 
-            (utilisateur_id, note, description, statut, created_at)
-            VALUES (:user_id, :note, :description, 'en attente', NOW())
-        ");
-        
-        $stmt->execute([
-            'user_id' => $data['utilisateur_id'],
-            'note' => $data['note'],
-            'description' => $data['description']
-        ]);
+        // Vérifier si un numéro de commande est fourni
+        if (isset($data['numero_commande'])) {
+            $stmt = $this->db->prepare("
+                INSERT INTO {$this->table} 
+                (utilisateur_id, numero_commande, note, description, statut, created_at)
+                VALUES (:user_id, :numero_commande, :note, :description, 'en attente', NOW())
+            ");
+            
+            $stmt->execute([
+                'user_id' => $data['utilisateur_id'],
+                'numero_commande' => $data['numero_commande'],
+                'note' => $data['note'],
+                'description' => $data['description']
+            ]);
+        } else {
+            $stmt = $this->db->prepare("
+                INSERT INTO {$this->table} 
+                (utilisateur_id, note, description, statut, created_at)
+                VALUES (:user_id, :note, :description, 'en attente', NOW())
+            ");
+            
+            $stmt->execute([
+                'user_id' => $data['utilisateur_id'],
+                'note' => $data['note'],
+                'description' => $data['description']
+            ]);
+        }
         
         return (int) $this->db->lastInsertId();
     }
@@ -179,5 +195,26 @@ class Avis extends Model
         ");
         $stmt->execute(['statut' => $statut]);
         return (int) ($stmt->fetch()['total'] ?? 0);
+    }
+
+    /**
+     * Vérifie si un utilisateur a déjà donné un avis pour une commande
+     * 
+     * @return array|null
+     */
+    public function findByCommandeAndUser(string $numeroCommande, int $userId): ?array
+    {
+        $stmt = $this->db->prepare("
+            SELECT * 
+            FROM {$this->table}
+            WHERE numero_commande = :numero_commande
+            AND utilisateur_id = :user_id
+        ");
+        $stmt->execute([
+            'numero_commande' => $numeroCommande,
+            'user_id' => $userId
+        ]);
+        $result = $stmt->fetch();
+        return $result ?: null;
     }
 }

@@ -51,11 +51,16 @@ $router->post('/reset-password', 'App\Controllers\AuthController', 'resetPasswor
 
 // Commandes (nécessite authentification)
 $router->get('/mes-commandes', 'App\Controllers\CommandeController', 'index');
+$router->get('/commande/details', 'App\Controllers\CommandeController', 'show');
 $router->get('/commande/nouvelle', 'App\Controllers\CommandeController', 'create');
 $router->post('/commande/nouvelle', 'App\Controllers\CommandeController', 'store');
 $router->get('/commande/modifier', 'App\Controllers\CommandeController', 'edit');
 $router->post('/commande/modifier', 'App\Controllers\CommandeController', 'update');
 $router->get('/commande/annuler', 'App\Controllers\CommandeController', 'cancel');
+
+// Avis (nécessite authentification)
+$router->get('/avis/create', 'App\Controllers\AvisController', 'create');
+$router->post('/avis/create', 'App\Controllers\AvisController', 'store');
 
 // Profil utilisateur
 $router->get('/profil', 'App\Controllers\ProfilController', 'index');

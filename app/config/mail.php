@@ -36,7 +36,7 @@ function sendContactEmail($nom, $email, $telephone, $titre, $message) {
     
     try {
         // Destinataire (email du restaurant)
-        $mail->addAddress('contact@viteetgourmand.fr', 'Service Client Vite & Gourmand');
+        $mail->addAddress('contact@viteetgourmand.fr', 'Service Utilisateur Vite & Gourmand');
         
         // Répondre à l'expéditeur
         $mail->addReplyTo($email, $nom);
@@ -103,12 +103,7 @@ function sendContactEmail($nom, $email, $telephone, $titre, $message) {
     }
 }
 
-/**
- * Envoyer un email de bienvenue après inscription
- * @param string $email Email du destinataire
- * @param string $prenom Prénom du destinataire
- * @return bool True si envoyé, False sinon
- */
+/* Envoyer un email de bienvenue après inscription*/
 function sendWelcomeEmail($email, $prenom) {
     $mail = getMailer();
     
@@ -169,14 +164,7 @@ function sendWelcomeEmail($email, $prenom) {
     }
 }
 
-/**
- * Envoyer un email de confirmation de commande
- * @param string $email Email du client
- * @param string $prenom Prénom du client
- * @param string $numeroCommande Numéro de la commande
- * @param array $detailsCommande Détails de la commande (menu, prix, personnes, date)
- * @return bool True si envoyé, False sinon
- */
+/* Envoyer un email de confirmation de commande*/
 function sendOrderConfirmationEmail($email, $prenom, $numeroCommande, $detailsCommande) {
     $mail = getMailer();
     
@@ -318,14 +306,7 @@ function sendOrderConfirmationEmail($email, $prenom, $numeroCommande, $detailsCo
     }
 }
 
-/**
- * Envoyer un email de modification de commande
- * @param string $email Email du client
- * @param string $prenom Prénom du client
- * @param string $numeroCommande Numéro de la commande
- * @param array $detailsCommande Détails de la commande (menu, prix, personnes, date)
- * @return bool True si envoyé, False sinon
- */
+/*Envoyer un email de modification de commande*/
 function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande) {
     $mail = getMailer();
     
@@ -423,8 +404,6 @@ function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande
         </body>
         </html>
         ";
-        
-        // Construire texte alternatif avec lignesMenus
         $altBodyMenus = '';
         foreach ($lignesMenus as $ligne) {
             $altBodyMenus .= "Menu : " . ($ligne['menu_nom'] ?? 'Menu') . "\n";
@@ -450,13 +429,7 @@ function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande
     }
 }
 
-/**
- * Envoyer un email de réinitialisation de mot de passe
- * @param string $email Email de l'utilisateur
- * @param string $prenom Prénom de l'utilisateur
- * @param string $resetLink Lien de réinitialisation avec token
- * @return bool True si envoyé, False sinon
- */
+/* Envoyer un email de réinitialisation de mot de passe*/
 function sendPasswordResetEmail($email, $prenom, $resetLink) {
     $mail = getMailer();
     
@@ -548,16 +521,7 @@ function sendPasswordResetEmail($email, $prenom, $resetLink) {
     }
 }
 
-/**
- * Envoyer un email de confirmation de commande acceptée
- * ECF DWWM - Email automatique #1
- * 
- * @param string $email Email du client
- * @param string $prenom Prénom du client
- * @param string $numeroCommande Numéro de la commande
- * @param string $datePrestation Date de prestation
- * @return bool True si envoyé, False sinon
- */
+/*Envoyer un email de confirmation de commande acceptée*/
 function sendOrderAcceptedEmail($email, $prenom, $numeroCommande, $datePrestation) {
     $mail = getMailer();
     
@@ -602,7 +566,7 @@ function sendOrderAcceptedEmail($email, $prenom, $numeroCommande, $datePrestatio
                             <li>Nous vous recontacterons avant la prestation pour confirmation finale</li>
                         </ul>
                         
-                        <p>Vous pouvez suivre l'état de votre commande en consultant votre espace client.</p>
+                        <p>Vous pouvez suivre l'état de votre commande en consultant votre espace utilisateur.</p>
                         
                         <div style='text-align: center;'>
                             <a href='http://localhost:8080/mes-commandes' class='button'>Voir mes commandes</a>
@@ -635,17 +599,7 @@ function sendOrderAcceptedEmail($email, $prenom, $numeroCommande, $datePrestatio
         return false;
     }
 }
-
-/**
- * Envoyer un email de commande terminée avec invitation à laisser un avis
- * ECF DWWM - Email automatique #2
- * 
- * @param string $email Email du client
- * @param string $prenom Prénom du client
- * @param string $numeroCommande Numéro de la commande
- * @param string $menuTitre Titre du menu
- * @return bool True si envoyé, False sinon
- */
+/*Envoyer un email de commande terminée avec invitation à laisser un avis*/
 function sendOrderCompletedEmail($email, $prenom, $numeroCommande, $menuTitre) {
     $mail = getMailer();
     
@@ -686,7 +640,7 @@ function sendOrderCompletedEmail($email, $prenom, $numeroCommande, $menuTitre) {
                         <p>Nous espérons que notre prestation vous a donné entière satisfaction.</p>
                         
                         <p><strong>Votre avis est précieux pour nous !</strong><br>
-                        Il nous aide à améliorer constamment notre service et guide d'autres clients dans leur choix.</p>
+                        Il nous aide à améliorer constamment notre service et guide d'autres utilisateurs dans leur choix.</p>
                         
                         <p style='text-align: center;'>
                             <span class='stars'>⭐⭐⭐⭐⭐</span>
@@ -727,17 +681,8 @@ function sendOrderCompletedEmail($email, $prenom, $numeroCommande, $menuTitre) {
     }
 }
 
-/**
- * Envoyer un email de rappel pour restitution du matériel
- * ECF DWWM - Email automatique #3
- * Envoyé 10 jours après la prestation si le matériel n'a pas été restitué
- * 
- * @param string $email Email du client
- * @param string $prenom Prénom du client
- * @param string $numeroCommande Numéro de la commande
- * @param string $datePrestation Date de la prestation
- * @return bool True si envoyé, False sinon
- */
+
+/*Envoyer un email de rappel pour restitution du matériel - Envoyé 10 jours après la prestation si le matériel n'a pas été restitué*/
 function sendMaterialReturnReminderEmail($email, $prenom, $numeroCommande, $datePrestation) {
     $mail = getMailer();
     
@@ -835,15 +780,7 @@ function sendMaterialReturnReminderEmail($email, $prenom, $numeroCommande, $date
     }
 }
 
-/**
- * Email de bienvenue pour un nouvel employé
- * Envoie un lien de réinitialisation pour définir le mot de passe
- * 
- * @param string $email Email de l'employé
- * @param string $prenom Prénom de l'employé
- * @param string $token Token de réinitialisation
- * @return bool True si envoyé, False sinon
- */
+ /* Email de bienvenue pour un nouvel employé -Envoie un lien de réinitialisation pour définir le mot de passe*/
 function sendEmployeeWelcomeEmail($email, $prenom, $token) {
     $mail = getMailer();
     
@@ -977,6 +914,103 @@ function sendEmployeeWelcomeEmail($email, $prenom, $token) {
         
     } catch (Exception $e) {
         error_log("Erreur envoi email bienvenue employé: " . $mail->ErrorInfo);
+        return false;
+    }
+}
+
+/*Notification de création de compte employé - le mot de passe n'est PAS communiqué par email - l'employé doit contacter l'administrateur pour l'obtenir */
+
+function sendEmployeeAccountCreatedEmail($email, $prenom, $nom) {
+    $mail = getMailer();
+    
+    try {
+        $mail->addAddress($email, "$prenom $nom");
+        $mail->Subject = "🎉 Bienvenue chez Vite & Gourmand - Votre compte employé";
+        
+        $mail->Body = "
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+                    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; text-align: center; }
+                    .content { padding: 40px; background-color: #f9f9f9; }
+                    .info-box { background-color: #e3f2fd; border-left: 4px solid #2196F3; padding: 20px; margin: 20px 0; }
+                    .warning-box { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 20px 0; }
+                    .footer { background-color: #333; color: white; padding: 20px; text-align: center; font-size: 0.9em; }
+                    .button { display: inline-block; padding: 12px 30px; background-color: #667eea; color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; font-weight: bold; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>🎉 Bienvenue dans l'équipe !</h1>
+                        <p style='font-size: 1.2em; margin-top: 10px;'>Vite & Gourmand</p>
+                    </div>
+                    <div class='content'>
+                        <p>Bonjour <strong>" . htmlspecialchars($prenom) . " " . htmlspecialchars($nom) . "</strong>,</p>
+                        
+                        <p>Un compte <strong>Employé</strong> a été créé pour vous sur la plateforme Vite & Gourmand.</p>
+                        
+                        <div class='info-box'>
+                            <p style='margin: 0;'><strong>📧 Votre identifiant :</strong></p>
+                            <p style='margin: 10px 0 0 0; font-size: 1.1em;'>" . htmlspecialchars($email) . "</p>
+                        </div>
+                        
+                        <div class='warning-box'>
+                            <p style='margin: 0;'><strong>🔐 Mot de passe</strong></p>
+                            <p style='margin: 10px 0 0 0;'>
+                                Pour des raisons de sécurité, votre mot de passe n'est <strong>PAS</strong> communiqué par email.
+                                <br><br>
+                                ➡️ <strong>Veuillez contacter l'administrateur</strong> (José) pour obtenir votre mot de passe.
+                            </p>
+                        </div>
+                        
+                        <p><strong>Vos accès employé vous permettront de :</strong></p>
+                        <ul>
+                            <li>✅ Gérer les commandes clients</li>
+                            <li>✅ Modifier les menus et plats</li>
+                            <li>✅ Modérer les avis clients</li>
+                            <li>✅ Mettre à jour les horaires</li>
+                        </ul>
+                        
+                        <div style='text-align: center; margin-top: 30px;'>
+                            <a href='http://localhost:8080/login' class='button'>Se connecter à la plateforme</a>
+                        </div>
+                        
+                        <p style='margin-top: 30px;'>À très bientôt,<br>
+                        <strong>L'équipe Vite & Gourmand</strong></p>
+                    </div>
+                    <div class='footer'>
+                        <p>© " . date('Y') . " Vite & Gourmand - Service Traiteur à Bordeaux</p>
+                        <p style='font-size: 0.8em; margin-top: 10px;'>Cet email a été envoyé automatiquement suite à la création de votre compte.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ";
+        
+        $mail->AltBody = "Bienvenue chez Vite & Gourmand\n\n"
+                       . "Bonjour $prenom $nom,\n\n"
+                       . "Un compte Employé a été créé pour vous.\n\n"
+                       . "Votre identifiant : $email\n\n"
+                       . "IMPORTANT : Pour des raisons de sécurité, votre mot de passe n'est PAS communiqué par email.\n"
+                       . "Veuillez contacter l'administrateur (José) pour obtenir votre mot de passe.\n\n"
+                       . "Connexion : http://localhost:8080/login\n\n"
+                       . "À très bientôt,\n"
+                       . "L'équipe Vite & Gourmand";
+        
+        $sent = $mail->send();
+        
+        if ($sent) {
+            error_log("✅ Email création compte employé envoyé à : $email");
+        } else {
+            error_log("❌ Échec envoi email création compte employé à : $email");
+        }
+        
+        return $sent;
+    } catch (\Exception $e) {
+        error_log("❌ Erreur envoi email création compte employé : " . $e->getMessage());
         return false;
     }
 }

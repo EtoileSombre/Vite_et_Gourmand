@@ -1,17 +1,17 @@
-SET NAMES utf8mb4;
+SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci;
 SET CHARACTER SET utf8mb4;
 
 -- `role`
-INSERT INTO `role` VALUES (1,'client','2025-12-12 11:39:50');
+INSERT INTO `role` VALUES (1,'utilisateur','2025-12-12 11:39:50');
 INSERT INTO `role` VALUES (2,'employé','2025-12-12 11:39:50');
 INSERT INTO `role` VALUES (3,'administrateur','2025-12-12 11:39:50');
 
 -- `utilisateur`
 INSERT INTO `utilisateur` VALUES (1,'admin@viteetgourmand.fr','$2y$10$Xc.PsI5kBvXwj0mQS1wWRONnLbokrhwxjMm5kaRyiwkQLnLjp4jwa','José','Martinez','0556123456','Bordeaux','France','10 Rue du Commerce','33000',1,3,'2025-12-12 11:39:50','2025-12-12 11:39:50');
 INSERT INTO `utilisateur` VALUES (2,'employe@viteetgourmand.fr','$2y$10$EMRNE3NG0QXbjDf7X5olbemZ8UzxxGL.5bibnzOZn3avySl4fsb/q','Julie','Dupont','0556789012','Bordeaux','France','10 Rue du Commerce','33000',1,2,'2025-12-12 11:39:50','2025-12-12 11:39:50');
-INSERT INTO `utilisateur` VALUES (3,'client@test.fr','$2y$10$yqOdnSyjaY4V1dJ01he0c.gS2BT6uZBkX/VZ1fvzSBZpQMFfwearG','Marie','Dubois','0612345678','Bordeaux','France','15 Avenue de la Liberté','33000',1,1,'2025-12-12 11:39:50','2025-12-12 11:39:50');
-INSERT INTO `utilisateur` VALUES (4,'client2@test.fr','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi','Pierre','Martin','0623456789','Mérignac','France','8 Rue des Fleurs','33700',1,1,'2025-12-12 11:39:50','2025-12-12 11:39:50');
-INSERT INTO `utilisateur` VALUES (5,'client3@test.fr','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi','Sophie','Bernard','0634567890','Pessac','France','22 Boulevard Wilson','33600',1,1,'2025-12-12 11:39:50','2025-12-12 11:39:50');
+INSERT INTO `utilisateur` VALUES (3,'utilisateur@test.fr','$2y$10$Sk2K9MTaflhHZvuQUCu5nuqHUDrzAaptZugK5ytrpS9cJoZmC1.G.','Marie','Dubois','0612345678','Bordeaux','France','15 Avenue de la Liberté','33000',1,1,'2025-12-12 11:39:50','2025-12-12 11:39:50');
+INSERT INTO `utilisateur` VALUES (4,'utilisateur2@test.fr','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi','Pierre','Martin','0623456789','Mérignac','France','8 Rue des Fleurs','33700',1,1,'2025-12-12 11:39:50','2025-12-12 11:39:50');
+INSERT INTO `utilisateur` VALUES (5,'utilisateur3@test.fr','$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi','Sophie','Bernard','0634567890','Pessac','France','22 Boulevard Wilson','33600',1,1,'2025-12-12 11:39:50','2025-12-12 11:39:50');
 
 -- `zone_livraison`
 INSERT INTO `zone_livraison` VALUES (1,'Bordeaux Centre','Bordeaux','33000','33000',5.00,0.00,0.00,2,1,'2025-12-12 11:39:50','2025-12-12 11:39:50');
@@ -320,7 +320,7 @@ INSERT INTO `galerie_menu` VALUES (124,14,'/assets/img/Menu Buffet Festif/eau_mi
 INSERT INTO `galerie_menu` VALUES (125,14,'/assets/img/Menu Buffet Festif/sauvignon_blanc.jpg',NULL,7,'2025-12-13 17:32:19');
 
 -- `commande`
-INSERT INTO `commande` VALUES ('CMD20251212-0003-693c207fccb7f','2025-12-12 15:02:39','2025-12-26','12:00:00',5.00,265.00,'7 Rue du Paquis','Bordeaux','',0.00,NULL,'en_attente',NULL,0,NULL,0,NULL,3,'2025-12-12 14:02:39','2025-12-19 15:58:19');
+INSERT INTO `commande` VALUES ('CMD20251212-0003-693c207fccb7f','2025-12-12 15:02:39','2025-12-26','12:00:00',5.00,265.00,'7 Rue du Paquis','Bordeaux',NULL,0.00,NULL,'en_attente',NULL,0,NULL,0,NULL,3,'2025-12-12 14:02:39','2025-12-19 15:58:19');
 
 -- `commande_menu`
 INSERT INTO `commande_menu` VALUES (1,'CMD20251212-0003-693c207fccb7f',10,1,4,30.00,0.00,120.00);
@@ -338,5 +338,7 @@ INSERT INTO `contact` VALUES (1,'DUPONT','admin@viteetgourmand.fr','Demande de d
 -- `prete`
 
 -- `suivi_commande`
+INSERT INTO `suivi_commande` (numero_commande, ancien_statut, nouveau_statut, commentaire, employe_id, date_changement)
+VALUES ('CMD20251212-0003-693c207fccb7f', NULL, 'en_attente', 'Commande créée par l\'utilisateur', NULL, '2025-12-12 14:02:39');
 
 -- `utilise_promotion`

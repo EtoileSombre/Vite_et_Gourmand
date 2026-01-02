@@ -39,11 +39,28 @@ class CommandeController extends Controller
             $this->redirect('/login');
         }
 
-        $menuModel = new Menu();
-        $menus = $menuModel->findAll();
+        // Récupérer les informations de l'utilisateur pour auto-remplissage
+        $userModel = new \App\Models\User();
+        $user = $userModel->findById($userId);
         
-        // Récupérer les boissons et matériels depuis l'URL
+        if (!$user) {
+            Session::set('error', 'Utilisateur introuvable.');
+            $this->redirect('/');
+        }
+
+        $menuModel = new Menu();
+        $menus = $menuModel->findActiveWithPhotos();
+        
+        // Récupérer le menu pré-sélectionné depuis l'URL
         $request = new Request();
+        $menuIdFromUrl = $request->get('menu_id');
+        
+        // Si un menu est pré-sélectionné, récupérer ses détails
+        $menuPreselectionne = null;
+        if ($menuIdFromUrl) {
+            $menuPreselectionne = $menuModel->findActiveById((int)$menuIdFromUrl);
+        }
+        
         $boissonsIds = $request->get('boissons');
         $materielsIds = $request->get('materiels');
         
@@ -75,7 +92,10 @@ class CommandeController extends Controller
         }
         
         $this->render('commandes/create', [
+            'user' => $user,
             'menus' => $menus,
+            'menuPreselectionne' => $menuPreselectionne,
+            'menuIdFromUrl' => $menuIdFromUrl,
             'boissonsSelectionnees' => $boissonsSelectionnees,
             'materielsSelectionnes' => $materielsSelectionnes
         ]);

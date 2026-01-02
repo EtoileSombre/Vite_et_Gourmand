@@ -241,7 +241,7 @@
         <ul class="mb-0 mt-2">
             <li><strong>Vues Menus</strong> : Chaque consultation de menu (liste ou détail)</li>
             <li><strong>Commandes</strong> : Création de nouvelles commandes</li>
-            <li><strong>Avis</strong> : Soumission d'avis clients</li>
+            <li><strong>Avis</strong> : Soumission d'avis utilisateurs</li>
             <li><strong>Activités</strong> : Connexions, déconnexions, actions utilisateurs</li>
         </ul>
     </div>

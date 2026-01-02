@@ -1,7 +1,4 @@
 <?php
-/**
- * Vue : Détails d'une commande (Employé)
- */
 require_once __DIR__ . '/../../layouts/header.php';
 ?>
 
@@ -21,29 +18,29 @@ require_once __DIR__ . '/../../layouts/header.php';
     </div>
 
     <div class="row">
-        <!-- Informations Client -->
+        <!-- Informations Utilisateur -->
         <div class="col-md-6 mb-4">
             <div class="card h-100">
                 <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="bi bi-person-circle"></i> Informations Client</h5>
+                    <h5 class="mb-0"><i class="bi bi-person-circle"></i> Informations Utilisateur</h5>
                 </div>
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-4">Nom :</dt>
-                        <dd class="col-sm-8"><?= htmlspecialchars($commande['client_prenom'] ?? 'N/A') ?></dd>
+                        <dd class="col-sm-8"><?= htmlspecialchars($commande['utilisateur_prenom'] ?? 'N/A') ?></dd>
 
                         <dt class="col-sm-4">Email :</dt>
                         <dd class="col-sm-8">
-                            <a href="mailto:<?= htmlspecialchars($commande['client_email']) ?>">
-                                <i class="bi bi-envelope"></i> <?= htmlspecialchars($commande['client_email']) ?>
+                            <a href="mailto:<?= htmlspecialchars($commande['utilisateur_email']) ?>">
+                                <i class="bi bi-envelope"></i> <?= htmlspecialchars($commande['utilisateur_email']) ?>
                             </a>
                         </dd>
 
                         <dt class="col-sm-4">Téléphone :</dt>
                         <dd class="col-sm-8">
-                            <?php if (!empty($commande['client_telephone'])): ?>
-                                <a href="tel:<?= htmlspecialchars($commande['client_telephone']) ?>">
-                                    <i class="bi bi-phone"></i> <?= htmlspecialchars($commande['client_telephone']) ?>
+                            <?php if (!empty($commande['utilisateur_telephone'])): ?>
+                                <a href="tel:<?= htmlspecialchars($commande['utilisateur_telephone']) ?>">
+                                    <i class="bi bi-phone"></i> <?= htmlspecialchars($commande['utilisateur_telephone']) ?>
                                 </a>
                             <?php else: ?>
                                 <span class="text-muted">Non renseigné</span>
@@ -140,7 +137,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <dd class="col-sm-7">
                             <span class="badge <?= match($commande['statut']) {
                                 'en attente' => 'bg-warning',
-                                'validee' => 'bg-info',
+                                'acceptee' => 'bg-info',
                                 'en_preparation' => 'bg-primary',
                                 'terminee' => 'bg-success',
                                 'refusee', 'annulee' => 'bg-danger',
@@ -216,18 +213,18 @@ require_once __DIR__ . '/../../layouts/header.php';
         </div>
 
         <!-- Historique de contact (si existe) -->
-        <?php if (!empty($commande['motif_modification']) || !empty($commande['mode_contact_client'])): ?>
+        <?php if (!empty($commande['motif_modification']) || !empty($commande['mode_contact_utilisateur'])): ?>
             <div class="col-12">
                 <div class="card border-warning">
                     <div class="card-header bg-warning">
-                        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Historique Contact Client</h5>
+                        <h5 class="mb-0"><i class="bi bi-clock-history"></i> Historique Contact Utilisateur</h5>
                     </div>
                     <div class="card-body">
                         <dl class="row mb-0">
-                            <?php if (!empty($commande['mode_contact_client'])): ?>
+                            <?php if (!empty($commande['mode_contact_utilisateur'])): ?>
                                 <dt class="col-sm-2">Mode contact :</dt>
                                 <dd class="col-sm-10">
-                                    <span class="badge bg-info"><?= htmlspecialchars($commande['mode_contact_client']) ?></span>
+                                    <span class="badge bg-info"><?= htmlspecialchars($commande['mode_contact_utilisateur']) ?></span>
                                 </dd>
                             <?php endif; ?>
 

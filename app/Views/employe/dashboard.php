@@ -1,8 +1,4 @@
 <?php
-/**
- * Dashboard Employé
- * Vue d'ensemble et accès rapide aux fonctions
- */
 require_once __DIR__ . '/../layouts/header.php';
 ?>
 
@@ -126,7 +122,7 @@ require_once __DIR__ . '/../layouts/header.php';
                             <thead class="table-light">
                                 <tr>
                                     <th>N° Commande</th>
-                                    <th>Client</th>
+                                    <th>Utilisateur</th>
                                     <th>Menu</th>
                                     <th>Pers.</th>
                                     <th>Date prestation</th>
@@ -139,8 +135,8 @@ require_once __DIR__ . '/../layouts/header.php';
                                 <tr>
                                     <td><strong><?= htmlspecialchars($cmd['numero_commande']) ?></strong></td>
                                     <td>
-                                        <?= htmlspecialchars($cmd['client_prenom'] ?? 'N/A') ?>
-                                        <br><small class="text-muted"><?= htmlspecialchars($cmd['client_email'] ?? '') ?></small>
+                                        <?= htmlspecialchars($cmd['utilisateur_prenom'] ?? 'N/A') ?>
+                                        <br><small class="text-muted"><?= htmlspecialchars($cmd['utilisateur_email'] ?? '') ?></small>
                                     </td>
                                     <td><?= htmlspecialchars($cmd['menu_nom'] ?? 'N/A') ?></td>
                                     <td><?= htmlspecialchars($cmd['totalPersonnes'] ?? 0) ?></td>
@@ -157,7 +153,7 @@ require_once __DIR__ . '/../layouts/header.php';
                                         <?php
                                         $badges = [
                                             'en attente' => 'warning',
-                                            'validee' => 'success',
+                                            'acceptee' => 'success',
                                             'en_preparation' => 'info'
                                         ];
                                         $statut = $cmd['statut'] ?? 'en attente';
@@ -204,15 +200,15 @@ require_once __DIR__ . '/../layouts/header.php';
                             <div class="card h-100 border-info">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <strong><?= htmlspecialchars($avis['client_prenom'] ?? 'Client') ?></strong>
+                                        <strong><?= htmlspecialchars($avis['utilisateur_prenom'] ?? 'Utilisateur') ?></strong>
                                         <div>
                                             <?php for ($i = 1; $i <= 5; $i++): ?>
                                                 <i class="bi bi-star-fill <?= $i <= ($avis['note'] ?? 0) ? 'text-warning' : 'text-muted' ?>"></i>
                                             <?php endfor; ?>
                                         </div>
                                     </div>
-                                    <p class="text-muted small mb-2">
-                                        <i class="bi bi-envelope"></i> <?= htmlspecialchars($avis['client_email'] ?? '') ?>
+                                    <p class="small text-muted mb-2">
+                                        <i class="bi bi-envelope"></i> <?= htmlspecialchars($avis['utilisateur_email'] ?? '') ?>
                                     </p>
                                     <p class="card-text"><?= htmlspecialchars($avis['description'] ?? 'Aucun commentaire') ?></p>
                                     <small class="text-muted">

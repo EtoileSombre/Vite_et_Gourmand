@@ -19,7 +19,7 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h2 class="h4 mb-3">Article 1 - Objet</h2>
-                    <p>Les présentes Conditions Générales de Vente (CGV) régissent les relations contractuelles entre <strong>Vite & Gourmand</strong>, ci-après dénommée "le Prestataire", et toute personne physique ou morale, ci-après dénommée "le Client", souhaitant effectuer une commande de prestation traiteur via le site internet.</p>
+                    <p>Les présentes Conditions Générales de Vente (CGV) régissent les relations contractuelles entre <strong>Vite & Gourmand</strong>, ci-après dénommée "le Prestataire", et toute personne physique ou morale, ci-après dénommée "l'Utilisateur", souhaitant effectuer une commande de prestation traiteur via le site internet.</p>
                 </div>
             </div>
 
@@ -41,9 +41,9 @@
                     <h2 class="h4 mb-3">Article 3 - Commandes</h2>
                     
                     <h3 class="h5 mt-3 mb-3">3.1. Passation de commande</h3>
-                    <p>Pour passer commande, le client doit :</p>
+                    <p>Pour passer commande, l'utilisateur doit :</p>
                     <ol>
-                        <li>Créer un compte client sur le site</li>
+                        <li>Créer un compte utilisateur sur le site</li>
                         <li>Sélectionner le menu souhaité</li>
                         <li>Indiquer le nombre de personnes (minimum selon le menu choisi)</li>
                         <li>Préciser la date et l'heure de prestation souhaitées</li>
@@ -55,13 +55,13 @@
                     <p>Les commandes doivent être passées <strong>au minimum 7 jours ouvrés</strong> avant la date de prestation souhaitée. Certains menus peuvent nécessiter un délai plus long (indiqué dans les conditions du menu).</p>
                     
                     <h3 class="h5 mt-4 mb-3">3.3. Confirmation de commande</h3>
-                    <p>Une fois la commande passée, le client reçoit un email de confirmation automatique. La commande n'est définitive qu'après acceptation par Vite & Gourmand (statut "acceptée").</p>
+                    <p>Une fois la commande passée, l'utilisateur reçoit un email de confirmation automatique. La commande n'est définitive qu'après acceptation par Vite & Gourmand (statut "acceptée").</p>
                     
                     <h3 class="h5 mt-4 mb-3">3.4. Modification de commande</h3>
-                    <p>Le client peut modifier sa commande tant qu'elle n'a pas été acceptée par le prestataire. Une fois acceptée, toute modification doit faire l'objet d'une demande par email à <strong>contact@vite-et-gourmand.fr</strong> et sera soumise à l'accord du prestataire.</p>
+                    <p>L'utilisateur peut modifier sa commande tant qu'elle n'a pas été acceptée par le prestataire. Une fois acceptée, toute modification doit faire l'objet d'une demande par email à <strong>contact@vite-et-gourmand.fr</strong> et sera soumise à l'accord du prestataire.</p>
                     
                     <h3 class="h5 mt-4 mb-3">3.5. Annulation de commande</h3>
-                    <p>Le client peut annuler sa commande :</p>
+                    <p>L'utilisateur peut annuler sa commande :</p>
                     <ul>
                         <li><strong>Gratuitement :</strong> jusqu'à 48h après la passation de commande (si la commande n'a pas encore été acceptée)</li>
                         <li><strong>Avec frais :</strong> après acceptation, sous réserve de contacter le prestataire. Des frais d'annulation de 30% du montant total peuvent s'appliquer.</li>
@@ -111,10 +111,10 @@
                     
                     <h3 class="h5 mt-4 mb-3">5.3. Horaires de livraison</h3>
                     <p>Les livraisons sont effectuées du <strong>lundi au dimanche, de 10h à 22h</strong>.</p>
-                    <p>L'heure de livraison convenue doit être respectée par le client. En cas d'absence, le prestataire se réserve le droit de facturer des frais supplémentaires.</p>
+                    <p>L'heure de livraison convenue doit être respectée par l'utilisateur. En cas d'absence, le prestataire se réserve le droit de facturer des frais supplémentaires.</p>
                     
                     <h3 class="h5 mt-4 mb-3">5.4. Réception de la commande</h3>
-                    <p>Le client doit vérifier l'état et la conformité de la commande à la livraison. Toute réserve doit être signalée immédiatement au livreur et confirmée par email dans les 24h.</p>
+                    <p>L'utilisateur doit vérifier l'état et la conformité de la commande à la livraison. Toute réserve doit être signalée immédiatement au livreur et confirmée par email dans les 24h.</p>
                 </div>
             </div>
 
@@ -128,17 +128,17 @@
                     
                     <h3 class="h5 mt-4 mb-3">6.2. Restitution du matériel</h3>
                     <p>Le matériel doit être restitué dans un délai de <strong>10 jours ouvrés</strong> suivant la livraison.</p>
-                    <p>Le client reçoit un email de rappel lorsque la commande passe en statut "en attente du retour de matériel".</p>
+                    <p>L'utilisateur reçoit un email de rappel lorsque la commande passe en statut "en attente du retour de matériel".</p>
                     
                     <h3 class="h5 mt-4 mb-3">6.3. Non-restitution</h3>
                     <p class="alert alert-danger">
                         <strong>⚠️ IMPORTANT :</strong> En cas de non-restitution dans les <strong>10 jours ouvrés</strong>, 
-                        des frais de <strong>600,00 €</strong> seront automatiquement facturés au client pour compenser 
+                        des frais de <strong>600,00 €</strong> seront automatiquement facturés à l'utilisateur pour compenser 
                         le coût du matériel non restitué.
                     </p>
                     
                     <h3 class="h5 mt-4 mb-3">6.4. Matériel endommagé</h3>
-                    <p>En cas de détérioration ou de perte du matériel, le client sera facturé du coût de remplacement.</p>
+                    <p>En cas de détérioration ou de perte du matériel, l'utilisateur sera facturé du coût de remplacement.</p>
                 </div>
             </div>
 
@@ -146,15 +146,15 @@
                 <div class="card-body">
                     <h2 class="h4 mb-3">Article 7 - Allergènes et Régimes alimentaires</h2>
                     <p>Les informations sur les allergènes et les régimes alimentaires (végétarien, végétalien, sans gluten, etc.) sont fournies à titre indicatif sur la fiche de chaque menu.</p>
-                    <p>Il est de la responsabilité du client de vérifier ces informations et de nous informer de toute allergie ou intolérance alimentaire avant de passer commande.</p>
-                    <p>Vite & Gourmand ne saurait être tenu responsable en cas de réaction allergique si le client n'a pas communiqué ses allergies.</p>
+                    <p>Il est de la responsabilité de l'utilisateur de vérifier ces informations et de nous informer de toute allergie ou intolérance alimentaire avant de passer commande.</p>
+                    <p>Vite & Gourmand ne saurait être tenu responsable en cas de réaction allergique si l'utilisateur n'a pas communiqué ses allergies.</p>
                 </div>
             </div>
 
             <div class="card mb-4">
                 <div class="card-body">
-                    <h2 class="h4 mb-3">Article 8 - Avis clients</h2>
-                    <p>Les clients peuvent laisser un avis sur leur commande une fois celle-ci terminée.</p>
+                    <h2 class="h4 mb-3">Article 8 - Avis utilisateurs</h2>
+                    <p>Les utilisateurs peuvent laisser un avis sur leur commande une fois celle-ci terminée.</p>
                     <p>Les avis sont soumis à modération avant publication et doivent respecter les règles de courtoisie. Vite & Gourmand se réserve le droit de refuser tout avis injurieux, diffamatoire ou contraire aux bonnes mœurs.</p>
                 </div>
             </div>
@@ -165,9 +165,9 @@
                     <p>Vite & Gourmand s'engage à respecter les normes d'hygiène et de sécurité alimentaire en vigueur.</p>
                     <p>Le prestataire ne saurait être tenu responsable :</p>
                     <ul>
-                        <li>Des dommages résultant d'une mauvaise utilisation ou conservation des produits par le client</li>
+                        <li>Des dommages résultant d'une mauvaise utilisation ou conservation des produits par l'utilisateur</li>
                         <li>Des retards de livraison dus à un cas de force majeure</li>
-                        <li>Des problèmes liés à des informations erronées fournies par le client</li>
+                        <li>Des problèmes liés à des informations erronées fournies par l'utilisateur</li>
                     </ul>
                 </div>
             </div>
@@ -193,7 +193,7 @@
                     <h2 class="h4 mb-3">Article 12 - Litiges</h2>
                     
                     <h3 class="h5 mt-3 mb-3">12.1. Médiation</h3>
-                    <p>En cas de litige, le client peut recourir gratuitement au service de médiation de la consommation :</p>
+                    <p>En cas de litige, l'utilisateur peut recourir gratuitement au service de médiation de la consommation :</p>
                     <p><strong>Médiateur de la consommation CNPM - MÉDIATION DE LA CONSOMMATION</strong><br>
                     23 rue de la Paix - 75002 Paris<br>
                     Site : <a href="https://www.cnpm-mediation-consommation.eu" target="_blank" rel="noopener">www.cnpm-mediation-consommation.eu</a></p>

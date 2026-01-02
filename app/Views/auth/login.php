@@ -25,6 +25,10 @@
                     <?php endif; ?>
                     
                     <form method="post" action="/login">
+                        <?php if (!empty($redirect)): ?>
+                            <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
+                        <?php endif; ?>
+                        
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" required>

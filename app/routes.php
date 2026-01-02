@@ -47,7 +47,7 @@ $router->post('/forgot-password', 'App\Controllers\AuthController', 'forgotPassw
 $router->get('/reset-password', 'App\Controllers\AuthController', 'resetPassword');
 $router->post('/reset-password', 'App\Controllers\AuthController', 'resetPassword');
 
-// ROUTES PROTÉGÉES (CLIENT CONNECTÉ)
+// ROUTES PROTÉGÉES (UTILISATEUR CONNECTÉ)
 
 // Commandes (nécessite authentification)
 $router->get('/mes-commandes', 'App\Controllers\CommandeController', 'index');
@@ -75,6 +75,9 @@ $router->post('/admin/contacts/delete', 'App\Controllers\AdminContactController'
 
 // Gestion des utilisateurs (admin)
 $router->get('/admin/utilisateurs', 'App\Controllers\AdminController', 'users');
+$router->post('/admin/utilisateurs/creer-employe', 'App\Controllers\AdminController', 'createEmploye');
+$router->post('/admin/utilisateurs/desactiver', 'App\Controllers\AdminController', 'deactivateUser');
+$router->post('/admin/utilisateurs/activer', 'App\Controllers\AdminController', 'activateUser');
 
 // Gestion des commandes (admin)
 $router->get('/admin/commandes', 'App\Controllers\AdminController', 'commandes');

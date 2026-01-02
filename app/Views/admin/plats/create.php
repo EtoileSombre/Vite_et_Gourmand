@@ -59,7 +59,7 @@
                                           rows="4"
                                           placeholder="Décrivez les ingrédients, la préparation, les saveurs..."></textarea>
                                 <div class="form-text">
-                                    Donnez envie à vos clients avec une description alléchante
+                                    Donnez envie à vos utilisateurs avec une description alléchante
                                 </div>
                             </div>
 

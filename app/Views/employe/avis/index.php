@@ -46,11 +46,11 @@
                             <div class="card h-100 shadow-sm">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <div>
-                                        <strong><?= htmlspecialchars($item['client_prenom'] ?? 'Client') ?> 
-                                                <?= htmlspecialchars(strtoupper(substr($item['client_nom'] ?? '', 0, 1))) ?>.</strong>
+                                        <strong><?= htmlspecialchars($item['utilisateur_prenom'] ?? 'Utilisateur') ?> 
+                                                <?= htmlspecialchars(strtoupper(substr($item['utilisateur_nom'] ?? '', 0, 1))) ?>.</strong>
                                         <br>
                                         <small class="text-muted">
-                                            <?= htmlspecialchars($item['client_email'] ?? '') ?>
+                                            <?= htmlspecialchars($item['utilisateur_email'] ?? '') ?>
                                         </small>
                                     </div>
                                     <div>

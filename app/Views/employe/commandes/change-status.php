@@ -1,8 +1,5 @@
 <?php
-/**
- * Vue : Formulaire de changement de statut (Employé)
- * OBLIGATION ECF : Contact client obligatoire avant modification
- */
+// OBLIGATION ECF : Contact utilisateur obligatoire avant modification statut
 require_once __DIR__ . '/../../layouts/header.php';
 ?>
 
@@ -30,21 +27,21 @@ require_once __DIR__ . '/../../layouts/header.php';
                 </div>
                 <div class="card-body">
                     <dl class="row mb-0">
-                        <dt class="col-sm-5">Client :</dt>
-                        <dd class="col-sm-7"><?= htmlspecialchars($commande['client_prenom'] ?? 'N/A') ?></dd>
+                        <dt class="col-sm-5">Utilisateur :</dt>
+                        <dd class="col-sm-7"><?= htmlspecialchars($commande['utilisateur_prenom'] ?? 'N/A') ?></dd>
 
                         <dt class="col-sm-5">Email :</dt>
                         <dd class="col-sm-7">
-                            <a href="mailto:<?= htmlspecialchars($commande['client_email']) ?>">
-                                <?= htmlspecialchars($commande['client_email']) ?>
+                            <a href="mailto:<?= htmlspecialchars($commande['utilisateur_email']) ?>">
+                                <?= htmlspecialchars($commande['utilisateur_email']) ?>
                             </a>
                         </dd>
 
                         <dt class="col-sm-5">Téléphone :</dt>
                         <dd class="col-sm-7">
-                            <?php if (!empty($commande['client_telephone'])): ?>
-                                <a href="tel:<?= htmlspecialchars($commande['client_telephone']) ?>">
-                                    <?= htmlspecialchars($commande['client_telephone']) ?>
+                            <?php if (!empty($commande['utilisateur_telephone'])): ?>
+                                <a href="tel:<?= htmlspecialchars($commande['utilisateur_telephone']) ?>">
+                                    <?= htmlspecialchars($commande['utilisateur_telephone']) ?>
                                 </a>
                             <?php else: ?>
                                 <span class="text-muted">Non renseigné</span>
@@ -83,7 +80,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <dd class="col-sm-7">
                             <span class="badge <?= match($commande['statut']) {
                                 'en attente' => 'bg-warning',
-                                'validée' => 'bg-info',
+                                'acceptee' => 'bg-info',
                                 'en préparation' => 'bg-primary',
                                 'terminée' => 'bg-success',
                                 default => 'bg-secondary'
@@ -98,7 +95,7 @@ require_once __DIR__ . '/../../layouts/header.php';
             <!-- Alerte ECF -->
             <div class="alert alert-warning">
                 <i class="bi bi-exclamation-triangle-fill"></i> <strong>Rappel ECF :</strong>
-                <p class="mb-0 mt-2">Vous DEVEZ contacter le client par téléphone ou email avant de modifier ou annuler une commande.</p>
+                <p class="mb-0 mt-2">Vous DEVEZ contacter l'utilisateur par téléphone ou email avant de modifier ou annuler une commande.</p>
             </div>
         </div>
 
@@ -119,11 +116,11 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <select name="nouveau_statut" id="nouveau_statut" class="form-select" data-statut-actuel="<?= htmlspecialchars($commande['statut']) ?>" required>
                                 <option value="">-- Sélectionner --</option>
                                 <?php if ($commande['statut'] === 'en attente'): ?>
-                                    <option value="validée">✅ Validée</option>
+                                    <option value="acceptee">✅ Acceptée</option>
                                     <option value="refusée">❌ Refusée</option>
                                 <?php endif; ?>
                                 
-                                <?php if ($commande['statut'] === 'validée'): ?>
+                                <?php if ($commande['statut'] === 'acceptee'): ?>
                                     <option value="en préparation">🔄 En préparation</option>
                                     <option value="annulée">❌ Annulée</option>
                                 <?php endif; ?>
@@ -137,18 +134,18 @@ require_once __DIR__ . '/../../layouts/header.php';
 
                         <hr>
 
-                        <!-- Contact client (apparaît selon le statut choisi) -->
-                        <div id="contactClientSection" class="hidden-section">
-                            <h6 class="text-danger mb-3">
-                                <i class="bi bi-telephone-fill"></i> Contact Client Obligatoire
+                        <!-- Contact utilisateur (apparaît selon le statut choisi) -->
+                        <div id="contactUtilisateurSection" class="hidden-section">
+                            <h6 class="border-bottom pb-2">
+                                <i class="bi bi-telephone-fill"></i> Contact Utilisateur Obligatoire
                             </h6>
 
                             <!-- Confirmation contact -->
                             <div class="mb-3">
                                 <div class="form-check">
-                                    <input type="checkbox" name="contacte_client" id="contacte_client" class="form-check-input" value="1">
-                                    <label for="contacte_client" class="form-check-label fw-bold">
-                                        Je confirme avoir contacté le client <span class="text-danger">*</span>
+                                    <input type="checkbox" name="contacte_utilisateur" id="contacte_utilisateur" class="form-check-input" value="1">
+                                    <label for="contacte_utilisateur" class="form-check-label fw-bold">
+                                        Je confirme avoir contacté l'utilisateur <span class="text-danger">*</span>
                                     </label>
                                 </div>
                             </div>
@@ -178,7 +175,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     Motif du contact / Raison de la modification <span class="text-danger">*</span>
                                 </label>
                                 <textarea name="motif_contact" id="motif_contact" class="form-control" rows="4" 
-                                          placeholder="Ex: Client a demandé une annulation, problème de disponibilité, changement de date..."></textarea>
+                                          placeholder="Ex: Utilisateur a demandé une annulation, problème de disponibilité, changement de date..."></textarea>
                                 <small class="text-muted">Minimum 10 caractères</small>
                             </div>
                         </div>

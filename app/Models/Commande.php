@@ -12,8 +12,8 @@ class Commande extends Model
     {
         $stmt = $this->db->prepare('
             SELECT c.*,
-                   u.prenom as client_prenom,
-                   u.nom as client_nom
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
             ORDER BY c.date_commande DESC
@@ -38,10 +38,10 @@ class Commande extends Model
     {
         $stmt = $this->db->prepare('
             SELECT c.*, 
-                   u.prenom as client_prenom,
+                   u.prenom as utilisateur_prenom,
                    u.nom as utilisateur_nom,
-                   u.email as client_email,
-                   u.telephone as client_telephone
+                   u.email as utilisateur_email,
+                   u.telephone as utilisateur_telephone
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
             WHERE c.numero_commande = ?
@@ -55,13 +55,13 @@ class Commande extends Model
     {
         $stmt = $this->db->prepare('
             SELECT c.*, 
-                   u.prenom as client_prenom,
-                   u.nom as client_nom,
-                   u.email as client_email,
-                   u.telephone as client_telephone,
-                   u.adresse_postale as client_adresse,
-                   u.ville as client_ville,
-                   u.code_postal as client_code_postal
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
+                   u.telephone as utilisateur_telephone,
+                   u.adresse_postale as utilisateur_adresse,
+                   u.ville as utilisateur_ville,
+                   u.code_postal as utilisateur_code_postal
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
             WHERE c.numero_commande = ?
@@ -81,10 +81,10 @@ class Commande extends Model
     {
         $stmt = $this->db->prepare("
             SELECT c.*, 
-                   u.prenom as client_prenom,
-                   u.nom as client_nom,
-                   u.email as client_email,
-                   u.telephone as client_telephone
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
+                   u.telephone as utilisateur_telephone
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
             ORDER BY c.date_prestation DESC, c.created_at DESC
@@ -126,10 +126,10 @@ class Commande extends Model
         $placeholders = str_repeat('?,', count($statuts) - 1) . '?';
         $stmt = $this->db->prepare("
             SELECT c.*, 
-                   u.prenom as client_prenom,
-                   u.nom as client_nom,
-                   u.email as client_email,
-                   u.telephone as client_telephone
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
+                   u.telephone as utilisateur_telephone
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
             WHERE c.statut IN ($placeholders)
@@ -149,9 +149,9 @@ class Commande extends Model
     {
         $stmt = $this->db->prepare("
             SELECT c.*, 
-                   u.prenom as client_prenom,
-                   u.nom as client_nom,
-                   u.email as client_email
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
             WHERE DATE(c.date_prestation) = ?

@@ -140,10 +140,26 @@ document.addEventListener('DOMContentLoaded', function() {
     if (selectStatut && contactSection && formChangeStatus) {
         const statutActuel = selectStatut.dataset.statutActuel;
 
+        // Définir les progressions normales (sans contact requis)
+        const progressionNormale = {
+            'en_attente': ['acceptee'],
+            'acceptee': ['en_preparation'],
+            'en_preparation': ['en_cours_livraison'],
+            'en_cours_livraison': ['livree'],
+            'livree': ['attente_retour_materiel', 'terminee'],
+            'attente_retour_materiel': ['terminee']
+        };
+
         selectStatut.addEventListener('change', function() {
-            const statut = this.value;
-            const requiresContact = ['refusée', 'annulée'].includes(statut) ||
-                (statutActuel !== 'en attente' && statut !== statutActuel);
+            const nouveauStatut = this.value;
+            
+            // Contact requis pour annulation
+            let requiresContact = nouveauStatut === 'annulee';
+            
+            // Contact requis si ce n'est pas une progression normale
+            if (!requiresContact && progressionNormale[statutActuel]) {
+                requiresContact = !progressionNormale[statutActuel].includes(nouveauStatut);
+            }
 
             contactSection.style.display = requiresContact ? 'block' : 'none';
             document.getElementById('contacte_utilisateur').required = requiresContact;

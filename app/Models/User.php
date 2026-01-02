@@ -26,17 +26,6 @@ class User extends Model
         return $this->create($data);
     }
 
-    public function findAllWithRole()
-    {
-        $stmt = $this->db->query('
-            SELECT u.*, r.libelle as role 
-            FROM utilisateur u 
-            LEFT JOIN role r ON u.role_id = r.role_id 
-            ORDER BY u.created_at DESC
-        ');
-        return $stmt->fetchAll();
-    }
-
     public function toggleActive($userId, $actif)
     {
         $stmt = $this->db->prepare('
@@ -45,6 +34,75 @@ class User extends Model
             WHERE utilisateur_id = ?
         ');
         return $stmt->execute([$actif ? 1 : 0, $userId]);
+    }
+
+    /**
+     * Récupère tous les utilisateurs avec leur rôle
+     */
+    public function findAllWithRole(): array
+    {
+        $stmt = $this->db->prepare('
+            SELECT u.*, r.nom as role_nom 
+            FROM utilisateur u
+            LEFT JOIN role r ON u.role_id = r.role_id
+            ORDER BY u.created_at DESC
+        ');
+        $stmt->execute();
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Crée un employé avec mot de passe (ECF)
+     * 
+     * @return int|false ID de l'employé créé ou false
+     */
+    public function createEmployeWithPassword($email, $prenom, $nom, $password)
+    {
+        // Vérifier que l'email n'existe pas déjà
+        if (self::findByEmail($email)) {
+            return false;
+        }
+        
+        $stmt = $this->db->prepare('
+            INSERT INTO utilisateur (email, password, prenom, nom, role_id, actif) 
+            VALUES (?, ?, ?, ?, 2, 1)
+        ');
+        
+        if ($stmt->execute([$email, password_hash($password, PASSWORD_DEFAULT), $prenom, $nom])) {
+            return $this->db->lastInsertId();
+        }
+        
+        return false;
+    }
+
+    /**
+     * Désactive un compte utilisateur (ECF - départ employé)
+     * 
+     * @return bool
+     */
+    public function deactivate($utilisateurId): bool
+    {
+        $stmt = $this->db->prepare('
+            UPDATE utilisateur 
+            SET actif = 0
+            WHERE utilisateur_id = ?
+        ');
+        return $stmt->execute([$utilisateurId]);
+    }
+
+    /**
+     * Active un compte utilisateur
+     * 
+     * @return bool
+     */
+    public function activate($utilisateurId): bool
+    {
+        $stmt = $this->db->prepare('
+            UPDATE utilisateur 
+            SET actif = 1
+            WHERE utilisateur_id = ?
+        ');
+        return $stmt->execute([$utilisateurId]);
     }
 
     /**

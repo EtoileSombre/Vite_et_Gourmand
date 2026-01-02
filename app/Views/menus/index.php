@@ -1,12 +1,12 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="container mt-5">
-    <div class="card mb-4">
-        <div class="card-header">
-            <h3>Nos Menus</h3>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header text-white bg-vg-bordeaux">
+            <h3 class="mb-0"><i class="bi bi-journal-text"></i> Nos Menus</h3>
         </div>
         <div class="card-body">
-            <h5 class="card-title mb-3"><i class="bi bi-funnel"></i> Filtres</h5>
+            <h5 class="card-title mb-3 text-vg-bordeaux"><i class="bi bi-funnel"></i> Filtres</h5>
             <div class="row g-3">
                 
                 <!-- Filtre Régime -->

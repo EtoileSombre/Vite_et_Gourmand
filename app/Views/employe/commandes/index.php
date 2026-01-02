@@ -92,11 +92,14 @@ require_once __DIR__ . '/../../layouts/header.php';
                                 <?php
                                 // Badge selon le statut
                                 $badgeClass = match($cmd['statut']) {
-                                    'en attente' => 'bg-warning',
-                                    'acceptee' => 'bg-info',
-                                    'en préparation' => 'bg-primary',
-                                    'terminée' => 'bg-success',
-                                    'refusée', 'annulée' => 'bg-danger',
+                                    'en_attente' => 'bg-warning text-dark',
+                                    'acceptee' => 'bg-success',
+                                    'en_preparation' => 'bg-primary',
+                                    'en_cours_livraison' => 'bg-purple',
+                                    'livree' => 'bg-orange text-dark',
+                                    'attente_retour_materiel' => 'bg-brown text-white',
+                                    'terminee' => 'bg-dark-green text-white',
+                                    'annulee' => 'bg-danger',
                                     default => 'bg-secondary'
                                 };
                                 ?>
@@ -116,7 +119,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     <td><strong><?= number_format($cmd['total_final'] ?? 0, 2) ?> €</strong></td>
                                     <td>
                                         <span class="badge <?= $badgeClass ?>">
-                                            <?= ucfirst($cmd['statut']) ?>
+                                            <?= ucfirst(str_replace('_', ' ', $cmd['statut'])) ?>
                                         </span>
                                     </td>
                                     <td>

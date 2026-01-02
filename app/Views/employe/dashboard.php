@@ -28,12 +28,12 @@ require_once __DIR__ . '/../layouts/header.php';
     <div class="row g-4 mb-4">
         <!-- Commandes en attente -->
         <div class="col-md-4">
-            <div class="card border-warning shadow-sm h-100">
+            <div class="card shadow-sm h-100 border-vg-gold-2">
                 <div class="card-body text-center">
-                    <i class="bi bi-hourglass-split text-warning fs-1"></i>
+                    <i class="bi bi-hourglass-split fs-1 text-vg-gold"></i>
                     <h2 class="mt-3 mb-1"><?= $stats['commandes_en_attente'] ?></h2>
                     <p class="text-muted mb-3">Commandes à traiter</p>
-                    <a href="/employe/commandes" class="btn btn-warning btn-sm">
+                    <a href="/employe/commandes" class="btn btn-sm btn-vg-gold">
                         <i class="bi bi-arrow-right-circle"></i> Gérer
                     </a>
                 </div>
@@ -42,12 +42,12 @@ require_once __DIR__ . '/../layouts/header.php';
 
         <!-- Commandes du jour -->
         <div class="col-md-4">
-            <div class="card border-primary shadow-sm h-100">
+            <div class="card shadow-sm h-100 border-vg-bordeaux-2">
                 <div class="card-body text-center">
-                    <i class="bi bi-calendar-check text-primary fs-1"></i>
+                    <i class="bi bi-calendar-check fs-1 text-vg-bordeaux"></i>
                     <h2 class="mt-3 mb-1"><?= $stats['commandes_aujourdhui'] ?></h2>
                     <p class="text-muted mb-3">Prestations aujourd'hui</p>
-                    <a href="/employe/commandes?filter=aujourdhui" class="btn btn-primary btn-sm">
+                    <a href="/employe/commandes?filter=aujourdhui" class="btn btn-sm btn-vg-bordeaux">
                         <i class="bi bi-eye"></i> Voir
                     </a>
                 </div>
@@ -56,12 +56,12 @@ require_once __DIR__ . '/../layouts/header.php';
 
         <!-- Avis à modérer -->
         <div class="col-md-4">
-            <div class="card border-info shadow-sm h-100">
+            <div class="card shadow-sm h-100 border-vg-gold-2">
                 <div class="card-body text-center">
-                    <i class="bi bi-star-half text-info fs-1"></i>
-                    <h2 class="mt-3 mb-1"><?= $stats['avis_a_moderer'] ?></h2>
-                    <p class="text-muted mb-3">Avis en attente</p>
-                    <a href="/employe/avis" class="btn btn-info btn-sm text-white">
+                    <i class="bi bi-star-half fs-1 text-vg-gold"></i>
+                    <h2 class="mt-3 mb-1"><?= $stats['avis_non_moderes'] ?></h2>
+                    <p class="text-muted mb-3">Avis à modérer</p>
+                    <a href="/employe/avis" class="btn btn-sm btn-vg-gold">
                         <i class="bi bi-check2-square"></i> Modérer
                     </a>
                 </div>
@@ -73,31 +73,31 @@ require_once __DIR__ . '/../layouts/header.php';
     <div class="row g-4 mb-4">
         <div class="col-md-12">
             <div class="card shadow-sm">
-                <div class="card-header bg-dark text-white">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Accès Rapides</h5>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <div class="col-md-3">
-                            <a href="/employe/commandes" class="btn btn-outline-primary w-100 py-3">
+                            <a href="/employe/commandes" class="btn btn-vg-cream w-100 py-3">
                                 <i class="bi bi-box-seam fs-4 d-block mb-2"></i>
                                 Gérer les Commandes
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="/employe/avis" class="btn btn-outline-info w-100 py-3">
+                            <a href="/employe/avis" class="btn btn-vg-cream w-100 py-3">
                                 <i class="bi bi-star fs-4 d-block mb-2"></i>
                                 Modérer les Avis
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="/admin/menus" class="btn btn-outline-success w-100 py-3">
+                            <a href="/admin/menus" class="btn btn-vg-cream w-100 py-3">
                                 <i class="bi bi-card-list fs-4 d-block mb-2"></i>
                                 Gérer les Menus
                             </a>
                         </div>
                         <div class="col-md-3">
-                            <a href="/profil" class="btn btn-outline-secondary w-100 py-3">
+                            <a href="/profil" class="btn btn-vg-cream w-100 py-3">
                                 <i class="bi bi-person-circle fs-4 d-block mb-2"></i>
                                 Mon Profil
                             </a>
@@ -113,7 +113,7 @@ require_once __DIR__ . '/../layouts/header.php';
     <div class="row g-4 mb-4">
         <div class="col-md-12">
             <div class="card shadow-sm">
-                <div class="card-header bg-warning">
+                <div class="card-header bg-vg-gold text-vg-bordeaux">
                     <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Commandes en Attente (<?= count($commandesEnAttente) ?> premières)</h5>
                 </div>
                 <div class="card-body">
@@ -151,13 +151,18 @@ require_once __DIR__ . '/../layouts/header.php';
                                     </td>
                                     <td>
                                         <?php
-                                        $badges = [
-                                            'en attente' => 'warning',
+                                        $badgeClass = match($cmd['statut'] ?? 'en_attente') {
+                                            'en_attente', 'en attente' => 'warning text-dark',
                                             'acceptee' => 'success',
-                                            'en_preparation' => 'info'
-                                        ];
-                                        $statut = $cmd['statut'] ?? 'en attente';
-                                        $badgeClass = $badges[$statut] ?? 'secondary';
+                                            'en_preparation' => 'primary',
+                                            'en_cours_livraison' => 'purple',
+                                            'livree' => 'orange text-dark',
+                                            'attente_retour_materiel' => 'brown text-white',
+                                            'terminee' => 'dark-green text-white',
+                                            'annulee' => 'danger',
+                                            default => 'secondary'
+                                        };
+                                        $statut = $cmd['statut'] ?? 'en_attente';
                                         ?>
                                         <span class="badge bg-<?= $badgeClass ?>"><?= htmlspecialchars($statut) ?></span>
                                     </td>
@@ -174,7 +179,7 @@ require_once __DIR__ . '/../layouts/header.php';
                     </div>
                     <?php if ($stats['commandes_en_attente'] > 5): ?>
                         <div class="text-center mt-3">
-                            <a href="/employe/commandes" class="btn btn-warning">
+                            <a href="/employe/commandes" class="btn btn-vg-gold">
                                 Voir toutes les commandes en attente (<?= $stats['commandes_en_attente'] ?>)
                             </a>
                         </div>
@@ -190,14 +195,14 @@ require_once __DIR__ . '/../layouts/header.php';
     <div class="row g-4">
         <div class="col-md-12">
             <div class="card shadow-sm">
-                <div class="card-header bg-info text-white">
+                <div class="card-header bg-vg-gold text-vg-bordeaux">
                     <h5 class="mb-0"><i class="bi bi-chat-square-text"></i> Avis en Attente de Modération (<?= count($avisEnAttente) ?> premiers)</h5>
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
                         <?php foreach ($avisEnAttente as $avis): ?>
                         <div class="col-md-4">
-                            <div class="card h-100 border-info">
+                            <div class="card h-100 border-vg-bordeaux-2">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
                                         <strong><?= htmlspecialchars($avis['utilisateur_prenom'] ?? 'Utilisateur') ?></strong>
@@ -217,7 +222,7 @@ require_once __DIR__ . '/../layouts/header.php';
                                     </small>
                                 </div>
                                 <div class="card-footer bg-transparent">
-                                    <a href="/employe/avis?id=<?= $avis['avis_id'] ?>" class="btn btn-sm btn-info w-100">
+                                    <a href="/employe/avis?id=<?= $avis['avis_id'] ?>" class="btn btn-sm btn-vg-gold w-100">
                                         <i class="bi bi-check-circle"></i> Modérer
                                     </a>
                                 </div>
@@ -227,7 +232,7 @@ require_once __DIR__ . '/../layouts/header.php';
                     </div>
                     <?php if ($stats['avis_a_moderer'] > 3): ?>
                         <div class="text-center mt-3">
-                            <a href="/employe/avis" class="btn btn-info text-white">
+                            <a href="/employe/avis" class="btn btn-vg-gold">
                                 Voir tous les avis (<?= $stats['avis_a_moderer'] ?>)
                             </a>
                         </div>

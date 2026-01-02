@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h4 class="mb-0">🔒 Mot de passe oublié</h4>
                 </div>
                 <div class="card-body">

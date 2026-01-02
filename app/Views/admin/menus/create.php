@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../layouts/header.php';
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h2 class="mb-0"><i class="bi bi-plus-circle"></i> Créer un Nouveau Menu</h2>
                 </div>
                 <div class="card-body">

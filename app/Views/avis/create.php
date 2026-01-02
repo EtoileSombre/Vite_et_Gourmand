@@ -3,14 +3,18 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Donner votre avis</h3>
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
+                    <h3 class="mb-0"><i class="bi bi-star-fill"></i> Donner votre avis<?php if (isset($numeroCommande)): ?> - Commande #<?= htmlspecialchars($numeroCommande) ?><?php endif; ?></h3>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="/avis">
+                    <form method="post" action="/avis/create">
+                        <?php if (isset($numeroCommande)): ?>
+                            <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($numeroCommande) ?>">
+                        <?php endif; ?>
+                        
                         <div class="mb-3">
-                            <label for="note" class="form-label">Note</label>
+                            <label for="note" class="form-label">Note <span class="text-danger">*</span></label>
                             <select class="form-select" id="note" name="note" required>
                                 <option value="">Sélectionnez une note...</option>
                                 <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
@@ -22,13 +26,13 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="commentaire" class="form-label">Commentaire</label>
-                            <textarea class="form-control" id="commentaire" name="commentaire" rows="5" required></textarea>
+                            <label for="commentaire" class="form-label">Commentaire <span class="text-danger">*</span></label>
+                            <textarea class="form-control" id="commentaire" name="commentaire" rows="5" required placeholder="Partagez votre expérience avec nous..."></textarea>
                         </div>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="/" class="btn btn-secondary">Annuler</a>
-                            <button type="submit" class="btn btn-primary">Envoyer mon avis</button>
+                            <a href="/" class="btn btn-outline-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-vg-gold"><i class="bi bi-send"></i> Envoyer mon avis</button>
                         </div>
                     </form>
                 </div>

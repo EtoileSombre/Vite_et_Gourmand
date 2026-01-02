@@ -3,9 +3,9 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Mon Espace Utilisateur</h3>
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
+                    <h3 class="mb-0"><i class="bi bi-person-circle"></i> Mon Espace Utilisateur</h3>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($errors)): ?>
@@ -52,8 +52,8 @@
                         </div>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="/" class="btn btn-secondary">Retour</a>
-                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                            <a href="/" class="btn btn-outline-secondary">Retour</a>
+                            <button type="submit" class="btn btn-vg-gold">Enregistrer les modifications</button>
                         </div>
                     </form>
                 </div>
@@ -66,7 +66,7 @@
                         <?= date('d/m/Y', strtotime($user['date_inscription'])) ?>
                     </p>
                     <p class="mb-0"><strong>Rôle :</strong> 
-                        <span class="badge bg-info"><?= htmlspecialchars($user['role']) ?></span>
+                        <span class="badge bg-vg-gold text-vg-bordeaux"><?= htmlspecialchars($user['role']) ?></span>
                     </p>
                 </div>
             </div>

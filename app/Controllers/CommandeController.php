@@ -111,7 +111,7 @@ class CommandeController extends Controller
         $request = new Request();
         $menuId = $request->post('menu_id');
         $nombrePersonnes = $request->post('nombre_personnes');
-        $dateLivraison = $request->post('date_livraison');
+        $dateLivraison = $request->post('date_prestation'); // Correction: c'est date_prestation dans le formulaire
         $heureLivraison = $request->post('heure_livraison');
         $adresseLivraison = $request->post('adresse_livraison');
         $lieuLivraison = $adresseLivraison; 
@@ -252,7 +252,16 @@ class CommandeController extends Controller
 
         // Vérifier que la commande appartient à l'utilisateur
         if (!$commande || $commande['utilisateur_id'] != $userId) {
+            Session::set('error', 'Commande introuvable.');
             $this->redirect('/mes-commandes');
+            return;
+        }
+
+        // Vérifier que la commande peut être modifiée (uniquement si en_attente)
+        if ($commande['statut'] !== 'en_attente') {
+            Session::set('error', 'Cette commande ne peut plus être modifiée car elle a été acceptée par notre équipe.');
+            $this->redirect('/mes-commandes');
+            return;
         }
 
         // Enrichir avec lignesMenus
@@ -289,7 +298,16 @@ class CommandeController extends Controller
 
         // Vérifier que la commande appartient à l'utilisateur
         if (!$commande || $commande['utilisateur_id'] != $userId) {
+            Session::set('error', 'Commande introuvable.');
             $this->redirect('/mes-commandes');
+            return;
+        }
+
+        // Vérifier que la commande peut être modifiée (uniquement si en_attente)
+        if ($commande['statut'] !== 'en_attente') {
+            Session::set('error', 'Cette commande ne peut plus être modifiée car elle a été acceptée.');
+            $this->redirect('/mes-commandes');
+            return;
         }
 
         // Récupérer les lignes de menus
@@ -357,12 +375,79 @@ class CommandeController extends Controller
 
         // Vérifier que la commande appartient à l'utilisateur
         if (!$commande || $commande['utilisateur_id'] != $userId) {
+            Session::set('error', 'Commande introuvable.');
             $this->redirect('/mes-commandes');
+            return;
+        }
+
+        // Vérifier que la commande peut être annulée (uniquement si en_attente)
+        if ($commande['statut'] !== 'en_attente') {
+            Session::set('error', 'Cette commande ne peut plus être annulée car elle a déjà été acceptée par notre équipe. Veuillez nous contacter.');
+            $this->redirect('/mes-commandes');
+            return;
         }
 
         // Mettre à jour le statut (sans accent)
         $commandeModel->updateByNumero($numeroCommande, ['statut' => 'annulee']);
+        
+        // Enregistrer dans l'historique de suivi
+        $suiviModel = new \App\Models\SuiviCommande();
+        $suiviModel->enregistrerChangement(
+            $numeroCommande,
+            $commande['statut'],
+            'annulee',
+            $userId,
+            'Annulation par l\'utilisateur'
+        );
 
         $this->redirect('/mes-commandes');
+    }
+    
+    /**
+     * Afficher le détail d'une commande avec son historique de suivi
+     */
+    public function show(Request $request): void
+    {
+        $userId = Session::get('user_id');
+        if (!$userId) {
+            $this->redirect('/login');
+            return;
+        }
+
+        $numeroCommande = $request->get('numero');
+        if (!$numeroCommande) {
+            Session::set('error', 'Commande introuvable');
+            $this->redirect('/mes-commandes');
+            return;
+        }
+
+        $commandeModel = new Commande();
+        $commande = $commandeModel->findByNumero($numeroCommande);
+
+        if (!$commande || $commande['utilisateur_id'] != $userId) {
+            Session::set('error', 'Commande introuvable');
+            $this->redirect('/mes-commandes');
+            return;
+        }
+
+        // Enrichir avec les lignes de menus
+        $commandeMenuModel = new CommandeMenu();
+        $commande['lignesMenus'] = $commandeMenuModel->findByCommande($numeroCommande);
+        $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($numeroCommande);
+
+        // Récupérer l'historique de suivi
+        $suiviModel = new \App\Models\SuiviCommande();
+        $historique = $suiviModel->getHistorique($numeroCommande);
+
+        // Vérifier si un avis a déjà été donné
+        $avisModel = new \App\Models\Avis();
+        $avisExistant = $avisModel->findByCommandeAndUser($numeroCommande, $userId);
+
+        $this->render('commandes/show', [
+            'title' => 'Détail de la commande #' . $numeroCommande,
+            'commande' => $commande,
+            'historique' => $historique,
+            'avisExistant' => $avisExistant
+        ]);
     }
 }

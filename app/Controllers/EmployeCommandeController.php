@@ -132,9 +132,32 @@ class EmployeCommandeController extends Controller
             $errors[] = "Le nouveau statut est obligatoire";
         }
 
-        // Vérifier le contact utilisateur pour modifications/annulations
-        $requiresContact = in_array($nouveauStatut, ['refusee', 'annulee']) || 
-                          ($commande['statut'] !== 'en_attente' && $nouveauStatut !== $commande['statut']);
+        // Vérifier le contact utilisateur UNIQUEMENT pour refus/annulations/modifications après acceptation
+        // Accepter une commande en attente ne nécessite PAS de contact
+        $requiresContact = false;
+        
+        // Contact obligatoire si : refus ou annulation
+        if (in_array($nouveauStatut, ['annulee'])) {
+            $requiresContact = true;
+        }
+        
+        // Contact obligatoire si modification d'une commande déjà acceptée (sauf progression normale)
+        // Progression normale = en_attente->acceptee, acceptee->en_preparation, en_preparation->en_cours_livraison, etc.
+        $progressionNormale = [
+            'en_attente' => ['acceptee'],
+            'acceptee' => ['en_preparation'],
+            'en_preparation' => ['en_cours_livraison'],
+            'en_cours_livraison' => ['livree'],
+            'livree' => ['attente_retour_materiel', 'terminee'],
+            'attente_retour_materiel' => ['terminee']
+        ];
+        
+        if (isset($progressionNormale[$commande['statut']])) {
+            if (!in_array($nouveauStatut, $progressionNormale[$commande['statut']])) {
+                // Ce n'est pas une progression normale, contact requis
+                $requiresContact = true;
+            }
+        }
 
         if ($requiresContact) {
             if (!$contacteUtilisateur) {
@@ -168,6 +191,16 @@ class EmployeCommandeController extends Controller
         $success = $this->commandeModel->updateByNumero($numeroCommande, $updateData);
 
         if ($success) {
+            // Enregistrer dans l'historique de suivi
+            $suiviModel = new \App\Models\SuiviCommande();
+            $suiviModel->enregistrerChangement(
+                $numeroCommande,
+                $commande['statut'],
+                $nouveauStatut,
+                Session::get('user_id'),
+                $motifContact ?: null
+            );
+
             // Logger dans MongoDB
             require_once __DIR__ . '/../config/mongodb.php';
             $mongoStats = new \App\Config\MongoStats();
@@ -202,6 +235,18 @@ class EmployeCommandeController extends Controller
                     $commande['utilisateur_prenom'],
                     $numeroCommande,
                     $commande['menu_titre'] ?? 'Menu'
+                );
+                error_log("Email envoyé: " . ($emailSent ? 'OUI' : 'NON'));
+            }
+            
+            // Email #3 : Attente retour matériel (rappel 10 jours, pénalité 600€)
+            if ($nouveauStatut === 'attente_retour_materiel') {
+                error_log("Envoi email rappel retour matériel à: " . $commande['utilisateur_email']);
+                $emailSent = sendMaterialReturnReminderEmail(
+                    $commande['utilisateur_email'],
+                    $commande['utilisateur_prenom'],
+                    $numeroCommande,
+                    $commande['date_prestation']
                 );
                 error_log("Email envoyé: " . ($emailSent ? 'OUI' : 'NON'));
             }
@@ -242,11 +287,20 @@ class EmployeCommandeController extends Controller
         $lignesMenus = $commandeMenuModel->findByCommande($numeroCommande);
         $totalPersonnes = $commandeMenuModel->getTotalPersonnes($numeroCommande);
 
+        // Calculer le total des menus
+        $totalMenus = 0;
+        foreach ($lignesMenus as $ligne) {
+            $totalMenus += $ligne['total_ligne'] ?? 0;
+        }
+        
+        // Ajouter le total des menus à la commande
+        $commande['total_menus'] = $totalMenus;
+        $commande['lignesMenus'] = $lignesMenus;
+        $commande['totalPersonnes'] = $totalPersonnes;
+
         $this->render('employe/commandes/view', [
             'title' => 'Détails de la Commande',
-            'commande' => $commande,
-            'lignesMenus' => $lignesMenus,
-            'totalPersonnes' => $totalPersonnes
+            'commande' => $commande
         ]);
     }
 }

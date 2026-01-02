@@ -331,3 +331,73 @@
     color: #999 !important;
     font-size: 0.85rem;
 }
+
+/* Animation pulse pour l'icône d'alerte */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.pulse-animation {
+    animation: pulse 2s ease-in-out infinite;
+}
+
+/* Classes spécifiques pour amélioration de la vue menu */
+.menu-prix-principal {
+    color: var(--vg-bordeaux);
+    white-space: nowrap;
+}
+
+.menu-header-bordeaux {
+    background-color: var(--vg-bordeaux);
+}
+
+.menu-header-gradient {
+    background: linear-gradient(135deg, var(--vg-bordeaux) 0%, #5a1515 100%);
+}
+
+.menu-titre-section {
+    color: var(--vg-bordeaux);
+}
+
+.menu-allergenes-petit {
+    font-size: 0.75rem;
+}
+
+.menu-allergenes-titre {
+    color: var(--vg-bordeaux);
+    font-size: 0.9rem;
+}
+
+.menu-allergenes-contenu {
+    font-size: 0.8rem;
+}
+
+.menu-conditions-card {
+    border-color: var(--vg-bordeaux) !important;
+}
+
+.menu-conditions-body {
+    background-color: #FFF8F0;
+}
+
+.menu-conditions-icone {
+    color: var(--vg-bordeaux);
+    font-size: 1.3rem;
+}
+
+.menu-conditions-titre {
+    color: var(--vg-bordeaux);
+    font-size: 0.9rem;
+}
+
+.menu-conditions-texte {
+    font-size: 0.85rem;
+    line-height: 1.4;
+}

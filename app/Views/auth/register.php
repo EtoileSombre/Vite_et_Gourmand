@@ -3,9 +3,9 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Inscription</h3>
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
+                    <h3 class="mb-0"><i class="bi bi-person-plus"></i> Inscription</h3>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($errors)): ?>

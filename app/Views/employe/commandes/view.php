@@ -20,8 +20,8 @@ require_once __DIR__ . '/../../layouts/header.php';
     <div class="row">
         <!-- Informations Utilisateur -->
         <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-primary text-white">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h5 class="mb-0"><i class="bi bi-person-circle"></i> Informations Utilisateur</h5>
                 </div>
                 <div class="card-body">
@@ -53,12 +53,12 @@ require_once __DIR__ . '/../../layouts/header.php';
 
         <!-- Informations Menus -->
         <div class="col-md-12 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-success text-white">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h5 class="mb-0"><i class="bi bi-card-list"></i> Menus Commandés</h5>
                 </div>
                 <div class="card-body">
-                    <?php if (!empty($lignesMenus)): ?>
+                    <?php if (!empty($commande['lignesMenus'])): ?>
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
@@ -70,7 +70,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($lignesMenus as $ligne): ?>
+                                <?php foreach ($commande['lignesMenus'] as $ligne): ?>
                                     <tr>
                                         <td><strong><?= htmlspecialchars($ligne['menu_nom']) ?></strong></td>
                                         <td><?= htmlspecialchars($ligne['nombre_personne']) ?></td>
@@ -83,7 +83,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <tfoot>
                                 <tr>
                                     <td colspan="4" class="text-end"><strong>Total personnes :</strong></td>
-                                    <td><strong><?= $totalPersonnes ?></strong></td>
+                                    <td><strong><?= $commande['totalPersonnes'] ?? 0 ?></strong></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -96,8 +96,8 @@ require_once __DIR__ . '/../../layouts/header.php';
 
         <!-- Détails Prestation -->
         <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-info text-white">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-vg-gold text-vg-bordeaux">
                     <h5 class="mb-0"><i class="bi bi-calendar-event"></i> Prestation</h5>
                 </div>
                 <div class="card-body">
@@ -127,8 +127,8 @@ require_once __DIR__ . '/../../layouts/header.php';
 
         <!-- Matériel et Statut -->
         <div class="col-md-6 mb-4">
-            <div class="card h-100">
-                <div class="card-header bg-warning">
+            <div class="card h-100 shadow-sm">
+                <div class="card-header bg-vg-gold text-vg-bordeaux">
                     <h5 class="mb-0"><i class="bi bi-box-seam"></i> Matériel & Statut</h5>
                 </div>
                 <div class="card-body">
@@ -136,14 +136,17 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <dt class="col-sm-5">Statut actuel :</dt>
                         <dd class="col-sm-7">
                             <span class="badge <?= match($commande['statut']) {
-                                'en attente' => 'bg-warning',
-                                'acceptee' => 'bg-info',
+                                'en_attente' => 'bg-warning text-dark',
+                                'acceptee' => 'bg-success',
                                 'en_preparation' => 'bg-primary',
-                                'terminee' => 'bg-success',
-                                'refusee', 'annulee' => 'bg-danger',
+                                'en_cours_livraison' => 'bg-purple',
+                                'livree' => 'bg-orange text-dark',
+                                'attente_retour_materiel' => 'bg-brown text-white',
+                                'terminee' => 'bg-dark-green text-white',
+                                'annulee' => 'bg-danger',
                                 default => 'bg-secondary'
                             } ?> fs-6">
-                                <?= ucfirst($commande['statut']) ?>
+                                <?= ucfirst(str_replace('_', ' ', $commande['statut'])) ?>
                             </span>
                         </dd>
 
@@ -173,8 +176,8 @@ require_once __DIR__ . '/../../layouts/header.php';
 
         <!-- Récapitulatif Prix -->
         <div class="col-12 mb-4">
-            <div class="card">
-                <div class="card-header bg-dark text-white">
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h5 class="mb-0"><i class="bi bi-calculator"></i> Récapitulatif Prix</h5>
                 </div>
                 <div class="card-body">

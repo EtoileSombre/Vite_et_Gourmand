@@ -22,7 +22,7 @@ $materielsIds = $materielsFromUrl ? explode(',', $materielsFromUrl) : [];
             </nav>
 
             <div class="card shadow-lg">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h3 class="mb-0">
                         <i class="bi bi-cart-plus"></i> Nouvelle commande
                     </h3>
@@ -39,30 +39,30 @@ $materielsIds = $materielsFromUrl ? explode(',', $materielsFromUrl) : [];
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="nom" name="nom" 
+                                    <input type="text" class="form-control bg-readonly" id="nom" name="nom" 
                                            value="<?= htmlspecialchars($user['nom'] ?? '') ?>" 
-                                           readonly style="background-color: #f8f9fa;">
+                                           readonly>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="prenom" class="form-label">Prénom <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="prenom" name="prenom" 
+                                    <input type="text" class="form-control bg-readonly" id="prenom" name="prenom" 
                                            value="<?= htmlspecialchars($user['prenom'] ?? '') ?>" 
-                                           readonly style="background-color: #f8f9fa;">
+                                           readonly>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                                    <input type="email" class="form-control" id="email" name="email" 
+                                    <input type="email" class="form-control bg-readonly" id="email" name="email" 
                                            value="<?= htmlspecialchars($user['email'] ?? '') ?>" 
-                                           readonly style="background-color: #f8f9fa;">
+                                           readonly>
                                 </div>
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label for="telephone" class="form-label">Numéro de GSM <span class="text-danger">*</span></label>
-                                    <input type="tel" class="form-control" id="telephone" name="telephone" 
+                                    <input type="tel" class="form-control bg-readonly" id="telephone" name="telephone" 
                                            value="<?= htmlspecialchars($user['telephone'] ?? '') ?>" 
-                                           readonly style="background-color: #f8f9fa;">
+                                           readonly>
                                 </div>
                             </div>
                             

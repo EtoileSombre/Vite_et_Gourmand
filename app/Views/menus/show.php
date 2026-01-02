@@ -265,7 +265,7 @@
                 ?>
                 
                 <?php if ($isAuthenticated): ?>
-                    <a href="/commande/create?menu_id=<?= $menu['menu_id'] ?>" 
+                    <a href="/commande/nouvelle?menu_id=<?= $menu['menu_id'] ?>" 
                        id="btnCommander" 
                        class="btn shadow-sm menu-btn-commande">
                         <i class="bi bi-cart-plus"></i> Commander ce menu

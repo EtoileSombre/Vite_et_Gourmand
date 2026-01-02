@@ -1,8 +1,12 @@
 <?php include __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="container mt-5">
-    <h2>Mes commandes</h2>
-    <a href="/commande/nouvelle" class="btn btn-success mb-3">Nouvelle commande</a>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">Mes commandes</h2>
+        <a href="/commande/nouvelle" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Nouvelle commande
+        </a>
+    </div>
     
     <?php if (empty($commandes)): ?>
         <div class="alert alert-info">
@@ -41,10 +45,14 @@
                                 <?php
                                 $statut = $commande['statut'] ?? 'en_attente';
                                 $statutClass = match($statut) {
-                                    'en_attente' => 'warning',
+                                    'en_attente' => 'warning text-dark',
                                     'acceptee' => 'success',
+                                    'en_preparation' => 'primary',
+                                    'en_cours_livraison' => 'purple',
+                                    'livree' => 'orange text-dark',
+                                    'attente_retour_materiel' => 'brown text-white',
+                                    'terminee' => 'dark-green text-white',
                                     'annulee' => 'danger',
-                                    'terminee' => 'info',
                                     default => 'secondary'
                                 };
                                 $statutText = ucfirst(str_replace('_', ' ', $statut));
@@ -58,12 +66,31 @@
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <?php if ($statut === 'en_attente'): ?>
-                                    <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-sm btn-primary">Modifier</a>
-                                    <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-sm btn-danger btn-annuler-commande">Annuler</a>
-                                <?php else: ?>
-                                    <span class="text-muted">-</span>
-                                <?php endif; ?>
+                                <div class="d-flex gap-1 align-items-center justify-content-center">
+                                    <a href="/commande/details?numero=<?= urlencode($commande['numero_commande']) ?>" 
+                                       class="btn btn-sm btn-outline-warning text-dark" 
+                                       title="Voir les détails et le suivi">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <?php if ($statut === 'en_attente'): ?>
+                                        <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" 
+                                           class="btn btn-sm btn-outline-secondary" 
+                                           title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" 
+                                           class="btn btn-sm btn-outline-danger btn-annuler-commande" 
+                                           title="Annuler">
+                                            <i class="bi bi-x-circle"></i>
+                                        </a>
+                                    <?php elseif ($statut === 'terminee'): ?>
+                                        <a href="/avis/create?commande=<?= urlencode($commande['numero_commande']) ?>" 
+                                           class="btn btn-sm btn-vg-gold" 
+                                           title="Donner votre avis">
+                                            <i class="bi bi-star-fill"></i>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

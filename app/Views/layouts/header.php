@@ -62,6 +62,7 @@
                                     <li><a class="dropdown-item" href="/employe/avis"><span aria-hidden="true">⭐</span> Modération Avis</a></li>
                                     <li><a class="dropdown-item" href="/admin/menus"><span aria-hidden="true">🍽️</span> Gestion Menus</a></li>
                                     <li><a class="dropdown-item" href="/admin/plats"><span aria-hidden="true">🥘</span> Gestion Plats</a></li>
+                                    <li><a class="dropdown-item" href="/admin/horaires"><span aria-hidden="true">⏰</span> Gestion Horaires</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php else: ?>
                                     <li><a class="dropdown-item" href="/mes-commandes"><span aria-hidden="true">📦</span> Mes commandes</a></li>

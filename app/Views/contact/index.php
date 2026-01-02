@@ -3,9 +3,9 @@
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Contactez-nous</h3>
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
+                    <h3 class="mb-0"><i class="bi bi-envelope-fill"></i> Contactez-nous</h3>
                 </div>
                 <div class="card-body">
                     <?php if (isset($_SESSION['flash_error'])): ?>
@@ -68,7 +68,7 @@
                                       placeholder="Décrivez votre demande..."><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
                         </div>
                         
-                        <button type="submit" class="btn btn-success w-100">
+                        <button type="submit" class="btn btn-vg-gold w-100">
                             <i class="bi bi-send"></i> Envoyer le message
                         </button>
                     </form>

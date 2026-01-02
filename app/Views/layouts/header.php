@@ -8,7 +8,9 @@
     <title><?= $title ?? 'Vite & Gourmand' ?></title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/png" href="/assets/img/favicon.png">
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png">
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -40,7 +42,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <strong><?= htmlspecialchars($_SESSION['user_prenom'] ?? 'Utilisateur') ?></strong>
-                                <span class="badge bg-secondary"><?= htmlspecialchars($_SESSION['user_role'] ?? 'client') ?></span>
+                                <span class="badge bg-secondary"><?= htmlspecialchars(($_SESSION['user_role'] ?? 'utilisateur') === 'utilisateur' ? 'utilisateur' : ($_SESSION['user_role'] ?? 'utilisateur')) ?></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <?php if (($_SESSION['user_role'] ?? '') === 'administrateur'): ?>
@@ -71,7 +73,7 @@
                             </ul>
                         </li>
                     <?php else: ?>
-                        <!-- Menu visiteur non connecté -->
+                        <!-- Menu utilisateur non connecté -->
                         <li class="nav-item"><a class="nav-link" href="/login">Connexion</a></li>
                         <li class="nav-item"><a class="nav-link btn btn-outline-danger btn-sm ms-2" href="/register">S'inscrire</a></li>
                     <?php endif; ?>

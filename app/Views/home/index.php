@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../layouts/header.php'; ?>
 
 <!-- Hero Section -->
 <section class="hero">
@@ -13,7 +13,7 @@
                 </a>
             </div>
             <div class="col-lg-5">
-                <img class="img-fluid rounded shadow" alt="Assortiment traiteur" src="/assets/img/lora.jpg" onerror="this.src='https://via.placeholder.com/600x400?text=Vite+%26+Gourmand'">
+                <img class="img-fluid rounded shadow" alt="Cuisine traiteur gastronomique" src="/assets/img/Menu Gastronomique/magret_de_canard.webp" style="max-height: 350px; width: auto; object-fit: cover;">
             </div>
         </div>
     </div>
@@ -33,7 +33,7 @@
             </div>
             <div class="col-md-3 col-6">
                 <div class="display-4 fw-bold figure-number">98%</div>
-                <div>Clients satisfaits</div>
+                <div>Utilisateurs satisfaits</div>
             </div>
             <div class="col-md-3 col-6">
                 <div class="display-4 fw-bold figure-number">24h</div>
@@ -154,9 +154,9 @@
     </div>
 </section>
 
-<!-- Avis clients -->
+<!-- Avis utilisateurs -->
 <section id="avis" class="container py-5">
-    <h2 class="section-title text-center mb-3">Avis clients (validés)</h2>
+    <h2 class="section-title text-center mb-3">Avis utilisateurs (validés)</h2>
     <p class="text-center text-muted mb-4">Ils nous ont fait confiance pour leurs événements.</p>
 
     <?php if (!empty($avis)): ?>

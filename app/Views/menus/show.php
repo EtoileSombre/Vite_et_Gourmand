@@ -61,34 +61,65 @@
         </div>
 
         <div class="col-md-6 offset-md-1">
-            <h2><?= htmlspecialchars($menu['titre']) ?></h2>
-            
-            <?php if (!empty($menu['categorie'])): ?>
-                <span class="menu-badge mb-3">
-                    <?= htmlspecialchars($menu['categorie']) ?>
-                </span>
-            <?php endif; ?>
-
-            <p class="lead"><?= htmlspecialchars($menu['description']) ?></p>
-
-            <div class="card mb-4 shadow-lg border-0 menu-price-card">
-                <div class="card-body py-4">
-                    <h3 class="mb-0 menu-price">
-                        <i class="bi bi-tag-fill"></i>
-                        <?= number_format($menu['prix_par_personne'], 2) ?> € <span class="menu-prix-par-personne">/ personne</span>
-                    </h3>
+            <!-- En-tête avec titre et prix -->
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <h2 class="mb-0"><?= htmlspecialchars($menu['titre']) ?></h2>
+                <div class="text-end">
+                    <span class="fs-3 fw-bold menu-prix-principal"><?= number_format($menu['prix_par_personne'], 2) ?> €<span class="text-muted menu-prix-par-personne">&nbsp;/&nbsp;personne</span></span>
                 </div>
             </div>
-
-            <?php if (!empty($menu['ingredients'])): ?>
-                <h5>Ingrédients :</h5>
-                <p><?= nl2br(htmlspecialchars($menu['ingredients'])) ?></p>
+            
+            <!-- COMPOSITION DU MENU - Liste des plats -->
+            <?php if (!empty($menu['plats'])): ?>
+                <div class="card mb-4 shadow-sm border-0">
+                    <div class="card-header text-white menu-header-bordeaux">
+                        <h5 class="mb-0">
+                            <i class="bi bi-card-list"></i> Composition du menu
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <?php 
+                        $platsByType = [];
+                        foreach ($menu['plats'] as $plat) {
+                            $platsByType[$plat['type_plat']][] = $plat;
+                        }
+                        
+                        $typeOrder = ['Entree' => 'Entrées', 'Plat' => 'Plats', 'Accompagnement' => 'Accompagnements', 'Dessert' => 'Desserts'];
+                        
+                        foreach ($typeOrder as $typeKey => $typeLabel):
+                            if (!empty($platsByType[$typeKey])):
+                        ?>
+                            <h6 class="mt-3 mb-2 menu-titre-section">
+                                <i class="bi bi-arrow-right-circle-fill"></i> <?= $typeLabel ?>
+                            </h6>
+                            <ul class="list-unstyled ms-3">
+                                <?php foreach ($platsByType[$typeKey] as $plat): ?>
+                                    <li class="mb-2">
+                                        <strong><?= htmlspecialchars($plat['titre_plat']) ?></strong>
+                                        <?php if (!empty($plat['description'])): ?>
+                                            <br><small class="text-muted"><?= htmlspecialchars($plat['description']) ?></small>
+                                        <?php endif; ?>
+                                        <?php if (!empty($plat['allergenes'])): ?>
+                                            <br><small class="text-danger menu-allergenes-petit">
+                                                <i class="bi bi-exclamation-circle"></i> 
+                                                Allergènes : <?= htmlspecialchars($plat['allergenes']) ?>
+                                            </small>
+                                        <?php endif; ?>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php 
+                            endif;
+                        endforeach; 
+                        ?>
+                    </div>
+                </div>
             <?php endif; ?>
 
             <?php if (!empty($menu['allergenes'])): ?>
                 <div class="alert shadow-sm border-0 menu-allergenes">
-                    <strong><i class="bi bi-exclamation-triangle-fill"></i> Allergènes :</strong><br>
-                    <span class="menu-allergenes-texte"><?= nl2br(htmlspecialchars($menu['allergenes'])) ?></span>
+                    <strong class="menu-allergenes-titre"><i class="bi bi-exclamation-triangle-fill"></i> Allergènes :</strong><br>
+                    <span class="menu-allergenes-contenu"><?= nl2br(htmlspecialchars($menu['allergenes'])) ?></span>
                 </div>
             <?php endif; ?>
 
@@ -96,13 +127,8 @@
             <div class="card mb-4 shadow-lg border-0 menu-options-card">
                 <!-- Boissons -->
                 <?php if (!empty($boissons)): ?>
-                    <div class="card mb-4 shadow-lg border-0 overflow-hidden">
-                    <div class="card-header text-white menu-section-header" 
-                         data-bs-toggle="collapse" 
-                         data-bs-target="#collapseBoissons" 
-                         aria-expanded="true" 
-                         aria-controls="collapseBoissons">
-                        <div class="d-flex justify-content-between align-items-center py-1">
+                    <div class="card mb-4 shadow-sm border-0 overflow-hidden">
+                    <div class="card-header text-white menu-section-header menu-header-gradient">
                             <h6 class="mb-0"><i class="bi bi-cup-straw"></i> Ajouter des boissons</h6>
                             <i class="bi bi-chevron-down menu-chevron-icon"></i>
                         </div>
@@ -209,14 +235,56 @@
                 </div>
             <?php endif; ?>
 
+            <!-- CONDITIONS DU MENU - Affichage permanent -->
+            <div class="card border-start border-4 shadow-sm mb-3 menu-conditions-card">
+                <div class="card-body py-2 px-3 menu-conditions-body">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-calendar-check-fill me-2 pulse-animation menu-conditions-icone"></i>
+                        <div class="flex-grow-1">
+                            <strong class="menu-conditions-titre">Commande à prévoir :</strong>
+                            <span class="ms-1 menu-conditions-texte">
+                                <?php if (!empty($menu['conditions'])): ?>
+                                    <?= htmlspecialchars($menu['conditions']) ?>
+                                <?php else: ?>
+                                    Merci de commander au moins 48h à l'avance pour garantir la disponibilité et la fraîcheur des produits.
+                                <?php endif; ?>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             </div>
             <!-- Fin des options -->
             
             <!-- Bouton commander -->
             <div class="text-center mt-4 py-3 menu-btn-commande-wrap">
-                <button type="button" id="btnCommander" class="btn shadow-sm menu-btn-commande">
-                    <i class="bi bi-cart-plus"></i> Commander ce menu
-                </button>
+                <?php 
+                use App\Core\Session;
+                $isAuthenticated = Session::get('user_id') !== null;
+                ?>
+                
+                <?php if ($isAuthenticated): ?>
+                    <a href="/commande/create?menu_id=<?= $menu['menu_id'] ?>" 
+                       id="btnCommander" 
+                       class="btn shadow-sm menu-btn-commande">
+                        <i class="bi bi-cart-plus"></i> Commander ce menu
+                    </a>
+                    <p class="text-muted mt-2 small">
+                        <i class="bi bi-info-circle"></i> Vous serez redirigé vers le formulaire de commande
+                    </p>
+                <?php else: ?>
+                    <button type="button" 
+                            id="btnCommander" 
+                            class="btn shadow-sm menu-btn-commande"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalAuthentification">
+                        <i class="bi bi-cart-plus"></i> Commander ce menu
+                    </button>
+                    <p class="text-muted mt-2 small">
+                        <i class="bi bi-lock"></i> Connexion requise pour commander
+                    </p>
+                <?php endif; ?>
             </div>
             
             <!-- Bouton retour -->
@@ -228,11 +296,46 @@
         </div>
     </div>
 
-    <!-- Bloc avis clients (placeholder) -->
+    <!-- Bloc avis utilisateurs (placeholder) -->
     <div class="row mt-5">
         <div class="col-12">
-            <h3><i class="bi bi-star-fill text-warning"></i> Avis clients</h3>
-            <p class="text-muted">Les avis clients seront bientôt disponibles...</p>
+            <h3><i class="bi bi-star-fill text-warning"></i> Avis utilisateurs</h3>
+            <p class="text-muted">Les avis utilisateurs seront bientôt disponibles...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Modal demande authentification pour visiteurs non connectés -->
+<div class="modal fade" id="modalAuthentification" tabindex="-1" aria-labelledby="modalAuthLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalAuthLabel">
+                    <i class="bi bi-lock-fill"></i> Connexion requise
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-person-circle fs-1 text-primary"></i>
+                </div>
+                <h5 class="mb-3">Pour commander ce menu, vous devez être connecté</h5>
+                <p class="text-muted mb-4">
+                    Connectez-vous à votre compte ou créez-en un nouveau pour passer commande.
+                </p>
+                <div class="d-grid gap-2">
+                    <a href="/login?redirect=/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-primary btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                    </a>
+                    <a href="/register?redirect=/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-outline-success btn-lg">
+                        <i class="bi bi-person-plus"></i> Créer un compte
+                    </a>
+                </div>
+                <hr class="my-4">
+                <p class="text-muted small mb-0">
+                    <i class="bi bi-shield-check"></i> Vos informations sont sécurisées et protégées
+                </p>
+            </div>
         </div>
     </div>
 </div>

@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Core\Controller;
-use App\Core\Request;
 use App\Core\Session;
 use App\Models\Avis;
 
@@ -21,8 +20,8 @@ class EmployeAvisController extends Controller
         $role = Session::get('user_role');
         if (!in_array($role, ['employé', 'administrateur'])) {
             Session::set('error', 'Accès refusé. Réservé aux employés.');
-            header('Location: /');
-            exit;
+            $this->redirect('/');
+            return;
         }
 
         $this->avisModel = new Avis();
@@ -31,10 +30,10 @@ class EmployeAvisController extends Controller
     /**
      * Liste des avis en attente de modération
      */
-    public function index(Request $request): void
+    public function index(): void
     {
         // Récupérer les filtres
-        $statut = $request->get('statut', 'en attente');
+        $statut = $_GET['statut'] ?? 'en_attente';
         
         // Récupérer les avis selon le statut via le modèle
         if ($statut === 'tous') {
@@ -42,7 +41,7 @@ class EmployeAvisController extends Controller
         } else {
             $avis = $this->avisModel->findByStatutWithDetails($statut);
         }
-        $countEnAttente = $this->avisModel->countByStatut('en attente');
+        $countEnAttente = $this->avisModel->countByStatut('en_attente');
 
         $this->render('employe/avis/index', [
             'title' => 'Modération des Avis',
@@ -55,16 +54,16 @@ class EmployeAvisController extends Controller
     /**
      * Approuver un avis (passer en statut "publié")
      */
-    public function approve(Request $request): void
+    public function approve(): void
     {
-        $avisId = $request->post('avis_id');
+        $avisId = $_POST['avis_id'] ?? null;
 
         if (!$avisId) {
             Session::set('error', 'Avis non trouvé.');
-            header('Location: /employe/avis');
-            exit;
+            $this->redirect('/employe/avis');
+            return;
         }
-        $success = $this->avisModel->updateStatus((int)$avisId, 'publié');
+        $success = $this->avisModel->updateStatus((int)$avisId, 'publie');
 
         if ($success) {
             Session::set('success', 'Avis approuvé et publié avec succès.');
@@ -72,24 +71,23 @@ class EmployeAvisController extends Controller
             Session::set('error', 'Erreur lors de l\'approbation de l\'avis.');
         }
 
-        header('Location: /employe/avis');
-        exit;
+        $this->redirect('/employe/avis');
     }
 
     /**
      * Rejeter un avis (passer en statut "rejeté")
      */
-    public function reject(Request $request): void
+    public function reject(): void
     {
-        $avisId = $request->post('avis_id');
-        $motif = $request->post('motif', '');
+        $avisId = $_POST['avis_id'] ?? null;
+        $motif = $_POST['motif'] ?? '';
 
         if (!$avisId) {
             Session::set('error', 'Avis non trouvé.');
-            header('Location: /employe/avis');
-            exit;
+            $this->redirect('/employe/avis');
+            return;
         }
-        $success = $this->avisModel->updateStatus((int)$avisId, 'rejeté');
+        $success = $this->avisModel->updateStatus((int)$avisId, 'rejete');
 
         if ($success) {
             Session::set('success', 'Avis rejeté.');
@@ -97,7 +95,6 @@ class EmployeAvisController extends Controller
             Session::set('error', 'Erreur lors du rejet de l\'avis.');
         }
 
-        header('Location: /employe/avis');
-        exit;
+        $this->redirect('/employe/avis');
     }
 }

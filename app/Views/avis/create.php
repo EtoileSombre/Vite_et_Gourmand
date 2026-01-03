@@ -8,7 +8,7 @@
                     <h3 class="mb-0"><i class="bi bi-star-fill"></i> Donner votre avis<?php if (isset($numeroCommande)): ?> - Commande #<?= htmlspecialchars($numeroCommande) ?><?php endif; ?></h3>
                 </div>
                 <div class="card-body">
-                    <form method="post" action="/avis/create">
+                    <form method="post" action="/avis">
                         <?php if (isset($numeroCommande)): ?>
                             <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($numeroCommande) ?>">
                         <?php endif; ?>

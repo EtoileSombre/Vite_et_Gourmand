@@ -65,7 +65,7 @@ class EmployeController extends Controller
         $stats = [
             'commandes_en_attente' => count($commandesEnAttente),
             'commandes_aujourdhui' => count($commandesDuJour),
-            'avis_a_moderer' => count($avisEnAttente)
+            'avis_non_moderes' => count($avisEnAttente)
         ];
 
         $this->render('employe/dashboard', [
@@ -81,8 +81,7 @@ class EmployeController extends Controller
      */
     private function getCommandesEnAttente(Commande $model): array
     {
-        // Utiliser une méthode du modèle plutôt qu'accéder directement à $db
-        return $model->findByStatuts(['en attente', 'acceptee', 'en préparation']);
+        return $model->findByStatuts(['en_attente', 'acceptee', 'en_preparation']);
     }
 
     /**
@@ -98,6 +97,6 @@ class EmployeController extends Controller
      */
     private function getAvisEnAttente(Avis $model): array
     {
-        return $model->findByStatut('en attente');
+        return $model->findByStatut('en_attente');
     }
 }

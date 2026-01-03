@@ -17,7 +17,7 @@ class Avis extends Model
                    u.prenom, u.nom
             FROM {$this->table} a
             INNER JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
-            WHERE a.statut = 'publié'
+            WHERE a.statut = 'publie'
             AND a.note >= :minNote
             ORDER BY a.created_at DESC
             LIMIT :limit
@@ -52,7 +52,7 @@ class Avis extends Model
             SELECT a.*, u.prenom, u.nom, u.email
             FROM {$this->table} a
             INNER JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
-            WHERE a.statut = 'en attente'
+            WHERE a.statut = 'en_attente'
             ORDER BY a.created_at DESC
         ");
         $stmt->execute();
@@ -72,7 +72,7 @@ class Avis extends Model
             $stmt = $this->db->prepare("
                 INSERT INTO {$this->table} 
                 (utilisateur_id, numero_commande, note, description, statut, created_at)
-                VALUES (:user_id, :numero_commande, :note, :description, 'en attente', NOW())
+                VALUES (:user_id, :numero_commande, :note, :description, 'en_attente', NOW())
             ");
             
             $stmt->execute([
@@ -85,7 +85,7 @@ class Avis extends Model
             $stmt = $this->db->prepare("
                 INSERT INTO {$this->table} 
                 (utilisateur_id, note, description, statut, created_at)
-                VALUES (:user_id, :note, :description, 'en attente', NOW())
+                VALUES (:user_id, :note, :description, 'en_attente', NOW())
             ");
             
             $stmt->execute([

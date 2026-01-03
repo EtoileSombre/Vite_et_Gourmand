@@ -230,10 +230,10 @@ require_once __DIR__ . '/../layouts/header.php';
                         </div>
                         <?php endforeach; ?>
                     </div>
-                    <?php if ($stats['avis_a_moderer'] > 3): ?>
+                    <?php if ($stats['avis_non_moderes'] > 3): ?>
                         <div class="text-center mt-3">
                             <a href="/employe/avis" class="btn btn-vg-gold">
-                                Voir tous les avis (<?= $stats['avis_a_moderer'] ?>)
+                                Voir tous les avis (<?= $stats['avis_non_moderes'] ?>)
                             </a>
                         </div>
                     <?php endif; ?>

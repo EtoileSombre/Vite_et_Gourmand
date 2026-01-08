@@ -1,4 +1,5 @@
 <?php include __DIR__ . '/../layouts/header.php'; ?>
+<link rel="stylesheet" href="/assets/css/pages/avis.css">
 
 <div class="container mt-5">
     <div class="row justify-content-center">

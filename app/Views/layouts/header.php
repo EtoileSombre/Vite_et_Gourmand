@@ -21,7 +21,12 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
+    <!-- CSS Global -->
     <link rel="stylesheet" href="/assets/css/app.css">
+    
+    <!-- CSS Composants -->
+    <link rel="stylesheet" href="/assets/css/components/navbar.css">
+    <link rel="stylesheet" href="/assets/css/components/footer.css">
 </head>
 <body class="d-flex flex-column min-vh-100">
     <!-- Navbar -->

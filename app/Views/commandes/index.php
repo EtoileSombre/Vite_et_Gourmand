@@ -1,4 +1,5 @@
 <?php include __DIR__ . '/../layouts/header.php'; ?>
+<link rel="stylesheet" href="/assets/css/pages/commandes.css">
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">

@@ -41,7 +41,7 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label for="nombre_personnes" class="form-label">Modifier le nombre de personnes (première ligne uniquement)</label>
+                            <label for="nombre_personnes" class="form-label">Modifier le nombre de personnes</label>
                             <input type="number" class="form-control" id="nombre_personnes" name="nombre_personnes" 
                                    min="1" value="<?= htmlspecialchars(!empty($commande['lignesMenus']) ? $commande['lignesMenus'][0]['nombre_personne'] : 2) ?>" required>
                             <small class="text-muted">Pour une modification plus complexe, contactez-nous.</small>

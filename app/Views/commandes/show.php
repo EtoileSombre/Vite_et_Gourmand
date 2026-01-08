@@ -1,4 +1,5 @@
 <?php include __DIR__ . '/../layouts/header.php'; ?>
+<link rel="stylesheet" href="/assets/css/pages/commandes.css">
 
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -219,11 +220,5 @@
         </div>
     </div>
 </div>
-
-<style>
-.timeline-item:last-child {
-    border-bottom: none !important;
-}
-</style>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

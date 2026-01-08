@@ -1015,3 +1015,118 @@ function sendEmployeeAccountCreatedEmail($email, $prenom, $nom) {
     }
 }
 
+// Email d'annulation de commande pour l'utilisateur
+function sendCancellationEmailToUser($email, $prenom, $numeroCommande) {
+    $mail = getMailer();
+    
+    try {
+        $mail->addAddress($email, $prenom);
+        $mail->Subject = "Annulation de votre commande #$numeroCommande";
+        
+        $mail->Body = "
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background-color: #8B0000; color: white; padding: 20px; text-align: center; }
+                    .content { padding: 20px; background-color: #f9f9f9; }
+                    .footer { text-align: center; padding: 20px; font-size: 12px; color: #666; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>Vite & Gourmand</h1>
+                    </div>
+                    <div class='content'>
+                        <h2>Annulation de commande</h2>
+                        <p>Bonjour " . htmlspecialchars($prenom) . ",</p>
+                        <p>Votre commande <strong>#" . htmlspecialchars($numeroCommande) . "</strong> a bien été annulée.</p>
+                        <p>Si vous avez des questions ou souhaitez passer une nouvelle commande, n'hésitez pas à nous contacter.</p>
+                        <p>Cordialement,<br>L'équipe Vite & Gourmand</p>
+                    </div>
+                    <div class='footer'>
+                        <p>Vite & Gourmand - Traiteur à Bordeaux<br>
+                        contact@viteetgourmand.fr | 📞 05 56 00 00 00</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ";
+        
+        $mail->AltBody = "Bonjour $prenom,\n\n"
+                       . "Votre commande #$numeroCommande a bien été annulée.\n\n"
+                       . "Si vous avez des questions ou souhaitez passer une nouvelle commande, n'hésitez pas à nous contacter.\n\n"
+                       . "Cordialement,\nL'équipe Vite & Gourmand";
+        
+        $sent = $mail->send();
+        
+        if ($sent) {
+            error_log("Email annulation commande envoyé à l'utilisateur : $email");
+        }
+        
+        return $sent;
+    } catch (\Exception $e) {
+        error_log("Erreur envoi email annulation utilisateur : " . $e->getMessage());
+        return false;
+    }
+}
+
+// Email d'annulation de commande pour le restaurant
+function sendCancellationEmailToRestaurant($numeroCommande, $clientNom, $clientEmail) {
+    $mail = getMailer();
+    
+    try {
+        $mail->addAddress('contact@viteetgourmand.fr', 'Vite & Gourmand');
+        $mail->Subject = "Annulation commande #$numeroCommande par le client";
+        
+        $mail->Body = "
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+                    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+                    .header { background-color: #8B0000; color: white; padding: 20px; text-align: center; }
+                    .content { padding: 20px; background-color: #f9f9f9; }
+                    .alert { background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 10px; margin: 10px 0; }
+                </style>
+            </head>
+            <body>
+                <div class='container'>
+                    <div class='header'>
+                        <h1>Notification Restaurant</h1>
+                    </div>
+                    <div class='content'>
+                        <div class='alert'>
+                            <strong>⚠️ Annulation de commande</strong>
+                        </div>
+                        <p>La commande <strong>#" . htmlspecialchars($numeroCommande) . "</strong> a été annulée par le client.</p>
+                        <p><strong>Informations client :</strong><br>
+                        Nom : " . htmlspecialchars($clientNom) . "<br>
+                        Email : " . htmlspecialchars($clientEmail) . "</p>
+                        <p>Veuillez mettre à jour votre planning de préparation.</p>
+                    </div>
+                </div>
+            </body>
+            </html>
+        ";
+        
+        $mail->AltBody = "Annulation de commande\n\n"
+                       . "La commande #$numeroCommande a été annulée par le client.\n\n"
+                       . "Client : $clientNom ($clientEmail)\n\n"
+                       . "Veuillez mettre à jour votre planning de préparation.";
+        
+        $sent = $mail->send();
+        
+        if ($sent) {
+            error_log("Email annulation commande envoyé au restaurant");
+        }
+        
+        return $sent;
+    } catch (\Exception $e) {
+        error_log("Erreur envoi email annulation restaurant : " . $e->getMessage());
+        return false;
+    }
+}
+

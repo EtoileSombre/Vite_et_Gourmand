@@ -113,20 +113,21 @@ $materielsIds = $materielsFromUrl ? explode(',', $materielsFromUrl) : [];
                                            pattern="[0-9]{5}" placeholder="33000" required>
                                 </div>
                             </div>
-
-                            <div class="alert alert-info">
-                                <strong><i class="bi bi-truck"></i> Frais de livraison :</strong>
-                                <ul class="mb-0 mt-2">
-                                    <li><strong>À Bordeaux</strong> : 5,00 € forfaitaire</li>
-                                    <li><strong>Hors Bordeaux</strong> : 5,00 € + 0,59 € par kilomètre parcouru</li>
-                                </ul>
-                            </div>
                             
                             <div class="mb-3" id="distance-group" style="display: none;">
                                 <label for="distance_km" class="form-label">Distance depuis Bordeaux (en km) <span class="text-danger">*</span></label>
                                 <input type="number" class="form-control" id="distance_km" name="distance_km" 
                                        min="0" step="0.1" value="0">
                                 <small class="form-text text-muted">Estimez la distance en km depuis le centre de Bordeaux</small>
+                            </div>
+                            
+                            <!-- Alerte frais de livraison -->
+                            <div id="alerte-frais-livraison" class="alert alert-warning alert-permanent border-warning mb-4">
+                                <h6 class="alert-heading"><i class="bi bi-truck"></i> Informations importantes sur la livraison</h6>
+                                <ul class="mb-0 mt-2">
+                                    <li><strong>À Bordeaux</strong> : Livraison gratuite</li>
+                                    <li><strong>Hors Bordeaux</strong> : Facturation de 5,00 € (majoré de 0,59 € par kilomètre parcouru)</li>
+                                </ul>
                             </div>
                         </div>
 
@@ -248,94 +249,5 @@ $materielsIds = $materielsFromUrl ? explode(',', $materielsFromUrl) : [];
         </div>
     </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const menuSelect = document.getElementById('menu_id');
-    const nbPersonnesInput = document.getElementById('nombre_personnes');
-    const villeLivraisonInput = document.getElementById('ville_livraison');
-    const distanceInput = document.getElementById('distance_km');
-    const distanceGroup = document.getElementById('distance-group');
-    
-    const prixMenuBase = document.getElementById('prix-menu-base');
-    const montantReduction = document.getElementById('montant-reduction');
-    const fraisLivraison = document.getElementById('frais-livraison');
-    const totalFinal = document.getElementById('total-final');
-    
-    const reductionAlert = document.getElementById('reduction-alert');
-    const reductionRow = document.getElementById('reduction-row');
-    const minPersonnesInfo = document.getElementById('min-personnes-info');
-    
-    // Fonction calcul en temps réel
-    function calculerPrix() {
-        const menuOption = menuSelect.options[menuSelect.selectedIndex];
-        if (!menuOption || !menuOption.value) {
-            return;
-        }
-        
-        const prixParPersonne = parseFloat(menuOption.dataset.prix) || 0;
-        const minPersonnes = parseInt(menuOption.dataset.minPersonnes) || 2;
-        const nbPersonnes = parseInt(nbPersonnesInput.value) || 0;
-        
-        // Validation minimum personnes
-        nbPersonnesInput.min = minPersonnes;
-        minPersonnesInfo.textContent = `Minimum ${minPersonnes} personnes pour ce menu`;
-        
-        if (nbPersonnes < minPersonnes) {
-            minPersonnesInfo.classList.add('text-danger');
-            return;
-        } else {
-            minPersonnesInfo.classList.remove('text-danger');
-        }
-        
-        // 1. Prix de base
-        const prixBase = prixParPersonne * nbPersonnes;
-        prixMenuBase.textContent = prixBase.toFixed(2);
-        
-        // 2. Réduction 10% si ≥ (min + 5)
-        let reduction = 0;
-        if (nbPersonnes >= (minPersonnes + 5)) {
-            reduction = prixBase * 0.10;
-            montantReduction.textContent = reduction.toFixed(2);
-            reductionAlert.style.display = 'block';
-            reductionRow.style.display = 'flex';
-        } else {
-            reductionAlert.style.display = 'none';
-            reductionRow.style.display = 'none';
-        }
-        
-        // 3. Frais livraison
-        const ville = villeLivraisonInput.value.toLowerCase().trim();
-        let frais = 5.00;
-        
-        if (ville === 'bordeaux') {
-            frais = 5.00;
-            distanceGroup.style.display = 'none';
-            distanceInput.value = 0;
-        } else {
-            const distance = parseFloat(distanceInput.value) || 0;
-            frais = 5.00 + (distance * 0.59);
-            distanceGroup.style.display = 'block';
-        }
-        
-        fraisLivraison.textContent = frais.toFixed(2);
-        
-        // 4. Total final
-        const total = (prixBase - reduction) + frais;
-        totalFinal.textContent = total.toFixed(2);
-    }
-    
-    // Événements
-    menuSelect.addEventListener('change', calculerPrix);
-    nbPersonnesInput.addEventListener('input', calculerPrix);
-    villeLivraisonInput.addEventListener('input', calculerPrix);
-    distanceInput.addEventListener('input', calculerPrix);
-    
-    // Calcul initial si menu pré-sélectionné
-    if (menuSelect.value) {
-        calculerPrix();
-    }
-});
-</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

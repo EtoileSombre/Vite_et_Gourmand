@@ -48,8 +48,21 @@
     height: 5px;
 }
 
+/* Timeline suppression bordure dernier élément */
+.timeline-item:last-child {
+    border-bottom: none !important;
+}
+
 .progress-xs {
     height: 3px;
+}
+
+/* Alerte frais de livraison */
+#alerte-frais-livraison {
+    border-left: 5px solid #ffc107 !important;
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
 /* Responsive */

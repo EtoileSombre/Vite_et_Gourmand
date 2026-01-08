@@ -400,6 +400,34 @@ class CommandeController extends Controller
             'Annulation par l\'utilisateur'
         );
 
+        // Envoyer les emails de notification
+        try {
+            require_once __DIR__ . '/../config/mail.php';
+            
+            // Récupérer les infos utilisateur
+            $userModel = new \App\Models\User();
+            $user = $userModel->findById($userId);
+            
+            if ($user) {
+                // Email à l'utilisateur
+                sendCancellationEmailToUser(
+                    $user['email'],
+                    $user['prenom'],
+                    $numeroCommande
+                );
+                
+                // Email au restaurant
+                sendCancellationEmailToRestaurant(
+                    $numeroCommande,
+                    $user['nom'] . ' ' . $user['prenom'],
+                    $user['email']
+                );
+            }
+        } catch (\Exception $e) {
+            error_log("Erreur envoi emails annulation : " . $e->getMessage());
+        }
+
+        Session::set('success', 'Votre commande a été annulée avec succès. Un email de confirmation vous a été envoyé.');
         $this->redirect('/mes-commandes');
     }
     

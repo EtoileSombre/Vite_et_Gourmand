@@ -217,6 +217,100 @@ class Menu extends Model
         return $stmt->fetchAll();
     }
 
+    //Filtre les menus selon les critères spécifiés//
+    public function findFiltered(array $filters): array
+    {
+        $sql = "
+                SELECT DISTINCT m.*,
+                       GROUP_CONCAT(DISTINCT t.libelle SEPARATOR ', ') as theme,
+                       GROUP_CONCAT(DISTINCT r.libelle SEPARATOR ', ') as regime
+                FROM {$this->table} m
+                LEFT JOIN menu_theme mt ON m.menu_id = mt.menu_id
+                LEFT JOIN theme t ON mt.theme_id = t.theme_id
+                LEFT JOIN adapte a ON m.menu_id = a.menu_id
+                LEFT JOIN regime r ON a.regime_id = r.regime_id
+                WHERE m.quantite_restante > 0
+            ";
+
+            $params = [];
+
+            // Filtre régime
+            if (!empty($filters['regime'])) {
+                $sql .= " AND EXISTS (
+                    SELECT 1 FROM adapte a2
+                    JOIN regime r2 ON a2.regime_id = r2.regime_id
+                    WHERE a2.menu_id = m.menu_id
+                    AND LOWER(r2.libelle) LIKE LOWER(:regime)
+                )";
+                $params['regime'] = '%' . $filters['regime'] . '%';
+            }
+
+            // Filtre thème
+            if (!empty($filters['theme'])) {
+                $sql .= " AND EXISTS (
+                    SELECT 1 FROM menu_theme mt2
+                    JOIN theme t2 ON mt2.theme_id = t2.theme_id
+                    WHERE mt2.menu_id = m.menu_id
+                    AND LOWER(t2.libelle) LIKE LOWER(:theme)
+                )";
+                $params['theme'] = '%' . $filters['theme'] . '%';
+            }
+
+            // Filtre nombre de personnes minimum
+            if (isset($filters['minPersonnes']) && is_numeric($filters['minPersonnes']) && $filters['minPersonnes'] > 0) {
+                $sql .= " AND m.nombre_personne_minimum <= :minPersonnes";
+                $params['minPersonnes'] = (int)$filters['minPersonnes'];
+            }
+
+            // Filtre prix minimum
+            if (isset($filters['prixMin']) && is_numeric($filters['prixMin']) && $filters['prixMin'] > 0) {
+                $sql .= " AND m.prix_par_personne >= :prixMin";
+                $params['prixMin'] = (float)$filters['prixMin'];
+            }
+
+            // Filtre prix maximum
+            if (isset($filters['prixMax']) && is_numeric($filters['prixMax']) && $filters['prixMax'] > 0) {
+                $sql .= " AND m.prix_par_personne <= :prixMax";
+                $params['prixMax'] = (float)$filters['prixMax'];
+            }
+
+            $sql .= " GROUP BY m.menu_id ORDER BY m.{$this->primaryKey} DESC";
+
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute($params);
+            $menus = $stmt->fetchAll();
+
+            if (empty($menus)) {
+                return [];
+            }
+
+            // Charger les photos pour tous les menus filtrés
+            $menuIds = array_column($menus, 'menu_id');
+            $placeholders = str_repeat('?,', count($menuIds) - 1) . '?';
+            
+            $stmt = $this->db->prepare("
+                SELECT menu_id, image_url, legende, ordre
+                FROM galerie_menu
+                WHERE menu_id IN ($placeholders)
+                ORDER BY menu_id, ordre ASC, galerie_id ASC
+            ");
+            $stmt->execute($menuIds);
+            $photos = $stmt->fetchAll();
+            
+            // Grouper les photos par menu_id
+            $photosParMenu = [];
+            foreach ($photos as $photo) {
+                $photosParMenu[$photo['menu_id']][] = $photo;
+            }
+            
+            // Associer les photos aux menus
+            foreach ($menus as &$menu) {
+                $menu['photos'] = $photosParMenu[$menu['menu_id']] ?? [];
+            }
+
+            return $menus;
+    }
+
     // Boissons groupées par type
     public function getAllBoissons(): array
     {

@@ -25,13 +25,14 @@
 
                 <!-- Filtre Nombre de personnes minimum -->
                 <div class="col-md-4">
-                    <label for="filterPersonnes" class="form-label">Nombre de personnes</label>
+                    <label for="filterPersonnes" class="form-label">Nombre de convives</label>
                     <select class="form-select" id="filterPersonnes">
                         <option value="">Toutes les quantités</option>
-                        <option value="2">2 personnes minimum</option>
-                        <option value="4">4 personnes minimum</option>
-                        <option value="6">6 personnes minimum</option>
-                        <option value="8">8 personnes minimum</option>
+                        <option value="2">Pour 2 personnes</option>
+                        <option value="4">Pour 4 personnes</option>
+                        <option value="6">Pour 6 personnes</option>
+                        <option value="8">Pour 8 personnes</option>
+                        <option value="10">Pour 10 personnes</option>
                     </select>
                 </div>
 
@@ -76,6 +77,14 @@
                     <i class="bi bi-info-circle"></i> 
                     <span id="menuCount"></span>
                 </small>
+            </div>
+
+            <!-- Indicateur de chargement -->
+            <div id="loadingIndicator" class="text-center mt-3 d-none">
+                <div class="spinner-border text-vg-bordeaux" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+                <p class="text-muted mt-2">Chargement des menus...</p>
             </div>
         </div>
     </div>
@@ -156,6 +165,7 @@
     <?php endif; ?>
 </div>
 
-<script src="/assets/js/menu-filters.js"></script>
+<!-- Script de filtrage asynchrone -->
+<script src="/assets/js/menu-filters-async.js"></script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

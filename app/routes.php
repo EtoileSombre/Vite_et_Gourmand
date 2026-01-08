@@ -14,6 +14,9 @@ $router->get('/', 'App\Controllers\HomeController', 'index');
 $router->get('/menus', 'App\Controllers\MenuController', 'index');
 $router->get('/menu', 'App\Controllers\MenuController', 'show');
 
+// API Menus (filtrage asynchrone)
+$router->get('/api/menus/filter', 'App\Controllers\MenuController', 'apiFilter');
+
 // Contact
 $router->get('/contact', 'App\Controllers\ContactController', 'index');
 $router->post('/contact', 'App\Controllers\ContactController', 'index');

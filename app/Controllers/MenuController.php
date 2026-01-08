@@ -76,4 +76,55 @@ class MenuController extends Controller
             'title' => $menu['titre']
         ]);
     }
+
+    /**
+     * API pour filtrer les menus de manière asynchrone
+     */
+    public function apiFilter(Request $request): void
+    {
+        try {
+            $filters = [];
+            
+            $regime = $request->get('regime');
+            if ($regime && trim($regime) !== '') {
+                $filters['regime'] = trim($regime);
+            }
+            
+            $theme = $request->get('theme');
+            if ($theme && trim($theme) !== '') {
+                $filters['theme'] = trim($theme);
+            }
+            
+            $minPersonnes = $request->get('minPersonnes');
+            if ($minPersonnes && is_numeric($minPersonnes) && $minPersonnes > 0) {
+                $filters['minPersonnes'] = (int)$minPersonnes;
+            }
+            
+            $prixMin = $request->get('prixMin');
+            if ($prixMin && is_numeric($prixMin) && $prixMin > 0) {
+                $filters['prixMin'] = (float)$prixMin;
+            }
+            
+            $prixMax = $request->get('prixMax');
+            if ($prixMax && is_numeric($prixMax) && $prixMax > 0) {
+                $filters['prixMax'] = (float)$prixMax;
+            }
+
+            $menus = $this->menuModel->findFiltered($filters);
+
+            $this->json([
+                'success' => true,
+                'count' => count($menus),
+                'menus' => $menus
+            ]);
+            
+        } catch (\Exception $e) {
+            error_log('Erreur dans apiFilter: ' . $e->getMessage());
+            
+            $this->json([
+                'success' => false,
+                'error' => 'Une erreur est survenue lors du filtrage'
+            ], 500);
+        }
+    }
 }

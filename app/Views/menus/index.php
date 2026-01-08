@@ -1,4 +1,5 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
+<link rel="stylesheet" href="/assets/css/pages/menus-list.css">
 
 <div class="container mt-5">
     <div class="card mb-4 shadow-sm">

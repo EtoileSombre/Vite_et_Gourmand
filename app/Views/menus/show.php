@@ -1,6 +1,6 @@
 
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
-<link rel="stylesheet" href="/assets/css/menu-show.css">
+<link rel="stylesheet" href="/assets/css/pages/menu-show.css">
 
 <div class="container">
     <nav aria-label="breadcrumb" class="mt-4">
@@ -309,7 +309,7 @@
 <div class="modal fade" id="modalAuthentification" tabindex="-1" aria-labelledby="modalAuthLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header bg-vg-bordeaux text-white">
                 <h5 class="modal-title" id="modalAuthLabel">
                     <i class="bi bi-lock-fill"></i> Connexion requise
                 </h5>
@@ -317,14 +317,14 @@
             </div>
             <div class="modal-body text-center py-4">
                 <div class="mb-4">
-                    <i class="bi bi-person-circle fs-1 text-primary"></i>
+                    <i class="bi bi-person-circle fs-1 text-vg-bordeaux"></i>
                 </div>
                 <h5 class="mb-3">Pour commander ce menu, vous devez être connecté</h5>
                 <p class="text-muted mb-4">
                     Connectez-vous à votre compte ou créez-en un nouveau pour passer commande.
                 </p>
                 <div class="d-grid gap-2">
-                    <a href="/login?redirect=/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-primary btn-lg">
+                    <a href="/login?redirect=/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-vg-bordeaux btn-lg">
                         <i class="bi bi-box-arrow-in-right"></i> Se connecter
                     </a>
                     <a href="/register?redirect=/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-outline-success btn-lg">

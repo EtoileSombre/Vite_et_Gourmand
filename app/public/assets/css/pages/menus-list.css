@@ -1,0 +1,29 @@
+.menu-card-img {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-card-single-img,
+.menu-card img {
+    object-fit: cover;
+    border-top-left-radius: var(--vg-radius);
+    border-top-right-radius: var(--vg-radius);
+}
+
+.menu-card-single-img {
+    height: 250px;
+    width: 100%;
+    object-position: center;
+    display: block;
+}
+
+.menu-card img {
+    aspect-ratio: 16/9;
+}
+
+.menu-icon {
+    font-size: 4rem;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
+}

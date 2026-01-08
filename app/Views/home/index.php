@@ -1,4 +1,6 @@
 <?php include __DIR__ . '/../layouts/header.php'; ?>
+<link rel="stylesheet" href="/assets/css/pages/home.css">
+<link rel="stylesheet" href="/assets/css/pages/avis.css">
 
 <!-- Hero Section -->
 <section class="hero">

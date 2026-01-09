@@ -97,6 +97,7 @@ $materielsIds = $materielsFromUrl ? explode(',', $materielsFromUrl) : [];
                             <div class="mb-3">
                                 <label for="adresse_livraison" class="form-label">Adresse complète de livraison <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="adresse_livraison" name="adresse_livraison" 
+                                       value="<?= htmlspecialchars($user['adresse_postale'] ?? '') ?>"
                                        placeholder="12 Rue de la Paix, 33000 Bordeaux" required>
                             </div>
 
@@ -104,12 +105,14 @@ $materielsIds = $materielsFromUrl ? explode(',', $materielsFromUrl) : [];
                                 <div class="col-md-6 mb-3">
                                     <label for="ville_livraison" class="form-label">Ville de livraison <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="ville_livraison" name="ville_livraison" 
+                                           value="<?= htmlspecialchars($user['ville'] ?? '') ?>"
                                            placeholder="Bordeaux" required>
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
                                     <label for="code_postal_livraison" class="form-label">Code postal <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="code_postal_livraison" name="code_postal_livraison" 
+                                           value="<?= htmlspecialchars($user['code_postal'] ?? '') ?>"
                                            pattern="[0-9]{5}" placeholder="33000" required>
                                 </div>
                             </div>

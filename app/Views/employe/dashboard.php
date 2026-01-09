@@ -26,14 +26,14 @@ require_once __DIR__ . '/../layouts/header.php';
 
     <!-- Statistiques rapides -->
     <div class="row g-4 mb-4">
-        <!-- Commandes en attente -->
+        <!-- Commandes à gérer -->
         <div class="col-md-4">
-            <div class="card shadow-sm h-100 border-vg-gold-2">
+            <div class="card shadow-sm h-100 border-vg-bordeaux-2">
                 <div class="card-body text-center">
-                    <i class="bi bi-hourglass-split fs-1 text-vg-gold"></i>
+                    <i class="bi bi-box-seam fs-1 text-vg-bordeaux"></i>
                     <h2 class="mt-3 mb-1"><?= $stats['commandes_en_attente'] ?></h2>
-                    <p class="text-muted mb-3">Commandes à traiter</p>
-                    <a href="/employe/commandes" class="btn btn-sm btn-vg-gold">
+                    <p class="text-muted mb-3">Commandes à gérer</p>
+                    <a href="/employe/commandes" class="btn btn-sm btn-vg-bordeaux">
                         <i class="bi bi-arrow-right-circle"></i> Gérer
                     </a>
                 </div>
@@ -77,29 +77,41 @@ require_once __DIR__ . '/../layouts/header.php';
                     <h5 class="mb-0"><i class="bi bi-lightning-charge"></i> Accès Rapides</h5>
                 </div>
                 <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <a href="/employe/commandes" class="btn btn-vg-cream w-100 py-3">
-                                <i class="bi bi-box-seam fs-4 d-block mb-2"></i>
-                                Gérer les Commandes
+                    <div class="row g-2">
+                        <div class="col-md-2">
+                            <a href="/employe/commandes" class="btn btn-vg-cream w-100 py-2">
+                                <i class="bi bi-box-seam fs-5 d-block mb-1"></i>
+                                <small>Commandes</small>
                             </a>
                         </div>
-                        <div class="col-md-3">
-                            <a href="/employe/avis" class="btn btn-vg-cream w-100 py-3">
-                                <i class="bi bi-star fs-4 d-block mb-2"></i>
-                                Modérer les Avis
+                        <div class="col-md-2">
+                            <a href="/employe/avis" class="btn btn-vg-cream w-100 py-2">
+                                <i class="bi bi-star fs-5 d-block mb-1"></i>
+                                <small>Avis</small>
                             </a>
                         </div>
-                        <div class="col-md-3">
-                            <a href="/admin/menus" class="btn btn-vg-cream w-100 py-3">
-                                <i class="bi bi-card-list fs-4 d-block mb-2"></i>
-                                Gérer les Menus
+                        <div class="col-md-2">
+                            <a href="/admin/menus" class="btn btn-vg-cream w-100 py-2">
+                                <i class="bi bi-card-list fs-5 d-block mb-1"></i>
+                                <small>Menus</small>
                             </a>
                         </div>
-                        <div class="col-md-3">
-                            <a href="/profil" class="btn btn-vg-cream w-100 py-3">
-                                <i class="bi bi-person-circle fs-4 d-block mb-2"></i>
-                                Mon Profil
+                        <div class="col-md-2">
+                            <a href="/admin/plats" class="btn btn-vg-cream w-100 py-2">
+                                <i class="bi bi-egg-fried fs-5 d-block mb-1"></i>
+                                <small>Plats</small>
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/admin/horaires" class="btn btn-vg-cream w-100 py-2">
+                                <i class="bi bi-clock fs-5 d-block mb-1"></i>
+                                <small>Horaires</small>
+                            </a>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="/profil" class="btn btn-vg-cream w-100 py-2">
+                                <i class="bi bi-person-circle fs-5 d-block mb-1"></i>
+                                <small>Profil</small>
                             </a>
                         </div>
                     </div>
@@ -107,88 +119,6 @@ require_once __DIR__ . '/../layouts/header.php';
             </div>
         </div>
     </div>
-
-    <!-- Dernières commandes en attente -->
-    <?php if (!empty($commandesEnAttente)): ?>
-    <div class="row g-4 mb-4">
-        <div class="col-md-12">
-            <div class="card shadow-sm">
-                <div class="card-header bg-vg-gold text-vg-bordeaux">
-                    <h5 class="mb-0"><i class="bi bi-exclamation-triangle"></i> Commandes en Attente (<?= count($commandesEnAttente) ?> premières)</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>N° Commande</th>
-                                    <th>Utilisateur</th>
-                                    <th>Menu</th>
-                                    <th>Pers.</th>
-                                    <th>Date prestation</th>
-                                    <th>Statut</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($commandesEnAttente as $cmd): ?>
-                                <tr>
-                                    <td><strong><?= htmlspecialchars($cmd['numero_commande']) ?></strong></td>
-                                    <td>
-                                        <?= htmlspecialchars($cmd['utilisateur_prenom'] ?? 'N/A') ?>
-                                        <br><small class="text-muted"><?= htmlspecialchars($cmd['utilisateur_email'] ?? '') ?></small>
-                                    </td>
-                                    <td><?= htmlspecialchars($cmd['menu_nom'] ?? 'N/A') ?></td>
-                                    <td><?= htmlspecialchars($cmd['totalPersonnes'] ?? 0) ?></td>
-                                    <td>
-                                        <?php 
-                                        $datePresta = $cmd['date_prestation'] ? date('d/m/Y', strtotime($cmd['date_prestation'])) : 'N/A';
-                                        echo $datePresta;
-                                        ?>
-                                        <?php if ($cmd['heure_livraison']): ?>
-                                            <br><small class="text-muted"><i class="bi bi-clock"></i> <?= htmlspecialchars($cmd['heure_livraison']) ?></small>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        $badgeClass = match($cmd['statut'] ?? 'en_attente') {
-                                            'en_attente', 'en attente' => 'warning text-dark',
-                                            'acceptee' => 'success',
-                                            'en_preparation' => 'primary',
-                                            'en_cours_livraison' => 'purple',
-                                            'livree' => 'orange text-dark',
-                                            'attente_retour_materiel' => 'brown text-white',
-                                            'terminee' => 'dark-green text-white',
-                                            'annulee' => 'danger',
-                                            default => 'secondary'
-                                        };
-                                        $statut = $cmd['statut'] ?? 'en_attente';
-                                        ?>
-                                        <span class="badge bg-<?= $badgeClass ?>"><?= htmlspecialchars($statut) ?></span>
-                                    </td>
-                                    <td>
-                                        <a href="/employe/commandes?id=<?= $cmd['numero_commande'] ?>" 
-                                           class="btn btn-sm btn-primary">
-                                            <i class="bi bi-pencil"></i> Traiter
-                                        </a>
-                                    </td>
-                                </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <?php if ($stats['commandes_en_attente'] > 5): ?>
-                        <div class="text-center mt-3">
-                            <a href="/employe/commandes" class="btn btn-vg-gold">
-                                Voir toutes les commandes en attente (<?= $stats['commandes_en_attente'] ?>)
-                            </a>
-                        </div>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php endif; ?>
 
     <!-- Derniers avis à modérer -->
     <?php if (!empty($avisEnAttente)): ?>

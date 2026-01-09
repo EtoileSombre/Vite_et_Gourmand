@@ -167,6 +167,18 @@ h4.text-success,
     color: #fff;
 }
 
+.btn-outline-vg-bordeaux {
+    background-color: transparent !important;
+    color: var(--vg-bordeaux) !important;
+    border: 1px solid var(--vg-bordeaux) !important;
+}
+
+.btn-outline-vg-bordeaux:hover {
+    background-color: var(--vg-bordeaux) !important;
+    color: #fff !important;
+    border-color: var(--vg-bordeaux) !important;
+}
+
 .btn-vg-cream {
     background-color: var(--vg-cream);
     color: var(--vg-bordeaux);
@@ -229,6 +241,11 @@ h4.text-success,
     border: 0;
     border-radius: var(--vg-radius);
     box-shadow: var(--vg-shadow);
+}
+
+.card-header {
+    border-top-left-radius: var(--vg-radius) !important;
+    border-top-right-radius: var(--vg-radius) !important;
 }
 
 .card .badge {
@@ -480,6 +497,19 @@ input[type="time"]:focus {
         flex: 0 0 48%;
         margin-bottom: 1rem;
     }
+}
+
+/* Classes utilitaires pour commandes employé */
+.border-bottom-bordeaux {
+    border-bottom: 2px solid var(--vg-bordeaux) !important;
+}
+
+.border-white {
+    border: 2px solid white !important;
+}
+
+.bg-gray {
+    background-color: #6b7280 !important;
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) {

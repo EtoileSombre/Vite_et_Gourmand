@@ -107,11 +107,7 @@ class EmployeCommandeController extends Controller
             return;
         }
 
-        // Afficher le formulaire
-        $this->render('employe/commandes/change-status', [
-            'title' => 'Modifier la Commande',
-            'commande' => $commande
-        ]);
+        $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
     }
 
     /**
@@ -141,8 +137,7 @@ class EmployeCommandeController extends Controller
             $requiresContact = true;
         }
         
-        // Contact obligatoire si modification d'une commande déjà acceptée (sauf progression normale)
-        // Progression normale = en_attente->acceptee, acceptee->en_preparation, en_preparation->en_cours_livraison, etc.
+        // Contact obligatoire si modification d'une commande déjà acceptée
         $progressionNormale = [
             'en_attente' => ['acceptee'],
             'acceptee' => ['en_preparation'],
@@ -184,8 +179,7 @@ class EmployeCommandeController extends Controller
 
         // Ajouter les informations de contact si nécessaire
         if ($requiresContact) {
-            $updateData['motif_annulation'] = $motifContact;
-            $updateData['mode_contact_annulation'] = $modeContact;
+            $updateData['motif_annulation'] = "[Contact: $modeContact] $motifContact";
         }
 
         $success = $this->commandeModel->updateByNumero($numeroCommande, $updateData);
@@ -253,11 +247,11 @@ class EmployeCommandeController extends Controller
 
             Session::set('flash_success', "Statut de la commande mis à jour avec succès !");
             
-            // Rediriger vers la liste des commandes
-            $this->redirect('/employe/commandes');
+            // Rediriger vers la page de détail de la commande
+            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
         } else {
             Session::set('flash_error', "Erreur lors de la mise à jour du statut");
-            $this->redirect('/employe/commandes/change-status?id=' . $numeroCommande);
+            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
         }
     }
 
@@ -302,5 +296,128 @@ class EmployeCommandeController extends Controller
             'title' => 'Détails de la Commande',
             'commande' => $commande
         ]);
+    }
+
+    /**
+     * Modifier les détails d'une commande (après contact client obligatoire)
+     */
+    public function edit(Request $request): void
+    {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            Session::set('flash_error', 'Méthode non autorisée');
+            $this->redirect('/employe/commandes');
+            return;
+        }
+
+        $errors = [];
+        $numeroCommande = $_POST['numero_commande'] ?? '';
+
+        // Vérifier que la commande existe
+        $commande = $this->commandeModel->findByNumero($numeroCommande);
+        if (!$commande) {
+            Session::set('flash_error', 'Commande introuvable');
+            $this->redirect('/employe/commandes');
+            return;
+        }
+
+        // Vérifier que la commande n'est pas terminée/annulée
+        if (in_array($commande['statut'], ['terminee', 'annulee', 'refusee'])) {
+            Session::set('flash_error', 'Cette commande ne peut plus être modifiée');
+            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
+            return;
+        }
+
+        // Récupérer les données du formulaire
+        $datePrestation = $_POST['date_prestation'] ?? '';
+        $heureLivraison = $_POST['heure_livraison'] ?? '';
+        $lieuLivraison = trim($_POST['lieu_livraison'] ?? '');
+        $villeLivraison = trim($_POST['ville_livraison'] ?? '');
+        $codePostal = trim($_POST['code_postal_livraison'] ?? '');
+        $instructionsSpeciales = trim($_POST['instructions_speciales'] ?? '');
+        $quantitesMenus = $_POST['quantite_menu'] ?? [];
+        
+        // Validation du contact utilisateur
+        $contacteUtilisateur = isset($_POST['contacte_utilisateur_edit']);
+        $modeContact = $_POST['mode_contact_edit'] ?? '';
+        $motifModification = trim($_POST['motif_modification'] ?? '');
+
+        if (!$contacteUtilisateur) {
+            $errors[] = "Vous devez confirmer avoir contacté l'utilisateur";
+        }
+        if (empty($modeContact)) {
+            $errors[] = "Le mode de contact est obligatoire";
+        }
+        if (strlen($motifModification) < 10) {
+            $errors[] = "Le motif de modification doit contenir au moins 10 caractères";
+        }
+
+        // Validation des données
+        if (empty($datePrestation)) {
+            $errors[] = "La date de prestation est obligatoire";
+        }
+        if (empty($heureLivraison)) {
+            $errors[] = "L'heure de livraison est obligatoire";
+        }
+        if (empty($lieuLivraison)) {
+            $errors[] = "Le lieu de livraison est obligatoire";
+        }
+        if (empty($villeLivraison)) {
+            $errors[] = "La ville est obligatoire";
+        }
+        if (empty($codePostal)) {
+            $errors[] = "Le code postal est obligatoire";
+        }
+
+        if (!empty($errors)) {
+            Session::set('flash_error', implode('<br>', $errors));
+            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
+            return;
+        }
+
+        // Mettre à jour la commande
+        $updateData = [
+            'date_prestation' => $datePrestation,
+            'heure_livraison' => $heureLivraison,
+            'lieu_livraison' => $lieuLivraison,
+            'ville_livraison' => $villeLivraison,
+            'code_postal_livraison' => $codePostal,
+            'instructions_speciales' => $instructionsSpeciales,
+            'motif_annulation' => "[Contact: $modeContact - MODIFICATION] $motifModification"
+        ];
+
+        $success = $this->commandeModel->updateByNumero($numeroCommande, $updateData);
+
+        if ($success) {
+            // Mettre à jour les quantités des menus
+            $commandeMenuModel = new CommandeMenu();
+            foreach ($quantitesMenus as $menuId => $quantite) {
+                $commandeMenuModel->updateQuantite($numeroCommande, $menuId, (int)$quantite);
+            }
+
+            // Enregistrer dans l'historique
+            $suiviModel = new \App\Models\SuiviCommande();
+            $suiviModel->enregistrerChangement(
+                $numeroCommande,
+                $commande['statut'],
+                $commande['statut'], // Même statut
+                Session::get('user_id'),
+                "[MODIFICATION] $motifModification"
+            );
+
+            // Logger dans MongoDB
+            require_once __DIR__ . '/../config/mongodb.php';
+            $mongoStats = new \App\Config\MongoStats();
+            $mongoStats->logUserActivity('edit_order', Session::get('user_id'), [
+                'numero_commande' => $numeroCommande,
+                'mode_contact' => $modeContact,
+                'motif' => $motifModification
+            ]);
+
+            Session::set('flash_success', 'Commande modifiée avec succès !');
+        } else {
+            Session::set('flash_error', 'Erreur lors de la modification de la commande');
+        }
+
+        $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
     }
 }

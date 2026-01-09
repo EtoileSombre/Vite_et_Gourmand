@@ -9,9 +9,14 @@
                 <h1 class="h2 mb-1">🍽️ Gestion des plats</h1>
                 <p class="text-muted mb-0">Créez et gérez votre catalogue de plats</p>
             </div>
-            <a href="/admin/plats/create" class="btn btn-primary">
-                <span aria-hidden="true">➕</span> Créer un plat
-            </a>
+            <div>
+                <a href="/employe" class="btn btn-vg-bordeaux me-2">
+                    <i class="bi bi-arrow-left"></i> Retour Dashboard
+                </a>
+                <a href="/admin/plats/create" class="btn btn-primary">
+                    <span aria-hidden="true">➕</span> Créer un plat
+                </a>
+            </div>
         </div>
 
         <!-- Statistiques -->
@@ -149,4 +154,7 @@
     </div>
 </main>
 
-<?php require_once __DIR__ . '/../../layouts/footer.php'; ?>
+<?php 
+$additionalScripts = ['/assets/js/admin-plats.js'];
+require_once __DIR__ . '/../../layouts/footer.php'; 
+?>

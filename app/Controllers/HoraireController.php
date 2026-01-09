@@ -8,20 +8,20 @@ use App\Models\Horaire;
 
 /**
  * Contrôleur Horaire
- * Gestion des horaires d'ouverture par les administrateurs
+ * Gestion des horaires d'ouverture par les administrateurs et employés
  */
 class HoraireController extends Controller
 {
     public function __construct()
     {
-        // Vérifier que l'utilisateur est connecté et admin
+        // Vérifier que l'utilisateur est connecté et a le rôle employé ou admin
         if (!Session::has('user_id')) {
             header('Location: /login');
             exit;
         }
 
         $userRole = Session::get('user_role');
-        if ($userRole !== 'administrateur') {
+        if (!in_array($userRole, ['employé', 'administrateur'])) {
             header('Location: /');
             exit;
         }

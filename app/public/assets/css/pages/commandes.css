@@ -65,6 +65,17 @@
     visibility: visible !important;
 }
 
+/* Table colonnes - Gestion des commandes */
+.table-commandes th:nth-child(1) { width: 20%; }
+.table-commandes th:nth-child(2) { width: 18%; }
+.table-commandes th:nth-child(3) { width: 10%; }
+.table-commandes th:nth-child(4) { width: 9%; }
+.table-commandes th:nth-child(5) { width: 9%; }
+.table-commandes th:nth-child(6) { width: 6%; }
+.table-commandes th:nth-child(7) { width: 8%; }
+.table-commandes th:nth-child(8) { width: 10%; }
+.table-commandes th:nth-child(9) { width: 10%; }
+
 /* Responsive */
 @media (max-width: 575.98px) {
     .timeline-item {

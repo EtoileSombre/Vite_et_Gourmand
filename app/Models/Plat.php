@@ -198,4 +198,57 @@ class Plat extends Model
     {
         return ['Entrée', 'Plat', 'Dessert', 'Accompagnement'];
     }
+
+    /**
+     * Récupère tous les allergènes disponibles
+     */
+    public static function getAllAllergenes(): array
+    {
+        $db = Database::getInstance();
+        $stmt = $db->query("SELECT allergene_id, libelle FROM allergene ORDER BY libelle");
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Récupère les allergènes d'un plat
+     */
+    public static function getAllergenesForPlat(int $platId): array
+    {
+        $db = Database::getInstance();
+        $stmt = $db->prepare("
+            SELECT allergene_id 
+            FROM contient 
+            WHERE plat_id = :plat_id
+        ");
+        $stmt->execute(['plat_id' => $platId]);
+        return array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'allergene_id');
+    }
+
+    /**
+     * Associe des allergènes à un plat
+     */
+    public static function syncAllergenes(int $platId, array $allergeneIds): bool
+    {
+        $db = Database::getInstance();
+        
+        // Supprimer les anciennes associations
+        $stmt = $db->prepare("DELETE FROM contient WHERE plat_id = :plat_id");
+        $stmt->execute(['plat_id' => $platId]);
+        
+        // Ajouter les nouvelles associations
+        if (!empty($allergeneIds)) {
+            $stmt = $db->prepare("
+                INSERT INTO contient (plat_id, allergene_id)
+                VALUES (:plat_id, :allergene_id)
+            ");
+            foreach ($allergeneIds as $allergeneId) {
+                $stmt->execute([
+                    'plat_id' => $platId,
+                    'allergene_id' => $allergeneId
+                ]);
+            }
+        }
+        
+        return true;
+    }
 }

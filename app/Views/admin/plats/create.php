@@ -77,6 +77,26 @@
                                 </div>
                             </div>
 
+                            <!-- Allergènes -->
+                            <div class="mb-3">
+                                <label class="form-label">Allergènes</label>
+                                <p class="text-muted small">Sélectionnez les allergènes présents dans ce plat</p>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <?php foreach ($allergenes as $allergene): ?>
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" 
+                                                   type="checkbox" 
+                                                   name="allergenes[]" 
+                                                   value="<?= $allergene['allergene_id'] ?>"
+                                                   id="allergene_<?= $allergene['allergene_id'] ?>">
+                                            <label class="form-check-label" for="allergene_<?= $allergene['allergene_id'] ?>">
+                                                <?= htmlspecialchars($allergene['libelle']) ?>
+                                            </label>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
                             <!-- Boutons -->
                             <div class="d-flex justify-content-between mt-4">
                                 <a href="/admin/plats" class="btn btn-secondary">Annuler</a>

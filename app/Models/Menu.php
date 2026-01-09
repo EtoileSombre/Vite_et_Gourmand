@@ -362,5 +362,107 @@ class Menu extends Model
         
         return $grouped;
     }
+
+    /**
+     * Récupère les boissons par leurs IDs
+     * 
+     * @return array
+     */
+    public function getBoissonsByIds(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+        
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = $this->db->prepare("SELECT * FROM boisson WHERE boisson_id IN ($placeholders)");
+        $stmt->execute($ids);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Récupère le matériel par leurs IDs
+     * 
+     * @return array
+     */
+    public function getMaterielsByIds(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+        
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $stmt = $this->db->prepare("SELECT * FROM materiel WHERE materiel_id IN ($placeholders)");
+        $stmt->execute($ids);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Récupère les plats associés à un menu
+     * 
+     * @return array
+     */
+    public function getPlatsForMenu(int $menuId): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT p.titre_plat, p.type_plat
+            FROM propose pr
+            JOIN plat p ON pr.plat_id = p.plat_id
+            WHERE pr.menu_id = :menu_id
+            ORDER BY pr.ordre, p.type_plat
+        ");
+        $stmt->execute(['menu_id' => $menuId]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Récupère les IDs des plats associés à un menu
+     * 
+     * @return array
+     */
+    public function getPlatIdsForMenu(int $menuId): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT plat_id, ordre
+            FROM propose
+            WHERE menu_id = :menu_id
+            ORDER BY ordre
+        ");
+        $stmt->execute(['menu_id' => $menuId]);
+        $platsMenu = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        return array_column($platsMenu, 'plat_id');
+    }
+
+    /**
+     * Associe des plats à un menu
+     * 
+     * @return bool
+     */
+    public function syncPlats(int $menuId, array $platIds): bool
+    {
+        try {
+            // Supprimer les anciennes associations
+            $stmt = $this->db->prepare("DELETE FROM propose WHERE menu_id = :menu_id");
+            $stmt->execute(['menu_id' => $menuId]);
+
+            // Ajouter les nouvelles associations
+            if (!empty($platIds)) {
+                $stmt = $this->db->prepare("
+                    INSERT INTO propose (menu_id, plat_id, ordre)
+                    VALUES (:menu_id, :plat_id, :ordre)
+                ");
+                foreach ($platIds as $ordre => $platId) {
+                    $stmt->execute([
+                        'menu_id' => $menuId,
+                        'plat_id' => $platId,
+                        'ordre' => $ordre
+                    ]);
+                }
+            }
+            return true;
+        } catch (\PDOException $e) {
+            return false;
+        }
+    }
 }
 

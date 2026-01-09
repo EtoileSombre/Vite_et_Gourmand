@@ -70,25 +70,13 @@ class CommandeController extends Controller
         // Récupérer les détails des boissons
         if ($boissonsIds) {
             $ids = explode(',', $boissonsIds);
-            require_once __DIR__ . '/../Core/Database.php';
-            $db = \App\Core\Database::getInstance();
-            
-            $placeholders = implode(',', array_fill(0, count($ids), '?'));
-            $stmt = $db->prepare("SELECT * FROM boisson WHERE boisson_id IN ($placeholders)");
-            $stmt->execute($ids);
-            $boissonsSelectionnees = $stmt->fetchAll();
+            $boissonsSelectionnees = $menuModel->getBoissonsByIds($ids);
         }
         
         // Récupérer les détails du matériel
         if ($materielsIds) {
             $ids = explode(',', $materielsIds);
-            require_once __DIR__ . '/../Core/Database.php';
-            $db = \App\Core\Database::getInstance();
-            
-            $placeholders = implode(',', array_fill(0, count($ids), '?'));
-            $stmt = $db->prepare("SELECT * FROM materiel WHERE materiel_id IN ($placeholders)");
-            $stmt->execute($ids);
-            $materielsSelectionnes = $stmt->fetchAll();
+            $materielsSelectionnes = $menuModel->getMaterielsByIds($ids);
         }
         
         $this->render('commandes/create', [

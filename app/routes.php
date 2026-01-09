@@ -104,6 +104,7 @@ $router->get('/employe/commandes', 'App\Controllers\EmployeCommandeController', 
 $router->get('/employe/commandes/change-status', 'App\Controllers\EmployeCommandeController', 'changeStatus');
 $router->post('/employe/commandes/change-status', 'App\Controllers\EmployeCommandeController', 'changeStatus');
 $router->get('/employe/commandes/view', 'App\Controllers\EmployeCommandeController', 'view');
+$router->post('/employe/commandes/edit', 'App\Controllers\EmployeCommandeController', 'edit');
 
 // Modération des avis (employé)
 $router->get('/employe/avis', 'App\Controllers\EmployeAvisController', 'index');

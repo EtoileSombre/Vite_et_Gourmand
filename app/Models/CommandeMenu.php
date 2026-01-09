@@ -140,4 +140,41 @@ class CommandeMenu extends Model
         $stmt->execute([$commandeMenuId]);
         return $stmt->fetch();
     }
+
+    /**
+     * Mettre à jour la quantité (nombre de personnes) pour un menu d'une commande
+     */
+    public function updateQuantite($numeroCommande, $menuId, $nombrePersonne)
+    {
+        // Récupérer le prix et la réduction actuels
+        $stmt = $this->db->prepare("
+            SELECT prix_par_personne, reduction
+            FROM {$this->table}
+            WHERE numero_commande = ? AND menu_id = ?
+        ");
+        $stmt->execute([$numeroCommande, $menuId]);
+        $ligne = $stmt->fetch();
+
+        if (!$ligne) {
+            return false;
+        }
+
+        // Recalculer le total
+        $prixParPersonne = $ligne['prix_par_personne'];
+        $reduction = $ligne['reduction'];
+        $totalLigne = ($nombrePersonne * $prixParPersonne) - $reduction;
+        $updateStmt = $this->db->prepare("
+            UPDATE {$this->table}
+            SET nombre_personne = ?,
+                total_ligne = ?
+            WHERE numero_commande = ? AND menu_id = ?
+        ");
+
+        return $updateStmt->execute([
+            $nombrePersonne,
+            $totalLigne,
+            $numeroCommande,
+            $menuId
+        ]);
+    }
 }

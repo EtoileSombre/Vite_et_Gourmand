@@ -7,7 +7,7 @@ use App\Core\Model;
 /**
  * Modèle PasswordReset
  * Gère les tokens de réinitialisation de mot de passe
- */
+ */ 
 class PasswordReset extends Model
 {
     protected $table = 'password_resets';

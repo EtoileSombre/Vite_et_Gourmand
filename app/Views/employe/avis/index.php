@@ -3,10 +3,16 @@
 <div class="container my-5">
     <div class="row mb-4">
         <div class="col-12">
-            <h1 class="h3 mb-3">
-                <i class="bi bi-star-fill text-warning me-2"></i>
-                Modération des Avis
-            </h1>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="h3 mb-0">
+                    <i class="bi bi-star-fill text-warning me-2"></i>
+                    Modération des Avis
+                </h1>
+                <a href="/employe" class="btn btn-vg-bordeaux">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Retour Dashboard
+                </a>
+            </div>
 
             <!-- Filtres -->
             <div class="card mb-4">
@@ -183,14 +189,6 @@
                     <?php endif; ?>
                 <?php endforeach; ?>
             <?php endif; ?>
-
-            <!-- Retour au dashboard -->
-            <div class="mt-4">
-                <a href="/employe" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-2"></i>
-                    Retour au dashboard
-                </a>
-            </div>
         </div>
     </div>
 </div>

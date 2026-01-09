@@ -57,7 +57,8 @@ class PlatController extends Controller
     {
         $this->render('admin/plats/create', [
             'title' => 'Créer un plat',
-            'typesPlat' => Plat::getTypesPlat()
+            'typesPlat' => Plat::getTypesPlat(),
+            'allergenes' => Plat::getAllAllergenes()
         ]);
     }
 
@@ -87,7 +88,7 @@ class PlatController extends Controller
         }
 
         if (!empty($errors)) {
-            $_SESSION['error'] = implode(' ', $errors);
+            $_SESSION['flash_error'] = implode(' ', $errors);
             $this->redirect('/admin/plats/create');
             return;
         }
@@ -101,6 +102,12 @@ class PlatController extends Controller
         ]);
 
         if ($platId) {
+            // Associer les allergènes
+            $allergenes = $_POST['allergenes'] ?? [];
+            if (!empty($allergenes)) {
+                Plat::syncAllergenes($platId, $allergenes);
+            }
+
             Session::set('success', "Le plat « $titrePlat » a été créé avec succès.");
         } else {
             Session::set('error', "Une erreur est survenue lors de la création du plat.");
@@ -126,7 +133,9 @@ class PlatController extends Controller
         $this->render('admin/plats/edit', [
             'title' => 'Modifier un plat',
             'plat' => $plat,
-            'typesPlat' => Plat::getTypesPlat()
+            'typesPlat' => Plat::getTypesPlat(),
+            'allergenes' => Plat::getAllAllergenes(),
+            'platAllergenes' => Plat::getAllergenesForPlat($platId)
         ]);
     }
 
@@ -165,7 +174,7 @@ class PlatController extends Controller
         }
 
         if (!empty($errors)) {
-            $_SESSION['error'] = implode(' ', $errors);
+            $_SESSION['flash_error'] = implode(' ', $errors);
             $this->redirect('/admin/plats/edit?id=' . $platId);
             return;
         }
@@ -177,6 +186,9 @@ class PlatController extends Controller
         ]);
 
         if ($success) {
+            $allergenes = $_POST['allergenes'] ?? [];
+            Plat::syncAllergenes($platId, $allergenes);
+
             Session::set('success', "Le plat « $titrePlat » a été modifié avec succès.");
         } else {
             Session::set('error', "Une erreur est survenue lors de la modification.");

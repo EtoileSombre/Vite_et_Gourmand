@@ -152,8 +152,8 @@ document.addEventListener('DOMContentLoaded', function() {
         selectStatut.addEventListener('change', function() {
             const nouveauStatut = this.value;
             
-            // Contact requis pour annulation
-            let requiresContact = nouveauStatut === 'annulee';
+            // Contact requis pour annulation ou modification
+            let requiresContact = (nouveauStatut === 'annulee' || nouveauStatut === 'modifier');
             
             // Contact requis si ce n'est pas une progression normale
             if (!requiresContact && progressionNormale[statutActuel]) {

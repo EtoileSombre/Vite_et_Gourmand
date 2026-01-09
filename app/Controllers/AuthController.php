@@ -38,6 +38,8 @@ class AuthController extends Controller
                         $this->redirect($redirect);
                     } elseif ($user['role'] === 'administrateur') {
                         $this->redirect('/admin');
+                    } elseif ($user['role'] === 'employé') {
+                        $this->redirect('/employe');
                     } else {
                         $this->redirect('/');
                     }

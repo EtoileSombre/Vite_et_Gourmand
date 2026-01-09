@@ -90,7 +90,18 @@
                         </div>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="/" class="btn btn-outline-secondary">Retour</a>
+                            <?php 
+                            $userRole = $_SESSION['user_role'] ?? '';
+                            $returnUrl = '/';
+                            if ($userRole === 'employé') {
+                                $returnUrl = '/employe';
+                            } elseif ($userRole === 'administrateur') {
+                                $returnUrl = '/admin/dashboard';
+                            }
+                            ?>
+                            <a href="<?= $returnUrl ?>" class="btn btn-vg-bordeaux">
+                                <i class="bi bi-arrow-left me-2"></i>Retour Dashboard
+                            </a>
                             <button type="submit" class="btn btn-vg-gold">Enregistrer les modifications</button>
                         </div>
                     </form>

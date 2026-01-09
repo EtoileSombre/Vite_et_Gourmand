@@ -27,6 +27,13 @@
     <!-- CSS Composants -->
     <link rel="stylesheet" href="/assets/css/components/navbar.css">
     <link rel="stylesheet" href="/assets/css/components/footer.css">
+
+    <!-- CSS Pages additionnelles -->
+    <?php if (isset($additionalStyles) && is_array($additionalStyles)): ?>
+        <?php foreach ($additionalStyles as $style): ?>
+            <link rel="stylesheet" href="<?= htmlspecialchars($style) ?>">
+        <?php endforeach; ?>
+    <?php endif; ?>
 </head>
 <body class="d-flex flex-column min-vh-100">
     <!-- Navbar -->
@@ -47,7 +54,7 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <strong><?= htmlspecialchars($_SESSION['user_prenom'] ?? 'Utilisateur') ?></strong>
-                                <span class="badge bg-secondary"><?= htmlspecialchars(($_SESSION['user_role'] ?? 'utilisateur') === 'utilisateur' ? 'utilisateur' : ($_SESSION['user_role'] ?? 'utilisateur')) ?></span>
+                                <span class="badge bg-secondary"><?= htmlspecialchars($_SESSION['user_role'] ?? 'utilisateur') ?></span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <?php if (($_SESSION['user_role'] ?? '') === 'administrateur'): ?>
@@ -89,28 +96,28 @@
     </nav>
 
     <!-- Messages flash -->
-    <?php if (isset($_SESSION['success'])): ?>
+    <?php if (isset($_SESSION['flash_success'])): ?>
         <div class="container mt-3">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i>
-                <?= htmlspecialchars($_SESSION['success']) ?>
+                <?= htmlspecialchars($_SESSION['flash_success']) ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>
     <?php 
-        unset($_SESSION['success']);
+        unset($_SESSION['flash_success']);
     endif;
     
-    if (isset($_SESSION['error'])): ?>
+    if (isset($_SESSION['flash_error'])): ?>
         <div class="container mt-3">
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                <?= htmlspecialchars($_SESSION['error']) ?>
+                <?= htmlspecialchars($_SESSION['flash_error']) ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         </div>
     <?php 
-        unset($_SESSION['error']);
+        unset($_SESSION['flash_error']);
     endif;
     ?>
 

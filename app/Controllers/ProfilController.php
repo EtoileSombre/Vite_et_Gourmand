@@ -12,8 +12,8 @@ class ProfilController extends Controller
     // Profil utilisateur
     public function index()
     {
-        $user = Session::get('user');
-        if (!$user) {
+        $userId = Session::get('user_id');
+        if (!$userId) {
             $this->redirect('/login');
         }
 
@@ -22,14 +22,23 @@ class ProfilController extends Controller
         $request = new Request();
 
         if ($request->isPost()) {
-            $nom = $request->post('nom');
-            $email = $request->post('email');
+            $nom = trim($request->post('nom'));
+            $prenom = trim($request->post('prenom'));
+            $email = trim($request->post('email'));
+            $telephone = trim($request->post('telephone'));
+            $adresse_postale = trim($request->post('adresse_postale'));
+            $code_postal = trim($request->post('code_postal'));
+            $ville = trim($request->post('ville'));
             $password = $request->post('password');
             $passwordConfirm = $request->post('password_confirm');
 
-            // Validation simple
+            // Validation
             if (empty($nom)) {
                 $errors[] = "Le nom est obligatoire.";
+            }
+            
+            if (empty($prenom)) {
+                $errors[] = "Le prénom est obligatoire.";
             }
 
             if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -37,13 +46,29 @@ class ProfilController extends Controller
             }
 
             $existingUser = User::findByEmail($email);
-            if ($existingUser && $existingUser['id'] != $user['id']) {
+            if ($existingUser && $existingUser['utilisateur_id'] != $userId) {
                 $errors[] = "Cet email est déjà utilisé.";
+            }
+            
+            if (empty($telephone)) {
+                $errors[] = "Le numéro de téléphone est obligatoire.";
+            }
+            
+            if (empty($adresse_postale)) {
+                $errors[] = "L'adresse postale est obligatoire.";
+            }
+            
+            if (empty($code_postal) || !preg_match('/^[0-9]{5}$/', $code_postal)) {
+                $errors[] = "Le code postal doit contenir 5 chiffres.";
+            }
+            
+            if (empty($ville)) {
+                $errors[] = "La ville est obligatoire.";
             }
 
             if (!empty($password)) {
-                if (strlen($password) < 6) {
-                    $errors[] = "Le mot de passe doit contenir au moins 6 caractères.";
+                if (strlen($password) < 10) {
+                    $errors[] = "Le mot de passe doit contenir au moins 10 caractères.";
                 }
                 if ($password !== $passwordConfirm) {
                     $errors[] = "Les mots de passe ne correspondent pas.";
@@ -55,28 +80,29 @@ class ProfilController extends Controller
                 $userModel = new User();
                 $updateData = [
                     'nom' => $nom,
-                    'email' => $email
+                    'prenom' => $prenom,
+                    'email' => $email,
+                    'telephone' => $telephone,
+                    'adresse_postale' => $adresse_postale,
+                    'code_postal' => $code_postal,
+                    'ville' => $ville
                 ];
 
                 if (!empty($password)) {
-                    $updateData['mot_de_passe'] = password_hash($password, PASSWORD_DEFAULT);
+                    $updateData['password'] = password_hash($password, PASSWORD_DEFAULT);
                 }
 
-                $userModel->update($user['id'], $updateData);
+                $userModel->update($userId, $updateData);
 
-                Session::set('user', [
-                    'id' => $user['id'],
-                    'nom' => $nom,
-                    'email' => $email,
-                    'role' => $user['role']
-                ]);
+                Session::set('user_email', $email);
+                Session::set('user_prenom', $prenom);
 
                 $success = true;
             }
         }
 
         $userModel = new User();
-        $userData = $userModel->findById($user['id']);
+        $userData = $userModel->findById($userId);
 
         $this->render('profil/index', [
             'user' => $userData,

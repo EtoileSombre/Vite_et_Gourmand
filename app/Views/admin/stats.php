@@ -45,8 +45,8 @@
     <!-- Top 5 menus les plus consultés -->
     <div class="row mb-4">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-primary text-white">
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h5 class="mb-0">🏆 Top 5 Menus les Plus Consultés</h5>
                 </div>
                 <div class="card-body">
@@ -79,8 +79,8 @@
         </div>
 
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header bg-success text-white">
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h5 class="mb-0">📊 Répartition des Vues par Menu</h5>
                 </div>
                 <div class="card-body">
@@ -93,8 +93,8 @@
     <!-- Graphique commandes par jour -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header bg-info text-white">
+            <div class="card shadow-sm">
+                <div class="card-header bg-vg-gold text-vg-bordeaux">
                     <h5 class="mb-0">📈 Évolution des Commandes (30 derniers jours)</h5>
                 </div>
                 <div class="card-body">
@@ -107,8 +107,8 @@
     <!-- NOUVEAU : Filtres CA par Menu -->
     <div class="row mb-4">
         <div class="col-12">
-            <div class="card border-success">
-                <div class="card-header bg-success text-white">
+            <div class="card shadow-sm border-vg-bordeaux-2">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h5 class="mb-0">💰 Chiffre d'Affaires par Menu (MongoDB)</h5>
                 </div>
                 <div class="card-body">
@@ -241,17 +241,15 @@
         <ul class="mb-0 mt-2">
             <li><strong>Vues Menus</strong> : Chaque consultation de menu (liste ou détail)</li>
             <li><strong>Commandes</strong> : Création de nouvelles commandes</li>
-            <li><strong>Avis</strong> : Soumission d'avis clients</li>
+            <li><strong>Avis</strong> : Soumission d'avis utilisateurs</li>
             <li><strong>Activités</strong> : Connexions, déconnexions, actions utilisateurs</li>
         </ul>
     </div>
 </div>
 
-<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script src="/assets/js/stats-charts.js"></script>
 <script>
-    // Initialisation des graphiques avec les données du serveur
     const chartData = <?= json_encode($chartData) ?>;
     initStatsCharts(chartData);
 </script>

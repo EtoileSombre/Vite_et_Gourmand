@@ -6,6 +6,7 @@ abstract class Controller
 {
     protected function render($view, $data = [])
     {
+        header('Content-Type: text/html; charset=UTF-8');
         extract($data);
         
         $viewPath = __DIR__ . "/../Views/$view.php";

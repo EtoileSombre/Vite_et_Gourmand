@@ -11,9 +11,11 @@ class Commande extends Model
     public function findAll()
     {
         $stmt = $this->db->prepare('
-            SELECT c.*, m.titre as menu_nom, m.prix_par_personne as menu_prix 
+            SELECT c.*,
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom
             FROM commande c
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
+            LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
             ORDER BY c.date_commande DESC
         ');
         $stmt->execute();
@@ -23,9 +25,8 @@ class Commande extends Model
     public function findByUser($userId)
     {
         $stmt = $this->db->prepare('
-            SELECT c.*, m.titre as menu_nom, m.prix_par_personne as menu_prix 
+            SELECT c.*
             FROM commande c
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             WHERE c.utilisateur_id = ?
             ORDER BY c.date_commande DESC
         ');
@@ -33,16 +34,19 @@ class Commande extends Model
         return $stmt->fetchAll();
     }
 
-    public function findWithDetails($id)
+    public function findWithDetails($numeroCommande)
     {
         $stmt = $this->db->prepare('
-            SELECT c.*, m.titre as menu_nom, m.prix_par_personne as menu_prix, u.nom as utilisateur_nom
+            SELECT c.*, 
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
+                   u.telephone as utilisateur_telephone
             FROM commande c
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-            WHERE c.commande_id = ?
+            WHERE c.numero_commande = ?
         ');
-        $stmt->execute([$id]);
+        $stmt->execute([$numeroCommande]);
         $result = $stmt->fetch();
         return $result ?: null;
     }
@@ -51,16 +55,15 @@ class Commande extends Model
     {
         $stmt = $this->db->prepare('
             SELECT c.*, 
-                   u.prenom as client_prenom, 
-                   u.email as client_email,
-                   u.telephone as client_telephone,
-                   m.titre as menu_titre,
-                   m.description as menu_description,
-                   m.prix_par_personne as menu_prix,
-                   m.regime as menu_regime
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
+                   u.telephone as utilisateur_telephone,
+                   u.adresse_postale as utilisateur_adresse,
+                   u.ville as utilisateur_ville,
+                   u.code_postal as utilisateur_code_postal
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             WHERE c.numero_commande = ?
         ');
         $stmt->execute([$numeroCommande]);
@@ -69,7 +72,8 @@ class Commande extends Model
     }
 
     /**
-     * Trouve toutes les commandes avec détails (utilisateur + menu)
+     * Trouve toutes les commandes avec détails (utilisateur uniquement)
+     * Les menus sont récupérés via CommandeMenu
      * 
      * @return array
      */
@@ -77,16 +81,12 @@ class Commande extends Model
     {
         $stmt = $this->db->prepare("
             SELECT c.*, 
-                   u.prenom as client_prenom, 
-                   u.email as client_email,
-                   u.telephone as client_telephone,
-                   m.titre as menu_titre,
-                   m.description as menu_description,
-                   m.prix_par_personne as menu_prix,
-                   m.regime as menu_regime
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
+                   u.telephone as utilisateur_telephone
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             ORDER BY c.date_prestation DESC, c.created_at DESC
         ");
         $stmt->execute();
@@ -126,13 +126,12 @@ class Commande extends Model
         $placeholders = str_repeat('?,', count($statuts) - 1) . '?';
         $stmt = $this->db->prepare("
             SELECT c.*, 
-                   u.prenom as client_prenom, 
-                   u.email as client_email,
-                   u.telephone as client_telephone,
-                   m.titre as menu_nom
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
+                   u.telephone as utilisateur_telephone
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             WHERE c.statut IN ($placeholders)
             ORDER BY c.date_prestation ASC, c.created_at DESC
         ");
@@ -150,14 +149,13 @@ class Commande extends Model
     {
         $stmt = $this->db->prepare("
             SELECT c.*, 
-                   u.prenom as client_prenom, 
-                   u.email as client_email,
-                   m.titre as menu_nom
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             WHERE DATE(c.date_prestation) = ?
-            AND c.statut != 'annulée'
+            AND c.statut != 'annulee'
             ORDER BY c.heure_livraison ASC
         ");
         $stmt->execute([$date]);

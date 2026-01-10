@@ -22,7 +22,7 @@ ils souhaitent :
 - ✅ Présenter leurs menus en ligne
 - ✅ Automatiser la prise de commandes
 - ✅ Suivre leurs statistiques de vente
-- ✅ Gérer les avis clients
+- ✅ Gérer les avis utilisateurs
 - ✅ Améliorer leur visibilité numérique
 
 ---
@@ -30,7 +30,7 @@ ils souhaitent :
 ## ⚙️ Stack technique
 
 | Catégorie | Technologies |
-|-----------|-------------|
+| --------- | ----------- |
 | **Frontend** | HTML5, CSS3, Bootstrap 5, JavaScript (Vanilla), Chart.js |
 | **Backend** | PHP 8.3 (Architecture MVC), Apache 2.4 + mod_rewrite |
 | **Bases de données** | MySQL 8.3, MongoDB 6.0 |
@@ -42,7 +42,7 @@ ils souhaitent :
 ```
 app/
 ├── Controllers/   → 14 contrôleurs métier
-├── Models/        → 5 modèles (User, Menu, Commande, Avis, PasswordReset)
+├── Models/        → 6 modèles (User, Menu, CommandeMenu, Commande, Avis, PasswordReset)
 ├── Views/         → 32 templates organisés par fonctionnalité
 ├── Core/          → Router, Database, Model, Controller
 ├── config/        → Configuration (MySQL, MongoDB, Mail)
@@ -96,7 +96,7 @@ docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/donnees.sql
 ## 🌐 Accès aux services
 
 | Service | URL | Identifiants | Description |
-|---------|-----|--------------|-------------|
+| ------- | --- | ------------ | ----------- |
 | **Application** | <http://localhost:8080> | - | Site principal |
 | **phpMyAdmin** | <http://localhost:8090> | `root` / `rootpass` | Gestion MySQL |
 | **Mongo Express** | <http://localhost:8081> | `vgroot` / `vgrootpass` | Gestion MongoDB |
@@ -107,10 +107,10 @@ docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/donnees.sql
 ## 🔑 Comptes de test
 
 | Rôle | Email | Mot de passe | Accès |
-|------|-------|--------------|-------|
+| ---- | ----- | ------------ | ----- |
 | 👑 **Admin** | `admin@viteetgourmand.fr` | `Admin123!` | Stats |
 | 👷 **Employé** | `employe@viteetgourmand.fr` | `Employe123!` | Modération |
-| 👤 **Client** | `client@test.fr` | `Client123!` | Profil |
+| 👤 **Utilisateur** | `utilisateur@test.fr` | `Utilisateur123!` | Profil |
 
 ⚠️ _Identifiants fournis à des fins de démonstration uniquement._
 
@@ -118,7 +118,7 @@ docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/donnees.sql
 
 ## 🎯 Fonctionnalités principales
 
-### 👤 Espace Client
+### 👤 Espace Utilisateur
 - Inscription / Connexion sécurisée (bcrypt)
 - Réinitialisation de mot de passe par email
 - Consultation des menus avec filtres (thème, régime, prix)
@@ -154,7 +154,7 @@ docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/donnees.sql
 - ✅ Échappement HTML (`htmlspecialchars`) contre XSS
 - ✅ Sessions PHP sécurisées
 - ✅ Tokens de réinitialisation avec expiration (24h)
-- ✅ Gestion des rôles (client, employé, administrateur)
+- ✅ Gestion des rôles (utilisateur, employé, administrateur)
 - ✅ Headers de sécurité Apache (.htaccess)
 - ✅ Variables d'environnement pour credentials
 

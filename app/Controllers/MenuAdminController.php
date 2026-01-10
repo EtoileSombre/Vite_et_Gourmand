@@ -24,7 +24,7 @@ class MenuAdminController extends Controller
         }
 
         $userRole = Session::get('user_role');
-        if (!in_array($userRole, ['employe', 'administrateur'])) {
+        if (!in_array($userRole, ['employé', 'administrateur'])) {
             header('Location: /');
             exit;
         }
@@ -39,6 +39,11 @@ class MenuAdminController extends Controller
     {
         $menus = $this->menuModel->findAll(); // Tous les menus, pas seulement actifs
 
+        // Charger les plats pour chaque menu
+        foreach ($menus as &$menu) {
+            $menu['plats'] = $this->menuModel->getPlatsForMenu($menu['menu_id']);
+        }
+
         $this->render('admin/menus/index', [
             'menus' => $menus,
             'title' => 'Gestion des Menus'
@@ -50,7 +55,12 @@ class MenuAdminController extends Controller
      */
     public function create(): void
     {
+        // Charger tous les plats disponibles
+        $platModel = new \App\Models\Plat();
+        $plats = $platModel::findAllPlats();
+
         $this->render('admin/menus/create', [
+            'plats' => $plats,
             'title' => 'Créer un Menu'
         ]);
     }
@@ -72,7 +82,6 @@ class MenuAdminController extends Controller
         $description = trim($_POST['description'] ?? '');
         $prixParPersonne = trim($_POST['prix_par_personne'] ?? '');
         $nombrePersonnesMin = trim($_POST['nombre_personnes_min'] ?? '');
-        $regimeAlimentaire = $_POST['regime_alimentaire'] ?? null;
         $theme = trim($_POST['theme'] ?? '');
         $imageUrl = trim($_POST['image_url'] ?? '');
 
@@ -98,13 +107,18 @@ class MenuAdminController extends Controller
             'description' => $description,
             'prix_par_personne' => $prixParPersonne,
             'nombre_personne_minimum' => $nombrePersonnesMin,
-            'regime' => $regimeAlimentaire,
             'quantite_restante' => $_POST['quantite_restante'] ?? 100 // Stock disponible
         ];
 
         $menuId = $this->menuModel->create($data);
 
         if ($menuId) {
+            // Ajouter les plats au menu
+            $platsSelectionnes = $_POST['plats'] ?? [];
+            if (!empty($platsSelectionnes)) {
+                $this->menuModel->syncPlats($menuId, $platsSelectionnes);
+            }
+
             Session::set('flash_success', "Menu créé avec succès !");
             $this->redirect('/admin/menus');
         } else {
@@ -133,8 +147,17 @@ class MenuAdminController extends Controller
             return;
         }
 
+        // Charger tous les plats disponibles
+        $platModel = new \App\Models\Plat();
+        $plats = $platModel::findAllPlats();
+
+        // Charger les plats actuellement associés à ce menu
+        $platIds = $this->menuModel->getPlatIdsForMenu((int)$id);
+
         $this->render('admin/menus/edit', [
             'menu' => $menu,
+            'plats' => $plats,
+            'platIds' => $platIds,
             'title' => 'Modifier le Menu'
         ]);
     }
@@ -196,13 +219,16 @@ class MenuAdminController extends Controller
             'description' => $description,
             'prix_par_personne' => $prixParPersonne,
             'nombre_personne_minimum' => $nombrePersonnesMin,
-            'regime' => $regimeAlimentaire,
             'quantite_restante' => $quantiteRestante
         ];
 
         $success = $this->menuModel->update((int)$id, $data);
 
         if ($success) {
+            // Mettre à jour les plats du menu
+            $platsSelectionnes = $_POST['plats'] ?? [];
+            $this->menuModel->syncPlats((int)$id, $platsSelectionnes);
+
             Session::set('flash_success', "Menu mis à jour avec succès !");
             $this->redirect('/admin/menus');
         } else {

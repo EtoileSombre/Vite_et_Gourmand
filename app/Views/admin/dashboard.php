@@ -10,7 +10,7 @@
     
     <div class="row mt-4">
         <div class="col-md-4">
-            <div class="card text-white bg-primary mb-3">
+            <div class="card text-white mb-3 bg-vg-bordeaux">
                 <div class="card-body">
                     <h5 class="card-title">Utilisateurs</h5>
                     <p class="card-text display-4"><?= $totalUsers ?></p>
@@ -19,16 +19,16 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-success mb-3">
+            <div class="card text-white mb-3 bg-vg-gold">
                 <div class="card-body">
-                    <h5 class="card-title">Commandes</h5>
-                    <p class="card-text display-4"><?= $totalCommandes ?></p>
-                    <a href="/admin/commandes" class="btn btn-light btn-sm">Gérer</a>
+                    <h5 class="card-title text-vg-bordeaux">Commandes</h5>
+                    <p class="card-text display-4 text-vg-bordeaux"><?= $totalCommandes ?></p>
+                    <a href="/admin/commandes" class="btn btn-sm btn-vg-bordeaux">Gérer</a>
                 </div>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card text-white bg-info mb-3">
+            <div class="card text-white mb-3 bg-vg-bordeaux">
                 <div class="card-body">
                     <h5 class="card-title">Menus</h5>
                     <p class="card-text display-4"><?= $totalMenus ?></p>
@@ -59,14 +59,18 @@
                                 <td>#<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($commande['utilisateur_id'] ?? 'N/A') ?></td>
                                 <td><?= htmlspecialchars($commande['menu_nom'] ?? $commande['menu_id'] ?? 'N/A') ?></td>
-                                <td><?= htmlspecialchars($commande['nombre_personne'] ?? 'N/A') ?></td>
+                                <td><?= htmlspecialchars($commande['totalPersonnes'] ?? 'N/A') ?></td>
                                 <td>
                                     <?php
-                                    $statutClass = match($commande['statut'] ?? 'en attente') {
-                                        'en_attente', 'en attente' => 'warning',
-                                        'validee', 'validée' => 'success',
+                                    $statutClass = match($commande['statut'] ?? 'en_attente') {
+                                        'en_attente', 'en attente' => 'warning text-dark',
+                                        'acceptee' => 'success',
+                                        'en_preparation', 'en préparation' => 'primary',
+                                        'en_cours_livraison' => 'purple',
+                                        'livree', 'livrée' => 'orange text-dark',
+                                        'attente_retour_materiel' => 'brown text-white',
+                                        'terminee', 'terminée' => 'dark-green text-white',
                                         'annulee', 'annulée' => 'danger',
-                                        'livree', 'livrée', 'en cours' => 'info',
                                         default => 'secondary'
                                     };
                                     ?>

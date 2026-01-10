@@ -9,7 +9,7 @@ require_once __DIR__ . '/../../layouts/header.php';
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h2 class="mb-0"><i class="bi bi-plus-circle"></i> Créer un Nouveau Menu</h2>
                 </div>
                 <div class="card-body">
@@ -74,22 +74,9 @@ require_once __DIR__ . '/../../layouts/header.php';
                             </div>
                         </div>
 
-                        <div class="row">
-                            <!-- Régime alimentaire -->
-                            <div class="col-md-6 mb-3">
-                                <label for="regime" class="form-label">Régime alimentaire</label>
-                                <select class="form-select" id="regime" name="regime">
-                                    <option value="">-- Aucun régime spécifique --</option>
-                                    <option value="Végétarien">Végétarien</option>
-                                    <option value="Végétalien">Végétalien</option>
-                                    <option value="Sans gluten">Sans gluten</option>
-                                    <option value="Halal">Halal</option>
-                                    <option value="Kasher">Kasher</option>
-                                </select>
-                            </div>
-
-                            <!-- Stock disponible -->
-                            <div class="col-md-6 mb-3">
+                        <!-- Stock disponible -->
+                        <div class="mb-3">
+                            <div class="col-md-6">
                                 <label for="quantite_restante" class="form-label">Stock disponible</label>
                                 <input type="number" 
                                        class="form-control" 
@@ -100,6 +87,54 @@ require_once __DIR__ . '/../../layouts/header.php';
                                        placeholder="100">
                                 <div class="form-text">Si 0, le menu sera inactif</div>
                             </div>
+                        </div>
+
+                        <!-- Composition du menu (plats) -->
+                        <div class="mb-4 mt-4">
+                            <h5 class="mb-3"><i class="bi bi-list-check"></i> Composition du menu</h5>
+                            <p class="text-muted small">Sélectionnez les plats qui composent ce menu</p>
+                            
+                            <?php 
+                            $types = ['Entree' => 'Entrées', 'Plat' => 'Plats', 'Dessert' => 'Desserts', 'Accompagnement' => 'Accompagnements'];
+                            foreach ($types as $type => $label): 
+                                $platsType = array_filter($plats, fn($p) => $p['type_plat'] === $type);
+                                if (empty($platsType)) continue;
+                            ?>
+                                <div class="mb-3">
+                                    <strong class="d-block mb-2"><?= htmlspecialchars($label) ?></strong>
+                                    <div class="d-flex flex-wrap gap-2">
+                                        <?php foreach ($platsType as $plat): 
+                                            // Récupérer les allergènes du plat
+                                            $platAllergenes = \App\Models\Plat::getAllergenesForPlat($plat['plat_id']);
+                                            $allergenesLabels = [];
+                                            if (!empty($platAllergenes)) {
+                                                $allAllergenes = \App\Models\Plat::getAllAllergenes();
+                                                foreach ($platAllergenes as $allergeneId) {
+                                                    $allergene = array_filter($allAllergenes, fn($a) => $a['allergene_id'] == $allergeneId);
+                                                    if (!empty($allergene)) {
+                                                        $allergenesLabels[] = reset($allergene)['libelle'];
+                                                    }
+                                                }
+                                            }
+                                            $allergenesText = !empty($allergenesLabels) ? 'Allergènes: ' . implode(', ', $allergenesLabels) : '';
+                                        ?>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" 
+                                                       type="checkbox" 
+                                                       name="plats[]" 
+                                                       value="<?= $plat['plat_id'] ?>"
+                                                       id="plat_<?= $plat['plat_id'] ?>">
+                                                <label class="form-check-label" for="plat_<?= $plat['plat_id'] ?>" title="<?= htmlspecialchars(($plat['description'] ?? '') . ($allergenesText ? ' | ' . $allergenesText : '')) ?>">
+                                                    <?= htmlspecialchars($plat['titre_plat']) ?>
+                                                    <?php if (!empty($allergenesLabels)): ?>
+                                                        <span class="text-danger small">⚠️</span>
+                                                    <?php endif; ?>
+                                                </label>
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
 
                         <!-- Boutons d'action -->

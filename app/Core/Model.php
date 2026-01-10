@@ -63,7 +63,7 @@ abstract class Model
         $data['id'] = $id;
         $stmt = $this->db->prepare($sql);
         
-        return $stmt->execute();
+        return $stmt->execute($data);
     }
 
     public function delete($id)

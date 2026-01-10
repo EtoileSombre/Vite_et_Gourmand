@@ -3,10 +3,16 @@
 <div class="container my-5">
     <div class="row mb-4">
         <div class="col-12">
-            <h1 class="h3 mb-3">
-                <i class="bi bi-star-fill text-warning me-2"></i>
-                Modération des Avis
-            </h1>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h1 class="h3 mb-0">
+                    <i class="bi bi-star-fill text-warning me-2"></i>
+                    Modération des Avis
+                </h1>
+                <a href="/employe" class="btn btn-vg-bordeaux">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Retour Dashboard
+                </a>
+            </div>
 
             <!-- Filtres -->
             <div class="card mb-4">
@@ -15,13 +21,13 @@
                         <div class="col-md-4">
                             <label for="statut" class="form-label">Statut</label>
                             <select name="statut" id="statut" class="form-select">
-                                <option value="en attente" <?= ($statut_filtre ?? '') === 'en attente' ? 'selected' : '' ?>>
+                                <option value="en_attente" <?= ($statut_filtre ?? '') === 'en_attente' ? 'selected' : '' ?>>
                                     En attente (<?= $count_en_attente ?? 0 ?>)
                                 </option>
-                                <option value="publié" <?= ($statut_filtre ?? '') === 'publié' ? 'selected' : '' ?>>
+                                <option value="publie" <?= ($statut_filtre ?? '') === 'publie' ? 'selected' : '' ?>>
                                     Publiés
                                 </option>
-                                <option value="rejeté" <?= ($statut_filtre ?? '') === 'rejeté' ? 'selected' : '' ?>>
+                                <option value="rejete" <?= ($statut_filtre ?? '') === 'rejete' ? 'selected' : '' ?>>
                                     Rejetés
                                 </option>
                                 <option value="tous" <?= ($statut_filtre ?? '') === 'tous' ? 'selected' : '' ?>>
@@ -46,19 +52,19 @@
                             <div class="card h-100 shadow-sm">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <div>
-                                        <strong><?= htmlspecialchars($item['client_prenom'] ?? 'Client') ?> 
-                                                <?= htmlspecialchars(strtoupper(substr($item['client_nom'] ?? '', 0, 1))) ?>.</strong>
+                                        <strong><?= htmlspecialchars($item['utilisateur_prenom'] ?? 'Utilisateur') ?> 
+                                                <?= htmlspecialchars(strtoupper(substr($item['utilisateur_nom'] ?? '', 0, 1))) ?>.</strong>
                                         <br>
                                         <small class="text-muted">
-                                            <?= htmlspecialchars($item['client_email'] ?? '') ?>
+                                            <?= htmlspecialchars($item['utilisateur_email'] ?? '') ?>
                                         </small>
                                     </div>
                                     <div>
                                         <?php
                                         $badgeClass = match($item['statut']) {
-                                            'en attente' => 'bg-warning text-dark',
-                                            'publié' => 'bg-success',
-                                            'rejeté' => 'bg-danger',
+                                            'en_attente' => 'bg-warning text-dark',
+                                            'publie' => 'bg-success',
+                                            'rejete' => 'bg-danger',
                                             default => 'bg-secondary'
                                         };
                                         ?>
@@ -112,11 +118,11 @@
                                 </div>
 
                                 <!-- Actions -->
-                                <?php if ($item['statut'] === 'en attente'): ?>
+                                <?php if ($item['statut'] === 'en_attente'): ?>
                                     <div class="card-footer bg-light">
                                         <div class="row g-2">
                                             <div class="col-6">
-                                                <form method="POST" action="/employe/avis/approve" onsubmit="return confirm('Approuver cet avis et le publier ?');">
+                                                <form method="POST" action="/employe/avis/approve">
                                                     <input type="hidden" name="avis_id" value="<?= $item['avis_id'] ?>">
                                                     <button type="submit" class="btn btn-success btn-sm w-100">
                                                         <i class="bi bi-check-circle me-1"></i>
@@ -134,62 +140,60 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <!-- Modal de rejet -->
-                                    <div class="modal fade" id="rejectModal<?= $item['avis_id'] ?>" tabindex="-1">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <form method="POST" action="/employe/avis/reject">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Rejeter l'avis</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <input type="hidden" name="avis_id" value="<?= $item['avis_id'] ?>">
-                                                        <div class="mb-3">
-                                                            <label for="motif<?= $item['avis_id'] ?>" class="form-label">
-                                                                Motif du rejet (optionnel)
-                                                            </label>
-                                                            <textarea 
-                                                                name="motif" 
-                                                                id="motif<?= $item['avis_id'] ?>" 
-                                                                class="form-control" 
-                                                                rows="3"
-                                                                placeholder="Exemple : Contenu inapproprié, insultes, hors sujet..."></textarea>
-                                                        </div>
-                                                        <div class="alert alert-warning mb-0">
-                                                            <i class="bi bi-exclamation-triangle me-2"></i>
-                                                            Cet avis ne sera plus visible publiquement.
-                                                        </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                                        <button type="submit" class="btn btn-danger">
-                                                            <i class="bi bi-x-circle me-1"></i>
-                                                            Confirmer le rejet
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>
                     <?php endforeach; ?>
                 </div>
-            <?php endif; ?>
 
-            <!-- Retour au dashboard -->
-            <div class="mt-4">
-                <a href="/employe" class="btn btn-outline-secondary">
-                    <i class="bi bi-arrow-left me-2"></i>
-                    Retour au dashboard
-                </a>
-            </div>
+                <!-- Modals de rejet -->
+                <?php foreach ($avis as $item): ?>
+                    <?php if ($item['statut'] === 'en_attente'): ?>
+                        <div class="modal fade" id="rejectModal<?= $item['avis_id'] ?>" tabindex="-1" aria-labelledby="rejectModalLabel<?= $item['avis_id'] ?>" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form method="POST" action="/employe/avis/reject">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="rejectModalLabel<?= $item['avis_id'] ?>">Rejeter l'avis</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <input type="hidden" name="avis_id" value="<?= $item['avis_id'] ?>">
+                                            <div class="mb-3">
+                                                <label for="motif<?= $item['avis_id'] ?>" class="form-label">
+                                                    Motif du rejet (optionnel)
+                                                </label>
+                                                <textarea 
+                                                    name="motif" 
+                                                    id="motif<?= $item['avis_id'] ?>" 
+                                                    class="form-control" 
+                                                    rows="3"
+                                                    placeholder="Exemple : Contenu inapproprié, insultes, hors sujet..."></textarea>
+                                            </div>
+                                            <div class="alert alert-warning mb-0">
+                                                <i class="bi bi-exclamation-triangle me-2"></i>
+                                                Cet avis ne sera plus visible publiquement.
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                            <button type="submit" class="btn btn-danger">
+                                                <i class="bi bi-x-circle me-1"></i>
+                                                Confirmer le rejet
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
-<script src="/assets/js/employe-avis.js"></script>
-<?php require_once __DIR__ . '/../../layouts/footer.php'; ?>
+<?php 
+$additionalScripts = ['/assets/js/employe-avis.js'];
+require_once __DIR__ . '/../../layouts/footer.php'; 
+?>

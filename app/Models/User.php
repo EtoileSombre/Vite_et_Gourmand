@@ -43,7 +43,7 @@ class User extends Model
     public function findAllWithRole(): array
     {
         $stmt = $this->db->prepare('
-            SELECT u.*, r.nom as role_nom 
+            SELECT u.*, r.libelle as role_nom 
             FROM utilisateur u
             LEFT JOIN role r ON u.role_id = r.role_id
             ORDER BY u.created_at DESC

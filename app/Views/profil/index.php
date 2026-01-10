@@ -89,20 +89,22 @@
                             <input type="password" class="form-control" id="password_confirm" name="password_confirm" minlength="10">
                         </div>
                         
-                        <div class="d-flex justify-content-between">
+                        <div class="d-flex justify-content-between mt-4">
                             <?php 
                             $userRole = $_SESSION['user_role'] ?? '';
                             $returnUrl = '/';
                             if ($userRole === 'employé') {
                                 $returnUrl = '/employe';
                             } elseif ($userRole === 'administrateur') {
-                                $returnUrl = '/admin/dashboard';
+                                $returnUrl = '/admin';
                             }
                             ?>
                             <a href="<?= $returnUrl ?>" class="btn btn-vg-bordeaux">
-                                <i class="bi bi-arrow-left me-2"></i>Retour Dashboard
+                                <i class="bi bi-arrow-left"></i> Retour Dashboard
                             </a>
-                            <button type="submit" class="btn btn-vg-gold">Enregistrer les modifications</button>
+                            <button type="submit" class="btn btn-vg-gold">
+                                <i class="bi bi-save"></i> Enregistrer les modifications
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -115,7 +117,14 @@
                         <?= date('d/m/Y', strtotime($user['created_at'])) ?>
                     </p>
                     <p class="mb-0"><strong>Rôle :</strong> 
-                        <span class="badge bg-vg-gold text-vg-bordeaux"><?= htmlspecialchars($user['role']) ?></span>
+                        <?php
+                        $roleClass = match($_SESSION['user_role'] ?? '') {
+                            'administrateur' => 'badge-role-admin',
+                            'employé' => 'badge-role-employe',
+                            default => 'bg-secondary'
+                        };
+                        ?>
+                        <span class="badge <?= $roleClass ?>"><?= htmlspecialchars($user['role']) ?></span>
                     </p>
                 </div>
             </div>

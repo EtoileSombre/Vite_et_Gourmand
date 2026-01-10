@@ -152,11 +152,4 @@ require_once __DIR__ . '/../../layouts/header.php';
         </div>
     </div>
 
-    <div class="mt-3">
-        <a href="/admin/dashboard" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Retour au tableau de bord
-        </a>
-    </div>
-</div>
-
 <?php require_once __DIR__ . '/../../layouts/footer.php'; ?>

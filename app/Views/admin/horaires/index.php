@@ -14,6 +14,23 @@
             </a>
         </div>
 
+        <!-- Messages flash -->
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
         <!-- Formulaire de mise à jour des horaires -->
         <div class="card shadow-sm">
             <div class="card-body">
@@ -104,7 +121,7 @@
                     <div class="mt-4 d-flex justify-content-between align-items-center">
                         <div class="text-muted small">
                             <span aria-hidden="true">💡</span>
-                            <strong>Astuce :</strong> Cochez "Fermé" pour indiquer qu'un jour est non travaillé
+                             Cochez "Fermé" pour indiquer qu'un jour est non travaillé
                         </div>
                         <button type="submit" class="btn btn-primary">
                             <span aria-hidden="true">💾</span>
@@ -112,23 +129,6 @@
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
-
-        <!-- Aperçu de l'affichage -->
-        <div class="card shadow-sm mt-4">
-            <div class="card-body">
-                <h3 class="h5 mb-3">
-                    <span aria-hidden="true">👁️</span>
-                    Aperçu de l'affichage dans le footer
-                </h3>
-                <div class="alert alert-info mb-0">
-                    <strong>Horaires actuels :</strong>
-                    <?php
-                    use App\Models\Horaire;
-                    echo htmlspecialchars(Horaire::getHorairesFormatted());
-                    ?>
-                </div>
             </div>
         </div>
 

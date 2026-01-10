@@ -3,7 +3,7 @@
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2">📊 Statistiques MongoDB</h1>
-        <a href="/admin" class="btn btn-secondary">← Retour Dashboard</a>
+        <a href="/admin" class="btn btn-vg-bordeaux"><i class="bi bi-arrow-left"></i> Retour Dashboard</a>
     </div>
 
     <!-- Statistiques globales -->

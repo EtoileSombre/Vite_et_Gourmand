@@ -51,8 +51,6 @@ body {
 }
 
 /* Overrides Bootstrap colors */
-.bg-success,
-.badge.bg-success,
 .card-header.bg-success,
 section.bg-success {
     background-color: var(--vg-bordeaux) !important;
@@ -233,6 +231,44 @@ h4.text-success,
     background: #fff3d1;
     border: 1px dashed #f2c97d;
     color: #7a5a00;
+}
+
+/* Badges de rôles */
+.badge-role-admin {
+    background-color: #7B1E1E;
+    color: white;
+}
+
+.badge-role-employe {
+    background-color: #5c9bd5;
+    color: white;
+}
+
+/* Badges de statut utilisateur */
+.badge-status-actif {
+    background-color: #7cb342;
+    color: white;
+}
+
+.badge-status-inactif {
+    background-color: #c0392b;
+    color: white;
+}
+
+/* Badges de statut messages */
+.badge-status-nouveau {
+    background-color: #ff9800;
+    color: white;
+}
+
+.badge-status-en-cours {
+    background-color: #2196f3;
+    color: white;
+}
+
+.badge-status-traite {
+    background-color: #4caf50;
+    color: white;
 }
 
 /*CARD*/

@@ -8,7 +8,7 @@
                     <i class="bi bi-star-fill text-warning me-2"></i>
                     Modération des Avis
                 </h1>
-                <a href="/employe" class="btn btn-vg-bordeaux">
+                <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux">
                     <i class="bi bi-arrow-left me-2"></i>
                     Retour Dashboard
                 </a>

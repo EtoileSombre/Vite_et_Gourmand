@@ -3,9 +3,9 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Connexion</h3>
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
+                    <h3 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Connexion</h3>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($errors)): ?>
@@ -25,6 +25,10 @@
                     <?php endif; ?>
                     
                     <form method="post" action="/login">
+                        <?php if (!empty($redirect)): ?>
+                            <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
+                        <?php endif; ?>
+                        
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" required>

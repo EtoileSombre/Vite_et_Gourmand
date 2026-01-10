@@ -1,13 +1,15 @@
 <?php require_once __DIR__ . '/../layouts/header.php'; ?>
+<link rel="stylesheet" href="/assets/css/pages/menus-list.css">
 
-<div class="container">
-    <h1 class="mb-4"><i class="bi bi-card-list"></i> Nos Menus</h1>
-
-    <!-- Filtres -->
-    <div class="card mb-4">
+<div class="container mt-5">
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header text-white bg-vg-bordeaux">
+            <h3 class="mb-0"><i class="bi bi-journal-text"></i> Nos Menus</h3>
+        </div>
         <div class="card-body">
-            <h5 class="card-title mb-3"><i class="bi bi-funnel"></i> Filtres</h5>
+            <h5 class="card-title mb-3 text-vg-bordeaux"><i class="bi bi-funnel"></i> Filtres</h5>
             <div class="row g-3">
+                
                 <!-- Filtre Régime -->
                 <div class="col-md-4">
                     <label for="filterRegime" class="form-label">Type de menu</label>
@@ -23,13 +25,14 @@
 
                 <!-- Filtre Nombre de personnes minimum -->
                 <div class="col-md-4">
-                    <label for="filterPersonnes" class="form-label">Nombre de personnes</label>
+                    <label for="filterPersonnes" class="form-label">Nombre de convives</label>
                     <select class="form-select" id="filterPersonnes">
                         <option value="">Toutes les quantités</option>
-                        <option value="2">2 personnes minimum</option>
-                        <option value="4">4 personnes minimum</option>
-                        <option value="6">6 personnes minimum</option>
-                        <option value="8">8 personnes minimum</option>
+                        <option value="2">Pour 2 personnes</option>
+                        <option value="4">Pour 4 personnes</option>
+                        <option value="6">Pour 6 personnes</option>
+                        <option value="8">Pour 8 personnes</option>
+                        <option value="10">Pour 10 personnes</option>
                     </select>
                 </div>
 
@@ -62,7 +65,7 @@
 
                 <!-- Bouton Réinitialiser -->
                 <div class="col-md-4 d-flex align-items-end">
-                    <button class="btn btn-secondary w-100" id="btnResetFilters">
+                    <button class="btn btn-success w-100" id="btnResetFilters">
                         <i class="bi bi-x-circle"></i> Réinitialiser
                     </button>
                 </div>
@@ -74,6 +77,14 @@
                     <i class="bi bi-info-circle"></i> 
                     <span id="menuCount"></span>
                 </small>
+            </div>
+
+            <!-- Indicateur de chargement -->
+            <div id="loadingIndicator" class="text-center mt-3 d-none">
+                <div class="spinner-border text-vg-bordeaux" role="status">
+                    <span class="visually-hidden">Chargement...</span>
+                </div>
+                <p class="text-muted mt-2">Chargement des menus...</p>
             </div>
         </div>
     </div>
@@ -91,6 +102,7 @@
             foreach ($menus as $menu): 
                 $gradientClass = $gradientClasses[$index % count($gradientClasses)];
                 $icon = $icons[$index % count($icons)];
+                $menuPhotos = $menu['photos'] ?? [];
                 $index++;
             ?>
                 <div class="col-md-6 col-lg-4 mb-4 menu-item" 
@@ -101,14 +113,21 @@
                      data-prix="<?= $menu['prix_par_personne'] ?? 0 ?>"
                      data-min-personnes="<?= $menu['nombre_personne_minimum'] ?? 1 ?>">
                     <div class="card h-100 shadow-sm">
-                        <!-- Image avec gradient aux couleurs de la charte -->
-                        <div class="card-img-top menu-card-img <?= $gradientClass ?>">
-                            <div class="text-center text-white">
-                                <h1 class="mb-0 menu-icon">
-                                    <?= $icon ?>
-                                </h1>
+                        <?php if (!empty($menuPhotos)): ?>
+                            <!-- Photo du menu -->
+                            <img src="<?= htmlspecialchars($menuPhotos[0]['image_url']) ?>" 
+                                 class="card-img-top menu-card-single-img" 
+                                 alt="<?= htmlspecialchars($menuPhotos[0]['legende'] ?? $menu['titre']) ?>">
+                        <?php else: ?>
+                            <!-- Fallback : gradient si pas de photos -->
+                            <div class="card-img-top menu-card-img <?= $gradientClass ?>">
+                                <div class="text-center text-white">
+                                    <h1 class="mb-0 menu-icon">
+                                        <?= $icon ?>
+                                    </h1>
+                                </div>
                             </div>
-                        </div>
+                        <?php endif; ?>
                         
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($menu['titre']) ?></h5>
@@ -146,6 +165,7 @@
     <?php endif; ?>
 </div>
 
-<script src="/assets/js/menu-filters.js"></script>
+<!-- Script de filtrage asynchrone -->
+<script src="/assets/js/menu-filters-async.js"></script>
 
 <?php require_once __DIR__ . '/../layouts/footer.php'; ?>

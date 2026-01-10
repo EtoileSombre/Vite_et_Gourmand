@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Core\Controller;
 use App\Core\Session;
 use App\Models\Commande;
+use App\Models\CommandeMenu;
 use App\Models\Avis;
 
 /**
@@ -43,6 +44,17 @@ class EmployeController extends Controller
         // Commandes en attente (tous statuts sauf annulée et terminée)
         $commandesEnAttente = $this->getCommandesEnAttente($commandeModel);
         
+        // Enrichir avec lignesMenus
+        $commandeMenuModel = new CommandeMenu();
+        foreach ($commandesEnAttente as &$cmd) {
+            $cmd['lignesMenus'] = $commandeMenuModel->findByCommande($cmd['numero_commande']);
+            $cmd['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($cmd['numero_commande']);
+            // Afficher le premier menu comme menu_nom
+            if (!empty($cmd['lignesMenus'])) {
+                $cmd['menu_nom'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
+            }
+        }
+        
         // Commandes du jour
         $commandesDuJour = $this->getCommandesDuJour($commandeModel, $aujourdhui);
         
@@ -53,7 +65,7 @@ class EmployeController extends Controller
         $stats = [
             'commandes_en_attente' => count($commandesEnAttente),
             'commandes_aujourdhui' => count($commandesDuJour),
-            'avis_a_moderer' => count($avisEnAttente)
+            'avis_non_moderes' => count($avisEnAttente)
         ];
 
         $this->render('employe/dashboard', [
@@ -69,8 +81,7 @@ class EmployeController extends Controller
      */
     private function getCommandesEnAttente(Commande $model): array
     {
-        // Utiliser une méthode du modèle plutôt qu'accéder directement à $db
-        return $model->findByStatuts(['en attente', 'validée', 'en préparation']);
+        return $model->findByStatuts(['en_attente', 'acceptee', 'en_preparation']);
     }
 
     /**
@@ -86,6 +97,6 @@ class EmployeController extends Controller
      */
     private function getAvisEnAttente(Avis $model): array
     {
-        return $model->findByStatut('en attente');
+        return $model->findByStatut('en_attente');
     }
 }

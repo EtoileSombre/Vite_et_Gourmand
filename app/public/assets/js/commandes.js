@@ -163,9 +163,109 @@ const CommandeModule = {
         }
     },
 
-    /**
-     * Initialiser la page annuler-commande.php
-     */
+    /*Initialiser la page nouvelle commande*/
+    initCreatePage: function() {
+        const alerteLivraison = document.getElementById('alerte-frais-livraison');
+        if (alerteLivraison) {
+            alerteLivraison.style.display = 'block';
+            alerteLivraison.style.visibility = 'visible';
+            alerteLivraison.style.opacity = '1';
+        }
+        
+        const menuSelect = document.getElementById('menu_id');
+        const nbPersonnesInput = document.getElementById('nombre_personnes');
+        const villeLivraisonInput = document.getElementById('ville_livraison');
+        const distanceInput = document.getElementById('distance_km');
+        const distanceGroup = document.getElementById('distance-group');
+        
+        const prixMenuBase = document.getElementById('prix-menu-base');
+        const montantReduction = document.getElementById('montant-reduction');
+        const fraisLivraison = document.getElementById('frais-livraison');
+        const totalFinal = document.getElementById('total-final');
+        
+        const reductionAlert = document.getElementById('reduction-alert');
+        const reductionRow = document.getElementById('reduction-row');
+        const minPersonnesInfo = document.getElementById('min-personnes-info');
+        
+        if (!menuSelect || !nbPersonnesInput) {
+            return;
+        }
+        
+        function calculerPrix() {
+            const menuOption = menuSelect.options[menuSelect.selectedIndex];
+            if (!menuOption || !menuOption.value) {
+                return;
+            }
+            
+            const prixParPersonne = parseFloat(menuOption.dataset.prix) || 0;
+            const minPersonnes = parseInt(menuOption.dataset.minPersonnes) || 2;
+            const nbPersonnes = parseInt(nbPersonnesInput.value) || 0;
+            
+            // Validation minimum personnes
+            nbPersonnesInput.min = minPersonnes;
+            minPersonnesInfo.textContent = 'Minimum ' + minPersonnes + ' personnes pour ce menu';
+            
+            if (nbPersonnes < minPersonnes) {
+                minPersonnesInfo.classList.add('text-danger');
+                return;
+            } else {
+                minPersonnesInfo.classList.remove('text-danger');
+            }
+            
+            // 1. Prix de base
+            const prixBase = prixParPersonne * nbPersonnes;
+            prixMenuBase.textContent = prixBase.toFixed(2);
+            
+            // 2. Réduction 10% si >= (min + 5)
+            let reduction = 0;
+            if (nbPersonnes >= (minPersonnes + 5)) {
+                reduction = prixBase * 0.10;
+                montantReduction.textContent = reduction.toFixed(2);
+                reductionAlert.style.display = 'block';
+                reductionRow.style.display = 'flex';
+            } else {
+                reductionAlert.style.display = 'none';
+                reductionRow.style.display = 'none';
+            }
+            
+            // 3. Frais livraison
+            if (!villeLivraisonInput || !distanceInput || !distanceGroup) {
+                return;
+            }
+            
+            const ville = villeLivraisonInput.value.toLowerCase().trim();
+            let frais = 5.00;
+            
+            if (ville === 'bordeaux') {
+                frais = 5.00;
+                distanceGroup.style.display = 'none';
+                distanceInput.value = 0;
+            } else {
+                const distance = parseFloat(distanceInput.value) || 0;
+                frais = 5.00 + (distance * 0.59);
+                distanceGroup.style.display = 'block';
+            }
+            
+            fraisLivraison.textContent = frais.toFixed(2);
+            
+            // 4. Total final
+            const total = (prixBase - reduction) + frais;
+            totalFinal.textContent = total.toFixed(2);
+        }
+        
+        // Événements
+        menuSelect.addEventListener('change', calculerPrix);
+        nbPersonnesInput.addEventListener('input', calculerPrix);
+        villeLivraisonInput.addEventListener('input', calculerPrix);
+        distanceInput.addEventListener('input', calculerPrix);
+        
+        // Calcul initial si menu pré-sélectionné
+        if (menuSelect.value) {
+            calculerPrix();
+        }
+    },
+
+    /*Initialiser la page annuler-commande*/
     initAnnulerCommandePage: function() {
         const motifSelect = document.getElementById('motif_annulation_select');
         const motifTextarea = document.getElementById('motif_annulation');
@@ -185,15 +285,12 @@ const CommandeModule = {
     }
 };
 
-/**
- * Initialisation automatique au chargement du DOM
- */
 document.addEventListener('DOMContentLoaded', function() {
+    CommandeModule.initCreatePage();
     CommandeModule.initCommanderPage();
     CommandeModule.initModifierCommandePage();
     CommandeModule.initAnnulerCommandePage();
     CommandeModule.initConfirmationAnnulation();
 });
 
-// Exposer le module
 window.CommandeModule = CommandeModule;

@@ -28,10 +28,14 @@
                         <td>
                             <?php
                             $statutClass = match($commande['statut']) {
-                                'en_attente' => 'warning',
-                                'validee' => 'success',
+                                'en_attente' => 'warning text-dark',
+                                'acceptee' => 'success',
+                                'en_preparation' => 'primary',
+                                'en_cours_livraison' => 'purple',
+                                'livree' => 'orange text-dark',
+                                'attente_retour_materiel' => 'brown text-white',
+                                'terminee' => 'dark-green text-white',
                                 'annulee' => 'danger',
-                                'livree' => 'info',
                                 default => 'secondary'
                             };
                             ?>

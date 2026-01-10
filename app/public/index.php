@@ -1,28 +1,20 @@
 <?php
-// Point d'entrée unique (Front Controller)
+require_once __DIR__ . '/../autoload.php';
 
-ob_start();
-
-session_start();
-
-ini_set('display_errors', 1);
+if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
+    require_once __DIR__ . '/../vendor/autoload.php';
+}
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/../../storage/logs/php_errors.log');
 error_reporting(E_ALL);
 
 date_default_timezone_set('Europe/Paris');
 
-// Charger l'autoloader PSR-4
-require_once __DIR__ . '/../autoload.php';
 
-// Charger Composer autoloader (pour PHPMailer, MongoDB, etc.)
-if (file_exists(__DIR__ . '/../vendor/autoload.php')) {
-    require_once __DIR__ . '/../vendor/autoload.php';
-}
+session_start();
 
-// Charger les routes
 $router = require_once __DIR__ . '/../routes.php';
 
-// Dispatcher la requête
+// Analyser l'URL demandée et exécuter le contrôleur correspondant
 $router->dispatch();
-
-// Envoyer le buffer
-ob_end_flush();

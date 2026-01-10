@@ -17,7 +17,7 @@ class Avis extends Model
                    u.prenom, u.nom
             FROM {$this->table} a
             INNER JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
-            WHERE (a.statut = 'validé' OR a.statut LIKE 'valid%') 
+            WHERE a.statut = 'publie'
             AND a.note >= :minNote
             ORDER BY a.created_at DESC
             LIMIT :limit
@@ -52,7 +52,7 @@ class Avis extends Model
             SELECT a.*, u.prenom, u.nom, u.email
             FROM {$this->table} a
             INNER JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
-            WHERE a.statut = 'en attente'
+            WHERE a.statut = 'en_attente'
             ORDER BY a.created_at DESC
         ");
         $stmt->execute();
@@ -66,17 +66,33 @@ class Avis extends Model
      */
     public function createAvis(array $data): int
     {
-        $stmt = $this->db->prepare("
-            INSERT INTO {$this->table} 
-            (utilisateur_id, note, description, statut, created_at)
-            VALUES (:user_id, :note, :description, 'en attente', NOW())
-        ");
-        
-        $stmt->execute([
-            'user_id' => $data['utilisateur_id'],
-            'note' => $data['note'],
-            'description' => $data['description']
-        ]);
+        // Vérifier si un numéro de commande est fourni
+        if (isset($data['numero_commande'])) {
+            $stmt = $this->db->prepare("
+                INSERT INTO {$this->table} 
+                (utilisateur_id, numero_commande, note, description, statut, created_at)
+                VALUES (:user_id, :numero_commande, :note, :description, 'en_attente', NOW())
+            ");
+            
+            $stmt->execute([
+                'user_id' => $data['utilisateur_id'],
+                'numero_commande' => $data['numero_commande'],
+                'note' => $data['note'],
+                'description' => $data['description']
+            ]);
+        } else {
+            $stmt = $this->db->prepare("
+                INSERT INTO {$this->table} 
+                (utilisateur_id, note, description, statut, created_at)
+                VALUES (:user_id, :note, :description, 'en_attente', NOW())
+            ");
+            
+            $stmt->execute([
+                'user_id' => $data['utilisateur_id'],
+                'note' => $data['note'],
+                'description' => $data['description']
+            ]);
+        }
         
         return (int) $this->db->lastInsertId();
     }
@@ -109,8 +125,8 @@ class Avis extends Model
     {
         $stmt = $this->db->prepare("
             SELECT a.*, 
-                   u.prenom as client_prenom,
-                   u.email as client_email
+                   u.prenom as utilisateur_prenom,
+                   u.email as utilisateur_email
             FROM {$this->table} a
             LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
             WHERE a.statut = ?
@@ -129,15 +145,13 @@ class Avis extends Model
     {
         $stmt = $this->db->prepare("
             SELECT a.*, 
-                   u.prenom as client_prenom,
-                   u.nom as client_nom,
-                   u.email as client_email,
-                   c.numero_commande,
-                   m.titre as menu_titre
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
+                   c.numero_commande
             FROM {$this->table} a
             LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
             LEFT JOIN commande c ON a.numero_commande = c.numero_commande
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             ORDER BY a.created_at DESC
         ");
         $stmt->execute();
@@ -153,15 +167,13 @@ class Avis extends Model
     {
         $stmt = $this->db->prepare("
             SELECT a.*, 
-                   u.prenom as client_prenom,
-                   u.nom as client_nom,
-                   u.email as client_email,
-                   c.numero_commande,
-                   m.titre as menu_titre
+                   u.prenom as utilisateur_prenom,
+                   u.nom as utilisateur_nom,
+                   u.email as utilisateur_email,
+                   c.numero_commande
             FROM {$this->table} a
             LEFT JOIN utilisateur u ON a.utilisateur_id = u.utilisateur_id
             LEFT JOIN commande c ON a.numero_commande = c.numero_commande
-            LEFT JOIN menu m ON c.menu_id = m.menu_id
             WHERE a.statut = :statut
             ORDER BY a.created_at DESC
         ");
@@ -183,5 +195,26 @@ class Avis extends Model
         ");
         $stmt->execute(['statut' => $statut]);
         return (int) ($stmt->fetch()['total'] ?? 0);
+    }
+
+    /**
+     * Vérifie si un utilisateur a déjà donné un avis pour une commande
+     * 
+     * @return array|null
+     */
+    public function findByCommandeAndUser(string $numeroCommande, int $userId): ?array
+    {
+        $stmt = $this->db->prepare("
+            SELECT * 
+            FROM {$this->table}
+            WHERE numero_commande = :numero_commande
+            AND utilisateur_id = :user_id
+        ");
+        $stmt->execute([
+            'numero_commande' => $numeroCommande,
+            'user_id' => $userId
+        ]);
+        $result = $stmt->fetch();
+        return $result ?: null;
     }
 }

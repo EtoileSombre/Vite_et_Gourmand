@@ -1,34 +1,20 @@
 <?php
-/**
- * Vue Admin - Liste des menus
- * Gestion CRUD des menus par employés/administrateurs
- */
+/*Liste et gestion des menus par employés/administrateurs*/
 require_once __DIR__ . '/../../layouts/header.php';
 ?>
 
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-card-list"></i> Gestion des Menus</h1>
-        <a href="/admin/menus/create" class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i> Créer un Menu
-        </a>
+        <div>
+            <a href="/employe" class="btn btn-vg-bordeaux me-2">
+                <i class="bi bi-arrow-left"></i> Retour Dashboard
+            </a>
+            <a href="/admin/menus/create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Créer un Menu
+            </a>
+        </div>
     </div>
-
-    <?php if (isset($_SESSION['flash_success'])): ?>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle"></i> <?= htmlspecialchars($_SESSION['flash_success']) ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <?php unset($_SESSION['flash_success']); ?>
-    <?php endif; ?>
-
-    <?php if (isset($_SESSION['flash_error'])): ?>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle"></i> <?= $_SESSION['flash_error'] ?>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-        <?php unset($_SESSION['flash_error']); ?>
-    <?php endif; ?>
 
     <div class="card">
         <div class="card-body">
@@ -38,9 +24,9 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <tr>
                             <th>ID</th>
                             <th>Titre</th>
+                            <th>Composition</th>
                             <th>Prix/personne</th>
                             <th>Nb pers. min</th>
-                            <th>Régime</th>
                             <th>Stock</th>
                             <th>Statut</th>
                             <th class="text-end">Actions</th>
@@ -64,15 +50,29 @@ require_once __DIR__ . '/../../layouts/header.php';
                                             <br><small class="text-muted"><?= htmlspecialchars(substr($menu['description'], 0, 50)) ?>...</small>
                                         <?php endif; ?>
                                     </td>
-                                    <td><strong><?= number_format($menu['prix_par_personne'], 2) ?> €</strong></td>
-                                    <td><?= htmlspecialchars($menu['nombre_personne_minimum'] ?? 1) ?> pers.</td>
                                     <td>
-                                        <?php if ($menu['regime']): ?>
-                                            <span class="badge bg-info"><?= htmlspecialchars($menu['regime']) ?></span>
+                                        <?php if (!empty($menu['plats'])): ?>
+                                            <small>
+                                                <?php 
+                                                $platsList = array_map(function($p) {
+                                                    $icon = match($p['type_plat']) {
+                                                        'Entree' => '🥗',
+                                                        'Plat' => '🍽️',
+                                                        'Dessert' => '🍰',
+                                                        'Accompagnement' => '🥖',
+                                                        default => '•'
+                                                    };
+                                                    return $icon . ' ' . htmlspecialchars($p['titre_plat']);
+                                                }, $menu['plats']);
+                                                echo implode('<br>', $platsList);
+                                                ?>
+                                            </small>
                                         <?php else: ?>
                                             <span class="text-muted">-</span>
                                         <?php endif; ?>
                                     </td>
+                                    <td><strong><?= number_format($menu['prix_par_personne'], 2) ?> €</strong></td>
+                                    <td><?= htmlspecialchars($menu['nombre_personne_minimum'] ?? 1) ?> pers.</td>
                                     <td>
                                         <?php
                                         $stock = (int)$menu['quantite_restante'];
@@ -132,7 +132,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                             </div>
                                             <div class="modal-body">
                                                 <p>Voulez-vous vraiment désactiver le menu <strong>"<?= htmlspecialchars($menu['titre']) ?>"</strong> ?</p>
-                                                <p class="text-muted small">Le menu ne sera plus visible par les clients mais restera dans la base de données.</p>
+                                                <p class="text-muted small">Le menu ne sera plus visible par les utilisateurs mais restera dans la base de données.</p>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>

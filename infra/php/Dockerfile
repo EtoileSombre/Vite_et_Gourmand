@@ -18,4 +18,9 @@ RUN a2enmod rewrite \
 
 RUN echo "date.timezone=Europe/Paris" > /usr/local/etc/php/conf.d/timezone.ini
 
+# Configuration UTF-8 pour Apache
+RUN echo "AddDefaultCharset UTF-8" >> /etc/apache2/apache2.conf
+
+COPY php.ini /usr/local/etc/php/conf.d/custom.ini
+
 WORKDIR /var/www/html

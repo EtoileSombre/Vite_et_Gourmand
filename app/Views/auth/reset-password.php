@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card shadow">
-                <div class="card-header bg-primary text-white">
+                <div class="card-header text-white bg-vg-bordeaux">
                     <h4 class="mb-0">🔑 Nouveau mot de passe</h4>
                 </div>
                 <div class="card-body">
@@ -75,7 +75,7 @@
                             <!-- Indicateur de force du mot de passe -->
                             <div class="mb-3">
                                 <div class="progress progress-sm">
-                                    <div id="passwordStrength" class="progress-bar" role="progressbar" style="width: 0%"></div>
+                                    <div id="passwordStrength" class="progress-bar w-0" role="progressbar"></div>
                                 </div>
                                 <small id="passwordStrengthText" class="form-text"></small>
                             </div>

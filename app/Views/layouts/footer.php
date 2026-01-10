@@ -2,7 +2,10 @@
 
     <!-- Footer -->
     <footer class="site-footer text-center py-4 mt-5">
-        <p class="mb-1"><strong>Horaires :</strong> Lun–Dim 10h–22h</p>
+        <p class="mb-1"><strong>Horaires :</strong> <?php
+            use App\Models\Horaire;
+            echo htmlspecialchars(Horaire::getHorairesFormatted());
+        ?></p>
         <p class="mb-2">
             <a href="/contact">Contact</a> · 
             <a href="/">Accueil</a> · 
@@ -20,6 +23,11 @@
     <script src="/assets/js/validation.js"></script>
     <script src="/assets/js/commandes.js"></script>
     <script src="/assets/js/avis.js"></script>
-    <script src="/assets/js/menus.js"></script>
+    
+    <?php if (isset($additionalScripts) && is_array($additionalScripts)): ?>
+        <?php foreach ($additionalScripts as $script): ?>
+            <script src="<?= htmlspecialchars($script) ?>"></script>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </body>
 </html>

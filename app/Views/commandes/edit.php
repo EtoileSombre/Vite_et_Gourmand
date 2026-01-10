@@ -3,24 +3,48 @@
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h3>Modifier la commande #<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></h3>
+            <div class="card shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
+                    <h3 class="mb-0"><i class="bi bi-pencil-square"></i> Modifier la commande #<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></h3>
                 </div>
                 <div class="card-body">
                     <form method="post" action="/commande/modifier">
                         <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($commande['numero_commande']) ?>">
                         
                         <div class="mb-3">
-                            <label class="form-label">Menu</label>
-                            <p class="form-control-plaintext"><strong><?= htmlspecialchars($commande['menu_nom'] ?? 'Menu') ?></strong></p>
-                            <small class="text-muted">Le menu ne peut pas être modifié. Vous devez annuler et créer une nouvelle commande pour changer de menu.</small>
+                            <label class="form-label">Menus commandés</label>
+                            <?php if (!empty($commande['lignesMenus'])): ?>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Menu</th>
+                                            <th>Nb Personnes</th>
+                                            <th>Prix/pers.</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($commande['lignesMenus'] as $ligne): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($ligne['menu_nom']) ?></td>
+                                                <td><?= htmlspecialchars($ligne['nombre_personne']) ?></td>
+                                                <td><?= number_format($ligne['prix_par_personne'], 2) ?> €</td>
+                                                <td><?= number_format($ligne['total_ligne'], 2) ?> €</td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                                <small class="text-muted">Les menus ne peuvent pas être modifiés via ce formulaire. Pour changer les menus, veuillez annuler cette commande et en créer une nouvelle.</small>
+                            <?php else: ?>
+                                <p class="text-muted">Aucun menu dans cette commande</p>
+                            <?php endif; ?>
                         </div>
                         
                         <div class="mb-3">
-                            <label for="nombre_personnes" class="form-label">Nombre de personnes</label>
+                            <label for="nombre_personnes" class="form-label">Modifier le nombre de personnes</label>
                             <input type="number" class="form-control" id="nombre_personnes" name="nombre_personnes" 
-                                   min="1" value="<?= htmlspecialchars($commande['nombre_personne'] ?? 2) ?>" required>
+                                   min="1" value="<?= htmlspecialchars(!empty($commande['lignesMenus']) ? $commande['lignesMenus'][0]['nombre_personne'] : 2) ?>" required>
+                            <small class="text-muted">Pour une modification plus complexe, contactez-nous.</small>
                         </div>
                         
                         <div class="mb-3">

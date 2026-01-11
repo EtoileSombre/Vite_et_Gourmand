@@ -25,7 +25,6 @@ class MenuController extends Controller
         $regimes = $this->menuModel->getAllRegimes();
 
         // Log MongoDB
-        require_once __DIR__ . '/../config/mongodb.php';
         $mongoStats = new \App\Config\MongoStats();
         $mongoStats->logUserActivity('view_menus_list', Session::get('user_id'), [
             'count' => count($menus)
@@ -63,7 +62,6 @@ class MenuController extends Controller
         $photos = $this->menuModel->getPhotosMenu((int)$id);
 
         // Log MongoDB
-        require_once __DIR__ . '/../config/mongodb.php';
         $mongoStats = new \App\Config\MongoStats();
         $mongoStats->logMenuView((int)$id, ['titre' => $menu['titre']]);
 

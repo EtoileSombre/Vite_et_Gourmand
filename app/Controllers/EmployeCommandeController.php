@@ -194,7 +194,6 @@ class EmployeCommandeController extends Controller
             );
 
             // Logger dans MongoDB
-            require_once __DIR__ . '/../config/mongodb.php';
             $mongoStats = new \App\Config\MongoStats();
             $mongoStats->logUserActivity('change_order_status', Session::get('user_id'), [
                 'numero_commande' => $numeroCommande,
@@ -398,7 +397,6 @@ class EmployeCommandeController extends Controller
             );
 
             // Logger dans MongoDB
-            require_once __DIR__ . '/../config/mongodb.php';
             $mongoStats = new \App\Config\MongoStats();
             $mongoStats->logUserActivity('edit_order', Session::get('user_id'), [
                 'numero_commande' => $numeroCommande,

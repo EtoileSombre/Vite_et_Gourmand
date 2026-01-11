@@ -202,8 +202,6 @@ class CommandeController extends Controller
         }
 
         // LOGGING MONGODB
-        
-        require_once __DIR__ . '/../config/mongodb.php';
         $mongoStats = new \App\Config\MongoStats();
         $mongoStats->logCommande($numeroCommande, [
             'menu_id' => $menuId,

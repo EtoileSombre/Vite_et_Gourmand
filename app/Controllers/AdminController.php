@@ -136,7 +136,6 @@ class AdminController extends Controller
             Session::set('flash_success', "Compte employé créé avec succès ! Email de notification envoyé.");
             
             // Logger dans MongoDB
-            require_once __DIR__ . '/../config/mongodb.php';
             $mongoStats = new \App\Config\MongoStats();
             $mongoStats->logUserActivity('create_employee', Session::get('user_id'), [
                 'employee_id' => $userId,
@@ -179,7 +178,6 @@ class AdminController extends Controller
             Session::set('flash_success', "Compte employé désactivé avec succès");
             
             // Logger dans MongoDB
-            require_once __DIR__ . '/../config/mongodb.php';
             $mongoStats = new \App\Config\MongoStats();
             $mongoStats->logUserActivity('deactivate_employee', Session::get('user_id'), [
                 'employee_id' => $utilisateurId,
@@ -221,7 +219,6 @@ class AdminController extends Controller
             Session::set('flash_success', "Compte employé réactivé avec succès");
             
             // Logger dans MongoDB
-            require_once __DIR__ . '/../config/mongodb.php';
             $mongoStats = new \App\Config\MongoStats();
             $mongoStats->logUserActivity('activate_employee', Session::get('user_id'), [
                 'employee_id' => $utilisateurId,

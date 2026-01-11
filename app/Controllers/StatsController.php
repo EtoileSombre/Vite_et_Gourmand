@@ -9,51 +9,43 @@ use App\Models\Menu;
 
 class StatsController extends Controller
 {
-    /**
-     * Dashboard des statistiques MongoDB
-     */
     public function index()
     {
-        // Vérifier que l'utilisateur est admin
+        // Vérification accès administrateur
         $userRole = Session::get('user_role');
         if (!$userRole || $userRole !== 'administrateur') {
             $this->redirect('/');
             return;
         }
 
-        // Récupérer les paramètres de filtres CA
+        // Récupération des paramètres de filtres
         $filtreMenuId = isset($_GET['menu_id']) && $_GET['menu_id'] !== '' ? (int)$_GET['menu_id'] : null;
         $filtreDateDebut = isset($_GET['date_debut']) && $_GET['date_debut'] !== '' ? $_GET['date_debut'] : null;
         $filtreDateFin = isset($_GET['date_fin']) && $_GET['date_fin'] !== '' ? $_GET['date_fin'] : null;
 
-        // Récupérer les statistiques MongoDB
-        require_once __DIR__ . '/../config/mongodb.php';
-        $mongoStats = new \App\Config\MongoStats();
+        // Statistiques MongoDB
+        $mongoStats = new MongoStats();
         
-        $statsGlobales = $mongoStats->getGlobalStats();
-        $topMenus = $mongoStats->getTopMenus(5);
+        // Graph Commandes : comparaison SANS filtre menu (tous les menus visibles)
+        // Uniquement filtres de dates pour comparer les menus entre eux
+        $commandesParMenu = $mongoStats->getCommandesParMenu(null, $filtreDateDebut, $filtreDateFin);
         
-        // Commandes par menu depuis MongoDB
-        $commandesParMenu = $mongoStats->getCommandesParMenu($filtreMenuId, $filtreDateDebut, $filtreDateFin);
-        
-        // CA par menu avec filtres depuis MongoDB
+        // Tableau CA : AVEC filtre menu + dates (analyse détaillée)
         $caParMenu = $mongoStats->getCAParMenu($filtreMenuId, $filtreDateDebut, $filtreDateFin);
 
-        // Récupérer tous les menus pour le dropdown
+        // Récupérer tous les menus pour le dropdown de filtres
         $menuModel = new Menu();
         $allMenus = $menuModel->findAll();
 
         // Préparer les données pour Chart.js
-        $chartData = $this->prepareChartData($commandesParMenu, $topMenus, $caParMenu, $allMenus);
+        $chartData = $this->prepareChartData($commandesParMenu, $caParMenu, $allMenus);
 
         $this->render('admin/stats', [
-            'title' => 'Statistiques MongoDB',
-            'statsGlobales' => $statsGlobales,
-            'topMenus' => $topMenus,
+            'title' => 'Statistiques MongoDB - Commandes et CA',
             'commandesParMenu' => $commandesParMenu,
+            'caParMenu' => $caParMenu,
             'chartData' => $chartData,
             'allMenus' => $allMenus,
-            'caParMenu' => $caParMenu,
             'filtreMenuId' => $filtreMenuId,
             'filtreDateDebut' => $filtreDateDebut,
             'filtreDateFin' => $filtreDateFin
@@ -63,19 +55,19 @@ class StatsController extends Controller
     /**
      * Prépare les données pour les graphiques Chart.js
      */
-    private function prepareChartData(array $commandesParMenu, array $topMenus, array $caParMenu, array $allMenus): array
+    private function prepareChartData(
+        array $commandesParMenu,
+        array $caParMenu, 
+        array $allMenus
+    ): array
     {
-        // Préparer données top menus (vues)
-        $titresMenus = [];
-        $vuesMenus = [];
-        $couleursMenus = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
-
-        foreach ($topMenus as $index => $menu) {
-            $titresMenus[] = $menu['titre'] ?? 'Menu #' . $menu['_id'];
-            $vuesMenus[] = $menu['total_vues'];
+        // Créer un mapping menu_id => titre
+        $menuTitres = [];
+        foreach ($allMenus as $menu) {
+            $menuTitres[$menu['menu_id']] = $menu['titre'];
         }
 
-        // Préparer données commandes par menu (graphique comparatif)
+        // Préparer données commandes par menu
         $menusCommandes = [];
         $commandesValues = [];
         $personnesValues = [];
@@ -83,12 +75,6 @@ class StatsController extends Controller
             '#007bff', '#28a745', '#17a2b8', '#ffc107', '#dc3545', 
             '#6610f2', '#20c997', '#fd7e14', '#e83e8c', '#6c757d'
         ];
-
-        // Créer un mapping menu_id => titre
-        $menuTitres = [];
-        foreach ($allMenus as $menu) {
-            $menuTitres[$menu['menu_id']] = $menu['titre'];
-        }
 
         foreach ($commandesParMenu as $index => $data) {
             $menuId = $data['_id'];
@@ -114,11 +100,6 @@ class StatsController extends Controller
         }
 
         return [
-            'menus' => [
-                'labels' => $titresMenus,
-                'data' => $vuesMenus,
-                'colors' => $couleursMenus
-            ],
             'commandesParMenu' => [
                 'labels' => $menusCommandes,
                 'commandes' => $commandesValues,

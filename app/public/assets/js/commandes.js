@@ -177,94 +177,324 @@ const CommandeModule = {
         
         const menuSelect = document.getElementById('menu_id');
         const nbPersonnesInput = document.getElementById('nombre_personnes');
-        const villeLivraisonInput = document.getElementById('ville_livraison');
         const distanceInput = document.getElementById('distance_km');
-        const distanceGroup = document.getElementById('distance-group');
-        
-        const prixMenuBase = document.getElementById('prix-menu-base');
-        const montantReduction = document.getElementById('montant-reduction');
-        const fraisLivraison = document.getElementById('frais-livraison');
-        const totalFinal = document.getElementById('total-final');
-        
-        const reductionAlert = document.getElementById('reduction-alert');
-        const reductionRow = document.getElementById('reduction-row');
-        const minPersonnesInfo = document.getElementById('min-personnes-info');
         
         if (!menuSelect || !nbPersonnesInput) {
             return;
         }
         
-        function calculerPrix() {
-            const menuOption = menuSelect.options[menuSelect.selectedIndex];
-            if (!menuOption || !menuOption.value) {
-                return;
-            }
-            
-            const prixParPersonne = parseFloat(menuOption.dataset.prix) || 0;
-            const minPersonnes = parseInt(menuOption.dataset.minPersonnes) || 2;
-            const nbPersonnes = parseInt(nbPersonnesInput.value) || 0;
-            
-            // Validation minimum personnes
-            nbPersonnesInput.min = minPersonnes;
-            minPersonnesInfo.textContent = 'Minimum ' + minPersonnes + ' personnes pour ce menu';
-            
-            if (nbPersonnes < minPersonnes) {
-                minPersonnesInfo.classList.add('text-danger');
-                return;
-            } else {
-                minPersonnesInfo.classList.remove('text-danger');
-            }
-            
-            // 1. Prix de base
-            const prixBase = prixParPersonne * nbPersonnes;
-            prixMenuBase.textContent = prixBase.toFixed(2);
-            
-            // 2. Réduction 10% si >= (min + 5)
-            let reduction = 0;
-            if (nbPersonnes >= (minPersonnes + 5)) {
-                reduction = prixBase * 0.10;
-                montantReduction.textContent = reduction.toFixed(2);
-                reductionAlert.style.display = 'block';
-                reductionRow.style.display = 'flex';
-            } else {
-                reductionAlert.style.display = 'none';
-                reductionRow.style.display = 'none';
-            }
-            
-            // 3. Frais livraison
-            if (!villeLivraisonInput || !distanceInput || !distanceGroup) {
-                return;
-            }
-            
-            const ville = villeLivraisonInput.value.toLowerCase().trim();
-            let frais = 5.00;
-            
-            if (ville === 'bordeaux') {
-                frais = 5.00;
-                distanceGroup.style.display = 'none';
-                distanceInput.value = 0;
-            } else {
-                const distance = parseFloat(distanceInput.value) || 0;
-                frais = 5.00 + (distance * 0.59);
-                distanceGroup.style.display = 'block';
-            }
-            
-            fraisLivraison.textContent = frais.toFixed(2);
-            
-            // 4. Total final
-            const total = (prixBase - reduction) + frais;
-            totalFinal.textContent = total.toFixed(2);
+        // Événements - utiliser app.updateCalculations() pour gérer tous les calculs
+        menuSelect.addEventListener('change', () => {
+            if (this.app) this.app.updateCalculations();
+        });
+        nbPersonnesInput.addEventListener('input', () => {
+            if (this.app) this.app.updateCalculations();
+        });
+        if (distanceInput) {
+            distanceInput.addEventListener('input', () => {
+                if (this.app) this.app.updateCalculations();
+            });
         }
         
-        // Événements
-        menuSelect.addEventListener('change', calculerPrix);
-        nbPersonnesInput.addEventListener('input', calculerPrix);
-        villeLivraisonInput.addEventListener('input', calculerPrix);
-        distanceInput.addEventListener('input', calculerPrix);
-        
         // Calcul initial si menu pré-sélectionné
-        if (menuSelect.value) {
-            calculerPrix();
+        if (menuSelect.value && this.app) {
+            setTimeout(() => this.app.updateCalculations(), 100);
+        }
+    },
+
+    /*Gestion boissons et matériels pour create.php*/
+    app: {
+        boissons: [],
+        materiels: [],
+        
+        init() {
+            this.bindEvents();
+        },
+        
+        bindEvents() {
+            // Événements boissons
+            const btnBoisson = document.getElementById('btn_ajouter_boisson');
+            if (btnBoisson) btnBoisson.addEventListener('click', () => this.ajouterBoisson());
+            
+            // Événements matériel
+            const btnMateriel = document.getElementById('btn_ajouter_materiel');
+            if (btnMateriel) btnMateriel.addEventListener('click', () => this.ajouterMateriel());
+        },
+        
+        ajouterBoisson() {
+            const select = document.getElementById('boisson_select');
+            const option = select.options[select.selectedIndex];
+            
+            if (!option.value) return;
+            
+            const boisson = {
+                id: option.value,
+                nom: option.dataset.nom,
+                prix: parseFloat(option.dataset.prix),
+                contenance: option.dataset.contenance,
+                quantite: 1
+            };
+            
+            const existing = this.boissons.find(b => b.id === boisson.id);
+            if (existing) {
+                alert('Cette boisson est déjà ajoutée. Modifiez sa quantité.');
+                return;
+            }
+            
+            this.boissons.push(boisson);
+            this.renderBoissons();
+            this.updateCalculations();
+            select.selectedIndex = 0;
+        },
+        
+        ajouterMateriel() {
+            const select = document.getElementById('materiel_select');
+            const option = select.options[select.selectedIndex];
+            
+            if (!option.value) return;
+            
+            const materiel = {
+                id: option.value,
+                nom: option.dataset.nom,
+                caution: parseFloat(option.dataset.caution),
+                quantiteDispo: parseInt(option.dataset.quantiteDispo),
+                quantite: 1
+            };
+            
+            const existing = this.materiels.find(m => m.id === materiel.id);
+            if (existing) {
+                alert('Ce matériel est déjà ajouté. Modifiez sa quantité.');
+                return;
+            }
+            
+            this.materiels.push(materiel);
+            this.renderMateriels();
+            this.updateCalculations();
+            
+            const pretMateriel = document.getElementById('pret_materiel');
+            if (pretMateriel) pretMateriel.value = this.materiels.length > 0 ? '1' : '0';
+            
+            select.selectedIndex = 0;
+        },
+        
+        renderBoissons() {
+            const container = document.getElementById('liste_boissons');
+            const recap = document.getElementById('recap_boissons');
+            
+            if (!container) return;
+            
+            if (this.boissons.length === 0) {
+                container.innerHTML = '';
+                if (recap) recap.style.display = 'none';
+                return;
+            }
+            
+            container.innerHTML = this.boissons.map((b, index) => `
+                <div class="boisson-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="flex-grow-1">
+                            <strong>${b.nom}</strong>
+                            <small class="text-muted ms-2">${b.contenance}</small>
+                            <div class="price-badge">${b.prix.toFixed(2)} € / unité</div>
+                        </div>
+                        <div class="qty-control">
+                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" onclick="CommandeModule.app.updateBoissonQty(${index}, -1)">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <input type="number" class="qty-input" value="${b.quantite}" min="1" 
+                                   onchange="CommandeModule.app.setBoissonQty(${index}, this.value)" readonly>
+                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" onclick="CommandeModule.app.updateBoissonQty(${index}, 1)">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger btn-remove rounded-pill" onclick="CommandeModule.app.removeBoisson(${index})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="boissons[${index}][id]" value="${b.id}">
+                    <input type="hidden" name="boissons[${index}][quantite]" value="${b.quantite}">
+                    <input type="hidden" name="boissons[${index}][prix_unitaire]" value="${b.prix}">
+                </div>
+            `).join('');
+            
+            const total = this.boissons.reduce((sum, b) => sum + (b.prix * b.quantite), 0);
+            const totalDisplay = document.getElementById('total_boissons_display');
+            if (totalDisplay) totalDisplay.textContent = total.toFixed(2) + ' €';
+            if (recap) recap.style.display = 'block';
+        },
+        
+        renderMateriels() {
+            const container = document.getElementById('liste_materiel');
+            const recap = document.getElementById('recap_materiel');
+            
+            if (!container) return;
+            
+            if (this.materiels.length === 0) {
+                container.innerHTML = '';
+                if (recap) recap.style.display = 'none';
+                return;
+            }
+            
+            container.innerHTML = this.materiels.map((m, index) => `
+                <div class="materiel-item">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="flex-grow-1">
+                            <strong>${m.nom}</strong>
+                            <div class="caution-badge">Caution: ${m.caution.toFixed(2)} € / unité</div>
+                            <small class="text-muted">Max disponible: ${m.quantiteDispo}</small>
+                        </div>
+                        <div class="qty-control">
+                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" onclick="CommandeModule.app.updateMaterielQty(${index}, -1)">
+                                <i class="bi bi-dash"></i>
+                            </button>
+                            <input type="number" class="qty-input" value="${m.quantite}" min="1" max="${m.quantiteDispo}"
+                                   onchange="CommandeModule.app.setMaterielQty(${index}, this.value)" readonly>
+                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" onclick="CommandeModule.app.updateMaterielQty(${index}, 1)">
+                                <i class="bi bi-plus"></i>
+                            </button>
+                            <button type="button" class="btn btn-sm btn-danger btn-remove rounded-pill" onclick="CommandeModule.app.removeMateriel(${index})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="materiels[${index}][id]" value="${m.id}">
+                    <input type="hidden" name="materiels[${index}][quantite]" value="${m.quantite}">
+                    <input type="hidden" name="materiels[${index}][caution_unitaire]" value="${m.caution}">
+                </div>
+            `).join('');
+            
+            const totalCaution = this.materiels.reduce((sum, m) => sum + (m.caution * m.quantite), 0);
+            const totalDisplay = document.getElementById('total_caution_display');
+            if (totalDisplay) totalDisplay.textContent = totalCaution.toFixed(2) + ' €';
+            if (recap) recap.style.display = 'block';
+        },
+        
+        updateBoissonQty(index, delta) {
+            this.boissons[index].quantite = Math.max(1, this.boissons[index].quantite + delta);
+            this.renderBoissons();
+            this.updateCalculations();
+        },
+        
+        setBoissonQty(index, value) {
+            this.boissons[index].quantite = Math.max(1, parseInt(value) || 1);
+            this.renderBoissons();
+            this.updateCalculations();
+        },
+        
+        removeBoisson(index) {
+            this.boissons.splice(index, 1);
+            this.renderBoissons();
+            this.updateCalculations();
+        },
+        
+        updateMaterielQty(index, delta) {
+            const newQty = this.materiels[index].quantite + delta;
+            if (newQty >= 1 && newQty <= this.materiels[index].quantiteDispo) {
+                this.materiels[index].quantite = newQty;
+                this.renderMateriels();
+                this.updateCalculations();
+            }
+        },
+        
+        setMaterielQty(index, value) {
+            const qty = parseInt(value) || 1;
+            this.materiels[index].quantite = Math.max(1, Math.min(qty, this.materiels[index].quantiteDispo));
+            this.renderMateriels();
+            this.updateCalculations();
+        },
+        
+        removeMateriel(index) {
+            this.materiels.splice(index, 1);
+            this.renderMateriels();
+            this.updateCalculations();
+            const pretMateriel = document.getElementById('pret_materiel');
+            if (pretMateriel) pretMateriel.value = this.materiels.length > 0 ? '1' : '0';
+        },
+        
+        updateCalculations() {
+            const menuSelect = document.getElementById('menu_id');
+            if (!menuSelect) return;
+            
+            const option = menuSelect.options[menuSelect.selectedIndex];
+            
+            if (!option.value) {
+                const prixMenuBase = document.getElementById('prix-menu-base');
+                const totalFinal = document.getElementById('total-final');
+                const fraisLivraison = document.getElementById('frais-livraison');
+                if (prixMenuBase) prixMenuBase.textContent = '0,00';
+                if (totalFinal) totalFinal.textContent = '0,00';
+                if (fraisLivraison) fraisLivraison.textContent = '5,00';
+                return;
+            }
+            
+            const prixParPersonne = parseFloat(option.dataset.prix);
+            const minPersonnes = parseInt(option.dataset.minPersonnes);
+            const nombrePersonnesInput = document.getElementById('nombre_personnes');
+            const distanceKmInput = document.getElementById('distance_km');
+            
+            if (!nombrePersonnesInput || !distanceKmInput) return;
+            
+            const nombrePersonnes = parseInt(nombrePersonnesInput.value) || 0;
+            const distanceKm = parseFloat(distanceKmInput.value) || 0;
+            
+            // Mise à jour info minimum
+            const minPersonnesInfo = document.getElementById('min-personnes-info');
+            if (minPersonnesInfo) {
+                minPersonnesInfo.textContent = `Minimum requis : ${minPersonnes} personne${minPersonnes > 1 ? 's' : ''}`;
+            }
+            
+            // Calculs
+            const prixMenuBase = prixParPersonne * nombrePersonnes;
+            let reduction = 0;
+            
+            // Réduction 10% si +5 personnes au-dessus du minimum
+            const reductionAlert = document.getElementById('reduction-alert');
+            const reductionRow = document.getElementById('reduction-row');
+            
+            if (nombrePersonnes >= (minPersonnes + 5)) {
+                reduction = prixMenuBase * 0.10;
+                if (reductionAlert) reductionAlert.style.display = 'block';
+                if (reductionRow) reductionRow.style.display = 'flex';
+            } else {
+                if (reductionAlert) reductionAlert.style.display = 'none';
+                if (reductionRow) reductionRow.style.display = 'none';
+            }
+            
+            const totalBoissons = this.boissons.reduce((sum, b) => sum + (b.prix * b.quantite), 0);
+            const fraisLivraison = 5.00 + (distanceKm * 0.59);
+            const totalFinal = prixMenuBase - reduction + totalBoissons + fraisLivraison;
+            const totalCaution = this.materiels.reduce((sum, m) => sum + (m.caution * m.quantite), 0);
+            
+            // Affichage
+            const prixMenuBaseEl = document.getElementById('prix-menu-base');
+            const montantReductionEl = document.getElementById('montant-reduction');
+            const fraisLivraisonEl = document.getElementById('frais-livraison');
+            const totalFinalEl = document.getElementById('total-final');
+            
+            if (prixMenuBaseEl) prixMenuBaseEl.textContent = prixMenuBase.toFixed(2);
+            if (montantReductionEl) montantReductionEl.textContent = reduction.toFixed(2);
+            if (fraisLivraisonEl) fraisLivraisonEl.textContent = fraisLivraison.toFixed(2);
+            if (totalFinalEl) totalFinalEl.textContent = totalFinal.toFixed(2);
+            
+            // Boissons
+            const rowBoissons = document.getElementById('row-boissons');
+            const montantBoissons = document.getElementById('montant-boissons');
+            if (totalBoissons > 0 && rowBoissons && montantBoissons) {
+                rowBoissons.style.display = 'flex';
+                montantBoissons.textContent = totalBoissons.toFixed(2);
+            } else if (rowBoissons) {
+                rowBoissons.style.display = 'none';
+            }
+            
+            // Caution
+            const rowCaution = document.getElementById('row-caution');
+            const montantCautionFinal = document.getElementById('montant-caution-final');
+            if (totalCaution > 0 && rowCaution && montantCautionFinal) {
+                rowCaution.style.display = 'flex';
+                montantCautionFinal.textContent = totalCaution.toFixed(2);
+            } else if (rowCaution) {
+                rowCaution.style.display = 'none';
+            }
         }
     },
 
@@ -294,6 +524,11 @@ document.addEventListener('DOMContentLoaded', function() {
     CommandeModule.initModifierCommandePage();
     CommandeModule.initAnnulerCommandePage();
     CommandeModule.initConfirmationAnnulation();
+    
+    // Initialiser l'app pour create.php si les éléments existent
+    if (document.getElementById('btn_ajouter_boisson') || document.getElementById('btn_ajouter_materiel')) {
+        CommandeModule.app.init();
+    }
 });
 
 window.CommandeModule = CommandeModule;

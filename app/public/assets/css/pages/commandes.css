@@ -82,3 +82,67 @@
         padding-left: 30px;
     }
 }
+
+/* === Styles pour create.php === */
+
+/* Boissons et matériels */
+.boisson-item, .materiel-item {
+    background: #f8f9fa;
+    border-left: 3px solid #0d6efd;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.materiel-item {
+    border-left-color: #198754;
+}
+
+.boisson-item:hover, .materiel-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* Contrôles de quantité */
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-input {
+    width: 60px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.btn-remove {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+}
+
+/* Badges de prix et caution */
+.price-badge {
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+.caution-badge {
+    font-weight: 600;
+    color: #fd7e14;
+}

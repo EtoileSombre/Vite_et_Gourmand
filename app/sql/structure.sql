@@ -469,3 +469,57 @@ CREATE TABLE `utilise_promotion` (
   CONSTRAINT `utilise_promotion_ibfk_2` FOREIGN KEY (`promotion_id`) REFERENCES `promotion` (`promotion_id`) ON DELETE RESTRICT,
   CONSTRAINT `utilise_promotion_chk_1` CHECK ((`montant_reduction` >= 0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- TABLE : commande_boisson
+-- Boissons associées à une commande avec quantités
+
+CREATE TABLE `commande_boisson` (
+  `commande_boisson_id` int NOT NULL AUTO_INCREMENT,
+  `numero_commande` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `boisson_id` int NOT NULL,
+  `quantite` int NOT NULL DEFAULT 1,
+  `prix_unitaire` decimal(10,2) NOT NULL,
+  `total_ligne` decimal(10,2) GENERATED ALWAYS AS (`quantite` * `prix_unitaire`) STORED,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`commande_boisson_id`),
+  KEY `idx_cb_commande` (`numero_commande`),
+  KEY `idx_cb_boisson` (`boisson_id`),
+  CONSTRAINT `commande_boisson_ibfk_1` FOREIGN KEY (`numero_commande`) REFERENCES `commande` (`numero_commande`) ON DELETE CASCADE,
+  CONSTRAINT `commande_boisson_ibfk_2` FOREIGN KEY (`boisson_id`) REFERENCES `boisson` (`boisson_id`) ON DELETE RESTRICT,
+  CONSTRAINT `commande_boisson_chk_quantite` CHECK (`quantite` > 0),
+  CONSTRAINT `commande_boisson_chk_prix` CHECK (`prix_unitaire` >= 0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='Boissons commandées avec quantités';
+
+-- TABLE : commande_materiel
+-- Matériel loué pour une commande avec quantités et cautions
+
+CREATE TABLE `commande_materiel` (
+  `commande_materiel_id` int NOT NULL AUTO_INCREMENT,
+  `numero_commande` varchar(50) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `materiel_id` int NOT NULL,
+  `quantite` int NOT NULL DEFAULT 1,
+  `prix_caution_unitaire` decimal(10,2) NOT NULL,
+  `total_caution` decimal(10,2) GENERATED ALWAYS AS (`quantite` * `prix_caution_unitaire`) STORED,
+  `date_emprunt` datetime DEFAULT NULL,
+  `date_retour_prevue` datetime DEFAULT NULL,
+  `date_retour_effective` datetime DEFAULT NULL,
+  `etat_retour` enum('non_retourne','bon_etat','endommage','perdu') COLLATE utf8mb4_unicode_ci DEFAULT 'non_retourne',
+  `caution_restituee` tinyint(1) DEFAULT 0,
+  `montant_retenu` decimal(10,2) DEFAULT 0.00,
+  `notes` text COLLATE utf8mb4_unicode_ci,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`commande_materiel_id`),
+  KEY `idx_cm_commande` (`numero_commande`),
+  KEY `idx_cm_materiel` (`materiel_id`),
+  KEY `idx_cm_etat_retour` (`etat_retour`),
+  KEY `idx_date_retour_prevue` (`date_retour_prevue`),
+  KEY `idx_caution_restituee` (`caution_restituee`),
+  CONSTRAINT `commande_materiel_ibfk_1` FOREIGN KEY (`numero_commande`) REFERENCES `commande` (`numero_commande`) ON DELETE CASCADE,
+  CONSTRAINT `commande_materiel_ibfk_2` FOREIGN KEY (`materiel_id`) REFERENCES `materiel` (`materiel_id`) ON DELETE RESTRICT,
+  CONSTRAINT `commande_materiel_chk_quantite` CHECK (`quantite` > 0),
+  CONSTRAINT `commande_materiel_chk_caution` CHECK (`prix_caution_unitaire` >= 0),
+  CONSTRAINT `commande_materiel_chk_retenu` CHECK (`montant_retenu` >= 0)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+COMMENT='Matériel loué avec gestion des cautions et retours';

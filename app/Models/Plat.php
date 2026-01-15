@@ -3,252 +3,342 @@
 namespace App\Models;
 
 use App\Core\Model;
-use App\Core\Database;
-use PDO;
 
+/**
+ * Modèle Plat
+ * Gestion des plats et de leurs allergènes
+ */
 class Plat extends Model
 {
     protected $table = 'plat';
+    protected $primaryKey = 'plat_id';
 
     /**
-     * Récupère tous les plats avec filtre optionnel par type
+     * Récupère tous les plats avec filtre optionnel par type (surcharge de findAll)
+     * 
+     * @param string|null $typePlat
+     * @return array
      */
-    public static function findAllPlats(?string $typePlat = null): array
+    public function findAllPlats(?string $typePlat = null): array
     {
-        $db = Database::getInstance();
-        
         $sql = "SELECT plat_id, titre_plat, description, type_plat, photo, created_at, updated_at
-                FROM plat";
+                FROM {$this->table}";
         
         if ($typePlat) {
-            $sql .= " WHERE type_plat = :type_plat";
+            $sql .= " WHERE type_plat = ?";
         }
         
         $sql .= " ORDER BY type_plat ASC, titre_plat ASC";
         
-        $stmt = $db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
         
         if ($typePlat) {
-            $stmt->execute(['type_plat' => $typePlat]);
+            $stmt->execute([$typePlat]);
         } else {
             $stmt->execute();
         }
         
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     /**
-     * Récupère un plat par son ID
+     * Récupère un plat par son ID (wrapper sur findById du parent)
+     * 
+     * @param int $id
+     * @return array|null
      */
-    public static function findPlatById(int $platId): ?array
+    public function findPlatById(int $id): ?array
     {
-        $db = Database::getInstance();
-        
-        $stmt = $db->prepare("
-            SELECT plat_id, titre_plat, description, type_plat, photo, created_at, updated_at
-            FROM plat
-            WHERE plat_id = :plat_id
-        ");
-        
-        $stmt->execute(['plat_id' => $platId]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        return $result ?: null;
+        return $this->findById($id);
     }
 
     /**
      * Crée un nouveau plat
+     * 
+     * @param array $data
+     * @return int|null ID du plat créé
      */
-    public static function createPlat(array $data): ?int
+    public function createPlat(array $data): ?int
     {
-        $db = Database::getInstance();
-        
-        $stmt = $db->prepare("
-            INSERT INTO plat (titre_plat, description, type_plat, photo)
-            VALUES (:titre_plat, :description, :type_plat, :photo)
+        $stmt = $this->db->prepare("
+            INSERT INTO {$this->table} (titre_plat, description, type_plat, photo)
+            VALUES (?, ?, ?, ?)
         ");
         
         $success = $stmt->execute([
-            'titre_plat' => $data['titre_plat'],
-            'description' => $data['description'] ?? null,
-            'type_plat' => $data['type_plat'] ?? 'Plat',
-            'photo' => $data['photo'] ?? null
+            $data['titre_plat'],
+            $data['description'] ?? null,
+            $data['type_plat'] ?? 'Plat',
+            $data['photo'] ?? null
         ]);
         
-        return $success ? (int)$db->lastInsertId() : null;
+        return $success ? (int)$this->db->lastInsertId() : null;
     }
 
     /**
      * Met à jour un plat
+     * 
+     * @param int $id
+     * @param array $data
+     * @return bool
      */
-    public static function updatePlat(int $platId, array $data): bool
+    public function updatePlat(int $id, array $data): bool
     {
-        $db = Database::getInstance();
-        
-        $stmt = $db->prepare("
-            UPDATE plat
-            SET titre_plat = :titre_plat,
-                description = :description,
-                type_plat = :type_plat,
-                photo = :photo
-            WHERE plat_id = :plat_id
+        $stmt = $this->db->prepare("
+            UPDATE {$this->table}
+            SET titre_plat = ?,
+                description = ?,
+                type_plat = ?,
+                photo = ?
+            WHERE {$this->primaryKey} = ?
         ");
         
         return $stmt->execute([
-            'plat_id' => $platId,
-            'titre_plat' => $data['titre_plat'],
-            'description' => $data['description'] ?? null,
-            'type_plat' => $data['type_plat'] ?? 'Plat',
-            'photo' => $data['photo'] ?? null
+            $data['titre_plat'],
+            $data['description'] ?? null,
+            $data['type_plat'] ?? 'Plat',
+            $data['photo'] ?? null,
+            $id
         ]);
     }
 
     /**
-     * Supprime un plat
+     * Supprime un plat (wrapper sur delete du parent)
+     * 
+     * @param int $id
+     * @return bool
      */
-    public static function deletePlat(int $platId): bool
+    public function deletePlat(int $id): bool
     {
-        $db = Database::getInstance();
-        
-        // La suppression CASCADE s'occupera de la table 'propose' et 'contient'
-        $stmt = $db->prepare("DELETE FROM plat WHERE plat_id = :plat_id");
-        
-        return $stmt->execute(['plat_id' => $platId]);
+        return $this->delete($id);
     }
 
     /**
      * Compte le nombre de plats par type
+     * 
+     * @return array
      */
-    public static function countByType(): array
+    public function countByType(): array
     {
-        $db = Database::getInstance();
-        
-        $stmt = $db->query("
+        $stmt = $this->db->query("
             SELECT type_plat, COUNT(*) as total
-            FROM plat
+            FROM {$this->table}
             GROUP BY type_plat
             ORDER BY type_plat ASC
         ");
         
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll();
     }
 
     /**
      * Récupère les plats associés à un menu
+     * 
+     * @param int $menuId
+     * @return array
      */
-    public static function findPlatsByMenuId(int $menuId): array
+    public function findPlatsByMenuId(int $menuId): array
     {
-        $db = Database::getInstance();
-        
-        $stmt = $db->prepare("
+        $stmt = $this->db->prepare("
             SELECT p.plat_id, p.titre_plat, p.description, p.type_plat, p.photo, pr.ordre
-            FROM plat p
+            FROM {$this->table} p
             INNER JOIN propose pr ON p.plat_id = pr.plat_id
-            WHERE pr.menu_id = :menu_id
+            WHERE pr.menu_id = ?
             ORDER BY pr.ordre ASC, p.type_plat ASC
         ");
         
-        $stmt->execute(['menu_id' => $menuId]);
+        $stmt->execute([$menuId]);
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * Récupère les plats d un type spécifique
+     * 
+     * @param string $type
+     * @return array
+     */
+    public function findPlatsByType(string $type): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT *
+            FROM {$this->table}
+            WHERE type_plat = ?
+            ORDER BY titre_plat ASC
+        ");
         
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt->execute([$type]);
+        return $stmt->fetchAll();
     }
 
     /**
      * Associe un plat à un menu
+     * 
+     * @param int $platId
+     * @param int $menuId
+     * @param int $ordre
+     * @return bool
      */
-    public static function attachToMenu(int $platId, int $menuId, int $ordre = 0): bool
+    public function attachToMenu(int $platId, int $menuId, int $ordre = 0): bool
     {
-        $db = Database::getInstance();
-        
-        $stmt = $db->prepare("
+        $stmt = $this->db->prepare("
             INSERT INTO propose (menu_id, plat_id, ordre)
-            VALUES (:menu_id, :plat_id, :ordre)
-            ON DUPLICATE KEY UPDATE ordre = :ordre
+            VALUES (?, ?, ?)
+            ON DUPLICATE KEY UPDATE ordre = ?
         ");
         
-        return $stmt->execute([
-            'menu_id' => $menuId,
-            'plat_id' => $platId,
-            'ordre' => $ordre
-        ]);
+        return $stmt->execute([$menuId, $platId, $ordre, $ordre]);
     }
 
     /**
-     * Dissocie un plat d'un menu
+     * Dissocie un plat d un menu
+     * 
+     * @param int $platId
+     * @param int $menuId
+     * @return bool
      */
-    public static function detachFromMenu(int $platId, int $menuId): bool
+    public function detachFromMenu(int $platId, int $menuId): bool
     {
-        $db = Database::getInstance();
-        
-        $stmt = $db->prepare("
+        $stmt = $this->db->prepare("
             DELETE FROM propose
-            WHERE menu_id = :menu_id AND plat_id = :plat_id
+            WHERE menu_id = ? AND plat_id = ?
         ");
         
-        return $stmt->execute([
-            'menu_id' => $menuId,
-            'plat_id' => $platId
-        ]);
+        return $stmt->execute([$menuId, $platId]);
+    }
+
+    /**
+     * Associe plusieurs plats à un menu
+     * 
+     * @param int $menuId
+     * @param array $platIds Tableau [ordre => platId]
+     * @return bool
+     */
+    public function syncPlatsWithMenu(int $menuId, array $platIds): bool
+    {
+        try {
+            // Supprimer les anciennes associations
+            $stmt = $this->db->prepare("DELETE FROM propose WHERE menu_id = ?");
+            $stmt->execute([$menuId]);
+
+            // Ajouter les nouvelles associations
+            if (!empty($platIds)) {
+                $stmt = $this->db->prepare("
+                    INSERT INTO propose (menu_id, plat_id, ordre)
+                    VALUES (?, ?, ?)
+                ");
+                foreach ($platIds as $ordre => $platId) {
+                    $stmt->execute([$menuId, $platId, $ordre]);
+                }
+            }
+            return true;
+        } catch (\PDOException $e) {
+            return false;
+        }
     }
 
     /**
      * Types de plats disponibles
+     * 
+     * @return array
      */
-    public static function getTypesPlat(): array
+    public function getTypesPlat(): array
     {
         return ['Entrée', 'Plat', 'Dessert', 'Accompagnement'];
     }
 
     /**
      * Récupère tous les allergènes disponibles
+     * 
+     * @return array
      */
-    public static function getAllAllergenes(): array
+    public function getAllAllergenes(): array
     {
-        $db = Database::getInstance();
-        $stmt = $db->query("SELECT allergene_id, libelle FROM allergene ORDER BY libelle");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $this->db->query("SELECT allergene_id, libelle FROM allergene ORDER BY libelle");
+        return $stmt->fetchAll();
     }
 
     /**
-     * Récupère les allergènes d'un plat
+     * Récupère les allergènes d un plat
+     * 
+     * @param int $platId
+     * @return array
      */
-    public static function getAllergenesForPlat(int $platId): array
+    public function getAllergenesForPlat(int $platId): array
     {
-        $db = Database::getInstance();
-        $stmt = $db->prepare("
+        $stmt = $this->db->prepare("
             SELECT allergene_id 
             FROM contient 
-            WHERE plat_id = :plat_id
+            WHERE plat_id = ?
         ");
-        $stmt->execute(['plat_id' => $platId]);
-        return array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'allergene_id');
+        $stmt->execute([$platId]);
+        return array_column($stmt->fetchAll(), 'allergene_id');
+    }
+
+    /**
+     * Récupère les allergènes détaillés d un plat
+     * 
+     * @param int $platId
+     * @return array
+     */
+    public function getAllergenesDetailsForPlat(int $platId): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT a.allergene_id, a.libelle
+            FROM allergene a
+            INNER JOIN contient c ON a.allergene_id = c.allergene_id
+            WHERE c.plat_id = ?
+            ORDER BY a.libelle
+        ");
+        $stmt->execute([$platId]);
+        return $stmt->fetchAll();
     }
 
     /**
      * Associe des allergènes à un plat
+     * 
+     * @param int $platId
+     * @param array $allergeneIds
+     * @return bool
      */
-    public static function syncAllergenes(int $platId, array $allergeneIds): bool
+    public function syncAllergenes(int $platId, array $allergeneIds): bool
     {
-        $db = Database::getInstance();
-        
-        // Supprimer les anciennes associations
-        $stmt = $db->prepare("DELETE FROM contient WHERE plat_id = :plat_id");
-        $stmt->execute(['plat_id' => $platId]);
-        
-        // Ajouter les nouvelles associations
-        if (!empty($allergeneIds)) {
-            $stmt = $db->prepare("
-                INSERT INTO contient (plat_id, allergene_id)
-                VALUES (:plat_id, :allergene_id)
-            ");
-            foreach ($allergeneIds as $allergeneId) {
-                $stmt->execute([
-                    'plat_id' => $platId,
-                    'allergene_id' => $allergeneId
-                ]);
+        try {
+            // Supprimer les anciennes associations
+            $stmt = $this->db->prepare("DELETE FROM contient WHERE plat_id = ?");
+            $stmt->execute([$platId]);
+            
+            // Ajouter les nouvelles associations
+            if (!empty($allergeneIds)) {
+                $stmt = $this->db->prepare("
+                    INSERT INTO contient (plat_id, allergene_id)
+                    VALUES (?, ?)
+                ");
+                foreach ($allergeneIds as $allergeneId) {
+                    $stmt->execute([$platId, $allergeneId]);
+                }
             }
+            
+            return true;
+        } catch (\PDOException $e) {
+            return false;
         }
-        
-        return true;
+    }
+
+    /**
+     * Vérifie si un plat contient un allergène spécifique
+     * 
+     * @param int $platId
+     * @param int $allergeneId
+     * @return bool
+     */
+    public function hasAllergene(int $platId, int $allergeneId): bool
+    {
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*) as count
+            FROM contient
+            WHERE plat_id = ? AND allergene_id = ?
+        ");
+        $stmt->execute([$platId, $allergeneId]);
+        $result = $stmt->fetch();
+        return $result['count'] > 0;
     }
 }

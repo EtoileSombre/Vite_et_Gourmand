@@ -7,10 +7,10 @@ require_once __DIR__ . '/../../layouts/header.php';
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-card-list"></i> Gestion des Menus</h1>
         <div>
-            <a href="/employe" class="btn btn-vg-bordeaux me-2">
+            <a href="/admin" class="btn btn-vg-bordeaux me-2 rounded-pill">
                 <i class="bi bi-arrow-left"></i> Retour Dashboard
             </a>
-            <a href="/admin/menus/create" class="btn btn-primary">
+            <a href="/admin/menus/create" class="btn btn-primary rounded-pill">
                 <i class="bi bi-plus-circle"></i> Créer un Menu
             </a>
         </div>
@@ -95,14 +95,14 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     <td class="text-end">
                                         <div class="btn-group btn-group-sm" role="group">
                                             <a href="/admin/menus/edit?id=<?= $menu['menu_id'] ?>" 
-                                               class="btn btn-outline-primary" 
+                                               class="btn btn-outline-primary rounded-pill" 
                                                title="Modifier">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
                                             
                                             <?php if ($menu['quantite_restante'] > 0): ?>
                                                 <button type="button" 
-                                                        class="btn btn-outline-danger" 
+                                                        class="btn btn-outline-danger rounded-pill" 
                                                         title="Désactiver"
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#deleteModal<?= $menu['menu_id'] ?>">
@@ -112,7 +112,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                                 <form method="POST" action="/admin/menus/activate" class="d-inline">
                                                     <input type="hidden" name="menu_id" value="<?= $menu['menu_id'] ?>">
                                                     <button type="submit" 
-                                                            class="btn btn-outline-success" 
+                                                            class="btn btn-outline-success rounded-pill" 
                                                             title="Réactiver">
                                                         <i class="bi bi-arrow-clockwise"></i>
                                                     </button>
@@ -135,10 +135,10 @@ require_once __DIR__ . '/../../layouts/header.php';
                                                 <p class="text-muted small">Le menu ne sera plus visible par les utilisateurs mais restera dans la base de données.</p>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                                                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annuler</button>
                                                 <form method="POST" action="/admin/menus/delete" class="d-inline">
                                                     <input type="hidden" name="menu_id" value="<?= $menu['menu_id'] ?>">
-                                                    <button type="submit" class="btn btn-danger">Désactiver</button>
+                                                    <button type="submit" class="btn btn-danger rounded-pill">Désactiver</button>
                                                 </form>
                                             </div>
                                         </div>

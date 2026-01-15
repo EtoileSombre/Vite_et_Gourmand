@@ -11,7 +11,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
 <div class="container my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
-        <a href="/employe/commandes" class="btn btn-outline-secondary">
+        <a href="/employe/commandes" class="btn btn-outline-secondary rounded-pill">
             <i class="bi bi-arrow-left"></i> Retour
         </a>
     </div>

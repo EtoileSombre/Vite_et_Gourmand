@@ -10,10 +10,10 @@
                 <p class="text-muted mb-0">Créez et gérez votre catalogue de plats</p>
             </div>
             <div>
-                <a href="/employe" class="btn btn-vg-bordeaux me-2">
+                <a href="/admin" class="btn btn-vg-bordeaux me-2 rounded-pill">
                     <i class="bi bi-arrow-left"></i> Retour Dashboard
                 </a>
-                <a href="/admin/plats/create" class="btn btn-primary">
+                <a href="/admin/plats/create" class="btn btn-primary rounded-pill">
                     <span aria-hidden="true">➕</span> Créer un plat
                 </a>
             </div>
@@ -40,7 +40,7 @@
             <div class="card-body">
                 <form method="GET" action="/admin/plats" class="row g-3">
                     <div class="col-md-4">
-                        <label for="type" class="form-label">Filtrer par type</label>
+                        <label for="type" class="form-label">Filtrer 🔍</label>
                         <select name="type" id="type" class="form-select" data-auto-submit>
                             <option value="">Tous les types</option>
                             <?php foreach ($typesPlat as $type): ?>
@@ -52,7 +52,7 @@
                     </div>
                     <div class="col-md-8 d-flex align-items-end">
                         <?php if ($typeFiltre): ?>
-                            <a href="/admin/plats" class="btn btn-outline-secondary">
+                            <a href="/admin/plats" class="btn btn-outline-secondary rounded-pill">
                                 <span aria-hidden="true">🔄</span> Réinitialiser
                             </a>
                         <?php endif; ?>
@@ -125,7 +125,7 @@
                                     </td>
                                     <td class="text-end">
                                         <a href="/admin/plats/edit?id=<?= $plat['plat_id'] ?>" 
-                                           class="btn btn-sm btn-outline-primary" 
+                                           class="btn btn-sm btn-outline-primary rounded-pill" 
                                            title="Modifier">
                                             <span aria-hidden="true">✏️</span>
                                             <span class="visually-hidden">Modifier <?= htmlspecialchars($plat['titre_plat']) ?></span>
@@ -136,7 +136,7 @@
                                               class="d-inline" 
                                               data-confirm="Êtes-vous sûr de vouloir supprimer ce plat ?">
                                             <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" title="Supprimer">
                                                 <span aria-hidden="true">🗑️</span>
                                                 <span class="visually-hidden">Supprimer <?= htmlspecialchars($plat['titre_plat']) ?></span>
                                             </button>

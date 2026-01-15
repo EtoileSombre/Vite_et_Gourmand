@@ -3,7 +3,7 @@
 <div class="container mt-4" id="stats-container" data-chart-data='<?= json_encode($chartData) ?>'>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h2">📊 Statistiques MongoDB - Commandes et CA</h1>
-        <a href="/admin" class="btn btn-vg-bordeaux"><i class="bi bi-arrow-left"></i> Retour Dashboard</a>
+        <a href="/admin" class="btn btn-vg-bordeaux rounded-pill"><i class="bi bi-arrow-left"></i> Retour Dashboard</a>
     </div>
 
     <div class="row mb-4">
@@ -37,7 +37,7 @@
                                    value="<?= htmlspecialchars($filtreDateFin ?? '') ?>">
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary w-100">🔍 Filtrer</button>
+                            <button type="submit" class="btn btn-primary w-100 rounded-pill">🔍 Filtrer</button>
                         </div>
                     </form>
 
@@ -137,7 +137,7 @@
                                    value="<?= htmlspecialchars($filtreDateFin ?? '') ?>">
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" class="btn btn-success w-100">🔍 Filtrer</button>
+                            <button type="submit" class="btn btn-success w-100 rounded-pill">🔍 Filtrer</button>
                         </div>
                     </form>
 

@@ -73,7 +73,7 @@
                             <input type="password" class="form-control" id="password_confirm" name="password_confirm" required minlength="10">
                         </div>
                         
-                        <button type="submit" class="btn btn-success w-100">S'inscrire</button>
+                        <button type="submit" class="btn btn-success w-100 rounded-pill">S'inscrire</button>
                     </form>
                     
                     <div class="mt-3 text-center">

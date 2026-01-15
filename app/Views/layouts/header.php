@@ -92,7 +92,7 @@
                     <?php else: ?>
                         <!-- Menu utilisateur non connecté -->
                         <li class="nav-item"><a class="nav-link" href="/login">Connexion</a></li>
-                        <li class="nav-item"><a class="nav-link btn btn-outline-danger btn-sm ms-2" href="/register">S'inscrire</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-outline-danger btn-sm ms-2 rounded-pill" href="/register">S'inscrire</a></li>
                     <?php endif; ?>
                 </ul>
             </div>

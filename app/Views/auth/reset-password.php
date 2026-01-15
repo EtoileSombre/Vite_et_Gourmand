@@ -13,7 +13,7 @@
                             <i class="bi bi-check-circle-fill"></i> <?= htmlspecialchars($success) ?>
                         </div>
                         <p class="text-center mt-3">
-                            <a href="/login" class="btn btn-primary btn-lg">Se connecter maintenant</a>
+                            <a href="/login" class="btn btn-primary btn-lg rounded-pill">Se connecter maintenant</a>
                         </p>
                     <?php elseif (isset($tokenValid) && !$tokenValid): ?>
                         <div class="alert alert-danger" role="alert">
@@ -21,7 +21,7 @@
                             <p class="mb-0">Ce lien de réinitialisation n'est plus valide. Il a peut-être expiré ou déjà été utilisé.</p>
                         </div>
                         <p class="text-center mt-3">
-                            <a href="/forgot-password" class="btn btn-primary">Demander un nouveau lien</a>
+                            <a href="/forgot-password" class="btn btn-primary rounded-pill">Demander un nouveau lien</a>
                         </p>
                     <?php else: ?>
                         <?php if (!empty($errors)): ?>
@@ -81,7 +81,7 @@
                             </div>
 
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill">
                                     <i class="bi bi-shield-check"></i> Réinitialiser le mot de passe
                                 </button>
                             </div>

@@ -32,7 +32,7 @@ require_once __DIR__ . '/../layouts/header.php';
                     <i class="bi bi-people-fill fs-1 text-vg-bordeaux"></i>
                     <h2 class="mt-3 mb-1"><?= $totalUsers ?></h2>
                     <p class="text-muted mb-3">Employés</p>
-                    <a href="/admin/utilisateurs" class="btn btn-sm btn-vg-bordeaux">
+                    <a href="/admin/utilisateurs" class="btn btn-sm btn-vg-bordeaux rounded-pill">
                         <i class="bi bi-person-plus"></i> Créer
                     </a>
                 </div>
@@ -46,7 +46,7 @@ require_once __DIR__ . '/../layouts/header.php';
                     <i class="bi bi-graph-up fs-1 text-vg-bordeaux"></i>
                     <h2 class="mt-3 mb-1"><?= $totalCommandes ?></h2>
                     <p class="text-muted mb-3">Statistiques</p>
-                    <a href="/admin/stats" class="btn btn-sm btn-vg-bordeaux">
+                    <a href="/admin/stats" class="btn btn-sm btn-vg-bordeaux rounded-pill">
                         <i class="bi bi-bar-chart"></i> Voir
                     </a>
                 </div>
@@ -60,7 +60,7 @@ require_once __DIR__ . '/../layouts/header.php';
                     <i class="bi bi-card-list fs-1 text-vg-gold"></i>
                     <h2 class="mt-3 mb-1"><?= $totalMenus ?></h2>
                     <p class="text-muted mb-3">Menus</p>
-                    <a href="/admin/menus" class="btn btn-sm btn-vg-gold">
+                    <a href="/admin/menus" class="btn btn-sm btn-vg-gold rounded-pill">
                         <i class="bi bi-pencil"></i> Gérer
                     </a>
                 </div>
@@ -78,43 +78,43 @@ require_once __DIR__ . '/../layouts/header.php';
                 <div class="card-body">
                     <div class="row g-2">
                         <div class="col-md-2">
-                            <a href="/employe/commandes" class="btn btn-vg-cream w-100 py-2">
+                            <a href="/employe/commandes" class="btn btn-vg-cream w-100 py-2 rounded-pill">
                                 <i class="bi bi-box-seam fs-5 d-block mb-1"></i>
                                 <small>Commandes</small>
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="/employe/avis" class="btn btn-vg-cream w-100 py-2">
+                            <a href="/employe/avis" class="btn btn-vg-cream w-100 py-2 rounded-pill">
                                 <i class="bi bi-star fs-5 d-block mb-1"></i>
                                 <small>Avis</small>
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="/admin/menus" class="btn btn-vg-cream w-100 py-2">
+                            <a href="/admin/menus" class="btn btn-vg-cream w-100 py-2 rounded-pill">
                                 <i class="bi bi-card-list fs-5 d-block mb-1"></i>
                                 <small>Menus</small>
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="/admin/plats" class="btn btn-vg-cream w-100 py-2">
+                            <a href="/admin/plats" class="btn btn-vg-cream w-100 py-2 rounded-pill">
                                 <i class="bi bi-egg-fried fs-5 d-block mb-1"></i>
                                 <small>Plats</small>
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="/admin/horaires" class="btn btn-vg-cream w-100 py-2">
+                            <a href="/admin/horaires" class="btn btn-vg-cream w-100 py-2 rounded-pill">
                                 <i class="bi bi-clock fs-5 d-block mb-1"></i>
                                 <small>Horaires</small>
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="/admin/stats" class="btn btn-vg-cream w-100 py-2">
+                            <a href="/admin/stats" class="btn btn-vg-cream w-100 py-2 rounded-pill">
                                 <i class="bi bi-graph-up fs-5 d-block mb-1"></i>
                                 <small>Statistiques</small>
                             </a>
                         </div>
                         <div class="col-md-2">
-                            <a href="/profil" class="btn btn-vg-cream w-100 py-2">
+                            <a href="/profil" class="btn btn-vg-cream w-100 py-2 rounded-pill">
                                 <i class="bi bi-person-circle fs-5 d-block mb-1"></i>
                                 <small>Mon Profil</small>
                             </a>

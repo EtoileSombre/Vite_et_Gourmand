@@ -26,8 +26,8 @@ $router->get('/mentions-legales', 'App\Controllers\Public\LegalController', 'men
 $router->get('/cgv', 'App\Controllers\Public\LegalController', 'cgv');
 
 // Avis
-$router->get('/donner-avis', 'App\\Controllers\\Utilisateur\\AvisController', 'create');
-$router->post('/avis', 'App\\Controllers\\Utilisateur\\AvisController', 'store');
+$router->get('/donner-avis', 'App\Controllers\Utilisateur\AvisController', 'create');
+$router->post('/avis', 'App\Controllers\Utilisateur\AvisController', 'store');
 
 // ROUTES AUTHENTIFICATION
 
@@ -53,21 +53,21 @@ $router->post('/reset-password', 'App\Controllers\Auth\AuthController', 'resetPa
 // ROUTES PROTÉGÉES (UTILISATEUR CONNECTÉ)
 
 // Commandes (nécessite authentification)
-$router->get('/mes-commandes', 'App\\Controllers\\Utilisateur\\CommandeController', 'index');
-$router->get('/commande/details', 'App\\Controllers\\Utilisateur\\CommandeController', 'show');
-$router->get('/commande/nouvelle', 'App\\Controllers\\Utilisateur\\CommandeController', 'create');
-$router->post('/commande/nouvelle', 'App\\Controllers\\Utilisateur\\CommandeController', 'store');
-$router->get('/commande/modifier', 'App\\Controllers\\Utilisateur\\CommandeController', 'edit');
-$router->post('/commande/modifier', 'App\\Controllers\\Utilisateur\\CommandeController', 'update');
-$router->get('/commande/annuler', 'App\\Controllers\\Utilisateur\\CommandeController', 'cancel');
+$router->get('/mes-commandes', 'App\Controllers\Utilisateur\CommandeController', 'index');
+$router->get('/commande/details', 'App\Controllers\Utilisateur\CommandeController', 'show');
+$router->get('/commande/nouvelle', 'App\Controllers\Utilisateur\CommandeController', 'create');
+$router->post('/commande/nouvelle', 'App\Controllers\Utilisateur\CommandeController', 'store');
+$router->get('/commande/modifier', 'App\Controllers\Utilisateur\CommandeController', 'edit');
+$router->post('/commande/modifier', 'App\Controllers\Utilisateur\CommandeController', 'update');
+$router->get('/commande/annuler', 'App\Controllers\Utilisateur\CommandeController', 'cancel');
 
 // Avis (nécessite authentification)
-$router->get('/avis/create', 'App\\Controllers\\Utilisateur\\AvisController', 'create');
-$router->post('/avis/create', 'App\\Controllers\\Utilisateur\\AvisController', 'store');
+$router->get('/avis/create', 'App\Controllers\Utilisateur\AvisController', 'create');
+$router->post('/avis/create', 'App\Controllers\Utilisateur\AvisController', 'store');
 
 // Profil utilisateur
-$router->get('/profil', 'App\\Controllers\\Utilisateur\\ProfilController', 'index');
-$router->post('/profil', 'App\\Controllers\\Utilisateur\\ProfilController', 'index');
+$router->get('/profil', 'App\Controllers\Utilisateur\ProfilController', 'index');
+$router->post('/profil', 'App\Controllers\Utilisateur\ProfilController', 'index');
 // ROUTES ADMIN (NÉCESSITE RÔLE ADMIN)
 
 // Dashboard admin

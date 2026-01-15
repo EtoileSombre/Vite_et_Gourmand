@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../../layouts/header.php'; ?>
 <link rel="stylesheet" href="/assets/css/pages/home.css">
 <link rel="stylesheet" href="/assets/css/pages/avis.css">
 
@@ -10,7 +10,7 @@
                 <h1>Cuisine maison, <span class="text-bordeaux"> pour toutes vos occasions</span>.</h1>
                 <p class="lead text-muted mb-4">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
                 
-                <a class="btn btn-primary btn-lg" href="/menus">
+                <a class="btn btn-primary btn-lg rounded-pill" href="/menus">
                     <i class="bi bi-basket"></i> Découvrir nos menus
                 </a>
             </div>
@@ -207,4 +207,4 @@
     <?php endif; ?>
 </section>
 
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/footer.php'; ?>

@@ -1,10 +1,10 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../../layouts/header.php'; ?>
 <link rel="stylesheet" href="/assets/css/pages/commandes.css">
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Mes commandes</h2>
-        <a href="/commande/nouvelle" class="btn btn-success">
+        <a href="/commande/nouvelle" class="btn btn-success rounded-pill">
             <i class="bi bi-plus-circle"></i> Nouvelle commande
         </a>
     </div>
@@ -69,24 +69,24 @@
                             <td>
                                 <div class="d-flex gap-1 align-items-center justify-content-center">
                                     <a href="/commande/details?numero=<?= urlencode($commande['numero_commande']) ?>" 
-                                       class="btn btn-sm btn-outline-warning text-dark" 
+                                       class="btn btn-sm btn-outline-warning text-dark rounded-pill" 
                                        title="Voir les détails et le suivi">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     <?php if ($statut === 'en_attente'): ?>
                                         <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" 
-                                           class="btn btn-sm btn-outline-secondary" 
+                                           class="btn btn-sm btn-outline-secondary rounded-pill" 
                                            title="Modifier">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" 
-                                           class="btn btn-sm btn-outline-danger btn-annuler-commande" 
+                                           class="btn btn-sm btn-outline-danger btn-annuler-commande rounded-pill" 
                                            title="Annuler">
                                             <i class="bi bi-x-circle"></i>
                                         </a>
                                     <?php elseif ($statut === 'terminee'): ?>
                                         <a href="/avis/create?commande=<?= urlencode($commande['numero_commande']) ?>" 
-                                           class="btn btn-sm btn-vg-gold" 
+                                           class="btn btn-sm btn-vg-gold rounded-pill" 
                                            title="Donner votre avis">
                                             <i class="bi bi-star-fill"></i>
                                         </a>
@@ -101,4 +101,4 @@
     <?php endif; ?>
 </div>
 
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/footer.php'; ?>

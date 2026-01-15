@@ -1,11 +1,11 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../../layouts/header.php'; ?>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-header text-white bg-vg-bordeaux">
-                    <h3 class="mb-0"><i class="bi bi-person-circle"></i> Mon Espace Utilisateur</h3>
+                    <h3 class="mb-0"><i class="bi bi-person-circle"></i> Mon Profil</h3>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($errors)): ?>
@@ -99,10 +99,10 @@
                                 $returnUrl = '/admin';
                             }
                             ?>
-                            <a href="<?= $returnUrl ?>" class="btn btn-vg-bordeaux">
+                            <a href="<?= $returnUrl ?>" class="btn btn-vg-bordeaux rounded-pill">
                                 <i class="bi bi-arrow-left"></i> Retour Dashboard
                             </a>
-                            <button type="submit" class="btn btn-vg-gold">
+                            <button type="submit" class="btn btn-vg-gold rounded-pill">
                                 <i class="bi bi-save"></i> Enregistrer les modifications
                             </button>
                         </div>
@@ -132,4 +132,4 @@
     </div>
 </div>
 
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/footer.php'; ?>

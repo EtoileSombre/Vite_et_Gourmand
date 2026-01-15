@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Public;
 
 use App\Core\Controller;
 use App\Core\Request;
@@ -72,7 +72,7 @@ class ContactController extends Controller
             }
         }
 
-        $this->render('contact/index', [
+        $this->render('public/contact/index', [
             'errors' => $errors
         ]);
     }

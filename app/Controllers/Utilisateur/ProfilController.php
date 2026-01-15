@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Utilisateur;
 
 use App\Core\Controller;
 use App\Models\User;
@@ -104,7 +104,7 @@ class ProfilController extends Controller
         $userModel = new User();
         $userData = $userModel->findById($userId);
 
-        $this->render('profil/index', [
+        $this->render('utilisateur/profil/index', [
             'user' => $userData,
             'errors' => $errors,
             'success' => $success

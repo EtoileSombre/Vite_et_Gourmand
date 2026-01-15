@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Request;
@@ -10,7 +10,7 @@ use App\Models\Contact;
 /**
  * Contrôleur pour la gestion des messages de contact par les admins
  */
-class AdminContactController extends Controller
+class ContactController extends Controller
 {
     private Contact $contactModel;
 

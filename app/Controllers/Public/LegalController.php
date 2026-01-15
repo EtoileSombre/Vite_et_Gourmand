@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Public;
 
 use App\Core\Controller;
 
@@ -14,7 +14,7 @@ class LegalController extends Controller
      */
     public function mentionsLegales()
     {
-        $this->render('legal/mentions-legales', [
+        $this->render('public/legal/mentions-legales', [
             'title' => 'Mentions légales'
         ]);
     }
@@ -24,7 +24,7 @@ class LegalController extends Controller
      */
     public function cgv()
     {
-        $this->render('legal/cgv', [
+        $this->render('public/legal/cgv', [
             'title' => 'Conditions Générales de Vente'
         ]);
     }

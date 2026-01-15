@@ -1,11 +1,13 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Public;
 
 use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
 use App\Models\Menu;
+use App\Models\Boisson;
+use App\Models\Materiel;
 use App\Helpers\MongoLogger;
 
 class MenuController extends Controller
@@ -30,7 +32,7 @@ class MenuController extends Controller
             'count' => count($menus)
         ]);
 
-        $this->render('menus/index', [
+        $this->render('public/menus/index', [
             'menus' => $menus,
             'themes' => $themes,
             'regimes' => $regimes,
@@ -57,8 +59,10 @@ class MenuController extends Controller
             return;
         }
 
-        $boissons = $this->menuModel->getAllBoissons();
-        $materiels = $this->menuModel->getAllMateriel();
+        $boissonModel = new Boisson();
+        $materielModel = new Materiel();
+        $boissons = $boissonModel->findAllAvailable();
+        $materiels = $materielModel->findAllAvailable();
         $photos = $this->menuModel->getPhotosMenu((int)$id);
 
         // Log MongoDB
@@ -66,7 +70,7 @@ class MenuController extends Controller
         $mongoStats->logMenuView((int)$id, ['titre' => $menu['titre']]);
 
         // Afficher la vue
-        $this->render('menus/show', [
+        $this->render('public/menus/show', [
             'menu' => $menu,
             'boissons' => $boissons,
             'materiels' => $materiels,

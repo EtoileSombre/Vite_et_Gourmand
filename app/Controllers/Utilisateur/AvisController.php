@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Utilisateur;
 
 use App\Core\Controller;
 use App\Core\Request;
@@ -98,7 +98,7 @@ class AvisController extends Controller
             }
         }
 
-        $this->render('avis/create', [
+        $this->render('utilisateur/avis/create', [
             'numeroCommande' => $numeroCommande
         ]);
     }

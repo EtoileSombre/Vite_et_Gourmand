@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Employe;
 
 use App\Core\Controller;
 use App\Core\Session;
@@ -12,7 +12,7 @@ use App\Models\Avis;
  * Contrôleur Employé
  * Dashboard et vue d'ensemble pour les employés
  */
-class EmployeController extends Controller
+class DashboardController extends Controller
 {
     public function __construct()
     {

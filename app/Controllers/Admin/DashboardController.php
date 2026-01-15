@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Request;
@@ -10,7 +10,7 @@ use App\Models\CommandeMenu;
 use App\Models\Menu;
 use App\Core\Session;
 
-class AdminController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Dashboard admin avec statistiques

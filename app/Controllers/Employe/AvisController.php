@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Employe;
 
 use App\Core\Controller;
 use App\Core\Session;
@@ -10,7 +10,7 @@ use App\Models\Avis;
  * Contrôleur pour la modération des avis par les employés
  * ECF DWWM - Vite & Gourmand
  */
-class EmployeAvisController extends Controller
+class AvisController extends Controller
 {
     private Avis $avisModel;
 

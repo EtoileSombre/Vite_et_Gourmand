@@ -13,7 +13,7 @@
                             <i class="bi bi-check-circle-fill"></i> <?= htmlspecialchars($success) ?>
                         </div>
                         <p class="text-center mt-3">
-                            <a href="/login" class="btn btn-primary">Retour à la connexion</a>
+                            <a href="/login" class="btn btn-primary rounded-pill">Retour à la connexion</a>
                         </p>
                     <?php else: ?>
                         <?php if (!empty($errors)): ?>
@@ -45,7 +45,7 @@
                             </div>
 
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill">
                                     <i class="bi bi-envelope"></i> Envoyer le lien de réinitialisation
                                 </button>
                             </div>

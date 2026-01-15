@@ -101,8 +101,8 @@
 
                             <!-- Boutons -->
                             <div class="d-flex justify-content-between mt-4">
-                                <a href="/admin/plats" class="btn btn-secondary">Annuler</a>
-                                <button type="submit" class="btn btn-primary">
+                                <a href="/admin/plats" class="btn btn-secondary rounded-pill">Annuler</a>
+                                <button type="submit" class="btn btn-primary rounded-pill">
                                     <span aria-hidden="true">💾</span> Enregistrer les modifications
                                 </button>
                             </div>

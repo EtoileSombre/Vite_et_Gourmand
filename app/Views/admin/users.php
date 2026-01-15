@@ -4,10 +4,10 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="bi bi-people-fill"></i> Gestion des Employés</h2>
         <div>
-            <button type="button" class="btn btn-vg-bordeaux" data-bs-toggle="modal" data-bs-target="#createEmployeModal">
+            <button type="button" class="btn btn-vg-bordeaux rounded-pill" data-bs-toggle="modal" data-bs-target="#createEmployeModal">
                 <i class="bi bi-person-plus"></i> Créer un Employé
             </button>
-            <a href="/admin" class="btn btn-vg-bordeaux">
+            <a href="/admin" class="btn btn-vg-bordeaux rounded-pill">
                 <i class="bi bi-arrow-left"></i> Retour Dashboard
             </a>
         </div>
@@ -76,7 +76,7 @@
                                     <form method="POST" action="/admin/utilisateurs/desactiver" class="d-inline" 
                                           onsubmit="return confirm('Désactiver ce compte employé ?')">
                                         <input type="hidden" name="utilisateur_id" value="<?= $user['utilisateur_id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-warning" title="Désactiver">
+                                        <button type="submit" class="btn btn-sm btn-warning rounded-pill" title="Désactiver">
                                             <i class="bi bi-lock"></i>
                                         </button>
                                     </form>
@@ -84,7 +84,7 @@
                                     <form method="POST" action="/admin/utilisateurs/activer" class="d-inline"
                                           onsubmit="return confirm('Réactiver ce compte employé ?')">
                                         <input type="hidden" name="utilisateur_id" value="<?= $user['utilisateur_id'] ?>">
-                                        <button type="submit" class="btn btn-sm btn-success" title="Activer">
+                                        <button type="submit" class="btn btn-sm btn-success rounded-pill" title="Activer">
                                             <i class="bi bi-unlock"></i>
                                         </button>
                                     </form>
@@ -144,8 +144,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-vg-bordeaux">
+                    <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-vg-bordeaux rounded-pill">
                         <i class="bi bi-check-circle"></i> Créer le Compte
                     </button>
                 </div>

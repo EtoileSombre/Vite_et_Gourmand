@@ -9,7 +9,7 @@
                 <h1 class="h2 mb-1">⏰ Gestion des horaires</h1>
                 <p class="text-muted mb-0">Définissez les horaires d'ouverture de votre établissement</p>
             </div>
-            <a href="/employe" class="btn btn-vg-bordeaux">
+            <a href="/admin" class="btn btn-vg-bordeaux rounded-pill">
                 <i class="bi bi-arrow-left"></i> Retour Dashboard
             </a>
         </div>
@@ -123,7 +123,7 @@
                             <span aria-hidden="true">💡</span>
                              Cochez "Fermé" pour indiquer qu'un jour est non travaillé
                         </div>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="btn btn-primary rounded-pill">
                             <span aria-hidden="true">💾</span>
                             Enregistrer les horaires
                         </button>

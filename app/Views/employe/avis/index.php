@@ -8,7 +8,7 @@
                     <i class="bi bi-star-fill text-warning me-2"></i>
                     Modération des Avis
                 </h1>
-                <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux">
+                <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux rounded-pill">
                     <i class="bi bi-arrow-left me-2"></i>
                     Retour Dashboard
                 </a>
@@ -124,14 +124,14 @@
                                             <div class="col-6">
                                                 <form method="POST" action="/employe/avis/approve">
                                                     <input type="hidden" name="avis_id" value="<?= $item['avis_id'] ?>">
-                                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                                    <button type="submit" class="btn btn-success btn-sm w-100 rounded-pill">
                                                         <i class="bi bi-check-circle me-1"></i>
                                                         Approuver
                                                     </button>
                                                 </form>
                                             </div>
                                             <div class="col-6">
-                                                <button type="button" class="btn btn-danger btn-sm w-100" 
+                                                <button type="button" class="btn btn-danger btn-sm w-100 rounded-pill" 
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#rejectModal<?= $item['avis_id'] ?>">
                                                     <i class="bi bi-x-circle me-1"></i>
@@ -176,8 +176,8 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                            <button type="submit" class="btn btn-danger">
+                                            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annuler</button>
+                                            <button type="submit" class="btn btn-danger rounded-pill">
                                                 <i class="bi bi-x-circle me-1"></i>
                                                 Confirmer le rejet
                                             </button>

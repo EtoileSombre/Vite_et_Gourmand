@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-12">
             <div class="mb-3 text-end">
-                <a href="/admin" class="btn btn-vg-bordeaux">
+                <a href="/admin" class="btn btn-vg-bordeaux rounded-pill">
                     <i class="bi bi-arrow-left"></i> Retour Dashboard
                 </a>
             </div>
@@ -95,7 +95,7 @@
                                                         <option value="en cours" <?= $msg['statut'] === 'en cours' ? 'selected' : '' ?>>En cours</option>
                                                         <option value="traité" <?= $msg['statut'] === 'traité' ? 'selected' : '' ?>>Traité</option>
                                                     </select>
-                                                    <button type="submit" class="btn btn-sm btn-vg-bordeaux">
+                                                    <button type="submit" class="btn btn-sm btn-vg-bordeaux rounded-pill">
                                                         <i class="bi bi-check-lg"></i> Modifier
                                                     </button>
                                                 </div>
@@ -103,13 +103,13 @@
                                         </div>
                                         <div class="col-md-6 text-end mt-2 mt-md-0">
                                             <a href="mailto:<?= htmlspecialchars($msg['email']) ?>?subject=Re: <?= urlencode($msg['sujet']) ?>" 
-                                               class="btn btn-sm btn-outline-secondary">
+                                               class="btn btn-sm btn-outline-secondary rounded-pill">
                                                 <i class="bi bi-reply-fill"></i> Répondre
                                             </a>
                                             <form method="POST" action="/admin/contacts/delete" class="d-inline" 
                                                   onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');">
                                                 <input type="hidden" name="contact_id" value="<?= $msg['contact_id'] ?>">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
                                                     <i class="bi bi-trash-fill"></i> Supprimer
                                                 </button>
                                             </form>

@@ -40,7 +40,7 @@
                                 <a href="/forgot-password" class="text-decoration-none">Mot de passe oublié ?</a>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+                        <button type="submit" class="btn btn-primary w-100 rounded-pill">Se connecter</button>
                     </form>
                     
                     <div class="mt-3 text-center">

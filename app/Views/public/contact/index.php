@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../../layouts/header.php'; ?>
 
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
@@ -68,7 +68,7 @@
                                       placeholder="Décrivez votre demande..."><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
                         </div>
                         
-                        <button type="submit" class="btn btn-vg-gold w-100">
+                        <button type="submit" class="btn btn-vg-gold w-100 rounded-pill">
                             <i class="bi bi-send"></i> Envoyer le message
                         </button>
                     </form>
@@ -84,4 +84,4 @@
     </div>
 </div>
 
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/footer.php'; ?>

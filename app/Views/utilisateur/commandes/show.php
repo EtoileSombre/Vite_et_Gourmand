@@ -1,10 +1,10 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../../layouts/header.php'; ?>
 <link rel="stylesheet" href="/assets/css/pages/commandes.css">
 
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
-        <a href="/mes-commandes" class="btn btn-outline-secondary">
+        <a href="/mes-commandes" class="btn btn-outline-secondary rounded-pill">
             <i class="bi bi-arrow-left"></i> Retour
         </a>
     </div>
@@ -132,16 +132,16 @@
                     <!-- Actions selon le statut -->
                     <div class="mt-4">
                         <?php if ($statut === 'en_attente'): ?>
-                            <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-primary">
+                            <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-primary rounded-pill">
                                 <i class="bi bi-pencil"></i> Modifier la commande
                             </a>
                             <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" 
-                               class="btn btn-danger btn-annuler-commande">
+                               class="btn btn-danger btn-annuler-commande rounded-pill">
                                 <i class="bi bi-x-circle"></i> Annuler la commande
                             </a>
                         <?php elseif ($statut === 'terminee' && !$avisExistant): ?>
                             <a href="/avis/create?commande=<?= urlencode($commande['numero_commande']) ?>" 
-                               class="btn btn-warning">
+                               class="btn btn-warning rounded-pill">
                                 <i class="bi bi-star-fill"></i> Donner votre avis
                             </a>
                         <?php elseif ($statut === 'terminee' && $avisExistant): ?>
@@ -221,4 +221,4 @@
     </div>
 </div>
 
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/footer.php'; ?>

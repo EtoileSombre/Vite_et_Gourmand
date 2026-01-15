@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../../layouts/header.php'; ?>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -55,8 +55,8 @@
                         </div>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="/mes-commandes" class="btn btn-secondary">Annuler</a>
-                            <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                            <a href="/mes-commandes" class="btn btn-secondary rounded-pill">Annuler</a>
+                            <button type="submit" class="btn btn-primary rounded-pill">Enregistrer les modifications</button>
                         </div>
                     </form>
                 </div>
@@ -65,4 +65,4 @@
     </div>
 </div>
 
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/footer.php'; ?>

@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../../layouts/header.php'; ?>
 <link rel="stylesheet" href="/assets/css/pages/avis.css">
 
 <div class="container mt-5">
@@ -32,8 +32,8 @@
                         </div>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="/" class="btn btn-outline-secondary">Annuler</a>
-                            <button type="submit" class="btn btn-vg-gold"><i class="bi bi-send"></i> Envoyer mon avis</button>
+                            <a href="/" class="btn btn-outline-secondary rounded-pill">Annuler</a>
+                            <button type="submit" class="btn btn-vg-gold rounded-pill"><i class="bi bi-send"></i> Envoyer mon avis</button>
                         </div>
                     </form>
                 </div>
@@ -42,4 +42,4 @@
     </div>
 </div>
 
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/footer.php'; ?>

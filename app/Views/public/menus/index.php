@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../layouts/header.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/header.php'; ?>
 <link rel="stylesheet" href="/assets/css/pages/menus-list.css">
 
 <div class="container mt-5">
@@ -7,7 +7,6 @@
             <h3 class="mb-0"><i class="bi bi-journal-text"></i> Nos Menus</h3>
         </div>
         <div class="card-body">
-            <h5 class="card-title mb-3 text-vg-bordeaux"><i class="bi bi-funnel"></i> Filtres</h5>
             <div class="row g-3">
                 
                 <!-- Filtre Régime -->
@@ -25,9 +24,9 @@
 
                 <!-- Filtre Nombre de personnes minimum -->
                 <div class="col-md-4">
-                    <label for="filterPersonnes" class="form-label">Nombre de convives</label>
+                    <label for="filterPersonnes" class="form-label">Nombre de personnes</label>
                     <select class="form-select" id="filterPersonnes">
-                        <option value="">Toutes les quantités</option>
+                        <option value="">Tout</option>
                         <option value="2">Pour 2 personnes</option>
                         <option value="4">Pour 4 personnes</option>
                         <option value="6">Pour 6 personnes</option>
@@ -49,13 +48,6 @@
                     </select>
                 </div>
 
-                <!-- Filtre Prix maximum -->
-                <div class="col-md-4">
-                    <label for="filterPrixMax" class="form-label">Prix maximum (€/pers.)</label>
-                    <input type="number" class="form-control" id="filterPrixMax" 
-                           placeholder="Ex: 50" min="0" step="5">
-                </div>
-
                 <!-- Filtre Fourchette de prix (min) -->
                 <div class="col-md-4">
                     <label for="filterPrixMin" class="form-label">Prix minimum (€/pers.)</label>
@@ -63,9 +55,16 @@
                            placeholder="Ex: 20" min="0" step="5">
                 </div>
 
+                <!-- Filtre Prix maximum -->
+                <div class="col-md-4">
+                    <label for="filterPrixMax" class="form-label">Prix maximum (€/pers.)</label>
+                    <input type="number" class="form-control" id="filterPrixMax" 
+                           placeholder="Ex: 50" min="0" step="5">
+                </div>
+
                 <!-- Bouton Réinitialiser -->
                 <div class="col-md-4 d-flex align-items-end">
-                    <button class="btn btn-success w-100" id="btnResetFilters">
+                    <button class="btn btn-success w-100 rounded-pill" id="btnResetFilters">
                         <i class="bi bi-x-circle"></i> Réinitialiser
                     </button>
                 </div>
@@ -149,7 +148,7 @@
                                 <span class="h4 mb-0 fw-bold text-bordeaux">
                                     <?= number_format($menu['prix_par_personne'], 2, ',', ' ') ?> €
                                 </span>
-                                <a href="/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-bordeaux">
+                                <a href="/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-bordeaux rounded-pill">
                                     <i class="bi bi-eye"></i> Détails
                                 </a>
                             </div>
@@ -168,4 +167,4 @@
 <!-- Script de filtrage asynchrone -->
 <script src="/assets/js/menu-filters-async.js"></script>
 
-<?php require_once __DIR__ . '/../layouts/footer.php'; ?>
+<?php require_once __DIR__ . '/../../layouts/footer.php'; ?>

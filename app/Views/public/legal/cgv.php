@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../../layouts/header.php'; ?>
 
 <div class="container my-5">
     <div class="row">
@@ -208,11 +208,11 @@
             </div>
 
             <div class="text-center mt-4">
-                <a href="/" class="btn btn-primary">← Retour à l'accueil</a>
-                <a href="/mentions-legales" class="btn btn-outline-secondary">Voir les Mentions légales</a>
+                <a href="/" class="btn btn-primary rounded-pill">← Retour à l'accueil</a>
+                <a href="/mentions-legales" class="btn btn-outline-secondary rounded-pill">Voir les Mentions légales</a>
             </div>
         </div>
     </div>
 </div>
 
-<?php include __DIR__ . '/../layouts/footer.php'; ?>
+<?php include __DIR__ . '/../../layouts/footer.php'; ?>

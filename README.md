@@ -19,6 +19,10 @@ Plateforme de gestion de restaurant pour **Julie et José** (Bordeaux) : présen
 
 ## 🚀 Installation rapide
 
+### Prérequis
+- Docker + Docker Compose installés
+- Git installé
+
 ```bash
 # Cloner et configurer
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
@@ -27,6 +31,7 @@ cp infra/.env.example infra/.env
 
 # Lancer Docker
 cd infra && docker compose up -d
+cd ..
 
 # Importer MySQL
 docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/structure.sql

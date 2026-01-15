@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Session;
@@ -12,6 +12,8 @@ use App\Models\Plat;
  */
 class PlatController extends Controller
 {
+    private Plat $platModel;
+
     public function __construct()
     {
         // Vérifier que l'utilisateur est connecté et a le rôle employé ou admin
@@ -25,6 +27,9 @@ class PlatController extends Controller
             header('Location: /');
             exit;
         }
+
+        // Initialiser le modèle
+        $this->platModel = new Plat();
     }
 
     /**
@@ -36,17 +41,17 @@ class PlatController extends Controller
         $typeFiltre = $_GET['type'] ?? null;
 
         // Récupérer tous les plats
-        $plats = Plat::findAllPlats($typeFiltre);
+        $plats = $this->platModel->findAllPlats($typeFiltre);
 
         // Statistiques par type
-        $stats = Plat::countByType();
+        $stats = $this->platModel->countByType();
 
         $this->render('admin/plats/index', [
             'title' => 'Gestion des plats',
             'plats' => $plats,
             'stats' => $stats,
             'typeFiltre' => $typeFiltre,
-            'typesPlat' => Plat::getTypesPlat()
+            'typesPlat' => $this->platModel->getTypesPlat()
         ]);
     }
 
@@ -57,8 +62,8 @@ class PlatController extends Controller
     {
         $this->render('admin/plats/create', [
             'title' => 'Créer un plat',
-            'typesPlat' => Plat::getTypesPlat(),
-            'allergenes' => Plat::getAllAllergenes()
+            'typesPlat' => $this->platModel->getTypesPlat(),
+            'allergenes' => $this->platModel->getAllAllergenes()
         ]);
     }
 
@@ -83,7 +88,7 @@ class PlatController extends Controller
             $errors[] = "Le titre du plat est obligatoire.";
         }
 
-        if (!in_array($typePlat, Plat::getTypesPlat())) {
+        if (!in_array($typePlat, $this->platModel->getTypesPlat())) {
             $errors[] = "Type de plat invalide.";
         }
 
@@ -94,7 +99,7 @@ class PlatController extends Controller
         }
 
         // Créer le plat
-        $platId = Plat::createPlat([
+        $platId = $this->platModel->createPlat([
             'titre_plat' => $titrePlat,
             'description' => $description,
             'type_plat' => $typePlat,
@@ -105,10 +110,10 @@ class PlatController extends Controller
             // Associer les allergènes
             $allergenes = $_POST['allergenes'] ?? [];
             if (!empty($allergenes)) {
-                Plat::syncAllergenes($platId, $allergenes);
+                $this->platModel->syncAllergenes($platId, $allergenes);
             }
 
-            Session::set('success', "Le plat « $titrePlat » a été créé avec succès.");
+            Session::set('success', "Le plat  $titrePlat  a été créé avec succès.");
         } else {
             Session::set('error', "Une erreur est survenue lors de la création du plat.");
         }
@@ -122,10 +127,10 @@ class PlatController extends Controller
     public function edit()
     {
         $platId = (int)($_GET['id'] ?? 0);
-        $plat = Plat::findPlatById($platId);
+        $plat = $this->platModel->findPlatById($platId);
 
         if (!$plat) {
-            $this->setFlash('error', 'Plat introuvable.');
+            Session::set('error', 'Plat introuvable.');
             $this->redirect('/admin/plats');
             return;
         }
@@ -133,9 +138,9 @@ class PlatController extends Controller
         $this->render('admin/plats/edit', [
             'title' => 'Modifier un plat',
             'plat' => $plat,
-            'typesPlat' => Plat::getTypesPlat(),
-            'allergenes' => Plat::getAllAllergenes(),
-            'platAllergenes' => Plat::getAllergenesForPlat($platId)
+            'typesPlat' => $this->platModel->getTypesPlat(),
+            'allergenes' => $this->platModel->getAllAllergenes(),
+            'platAllergenes' => $this->platModel->getAllergenesForPlat($platId)
         ]);
     }
 
@@ -150,7 +155,7 @@ class PlatController extends Controller
         }
 
         $platId = (int)($_POST['plat_id'] ?? 0);
-        $plat = Plat::findPlatById($platId);
+        $plat = $this->platModel->findPlatById($platId);
 
         if (!$plat) {
             Session::set('error', 'Plat introuvable.');
@@ -169,7 +174,7 @@ class PlatController extends Controller
             $errors[] = "Le titre du plat est obligatoire.";
         }
 
-        if (!in_array($typePlat, Plat::getTypesPlat())) {
+        if (!in_array($typePlat, $this->platModel->getTypesPlat())) {
             $errors[] = "Type de plat invalide.";
         }
 
@@ -180,7 +185,7 @@ class PlatController extends Controller
         }
 
         // Mettre à jour
-        $success = Plat::updatePlat($platId, [
+        $success = $this->platModel->updatePlat($platId, [
             'titre_plat' => $titrePlat,
             'description' => $description,
             'type_plat' => $typePlat,
@@ -190,9 +195,9 @@ class PlatController extends Controller
         if ($success) {
             // Mettre à jour les allergènes
             $allergenes = $_POST['allergenes'] ?? [];
-            Plat::syncAllergenes($platId, $allergenes);
+            $this->platModel->syncAllergenes($platId, $allergenes);
 
-            Session::set('success', "Le plat « $titrePlat » a été modifié avec succès.");
+            Session::set('success', "Le plat  $titrePlat  a été modifié avec succès.");
         } else {
             Session::set('error', "Une erreur est survenue lors de la modification.");
         }
@@ -211,7 +216,7 @@ class PlatController extends Controller
         }
 
         $platId = (int)($_POST['plat_id'] ?? 0);
-        $plat = Plat::findPlatById($platId);
+        $plat = $this->platModel->findPlatById($platId);
 
         if (!$plat) {
             Session::set('error', 'Plat introuvable.');
@@ -219,10 +224,10 @@ class PlatController extends Controller
             return;
         }
 
-        $success = Plat::deletePlat($platId);
+        $success = $this->platModel->deletePlat($platId);
 
         if ($success) {
-            Session::set('success', "Le plat « {$plat['titre_plat']} » a été supprimé.");
+            Session::set('success', "Le plat  {$plat['titre_plat']}  a été supprimé.");
         } else {
             Session::set('error', "Une erreur est survenue lors de la suppression.");
         }

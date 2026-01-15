@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Utilisateur;
 
 use App\Core\Controller;
 use App\Models\Commande;
@@ -29,7 +29,7 @@ class CommandeController extends Controller
             $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($commande['numero_commande']);
         }
         
-        $this->render('commandes/index', ['commandes' => $commandes]);
+        $this->render('utilisateur/commandes/index', ['commandes' => $commandes]);
     }
 
     public function create()
@@ -51,6 +51,12 @@ class CommandeController extends Controller
         $menuModel = new Menu();
         $menus = $menuModel->findActiveWithPhotos();
         
+        // Récupérer TOUTES les boissons et matériels disponibles
+        $boissonModel = new \App\Models\Boisson();
+        $materielModel = new \App\Models\Materiel();
+        $boissons = $boissonModel->findAllAvailable();
+        $materiels = $materielModel->findAllAvailable();
+        
         // Récupérer le menu pré-sélectionné depuis l'URL
         $request = new Request();
         $menuIdFromUrl = $request->get('menu_id');
@@ -61,31 +67,13 @@ class CommandeController extends Controller
             $menuPreselectionne = $menuModel->findActiveById((int)$menuIdFromUrl);
         }
         
-        $boissonsIds = $request->get('boissons');
-        $materielsIds = $request->get('materiels');
-        
-        $boissonsSelectionnees = [];
-        $materielsSelectionnes = [];
-        
-        // Récupérer les détails des boissons
-        if ($boissonsIds) {
-            $ids = explode(',', $boissonsIds);
-            $boissonsSelectionnees = $menuModel->getBoissonsByIds($ids);
-        }
-        
-        // Récupérer les détails du matériel
-        if ($materielsIds) {
-            $ids = explode(',', $materielsIds);
-            $materielsSelectionnes = $menuModel->getMaterielsByIds($ids);
-        }
-        
-        $this->render('commandes/create', [
+        $this->render('utilisateur/commandes/create', [
             'user' => $user,
             'menus' => $menus,
             'menuPreselectionne' => $menuPreselectionne,
             'menuIdFromUrl' => $menuIdFromUrl,
-            'boissonsSelectionnees' => $boissonsSelectionnees,
-            'materielsSelectionnes' => $materielsSelectionnes
+            'boissons' => $boissons,
+            'materiels' => $materiels
         ]);
     }
 
@@ -170,6 +158,65 @@ class CommandeController extends Controller
             $menu['prix_par_personne'],
             $reductionAppliquee
         );
+
+        // AJOUT DES BOISSONS
+        $boissonsData = $request->post('boissons');
+        if (!empty($boissonsData) && is_array($boissonsData)) {
+            try {
+                $stmt = $this->db->prepare("
+                    INSERT INTO commande_boisson (numero_commande, boisson_id, quantite, prix_unitaire)
+                    VALUES (:numero_commande, :boisson_id, :quantite, :prix_unitaire)
+                ");
+                
+                foreach ($boissonsData as $boisson) {
+                    $stmt->execute([
+                        'numero_commande' => $numeroCommande,
+                        'boisson_id' => $boisson['id'],
+                        'quantite' => $boisson['quantite'],
+                        'prix_unitaire' => $boisson['prix_unitaire']
+                    ]);
+                }
+            } catch (\Exception $e) {
+                error_log("Erreur ajout boissons: " . $e->getMessage());
+            }
+        }
+
+        // AJOUT DU MATÉRIEL
+        $materielsData = $request->post('materiels');
+        if (!empty($materielsData) && is_array($materielsData)) {
+            try {
+                $stmt = $this->db->prepare("
+                    INSERT INTO commande_materiel (numero_commande, materiel_id, quantite, prix_caution_unitaire, date_retour_prevue)
+                    VALUES (:numero_commande, :materiel_id, :quantite, :prix_caution_unitaire, :date_retour_prevue)
+                ");
+                
+                // Date de retour prévue = date prestation + 10 jours
+                $dateRetourPrevue = date('Y-m-d H:i:s', strtotime($dateLivraison . ' +10 days'));
+                
+                foreach ($materielsData as $materiel) {
+                    $stmt->execute([
+                        'numero_commande' => $numeroCommande,
+                        'materiel_id' => $materiel['id'],
+                        'quantite' => $materiel['quantite'],
+                        'prix_caution_unitaire' => $materiel['caution_unitaire'],
+                        'date_retour_prevue' => $dateRetourPrevue
+                    ]);
+                    
+                    // Mettre à jour la quantité disponible du matériel
+                    $stmtUpdate = $this->db->prepare("
+                        UPDATE materiel 
+                        SET quantite_disponible = quantite_disponible - :quantite
+                        WHERE materiel_id = :materiel_id
+                    ");
+                    $stmtUpdate->execute([
+                        'quantite' => $materiel['quantite'],
+                        'materiel_id' => $materiel['id']
+                    ]);
+                }
+            } catch (\Exception $e) {
+                error_log("Erreur ajout matériel: " . $e->getMessage());
+            }
+        }
 
         // ENVOI EMAIL DE CONFIRMATION
         
@@ -258,7 +305,7 @@ class CommandeController extends Controller
         $menuModel = new Menu();
         $menus = $menuModel->findAll();
 
-        $this->render('commandes/edit', [
+        $this->render('utilisateur/commandes/edit', [
             'commande' => $commande,
             'menus' => $menus
         ]);
@@ -457,7 +504,7 @@ class CommandeController extends Controller
         $avisModel = new \App\Models\Avis();
         $avisExistant = $avisModel->findByCommandeAndUser($numeroCommande, $userId);
 
-        $this->render('commandes/show', [
+        $this->render('utilisateur/commandes/show', [
             'title' => 'Détail de la commande #' . $numeroCommande,
             'commande' => $commande,
             'historique' => $historique,

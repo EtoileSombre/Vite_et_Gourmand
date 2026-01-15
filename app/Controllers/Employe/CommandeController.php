@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Employe;
 
 use App\Core\Controller;
 use App\Core\Request;
@@ -13,7 +13,7 @@ use App\Config\MongoStats;
  * Contrôleur Employé - Gestion des Commandes
  * Changement de statuts avec obligation de contacter l'utilisateur
  */
-class EmployeCommandeController extends Controller
+class CommandeController extends Controller
 {
     private Commande $commandeModel;
 

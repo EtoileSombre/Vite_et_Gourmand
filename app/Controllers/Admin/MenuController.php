@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Request;
@@ -11,7 +11,7 @@ use App\Models\Menu;
  * Contrôleur Admin Menu
  * Gestion des menus par les employés et administrateurs (CRUD)
  */
-class MenuAdminController extends Controller
+class MenuController extends Controller
 {
     private Menu $menuModel;
 
@@ -57,7 +57,7 @@ class MenuAdminController extends Controller
     {
         // Charger tous les plats disponibles
         $platModel = new \App\Models\Plat();
-        $plats = $platModel::findAllPlats();
+        $plats = $platModel->findAllPlats();
 
         $this->render('admin/menus/create', [
             'plats' => $plats,
@@ -149,7 +149,7 @@ class MenuAdminController extends Controller
 
         // Charger tous les plats disponibles
         $platModel = new \App\Models\Plat();
-        $plats = $platModel::findAllPlats();
+        $plats = $platModel->findAllPlats();
 
         // Charger les plats actuellement associés à ce menu
         $platIds = $this->menuModel->getPlatIdsForMenu((int)$id);

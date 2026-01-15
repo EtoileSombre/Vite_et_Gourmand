@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controllers;
+namespace App\Controllers\Public;
 
 use App\Core\Controller;
 use App\Core\Request;
@@ -35,7 +35,7 @@ class HomeController extends Controller
             $avis = [];
         }
 
-        $this->render('home/index', [
+        $this->render('public/home/index', [
             'title' => 'Accueil - Vite & Gourmand',
             'avis' => $avis
         ]);

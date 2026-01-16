@@ -106,6 +106,11 @@ const ValidationModule = {
                     const phoneValid = ValidationModule.validatePhone(field.value);
                     ValidationModule.markFieldValidity(field, phoneValid, 'Téléphone invalide (10 chiffres)');
                     if (!phoneValid) isValid = false;
+                } else if (field.hasAttribute('minlength')) {
+                    const minLength = parseInt(field.getAttribute('minlength'));
+                    const lengthValid = field.value.trim().length >= minLength;
+                    ValidationModule.markFieldValidity(field, lengthValid, `Ce champ doit contenir au moins ${minLength} caractères`);
+                    if (!lengthValid) isValid = false;
                 } else {
                     ValidationModule.markFieldValidity(field, true);
                 }
@@ -129,15 +134,21 @@ const ValidationModule = {
             field.addEventListener('blur', function() {
                 if (this.hasAttribute('required') && !this.value.trim()) {
                     ValidationModule.markFieldValidity(this, false, 'Ce champ est obligatoire');
-                } else if (this.type === 'email') {
+                } else if (this.type === 'email' && this.value.trim()) {
                     const isValid = ValidationModule.validateEmail(this.value);
                     ValidationModule.markFieldValidity(this, isValid, 'Email invalide');
-                } else if (this.type === 'tel') {
+                } else if (this.type === 'tel' && this.value.trim()) {
                     const isValid = ValidationModule.validatePhone(this.value);
                     ValidationModule.markFieldValidity(this, isValid, 'Téléphone invalide (10 chiffres)');
-                } else if (this.hasAttribute('pattern')) {
+                } else if (this.hasAttribute('minlength') && this.value.trim()) {
+                    const minLength = parseInt(this.getAttribute('minlength'));
+                    const isValid = this.value.trim().length >= minLength;
+                    ValidationModule.markFieldValidity(this, isValid, `Ce champ doit contenir au moins ${minLength} caractères`);
+                } else if (this.hasAttribute('pattern') && this.value.trim()) {
                     const isValid = new RegExp(this.getAttribute('pattern')).test(this.value);
                     ValidationModule.markFieldValidity(this, isValid, 'Format invalide');
+                } else if (this.value.trim()) {
+                    ValidationModule.markFieldValidity(this, true);
                 }
             });
 
@@ -152,6 +163,19 @@ const ValidationModule = {
         // Validation à la soumission
         form.addEventListener('submit', function(e) {
             const isValid = ValidationModule.validateForm(this);
+            
+            // Vérification spéciale pour la confirmation du mot de passe
+            const password = this.querySelector('#password');
+            const passwordConfirm = this.querySelector('#password_confirm');
+            if (password && passwordConfirm) {
+                if (password.value !== passwordConfirm.value) {
+                    ValidationModule.markFieldValidity(passwordConfirm, false, 'Les mots de passe ne correspondent pas');
+                    e.preventDefault();
+                    alert('Veuillez corriger les erreurs dans le formulaire');
+                    return;
+                }
+            }
+            
             if (!isValid) {
                 e.preventDefault();
                 alert('Veuillez corriger les erreurs dans le formulaire');
@@ -168,6 +192,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const forms = document.querySelectorAll('form[data-validate]');
     forms.forEach(form => {
         ValidationModule.initFormValidation(form.id);
+    });
+    
+    // Gestion spécifique de la confirmation du mot de passe
+    const passwordConfirmFields = document.querySelectorAll('#password_confirm');
+    passwordConfirmFields.forEach(field => {
+        field.addEventListener('blur', function() {
+            const passwordField = document.querySelector('#password');
+            if (passwordField && this.value && passwordField.value !== this.value) {
+                ValidationModule.markFieldValidity(this, false, 'Les mots de passe ne correspondent pas');
+            } else if (passwordField && this.value && passwordField.value === this.value) {
+                ValidationModule.markFieldValidity(this, true);
+            }
+        });
     });
 });
 

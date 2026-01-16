@@ -113,18 +113,8 @@
             <div class="card mt-3">
                 <div class="card-body">
                     <h5>Informations du compte</h5>
-                    <p class="mb-1"><strong>Date d'inscription :</strong> 
+                    <p class="mb-0"><strong>Date d'inscription :</strong> 
                         <?= date('d/m/Y', strtotime($user['created_at'])) ?>
-                    </p>
-                    <p class="mb-0"><strong>Rôle :</strong> 
-                        <?php
-                        $roleClass = match($_SESSION['user_role'] ?? '') {
-                            'administrateur' => 'badge-role-admin',
-                            'employé' => 'badge-role-employe',
-                            default => 'bg-secondary'
-                        };
-                        ?>
-                        <span class="badge <?= $roleClass ?>"><?= htmlspecialchars($user['role']) ?></span>
                     </p>
                 </div>
             </div>

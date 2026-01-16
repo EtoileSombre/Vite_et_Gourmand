@@ -69,6 +69,20 @@
                 </div>
             </div>
             
+            <!-- Prévoir commande avant-->
+            <div class="card border-warning mb-3 shadow-sm" style="border-width: 2px;">
+                <div class="card-body bg-warning bg-opacity-25 text-center py-2 px-3">
+                    <p class="mb-0">
+                        <i class="bi bi-calendar-event me-1"></i>
+                        <?php if (!empty($menu['conditions'])): ?>
+                            <?= htmlspecialchars($menu['conditions']) ?>
+                        <?php else: ?>
+                            Commande à prévoir 48h avant pour garantir la disponibilité des produits frais
+                        <?php endif; ?>
+                    </p>
+                </div>
+            </div>
+            
             <!-- COMPOSITION DU MENU - Liste des plats -->
             <?php if (!empty($menu['plats'])): ?>
                 <div class="card mb-4 shadow-sm border-0">
@@ -77,7 +91,8 @@
                             <i class="bi bi-card-list"></i> Composition du menu
                         </h5>
                     </div>
-                    <div class="card-body">
+                    
+                    <div class="card-body pt-0">
                         <?php 
                         $platsByType = [];
                         foreach ($menu['plats'] as $plat) {
@@ -123,50 +138,30 @@
                 </div>
             <?php endif; ?>
 
-            <!-- Bouton commander + Info commande côte à côte -->
-            <div class="row align-items-center justify-content-center mt-1 mb-2 g-3">
-                <!-- Bouton commander -->
-                <div class="col-lg-6">
-                    <div class="d-flex justify-content-center align-items-center h-100">
-                        <?php 
-                        use App\Core\Session;
-                        $isAuthenticated = Session::get('user_id') !== null;
-                        ?>
-                        
-                        <?php if ($isAuthenticated): ?>
-                            <a href="/commande/nouvelle?menu_id=<?= $menu['menu_id'] ?>" 
-                               id="btnCommander" 
-                               class="btn shadow-sm menu-btn-commande rounded-pill px-4 py-2">
-                                <i class="bi bi-cart-plus"></i> Commander
-                            </a>
-                        <?php else: ?>
-                            <button type="button" 
-                                    id="btnCommander" 
-                                    class="btn shadow-sm menu-btn-commande rounded-pill px-4 py-2"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#modalAuthentification">
-                                <i class="bi bi-cart-plus"></i> Commander
-                            </button>
-                        <?php endif; ?>
-                    </div>
-                </div>
-
-                <!-- Info commande à prévoir (texte simple) -->
-                <div class="col-lg-6">
-                    <div class="d-flex flex-column justify-content-center h-100 text-center text-lg-start ps-lg-3">
-                        <p class="mb-1 small">
-                            <i class="bi bi-calendar-event text-vg-bordeaux me-1"></i>
-                            <strong class="text-vg-bordeaux">Commande à prévoir :</strong>
-                        </p>
-                        <p class="mb-0 small text-muted">
-                            <?php if (!empty($menu['conditions'])): ?>
-                                <?= htmlspecialchars($menu['conditions']) ?>
-                            <?php else: ?>
-                                Commande 48h avant pour garantir la disponibilité des produits frais.
-                            <?php endif; ?>
-                        </p>
-                    </div>
-                </div>
+            <!-- Bouton commander centré -->
+            <div class="text-center mt-4 mb-4">
+                <?php 
+                use App\Core\Session;
+                $isAuthenticated = Session::get('user_id') !== null;
+                ?>
+                
+                <?php if ($isAuthenticated): ?>
+                    <a href="/commande/nouvelle?menu_id=<?= $menu['menu_id'] ?>" 
+                       id="btnCommander" 
+                       class="btn shadow menu-btn-commande rounded-pill" 
+                       style="padding: 0.9rem 2.5rem; font-size: 1.15rem; font-weight: 600;">
+                        <i class="bi bi-cart-plus fs-5"></i> Commander
+                    </a>
+                <?php else: ?>
+                    <button type="button" 
+                            id="btnCommander" 
+                            class="btn shadow menu-btn-commande rounded-pill" 
+                            style="padding: 0.9rem 2.5rem; font-size: 1.15rem; font-weight: 600;"
+                            data-bs-toggle="modal" 
+                            data-bs-target="#modalAuthentification">
+                        <i class="bi bi-cart-plus fs-5"></i> Commander
+                    </button>
+                <?php endif; ?>
             </div>
 
             <!-- Informations sur les options disponibles -->

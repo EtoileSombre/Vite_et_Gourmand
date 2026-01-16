@@ -81,7 +81,7 @@ class MenuController extends Controller
         $titre = trim($_POST['titre'] ?? '');
         $description = trim($_POST['description'] ?? '');
         $prixParPersonne = trim($_POST['prix_par_personne'] ?? '');
-        $nombrePersonnesMin = trim($_POST['nombre_personnes_min'] ?? '');
+        $nombrePersonnesMin = trim($_POST['nombre_personne_minimum'] ?? '');
         $theme = trim($_POST['theme'] ?? '');
         $imageUrl = trim($_POST['image_url'] ?? '');
 

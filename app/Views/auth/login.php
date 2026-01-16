@@ -24,7 +24,7 @@
                         </div>
                     <?php endif; ?>
                     
-                    <form method="post" action="/login">
+                    <form id="loginForm" method="post" action="/login" data-validate>
                         <?php if (!empty($redirect)): ?>
                             <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
                         <?php endif; ?>
@@ -32,10 +32,12 @@
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input type="email" class="form-control" id="email" name="email" required>
+                            <div class="invalid-feedback">Veuillez entrer un email valide.</div>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="form-label">Mot de passe</label>
                             <input type="password" class="form-control" id="password" name="password" required>
+                            <div class="invalid-feedback">Le mot de passe est obligatoire.</div>
                             <div class="form-text text-end">
                                 <a href="/forgot-password" class="text-decoration-none">Mot de passe oublié ?</a>
                             </div>

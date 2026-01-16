@@ -10,7 +10,7 @@
                 <p class="text-muted mb-0">Créez et gérez votre catalogue de plats</p>
             </div>
             <div>
-                <a href="/admin" class="btn btn-vg-bordeaux me-2 rounded-pill">
+                <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux me-2 rounded-pill">
                     <i class="bi bi-arrow-left"></i> Retour Dashboard
                 </a>
                 <a href="/admin/plats/create" class="btn btn-primary rounded-pill">

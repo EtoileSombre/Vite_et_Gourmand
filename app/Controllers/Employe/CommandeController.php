@@ -204,7 +204,7 @@ class CommandeController extends Controller
             ]);
 
             // Envoyer les emails automatiques selon le nouveau statut
-            require_once __DIR__ . '/../config/mail.php';
+            require_once __DIR__ . '/../../config/mail.php';
             
             // Email #1 : Commande acceptée
             if ($nouveauStatut === 'acceptee') {

@@ -11,8 +11,8 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
 <div class="container my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
-        <a href="/employe/commandes" class="btn btn-outline-secondary rounded-pill">
-            <i class="bi bi-arrow-left"></i> Retour
+        <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux rounded-pill d-inline-flex align-items-center">
+            <i class="bi bi-arrow-left me-2"></i>Retour
         </a>
     </div>
 
@@ -67,15 +67,15 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                                 </label>
                                 <select name="nouveau_statut" id="nouveau_statut" class="form-select" data-statut-actuel="<?= htmlspecialchars($commande['statut']) ?>" required>
                                     <option value="">-- Sélectionner le nouveau statut --</option>
-                                    <option value="acceptee">✅ Acceptée</option>
-                                    <option value="en_preparation">🔄 En préparation</option>
-                                    <option value="en_cours_livraison">🚚 En cours de livraison</option>
-                                    <option value="livree">📦 Livrée</option>
+                                    <option value="acceptee" <?= $commande['statut'] === 'acceptee' ? 'selected' : '' ?>>✅ Acceptée</option>
+                                    <option value="en_preparation" <?= $commande['statut'] === 'en_preparation' ? 'selected' : '' ?>>🔄 En préparation</option>
+                                    <option value="en_cours_livraison" <?= $commande['statut'] === 'en_cours_livraison' ? 'selected' : '' ?>>🚚 En cours de livraison</option>
+                                    <option value="livree" <?= $commande['statut'] === 'livree' ? 'selected' : '' ?>>📦 Livrée</option>
                                     <?php if ($commande['pret_materiel']): ?>
-                                        <option value="attente_retour_materiel">⏳ Attente retour matériel (email auto 10j)</option>
+                                        <option value="attente_retour_materiel" <?= $commande['statut'] === 'attente_retour_materiel' ? 'selected' : '' ?>>⏳ Attente retour matériel (email auto 10j)</option>
                                     <?php endif; ?>
-                                    <option value="terminee">✅ Terminée</option>
-                                    <option value="annulee">❌ Annulée</option>
+                                    <option value="terminee" <?= $commande['statut'] === 'terminee' ? 'selected' : '' ?>>✅ Terminée</option>
+                                    <option value="annulee" <?= $commande['statut'] === 'annulee' ? 'selected' : '' ?>>❌ Annulée</option>
                                 </select>
                             </div>
 
@@ -131,7 +131,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
 
                             <!-- Bouton Validation -->
                             <div class="text-end">
-                                <button type="submit" class="btn btn-vg-bordeaux">
+                                <button type="submit" class="btn btn-vg-bordeaux rounded-pill">
                                     <i class="bi bi-check-circle me-1"></i> Valider
                                 </button>
                             </div>
@@ -143,14 +143,14 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
 
         <!-- FORMULAIRE DE MODIFICATION DE COMMANDE -->
         <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
-            <div class="col-md-12 mb-4" id="formEditCommandeSection" class="d-none">
+            <div class="col-md-12 mb-4" id="formEditCommandeSection" style="display: none;">
                 <div class="card border-0 shadow-sm overflow-hidden">
                     <div class="card-header bg-white text-vg-bordeaux d-flex justify-content-between align-items-center border-0 border-bottom-bordeaux">
                         <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Modifier la Commande</h5>
-                        <button type="button" class="btn btn-sm btn-outline-light border-white" 
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" 
                                 onclick="document.getElementById('formEditCommandeSection').style.display='none';"
-                                style="border: 2px solid white;">
-                            <i class="bi bi-x-lg"></i>
+                                title="Fermer le formulaire">
+                            <i class="bi bi-x-lg"></i> Fermer
                         </button>
                     </div>
                     <div class="card-body">
@@ -282,10 +282,10 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                             </div>
 
                             <div class="d-flex gap-2 justify-content-end">
-                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('formEditCommande').reset()">
+                                <button type="button" class="btn btn-outline-secondary rounded-pill" onclick="document.getElementById('formEditCommande').reset()">
                                     <i class="bi bi-x-circle"></i> Réinitialiser
                                 </button>
-                                <button type="submit" class="btn btn-vg-bordeaux">
+                                <button type="submit" class="btn btn-vg-bordeaux rounded-pill">
                                     <i class="bi bi-check-circle"></i> Enregistrer les Modifications
                                 </button>
                             </div>
@@ -328,7 +328,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                                 <tr>
                                     <td class="text-center align-middle">
                                         <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
-                                            <button type="button" class="btn btn-vg-bordeaux" 
+                                            <button type="button" class="btn btn-vg-bordeaux rounded-pill" 
                                                     onclick="document.getElementById('formEditCommandeSection').style.display='block'; document.getElementById('formEditCommandeSection').scrollIntoView({behavior: 'smooth'});">
                                                 <i class="bi bi-pencil-square me-1"></i> Modifier Commande
                                             </button>
@@ -368,7 +368,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                         <dt class="col-sm-5 mb-4">Lieu :</dt>
                         <dd class="col-sm-7 mb-4">
                             <?= htmlspecialchars($commande['lieu_livraison']) ?><br>
-                            <small class="text-muted"><?= htmlspecialchars($commande['ville_livraison']) ?> <?= htmlspecialchars($commande['code_postal_livraison'] ?? '') ?></small>
+                            <?= htmlspecialchars($commande['ville_livraison']) ?> <?= htmlspecialchars($commande['code_postal_livraison'] ?? '') ?>
                         </dd>
 
                         <?php if (!empty($commande['distance_km'])): ?>

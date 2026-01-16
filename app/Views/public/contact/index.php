@@ -32,7 +32,7 @@
                         </div>
                     <?php endif; ?>
 
-                    <form method="POST" action="/contact">
+                    <form id="contactForm" method="POST" action="/contact" data-validate>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email *</label>
                             <input type="email" 
@@ -42,6 +42,7 @@
                                    required
                                    placeholder="votre.email@example.com"
                                    value="<?= htmlspecialchars($_POST['email'] ?? '') ?>">
+                            <div class="invalid-feedback">Veuillez entrer un email valide.</div>
                         </div>
 
                         <div class="mb-3">
@@ -55,6 +56,7 @@
                                    maxlength="100"
                                    placeholder="Ex: Demande de devis"
                                    value="<?= htmlspecialchars($_POST['titre'] ?? '') ?>">
+                            <div class="invalid-feedback">Le titre doit contenir au moins 5 caractères.</div>
                         </div>
                         
                         <div class="mb-3">
@@ -66,6 +68,7 @@
                                       required
                                       minlength="10"
                                       placeholder="Décrivez votre demande..."><?= htmlspecialchars($_POST['description'] ?? '') ?></textarea>
+                            <div class="invalid-feedback">La description doit contenir au moins 10 caractères.</div>
                         </div>
                         
                         <button type="submit" class="btn btn-vg-gold w-100 rounded-pill">

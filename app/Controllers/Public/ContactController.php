@@ -78,11 +78,11 @@ class ContactController extends Controller
     }
 
     /**
-     * ECF : Envoie un email à l'entreprise avec la demande de contact
+     *Envoie un email à l'entreprise avec la demande de contact
      */
     private function sendEmailToEntreprise(string $email, string $titre, string $description, int $contactId): void
     {
-        require_once __DIR__ . '/../config/mail.php';
+        require_once __DIR__ . '/../../config/mail.php';
 
         try {
             $mail = getMailer();

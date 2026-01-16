@@ -148,15 +148,29 @@ class AuthController extends Controller
                 
                 // Envoyer l'email de bienvenue automatique
                 if ($userId) {
-                    require_once __DIR__ . '/../config/mail.php';
-                    sendWelcomeEmail($email, $prenom);
+                    try {
+                        require_once __DIR__ . '/../../config/mail.php';
+                        sendWelcomeEmail($email, $prenom);
+                    } catch (\Exception $e) {
+                        error_log("Erreur envoi email bienvenue: " . $e->getMessage());
+                        // On ne bloque pas l'inscription si l'email échoue
+                    }
                 }
+                
+                // Connecter automatiquement l'utilisateur après inscription
+                Session::set('user_id', $userId);
+                Session::set('user_prenom', $prenom);
+                Session::set('user_email', $email);
+                Session::set('user_role', 'utilisateur');
+                
+                // Message de succès et redirection
+                Session::set('flash_success', "Bienvenue $prenom ! Votre compte a été créé avec succès.");
                 
                 // Gestion de la redirection après inscription
                 if (!empty($redirect) && strpos($redirect, '/') === 0) {
-                    $this->redirect('/login?registered=1&redirect=' . urlencode($redirect));
+                    $this->redirect($redirect);
                 } else {
-                    $this->redirect('/login?registered=1');
+                    $this->redirect('/');
                 }
             }
         }

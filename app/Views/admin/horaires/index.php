@@ -9,7 +9,7 @@
                 <h1 class="h2 mb-1">⏰ Gestion des horaires</h1>
                 <p class="text-muted mb-0">Définissez les horaires d'ouverture de votre établissement</p>
             </div>
-            <a href="/admin" class="btn btn-vg-bordeaux rounded-pill">
+            <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux rounded-pill">
                 <i class="bi bi-arrow-left"></i> Retour Dashboard
             </a>
         </div>

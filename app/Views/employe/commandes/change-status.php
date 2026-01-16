@@ -1,12 +1,12 @@
 <?php
-// OBLIGATION ECF : Contact utilisateur obligatoire avant modification statut
+//Contact utilisateur obligatoire avant modification statut
 require_once __DIR__ . '/../../layouts/header.php';
 ?>
 
 <div class="container my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-pencil-square"></i> Modifier la Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
-        <a href="/employe/commandes" class="btn btn-outline-secondary">
+        <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux rounded-pill">
             <i class="bi bi-arrow-left"></i> Retour
         </a>
     </div>

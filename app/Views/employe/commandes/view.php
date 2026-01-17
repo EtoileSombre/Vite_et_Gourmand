@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../layouts/header.php';
 
 // Charger la configuration des statuts
-$statutConfig = require __DIR__ . '/statuts_commande.php';
+$statutConfig = require __DIR__ . '/../../../config/statuts_commande.php';
 $currentStatut = $commande['statut'];
 $currentStyle = $statutConfig['styles'][$currentStatut] ?? $statutConfig['styles']['default'];
 $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('_', ' ', $currentStatut));

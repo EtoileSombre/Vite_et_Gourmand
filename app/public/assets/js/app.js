@@ -25,7 +25,7 @@ const ViteGourmand = {
      */
     showToast: function(message, type = 'info') {
         // À implémenter avec Bootstrap Toast si besoin
-        // console.log(`[${type.toUpperCase()}] ${message}`);
+
     },
 
     /**

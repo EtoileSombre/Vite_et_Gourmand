@@ -22,9 +22,6 @@ try {
         $options
     );
     
-    // Message de debug (à retirer en production)
-    // echo "✅ Connexion réussie à la base de données $dbname<br>";
-    
 } catch (PDOException $e) {
     // En cas d'erreur, affiche un message et arrête le script
     die("❌ Erreur de connexion à la base de données : " . $e->getMessage());

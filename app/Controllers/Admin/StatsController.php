@@ -26,9 +26,8 @@ class StatsController extends Controller
         // Statistiques MongoDB
         $mongoStats = new MongoStats();
         
-        // Graph Commandes : comparaison SANS filtre menu (tous les menus visibles)
-        // Uniquement filtres de dates pour comparer les menus entre eux
-        $commandesParMenu = $mongoStats->getCommandesParMenu(null, $filtreDateDebut, $filtreDateFin);
+        // Graph Commandes : AVEC filtre menu + dates
+        $commandesParMenu = $mongoStats->getCommandesParMenu($filtreMenuId, $filtreDateDebut, $filtreDateFin);
         
         // Tableau CA : AVEC filtre menu + dates (analyse détaillée)
         $caParMenu = $mongoStats->getCAParMenu($filtreMenuId, $filtreDateDebut, $filtreDateFin);

@@ -31,8 +31,15 @@ class AvisController extends Controller
 
         // Validation
         if (!$note || !$commentaire || $note < 1 || $note > 5) {
-            Session::set('error', 'Données invalides. Note requise entre 1 et 5.');
-            $this->redirect('/avis/create');
+            Session::set('flash_error', 'Données invalides. Note requise entre 1 et 5 et commentaire obligatoire.');
+            $this->redirect('/donner-avis' . ($numeroCommande ? '?commande=' . urlencode($numeroCommande) : ''));
+            return;
+        }
+        
+        // Validation longueur minimale du commentaire
+        if (strlen(trim($commentaire)) < 10) {
+            Session::set('flash_error', 'Votre commentaire doit contenir au moins 10 caractères.');
+            $this->redirect('/donner-avis' . ($numeroCommande ? '?commande=' . urlencode($numeroCommande) : ''));
             return;
         }
 
@@ -51,12 +58,12 @@ class AvisController extends Controller
             
             $avisId = $this->avisModel->createAvis($avisData);
             
-            Session::set('success', 'Votre avis a été enregistré et sera publié après validation.');
+            Session::set('flash_success', 'Merci ! Votre avis a été enregistré avec succès et sera publié après validation par notre équipe.');
             $this->redirect('/');
         } catch (\Exception $e) {
             error_log("Erreur création avis : " . $e->getMessage());
-            Session::set('error', 'Erreur lors de l\'enregistrement de votre avis.');
-            $this->redirect('/donner-avis');
+            Session::set('flash_error', 'Erreur lors de l\'enregistrement de votre avis. Veuillez réessayer.');
+            $this->redirect('/donner-avis' . ($numeroCommande ? '?commande=' . urlencode($numeroCommande) : ''));
         }
     }
 
@@ -77,14 +84,14 @@ class AvisController extends Controller
             $commande = $commandeModel->findByNumero($numeroCommande);
             
             if (!$commande || $commande['utilisateur_id'] != $userId) {
-                Session::set('error', 'Commande introuvable.');
+                Session::set('flash_error', 'Commande introuvable.');
                 $this->redirect('/mes-commandes');
                 return;
             }
             
             // Vérifier que la commande est terminée
             if ($commande['statut'] !== 'terminee') {
-                Session::set('error', 'Vous ne pouvez donner un avis que pour une commande terminée.');
+                Session::set('flash_error', 'Vous ne pouvez donner un avis que pour une commande terminée.');
                 $this->redirect('/mes-commandes');
                 return;
             }
@@ -92,7 +99,7 @@ class AvisController extends Controller
             // Vérifier qu'un avis n'a pas déjà été donné
             $avisExistant = $this->avisModel->findByCommandeAndUser($numeroCommande, $userId);
             if ($avisExistant) {
-                Session::set('error', 'Vous avez déjà donné votre avis pour cette commande.');
+                Session::set('flash_error', 'Vous avez déjà donné votre avis pour cette commande.');
                 $this->redirect('/mes-commandes');
                 return;
             }

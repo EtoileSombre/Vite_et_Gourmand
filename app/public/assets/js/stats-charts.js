@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', function() {
  * Initialise les 2 graphiques
  */
 function initStatsCharts(chartData) {
-    console.log('Initialisation des graphiques avec:', chartData);
     //Graphique des commandes par menu
     if (chartData.commandesParMenu && chartData.commandesParMenu.labels && chartData.commandesParMenu.labels.length > 0) {
         initCommandesParMenuChart(chartData.commandesParMenu);
@@ -151,33 +150,6 @@ function initCommandesParMenuChart(data) {
             }
         }
     });
-}
-
-/**
- * Affiche un message dans un canvas vide
- */
-function showEmptyChart(canvasId, message) {
-    const canvas = document.getElementById(canvasId);
-    if (!canvas) return;
-    
-    const ctx = canvas.getContext('2d');
-    const width = canvas.width;
-    const height = canvas.height;
-    
-    // Fond gris clair
-    ctx.fillStyle = '#f8f9fa';
-    ctx.fillRect(0, 0, width, height);
-    
-    // Texte centré
-    ctx.fillStyle = '#6c757d';
-    ctx.font = '16px Arial';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText(message, width / 2, height / 2);
-    
-    // Icône
-    ctx.font = '32px Arial';
-    ctx.fillText('📊', width / 2, height / 2 - 40);
 }
 
 /**

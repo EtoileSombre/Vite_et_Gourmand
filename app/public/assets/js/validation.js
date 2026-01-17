@@ -206,6 +206,54 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
+    
+    // Indicateur de force du mot de passe
+    const passwordInput = document.getElementById('password');
+    const strengthBar = document.getElementById('passwordStrength');
+    const strengthText = document.getElementById('passwordStrengthText');
+    
+    if (passwordInput && strengthBar && strengthText) {
+        passwordInput.addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+            if (password.length >= 10) strength++;
+            if (/[a-z]/.test(password)) strength++;
+            if (/[A-Z]/.test(password)) strength++;
+            if (/[0-9]/.test(password)) strength++;
+            if (/[^A-Za-z0-9]/.test(password)) strength++;
+
+            // Définir couleur et texte
+            let color = '', text = '';
+            switch(strength) {
+                case 0:
+                case 1:
+                    color = 'bg-danger';
+                    text = 'Très faible';
+                    break;
+                case 2:
+                    color = 'bg-warning';
+                    text = 'Faible';
+                    break;
+                case 3:
+                    color = 'bg-info';
+                    text = 'Moyen';
+                    break;
+                case 4:
+                    color = 'bg-primary';
+                    text = 'Fort';
+                    break;
+                case 5:
+                    color = 'bg-success';
+                    text = 'Très fort';
+                    break;
+            }
+
+            strengthBar.style.width = (strength * 20) + '%';
+            strengthBar.className = 'progress-bar ' + color;
+            strengthText.textContent = text;
+            strengthText.className = 'form-text ' + (strength >= 4 ? 'text-success' : 'text-danger');
+        });
+    }
 });
 
 // Exposer le module

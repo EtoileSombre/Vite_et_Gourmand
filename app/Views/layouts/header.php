@@ -23,10 +23,6 @@
     
     <!-- CSS Global -->
     <link rel="stylesheet" href="/assets/css/app.css">
-    
-    <!-- CSS Composants -->
-    <link rel="stylesheet" href="/assets/css/components/navbar.css">
-    <link rel="stylesheet" href="/assets/css/components/footer.css">
 
     <!-- CSS Pages additionnelles -->
     <?php if (isset($additionalStyles) && is_array($additionalStyles)): ?>

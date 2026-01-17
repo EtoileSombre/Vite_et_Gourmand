@@ -20,7 +20,7 @@
                     <form method="GET" action="/employe/avis" class="row g-3 align-items-end">
                         <div class="col-md-4">
                             <label for="statut" class="form-label">Statut</label>
-                            <select name="statut" id="statut" class="form-select">
+                            <select name="statut" id="statut" class="form-select" data-auto-submit>
                                 <option value="en_attente" <?= ($statut_filtre ?? '') === 'en_attente' ? 'selected' : '' ?>>
                                     En attente (<?= $count_en_attente ?? 0 ?>)
                                 </option>
@@ -193,7 +193,4 @@
     </div>
 </div>
 
-<?php 
-$additionalScripts = ['/assets/js/employe-avis.js'];
-require_once __DIR__ . '/../../layouts/footer.php'; 
-?>
+<?php require_once __DIR__ . '/../../layouts/footer.php'; ?>

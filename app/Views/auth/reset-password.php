@@ -146,17 +146,5 @@ document.addEventListener('DOMContentLoaded', function() {
         strengthText.className = 'form-text ' + (strength >= 4 ? 'text-success' : 'text-danger');
     });
 
-    form.addEventListener('submit', function(e) {
-        const password = passwordInput.value;
-        const confirm = confirmInput.value;
-
-        if (password !== confirm) {
-            e.preventDefault();
-            alert('Les mots de passe ne correspondent pas !');
-            confirmInput.focus();
-        }
-    });
-});
-</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

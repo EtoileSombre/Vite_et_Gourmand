@@ -733,8 +733,7 @@ function sendMaterialReturnReminderEmail($email, $prenom, $numeroCommande, $date
                         
                         <div class='penalty-box'>
                             <p style='margin: 0; font-size: 1.1em;'><strong>⚠️ ATTENTION - Pénalité de retard</strong></p>
-                            <p style='margin: 10px 0 0 0;'>Conformément à nos CGV, en cas de non-restitution sous 10 jours :</p>
-                            <p style='margin: 10px 0 0 0; font-size: 1.2em; color: #dc3545;'><strong>Pénalité : 600,00 €</strong></p>
+                            <p style='margin: 10px 0 0 0;'>Conformément à nos CGV, une pénalité sera appliquée en cas de non-restitution sous 10 jours.</p>
                         </div>
                         
                         <p><strong>Contactez-nous rapidement :</strong></p>
@@ -765,7 +764,7 @@ function sendMaterialReturnReminderEmail($email, $prenom, $numeroCommande, $date
                        . "Commande : $numeroCommande\n"
                        . "Date de prestation : $datePrestationFormatted\n"
                        . "Date limite : $dateEcheance\n\n"
-                       . "ATTENTION : En cas de non-restitution sous 10 jours, une pénalité de 600€ sera appliquée.\n\n"
+                       . "ATTENTION : En cas de non-restitution sous 10 jours, une pénalité sera appliquée.\n\n"
                        . "Contactez-nous rapidement :\n"
                        . "- Email : contact@viteetgourmand.fr\n"
                        . "- Téléphone : 05 56 XX XX XX\n\n"

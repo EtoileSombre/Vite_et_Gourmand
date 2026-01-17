@@ -216,7 +216,7 @@ class AuthController extends Controller
                     $passwordResetModel->createToken($email, $token, $expiresAt);
                     
                     // Envoyer l'email avec le lien de réinitialisation
-                    require_once __DIR__ . '/../config/mail.php';
+                    require_once __DIR__ . '/../../config/mail.php';
                     $resetLink = "http://localhost:8080/reset-password?token=" . $token;
                     
                     if (sendPasswordResetEmail($email, $user['prenom'], $resetLink)) {

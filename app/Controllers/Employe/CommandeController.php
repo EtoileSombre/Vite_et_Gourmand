@@ -128,42 +128,17 @@ class CommandeController extends Controller
             $errors[] = "Le nouveau statut est obligatoire";
         }
 
-        // Vérifier le contact utilisateur UNIQUEMENT pour refus/annulations/modifications après acceptation
+        // Vérifier le contact utilisateur UNIQUEMENT pour refus/annulations
         // Accepter une commande en attente ne nécessite PAS de contact
         $requiresContact = false;
         
-        // Contact obligatoire si : refus ou annulation
+        // Contact obligatoire UNIQUEMENT si : annulation explicite
         if (in_array($nouveauStatut, ['annulee'])) {
             $requiresContact = true;
         }
-        
-        // Contact obligatoire si modification d'une commande déjà acceptée
-        $progressionNormale = [
-            'en_attente' => ['acceptee'],
-            'acceptee' => ['en_preparation'],
-            'en_preparation' => ['en_cours_livraison'],
-            'en_cours_livraison' => ['livree'],
-            'livree' => ['attente_retour_materiel', 'terminee'],
-            'attente_retour_materiel' => ['terminee']
-        ];
-        
-        if (isset($progressionNormale[$commande['statut']])) {
-            if (!in_array($nouveauStatut, $progressionNormale[$commande['statut']])) {
-                // Ce n'est pas une progression normale, contact requis
-                $requiresContact = true;
-            }
-        }
 
         if ($requiresContact) {
-            if (!$contacteUtilisateur) {
-                $errors[] = "Vous devez confirmer avoir contacté l'utilisateur avant de modifier cette commande";
-            }
-            if (empty($motifContact)) {
-                $errors[] = "Le motif de contact est obligatoire";
-            }
-            if (empty($modeContact)) {
-                $errors[] = "Le mode de contact est obligatoire (GSM ou Email)";
-            }
+            $errors[] = "Contact client obligatoire veuillez utiliser le formulaire \"Modifier Commande\" pour annuler cette commande";
         }
 
         if (!empty($errors)) {
@@ -174,6 +149,11 @@ class CommandeController extends Controller
         $updateData = [
             'statut' => $nouveauStatut
         ];
+
+        // Si la commande passe à "terminée", marquer la restitution du matériel comme effectuée
+        if ($nouveauStatut === 'terminee') {
+            $updateData['restitution_materiel'] = 1;
+        }
 
         // Ajouter les informations de contact si nécessaire
         if ($requiresContact) {

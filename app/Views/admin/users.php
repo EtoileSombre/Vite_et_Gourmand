@@ -74,7 +74,7 @@
                             <?php if ($user['role_nom'] === 'employé'): ?>
                                 <?php if ($user['actif']): ?>
                                     <form method="POST" action="/admin/utilisateurs/desactiver" class="d-inline" 
-                                          onsubmit="return confirm('Désactiver ce compte employé ?')">
+                                          data-confirm="Désactiver ce compte employé ?">
                                         <input type="hidden" name="utilisateur_id" value="<?= $user['utilisateur_id'] ?>">
                                         <button type="submit" class="btn btn-sm btn-warning rounded-pill" title="Désactiver">
                                             <i class="bi bi-lock"></i>
@@ -82,7 +82,7 @@
                                     </form>
                                 <?php else: ?>
                                     <form method="POST" action="/admin/utilisateurs/activer" class="d-inline"
-                                          onsubmit="return confirm('Réactiver ce compte employé ?')">
+                                          data-confirm="Réactiver ce compte employé ?">
                                         <input type="hidden" name="utilisateur_id" value="<?= $user['utilisateur_id'] ?>">
                                         <button type="submit" class="btn btn-sm btn-success rounded-pill" title="Activer">
                                             <i class="bi bi-unlock"></i>

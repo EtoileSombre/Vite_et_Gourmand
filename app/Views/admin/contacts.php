@@ -107,7 +107,7 @@
                                                 <i class="bi bi-reply-fill"></i> Répondre
                                             </a>
                                             <form method="POST" action="/admin/contacts/delete" class="d-inline" 
-                                                  onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce message ?');">
+                                                  data-confirm="Êtes-vous sûr de vouloir supprimer ce message ?">
                                                 <input type="hidden" name="contact_id" value="<?= $msg['contact_id'] ?>">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
                                                     <i class="bi bi-trash-fill"></i> Supprimer

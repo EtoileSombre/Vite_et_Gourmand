@@ -96,7 +96,7 @@
 }
 
 .materiel-item {
-    border-left-color: #198754;
+    border-left-color: #0d6efd;
 }
 
 .boisson-item:hover, .materiel-item:hover {
@@ -144,5 +144,5 @@
 
 .caution-badge {
     font-weight: 600;
-    color: #fd7e14;
+    color: #0d6efd;
 }

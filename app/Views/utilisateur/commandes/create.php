@@ -160,7 +160,7 @@ use App\Core\Session;
                                 <small class="form-text" id="min-personnes-info"></small>
                             </div>
 
-                            <div class="alert alert-warning" id="reduction-alert" style="display: none;">
+                            <div class="alert alert-warning d-none" id="reduction-alert">
                                 <i class="bi bi-percent"></i> <strong>Réduction de 10% appliquée !</strong><br>
                                 Vous commandez pour 5 personnes ou plus au-dessus du minimum requis.
                             </div>
@@ -204,7 +204,7 @@ use App\Core\Session;
                                 <!-- Les boissons ajoutées apparaîtront ici -->
                             </div>
                             
-                            <div class="card bg-light" id="recap_boissons" style="display: none;">
+                            <div class="card bg-light d-none" id="recap_boissons">
                                 <div class="card-body py-2">
                                     <div class="d-flex justify-content-between">
                                         <strong>Total boissons :</strong>
@@ -259,7 +259,7 @@ use App\Core\Session;
                                 <!-- Le matériel ajouté apparaîtra ici -->
                             </div>
                             
-                            <div class="card bg-warning bg-opacity-10" id="recap_materiel" style="display: none;">
+                            <div class="card bg-warning bg-opacity-10 d-none" id="recap_materiel">
                                 <div class="card-body py-2">
                                     <div class="d-flex justify-content-between">
                                         <strong>Total caution à verser :</strong>
@@ -287,7 +287,7 @@ use App\Core\Session;
                                         </div>
                                     </div>
                                     
-                                    <div class="row mb-2" id="reduction-row" style="display: none;">
+                                    <div class="row mb-2 d-none" id="reduction-row">
                                         <div class="col-8 text-success">
                                             <i class="bi bi-tag-fill"></i> <strong>Réduction 10%</strong>
                                         </div>
@@ -296,7 +296,7 @@ use App\Core\Session;
                                         </div>
                                     </div>
                                     
-                                    <div class="row mb-2" id="row-boissons" style="display: none;">
+                                    <div class="row mb-2 d-none" id="row-boissons">
                                         <div class="col-8"><strong>Boissons</strong></div>
                                         <div class="col-4 text-end">
                                             <span id="montant-boissons">0,00</span> €
@@ -321,7 +321,7 @@ use App\Core\Session;
                                         </div>
                                     </div>
                                     
-                                    <div class="row mt-3 pt-3 border-top" id="row-caution" style="display: none;">
+                                    <div class="row mt-3 pt-3 border-top d-none" id="row-caution">
                                         <div class="col-8">
                                             <strong class="text-warning">Caution matériel</strong>
                                             <br><small class="text-muted">À verser séparément (restituable)</small>
@@ -350,6 +350,7 @@ use App\Core\Session;
     </div>
 </div>
 
-<script src="/assets/js/commandes.js"></script>
-
-<?php include __DIR__ . '/../../layouts/footer.php'; ?>
+<?php 
+$additionalScripts = ['/assets/js/commandes.js'];
+include __DIR__ . '/../../layouts/footer.php'; 
+?>

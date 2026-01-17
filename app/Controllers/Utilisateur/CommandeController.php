@@ -12,6 +12,11 @@ use App\Helpers\MongoLogger;
 
 class CommandeController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function index()
     {
         $userId = Session::get('user_id');
@@ -224,7 +229,7 @@ class CommandeController extends Controller
         $userPrenom = Session::get('user_prenom');
         
         if ($userEmail && $userPrenom && $menu) {
-            require_once __DIR__ . '/../config/mail.php';
+            require_once __DIR__ . '/../../config/mail.php';
             
             // Préparer les lignes de menus pour l'email
             $lignesMenus = [[
@@ -375,7 +380,7 @@ class CommandeController extends Controller
         $userPrenom = Session::get('user_prenom');
         
         if ($userEmail && $userPrenom) {
-            require_once __DIR__ . '/../config/mail.php';
+            require_once __DIR__ . '/../../config/mail.php';
             
             $lignesMenus = $commandeMenuModel->findByCommande($numeroCommande);
             
@@ -435,7 +440,7 @@ class CommandeController extends Controller
 
         // Envoyer les emails de notification
         try {
-            require_once __DIR__ . '/../config/mail.php';
+            require_once __DIR__ . '/../../config/mail.php';
             
             // Récupérer les infos utilisateur
             $userModel = new \App\Models\User();

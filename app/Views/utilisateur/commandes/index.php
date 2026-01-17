@@ -45,20 +45,11 @@
                             <td>
                                 <?php
                                 $statut = $commande['statut'] ?? 'en_attente';
-                                $statutClass = match($statut) {
-                                    'en_attente' => 'warning text-dark',
-                                    'acceptee' => 'success',
-                                    'en_preparation' => 'primary',
-                                    'en_cours_livraison' => 'purple',
-                                    'livree' => 'orange text-dark',
-                                    'attente_retour_materiel' => 'brown text-white',
-                                    'terminee' => 'dark-green text-white',
-                                    'annulee' => 'danger',
-                                    default => 'secondary'
-                                };
-                                $statutText = ucfirst(str_replace('_', ' ', $statut));
+                                $statutConfig = require __DIR__ . '/../../employe/commandes/statuts_commande.php';
+                                $badgeStyle = $statutConfig['styles'][$statut] ?? $statutConfig['styles']['default'];
+                                $statutLabel = $statutConfig['labels'][$statut] ?? ucfirst(str_replace('_', ' ', $statut));
                                 ?>
-                                <span class="badge bg-<?= $statutClass ?>"><?= $statutText ?></span>
+                                <span class="badge" style="<?= $badgeStyle ?>"><?= $statutLabel ?></span>
                             </td>
                             <td>
                                 <?= number_format($commande['total_final'] ?? 0, 2, ',', ' ') ?> €

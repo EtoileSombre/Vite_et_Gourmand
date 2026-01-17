@@ -42,4 +42,7 @@
     </div>
 </div>
 
-<?php include __DIR__ . '/../../layouts/footer.php'; ?>
+<?php 
+$additionalScripts = ['/assets/js/avis.js'];
+include __DIR__ . '/../../layouts/footer.php'; 
+?>

@@ -149,14 +149,13 @@
                     <a href="/commande/nouvelle?menu_id=<?= $menu['menu_id'] ?>" 
                        id="btnCommander" 
                        class="btn shadow menu-btn-commande rounded-pill" 
-                       style="padding: 0.9rem 2.5rem; font-size: 1.15rem; font-weight: 600;">
+                       class="btn btn-vg-bordeaux rounded-pill btn-commande-custom">
                         <i class="bi bi-cart-plus fs-5"></i> Commander
                     </a>
                 <?php else: ?>
                     <button type="button" 
                             id="btnCommander" 
-                            class="btn shadow menu-btn-commande rounded-pill" 
-                            style="padding: 0.9rem 2.5rem; font-size: 1.15rem; font-weight: 600;"
+                            class="btn shadow menu-btn-commande rounded-pill btn-commande-custom" 
                             data-bs-toggle="modal" 
                             data-bs-target="#modalAuthentification">
                         <i class="bi bi-cart-plus fs-5"></i> Commander

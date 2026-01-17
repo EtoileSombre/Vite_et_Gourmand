@@ -66,7 +66,7 @@
                             <dt class="col-sm-4">Prêt de matériel :</dt>
                             <dd class="col-sm-8">
                                 <span class="badge bg-info">
-                                    <i class="bi bi-box-seam"></i> Oui (Caution: 600 €)
+                                    <i class="bi bi-box-seam"></i> Oui
                                 </span>
                             </dd>
                         <?php endif; ?>
@@ -113,20 +113,11 @@
                         <dd class="col-sm-8">
                             <?php
                             $statut = $commande['statut'] ?? 'en_attente';
-                            $statutClass = match($statut) {
-                                'en_attente' => 'warning text-dark',
-                                'acceptee' => 'success',
-                                'en_preparation' => 'primary',
-                                'en_cours_livraison' => 'purple',
-                                'livree' => 'orange text-dark',
-                                'attente_retour_materiel' => 'brown text-white',
-                                'terminee' => 'dark-green text-white',
-                                'annulee' => 'danger',
-                                default => 'secondary'
-                            };
-                            $statutText = ucfirst(str_replace('_', ' ', $statut));
+                            $statutConfig = require __DIR__ . '/../../employe/commandes/statuts_commande.php';
+                            $badgeStyle = $statutConfig['styles'][$statut] ?? $statutConfig['styles']['default'];
+                            $statutLabel = $statutConfig['labels'][$statut] ?? ucfirst(str_replace('_', ' ', $statut));
                             ?>
-                            <h5><span class="badge bg-<?= $statutClass ?>"><?= $statutText ?></span></h5>
+                            <h5><span class="badge" style="<?= $badgeStyle ?>"><?= $statutLabel ?></span></h5>
                         </dd>
                     </dl>
 
@@ -163,22 +154,24 @@
                 </div>
                 <div class="card-body">
                     <?php if (!empty($historique)): ?>
+                        <?php 
+                        // Charger la configuration des statuts une seule fois
+                        $statutConfigTimeline = require __DIR__ . '/../../employe/commandes/statuts_commande.php';
+                        ?>
                         <div class="timeline">
                             <?php foreach ($historique as $index => $suivi): ?>
                                 <div class="timeline-item mb-3 pb-3 <?= $index < count($historique) - 1 ? 'border-bottom' : '' ?>">
                                     <div class="d-flex align-items-start">
                                         <div class="flex-shrink-0 me-3">
-                                            <div class="badge bg-<?= match($suivi['nouveau_statut']) {
-                                                'en_attente' => 'warning',
-                                                'acceptee' => 'success',
-                                                'en_preparation' => 'primary',
-                                                'en_cours_livraison' => 'purple',
-                                                'livree' => 'orange',
-                                                'attente_retour_materiel' => 'brown',
-                                                'terminee' => 'dark-green',
-                                                'annulee' => 'danger',
-                                                default => 'secondary'
-                                            } ?> rounded-circle p-2 timeline-badge">
+                                            <?php
+                                            // Utiliser les couleurs du fichier de configuration
+                                            $timelineStatut = $suivi['nouveau_statut'];
+                                            $timelineStyle = $statutConfigTimeline['styles'][$timelineStatut] ?? $statutConfigTimeline['styles']['default'];
+                                            // Extraire uniquement la couleur de fond du style
+                                            preg_match('/background-color:\s*([^;]+);/', $timelineStyle, $matches);
+                                            $timelineBgColor = $matches[1] ?? '#95a5a6';
+                                            ?>
+                                            <div class="rounded-circle p-2 timeline-badge" style="background-color: <?= $timelineBgColor ?>; color: white;">
                                                 <i class="bi bi-<?= match($suivi['nouveau_statut']) {
                                                     'en_attente' => 'hourglass-split',
                                                     'acceptee' => 'check-circle',
@@ -193,7 +186,7 @@
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1"><?= ucfirst(str_replace('_', ' ', $suivi['nouveau_statut'])) ?></h6>
+                                            <h6 class="mb-1"><?= $statutConfigTimeline['labels'][$suivi['nouveau_statut']] ?? ucfirst(str_replace('_', ' ', $suivi['nouveau_statut'])) ?></h6>
                                             <small class="text-muted">
                                                 <?= date('d/m/Y à H:i', strtotime($suivi['date_changement'])) ?>
                                             </small>

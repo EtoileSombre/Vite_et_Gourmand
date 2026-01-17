@@ -589,3 +589,85 @@ input[type="time"]:focus {
         page-break-inside: avoid;
     }
 }
+
+/* ===== COMPONENTS ===== */
+
+/* Navbar */
+.navbar {
+    -webkit-backdrop-filter: saturate(1.2) blur(6px);
+    backdrop-filter: saturate(1.2) blur(6px);
+    z-index: 1030;
+}
+
+.navbar-light .navbar-brand {
+    font-weight: 800;
+    letter-spacing: .2px;
+    color: var(--vg-bordeaux) !important;
+}
+
+.navbar-light .nav-link {
+    font-weight: 600;
+    border-radius: 10px;
+}
+
+.navbar-light .nav-link:hover {
+    background: #f5f5f7;
+}
+
+.navbar .nav-link:focus,
+.navbar .nav-link:active,
+.navbar-brand:focus,
+.navbar-brand:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.navbar-toggler:focus {
+    box-shadow: 0 0 0 .25rem rgba(123, 30, 30, .25) !important;
+    outline: none !important;
+}
+
+.dropdown-menu {
+    z-index: 1040 !important;
+}
+
+.dropdown-toggle:focus,
+.dropdown-toggle:active,
+.dropdown-toggle.show,
+.nav-link.dropdown-toggle:focus,
+.nav-link.dropdown-toggle:active,
+.navbar .badge:focus,
+.navbar .badge:active {
+    outline: none !important;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+/* Footer */
+.site-footer {
+    background: #111;
+    color: #e9ecef;
+}
+
+.site-footer a {
+    color: #e9ecef;
+    text-decoration: none;
+}
+
+.site-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ===== UTILITY CLASSES ===== */
+
+/* Display utilities */
+.d-none {
+    display: none !important;
+}
+
+/* Custom button styles */
+.btn-commande-custom {
+    padding: 0.9rem 2.5rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+}

@@ -45,7 +45,7 @@
                             <td>
                                 <?php
                                 $statut = $commande['statut'] ?? 'en_attente';
-                                $statutConfig = require __DIR__ . '/../../employe/commandes/statuts_commande.php';
+                                $statutConfig = require __DIR__ . '/../../../config/statuts_commande.php';
                                 $badgeStyle = $statutConfig['styles'][$statut] ?? $statutConfig['styles']['default'];
                                 $statutLabel = $statutConfig['labels'][$statut] ?? ucfirst(str_replace('_', ' ', $statut));
                                 ?>

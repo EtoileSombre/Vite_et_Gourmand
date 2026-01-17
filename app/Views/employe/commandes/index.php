@@ -73,7 +73,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <tbody>
                             <?php 
                             // Charger la configuration des statuts (une seule fois)
-                            $statutConfig = require __DIR__ . '/statuts_commande.php';
+                            $statutConfig = require __DIR__ . '/../../../config/statuts_commande.php';
                             foreach ($commandes as $cmd): 
                                 $statut = $cmd['statut'];
                                 $badgeStyle = $statutConfig['styles'][$statut] ?? $statutConfig['styles']['default'];

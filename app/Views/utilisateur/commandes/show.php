@@ -112,7 +112,7 @@
                         <dd class="col-sm-8">
                             <?php
                             $statut = $commande['statut'] ?? 'en_attente';
-                            $statutConfig = require __DIR__ . '/../../employe/commandes/statuts_commande.php';
+                            $statutConfig = require __DIR__ . '/../../../config/statuts_commande.php';
                             $badgeStyle = $statutConfig['styles'][$statut] ?? $statutConfig['styles']['default'];
                             $statutLabel = $statutConfig['labels'][$statut] ?? ucfirst(str_replace('_', ' ', $statut));
                             ?>
@@ -155,7 +155,7 @@
                     <?php if (!empty($historique)): ?>
                         <?php 
                         // Charger la configuration des statuts une seule fois
-                        $statutConfigTimeline = require __DIR__ . '/../../employe/commandes/statuts_commande.php';
+                        $statutConfigTimeline = require __DIR__ . '/../../../config/statuts_commande.php';
                         ?>
                         <div class="timeline">
                             <?php foreach ($historique as $index => $suivi): ?>

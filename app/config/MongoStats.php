@@ -159,15 +159,18 @@ class MongoStats
                 }
             }
 
-            $pipeline = [
-                ['$match' => $match],
-                ['$group' => [
-                    '_id' => '$menu_id',
-                    'nombre_commandes' => ['$sum' => 1],
-                    'total_personnes' => ['$sum' => '$nombre_personne']
-                ]],
-                ['$sort' => ['nombre_commandes' => -1]]
-            ];
+            $pipeline = [];
+            
+            if (!empty($match)) {
+                $pipeline[] = ['$match' => $match];
+            }
+            
+            $pipeline[] = ['$group' => [
+                '_id' => '$menu_id',
+                'nombre_commandes' => ['$sum' => 1],
+                'total_personnes' => ['$sum' => '$nombre_personne']
+            ]];
+            $pipeline[] = ['$sort' => ['nombre_commandes' => -1]];
 
             $result = $this->collections['commande_stats']->aggregate($pipeline);
             $data = [];
@@ -214,26 +217,30 @@ class MongoStats
                 }
             }
 
-            $pipeline = [
-                ['$match' => $match],
-                ['$group' => [
-                    '_id' => '$menu_id',
-                    'chiffre_affaires' => ['$sum' => '$prix_total'],
-                    'nombre_commandes' => ['$sum' => 1],
-                    'total_personnes' => ['$sum' => '$nombre_personne']
-                ]],
-                ['$addFields' => [
-                    // Sécurisation : division par zéro protégée avec $cond
-                    'montant_moyen' => [
-                        '$cond' => [
-                            ['$gt' => ['$nombre_commandes', 0]],
-                            ['$divide' => ['$chiffre_affaires', '$nombre_commandes']],
-                            0
-                        ]
+            $pipeline = [];
+            
+            // N'ajouter $match que s'il y a des filtres
+            if (!empty($match)) {
+                $pipeline[] = ['$match' => $match];
+            }
+            
+            $pipeline[] = ['$group' => [
+                '_id' => '$menu_id',
+                'chiffre_affaires' => ['$sum' => '$prix_total'],
+                'nombre_commandes' => ['$sum' => 1],
+                'total_personnes' => ['$sum' => '$nombre_personne']
+            ]];
+            $pipeline[] = ['$addFields' => [
+                // Sécurisation : division par zéro protégée avec $cond
+                'montant_moyen' => [
+                    '$cond' => [
+                        ['$gt' => ['$nombre_commandes', 0]],
+                        ['$divide' => ['$chiffre_affaires', '$nombre_commandes']],
+                        0
                     ]
-                ]],
-                ['$sort' => ['chiffre_affaires' => -1]]
-            ];
+                ]
+            ]];
+            $pipeline[] = ['$sort' => ['chiffre_affaires' => -1]];
 
             $result = $this->collections['commande_stats']->aggregate($pipeline);
             $data = [];

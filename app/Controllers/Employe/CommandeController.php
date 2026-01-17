@@ -188,38 +188,41 @@ class CommandeController extends Controller
             
             // Email #1 : Commande acceptée
             if ($nouveauStatut === 'acceptee') {
-                error_log("Envoi email commande acceptée à: " . $commande['utilisateur_email']);
                 $emailSent = sendOrderAcceptedEmail(
                     $commande['utilisateur_email'],
                     $commande['utilisateur_prenom'],
                     $numeroCommande,
                     $commande['date_prestation']
                 );
-                error_log("Email envoyé: " . ($emailSent ? 'OUI' : 'NON'));
+                if (!$emailSent) {
+                    error_log("Échec envoi email acceptation commande #$numeroCommande à " . $commande['utilisateur_email']);
+                }
             }
             
             // Email #2 : Commande terminée (avec invitation avis)
             if ($nouveauStatut === 'terminee') {
-                error_log("Envoi email commande terminée à: " . $commande['utilisateur_email']);
                 $emailSent = sendOrderCompletedEmail(
                     $commande['utilisateur_email'],
                     $commande['utilisateur_prenom'],
                     $numeroCommande,
                     $commande['menu_titre'] ?? 'Menu'
                 );
-                error_log("Email envoyé: " . ($emailSent ? 'OUI' : 'NON'));
+                if (!$emailSent) {
+                    error_log("Échec envoi email terminaison commande #$numeroCommande à " . $commande['utilisateur_email']);
+                }
             }
             
             // Email #3 : Attente retour matériel (rappel 10 jours, pénalité 600€)
             if ($nouveauStatut === 'attente_retour_materiel') {
-                error_log("Envoi email rappel retour matériel à: " . $commande['utilisateur_email']);
                 $emailSent = sendMaterialReturnReminderEmail(
                     $commande['utilisateur_email'],
                     $commande['utilisateur_prenom'],
                     $numeroCommande,
                     $commande['date_prestation']
                 );
-                error_log("Email envoyé: " . ($emailSent ? 'OUI' : 'NON'));
+                if (!$emailSent) {
+                    error_log("Échec envoi email rappel matériel commande #$numeroCommande à " . $commande['utilisateur_email']);
+                }
             }
 
             Session::set('flash_success', "Statut de la commande mis à jour avec succès !");

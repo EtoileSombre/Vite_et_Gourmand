@@ -381,10 +381,27 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                             <dd class="col-sm-7">+ <?= number_format($commande['prix_livraison'], 2) ?> €</dd>
                         <?php endif; ?>
 
-                        <dt class="col-sm-5"><strong>TOTAL :</strong></dt>
+                        <hr class="my-2">
+
+                        <?php
+                        // Calcul HT et TVA
+                        $totalTTC = $commande['total_final'] ?? 0;
+                        $totalHT = $totalTTC / 1.10;
+                        $montantTVA = $totalTTC - $totalHT;
+                        ?>
+
+                        <dt class="col-sm-5">Total HT :</dt>
+                        <dd class="col-sm-7"><?= number_format($totalHT, 2) ?> €</dd>
+
+                        <dt class="col-sm-5">TVA (10%) :</dt>
+                        <dd class="col-sm-7">+ <?= number_format($montantTVA, 2) ?> €</dd>
+
+                        <hr class="my-2">
+
+                        <dt class="col-sm-5"><strong>TOTAL TTC :</strong></dt>
                         <dd class="col-sm-7">
                             <strong class="fs-5 text-primary">
-                                <?= number_format($commande['total_final'] ?? 0, 2) ?> €
+                                <?= number_format($totalTTC, 2) ?> €
                             </strong>
                         </dd>
                     </dl>

@@ -25,7 +25,7 @@ include __DIR__ . '/../../layouts/header.php';
                         <th>Quantité</th>
                         <th>Date de livraison</th>
                         <th>Statut</th>
-                        <th>Prix total</th>
+                        <th>Total HT</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -53,10 +53,8 @@ include __DIR__ . '/../../layouts/header.php';
                                 <span class="badge <?= $badgeClass ?>"><?= $statutLabel ?></span>
                             </td>
                             <td>
-                                <?= number_format($commande['total_final'] ?? 0, 2, ',', ' ') ?> €
-                                <?php if ($commande['reductionTotale'] > 0): ?>
-                                    <br><small class="text-success">-<?= number_format($commande['reductionTotale'], 2, ',', ' ') ?> € de réduction</small>
-                                <?php endif; ?>
+                                <?php $totalHT = ($commande['total_final'] ?? 0) / 1.10; ?>
+                                <?= number_format($totalHT, 2, ',', ' ') ?> €
                             </td>
                             <td>
                                 <div class="d-flex gap-1 align-items-center justify-content-center">

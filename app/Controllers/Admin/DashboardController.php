@@ -243,6 +243,9 @@ class DashboardController extends Controller
         $commandeModel = new Commande();
         $commandes = $commandeModel->findAll();
 
-        $this->render('admin/commandes', ['commandes' => $commandes]);
+        $this->render('admin/commandes', [
+            'commandes' => $commandes,
+            'statuts' => Commande::STATUTS
+        ]);
     }
 }

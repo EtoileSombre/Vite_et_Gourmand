@@ -1,11 +1,10 @@
 <?php
+$additionalStyles = ['/assets/css/pages/commandes.css'];
 require_once __DIR__ . '/../../layouts/header.php';
 
-// Charger la configuration des statuts
-$statutConfig = require __DIR__ . '/../../../config/statuts_commande.php';
 $currentStatut = $commande['statut'];
-$currentStyle = $statutConfig['styles'][$currentStatut] ?? $statutConfig['styles']['default'];
-$currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('_', ' ', $currentStatut));
+$currentLabel = $statuts[$currentStatut] ?? ucfirst(str_replace('_', ' ', $currentStatut));
+$badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
 ?>
 
 <div class="container my-4">
@@ -340,7 +339,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                     <dl class="row mb-0">
                         <dt class="col-sm-5">Statut actuel :</dt>
                         <dd class="col-sm-7">
-                            <span class="badge fs-6" style="<?= $currentStyle ?>">
+                            <span class="badge fs-6 <?= $badgeClass ?>">
                                 <?= $currentLabel ?>
                             </span>
                         </dd>

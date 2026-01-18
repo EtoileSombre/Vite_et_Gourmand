@@ -1,4 +1,7 @@
-<?php include __DIR__ . '/../../layouts/header.php'; ?>
+<?php
+$additionalStyles = ['/assets/css/pages/commandes.css'];
+include __DIR__ . '/../../layouts/header.php';
+?>
 
 <div class="container mt-5">
     <div class="row justify-content-center">

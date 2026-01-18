@@ -15,7 +15,7 @@
                 </a>
             </div>
             <div class="col-lg-5">
-                <img class="img-fluid rounded shadow" alt="Cuisine traiteur gastronomique" src="/assets/img/Menu Gastronomique/magret_de_canard.webp" style="max-height: 350px; width: auto; object-fit: cover;">
+                <img class="img-fluid rounded shadow home-hero-image" alt="Cuisine traiteur gastronomique" src="/assets/img/Menu Gastronomique/magret_de_canard.webp">
             </div>
         </div>
     </div>

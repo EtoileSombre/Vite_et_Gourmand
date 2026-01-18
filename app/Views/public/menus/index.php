@@ -26,7 +26,7 @@
                 <div class="col-md-4">
                     <label for="filterPersonnes" class="form-label">Nombre de personnes</label>
                     <select class="form-select" id="filterPersonnes">
-                        <option value="">Tout</option>
+                        <option value="">Tous les nombres</option>
                         <option value="2">Pour 2 personnes</option>
                         <option value="4">Pour 4 personnes</option>
                         <option value="6">Pour 6 personnes</option>
@@ -148,7 +148,7 @@
                                 <span class="h4 mb-0 fw-bold text-bordeaux">
                                     <?= number_format($menu['prix_par_personne'], 2, ',', ' ') ?> €
                                 </span>
-                                <a href="/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-bordeaux rounded-pill">
+                                <a href="/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-bordeaux btn-sm rounded-pill">
                                     <i class="bi bi-eye"></i> Détails
                                 </a>
                             </div>

@@ -70,7 +70,7 @@
             </div>
             
             <!-- Prévoir commande avant-->
-            <div class="card border-warning mb-3 shadow-sm" style="border-width: 2px;">
+            <div class="card border-warning border-2 mb-3 shadow-sm">
                 <div class="card-body bg-warning bg-opacity-25 text-center py-2 px-3">
                     <p class="mb-0">
                         <i class="bi bi-calendar-event me-1"></i>

@@ -71,7 +71,8 @@ class CommandeController extends Controller
             'commandes' => $commandes,
             'filterStatut' => $filterStatut,
             'filterUtilisateur' => $filterUtilisateur,
-            'filterAujourdhui' => $filterAujourdhui
+            'filterAujourdhui' => $filterAujourdhui,
+            'statuts' => Commande::STATUTS
         ]);
     }
 
@@ -274,9 +275,15 @@ class CommandeController extends Controller
         $commande['lignesMenus'] = $lignesMenus;
         $commande['totalPersonnes'] = $totalPersonnes;
 
+        // Récupérer l'historique de suivi
+        $suiviModel = new \App\Models\SuiviCommande();
+        $suivis = $suiviModel->getHistorique($numeroCommande);
+
         $this->render('employe/commandes/view', [
             'title' => 'Détails de la Commande',
-            'commande' => $commande
+            'commande' => $commande,
+            'suivis' => $suivis,
+            'statuts' => Commande::STATUTS
         ]);
     }
 

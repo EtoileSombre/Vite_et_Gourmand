@@ -72,12 +72,10 @@ require_once __DIR__ . '/../../layouts/header.php';
                     </thead>
                         <tbody>
                             <?php 
-                            // Charger la configuration des statuts (une seule fois)
-                            $statutConfig = require __DIR__ . '/../../../config/statuts_commande.php';
                             foreach ($commandes as $cmd): 
                                 $statut = $cmd['statut'];
-                                $badgeStyle = $statutConfig['styles'][$statut] ?? $statutConfig['styles']['default'];
-                                $statutLabel = $statutConfig['labels'][$statut] ?? ucfirst(str_replace('_', ' ', $statut));
+                                $statutLabel = $statuts[$statut] ?? ucfirst(str_replace('_', ' ', $statut));
+                                $badgeClass = 'badge-statut-' . str_replace('_', '-', $statut);
                             ?>
                                 <tr>
                                     <td class="text-center"><strong>#<?= htmlspecialchars($cmd['numero_commande']) ?></strong></td>
@@ -95,7 +93,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     <td class="text-center"><?= htmlspecialchars($cmd['totalPersonnes'] ?? 0) ?></td>
                                     <td class="text-center"><strong><?= number_format($cmd['total_final'] ?? 0, 2) ?> €</strong></td>
                                     <td class="text-center">
-                                        <span class="badge" style="<?= $badgeStyle ?>">
+                                        <span class="badge <?= $badgeClass ?>">
                                             <?= $statutLabel ?>
                                         </span>
                                     </td>

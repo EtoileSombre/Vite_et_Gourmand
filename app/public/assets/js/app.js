@@ -39,8 +39,8 @@ const ViteGourmand = {
  * Initialisation au chargement du DOM
  */
 document.addEventListener('DOMContentLoaded', function() {
-    // Auto-dismiss des alertes après 5 secondes
-    const alerts = document.querySelectorAll('.alert:not(.alert-permanent)');
+    // Auto-dismiss des alertes après 5 secondes (sauf les permanentes)
+    const alerts = document.querySelectorAll('.alert.alert-dismissible:not(.alert-permanent)');
     alerts.forEach(alert => {
         setTimeout(() => {
             const bsAlert = new bootstrap.Alert(alert);

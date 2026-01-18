@@ -428,7 +428,7 @@ const CommandeModule = {
             }
             
             const prixParPersonne = parseFloat(option.dataset.prix);
-            const minPersonnes = parseInt(option.dataset.minPersonnes);
+            const minPersonnes = parseInt(option.dataset.min);
             const nombrePersonnesInput = document.getElementById('nombre_personnes');
             const distanceKmInput = document.getElementById('distance_km');
             
@@ -448,16 +448,13 @@ const CommandeModule = {
             let reduction = 0;
             
             // Réduction 10% si +5 personnes au-dessus du minimum
-            const reductionAlert = document.getElementById('reduction-alert');
             const reductionRow = document.getElementById('reduction-row');
             
             if (nombrePersonnes >= (minPersonnes + 5)) {
                 reduction = prixMenuBase * 0.10;
-                if (reductionAlert) reductionAlert.style.display = 'block';
-                if (reductionRow) reductionRow.style.display = 'flex';
+                if (reductionRow) reductionRow.classList.remove('d-none');
             } else {
-                if (reductionAlert) reductionAlert.style.display = 'none';
-                if (reductionRow) reductionRow.style.display = 'none';
+                if (reductionRow) reductionRow.classList.add('d-none');
             }
             
             const totalBoissons = this.boissons.reduce((sum, b) => sum + (b.prix * b.quantite), 0);
@@ -480,20 +477,20 @@ const CommandeModule = {
             const rowBoissons = document.getElementById('row-boissons');
             const montantBoissons = document.getElementById('montant-boissons');
             if (totalBoissons > 0 && rowBoissons && montantBoissons) {
-                rowBoissons.style.display = 'flex';
+                rowBoissons.classList.remove('d-none');
                 montantBoissons.textContent = totalBoissons.toFixed(2);
             } else if (rowBoissons) {
-                rowBoissons.style.display = 'none';
+                rowBoissons.classList.add('d-none');
             }
             
             // Caution
             const rowCaution = document.getElementById('row-caution');
             const montantCautionFinal = document.getElementById('montant-caution-final');
             if (totalCaution > 0 && rowCaution && montantCautionFinal) {
-                rowCaution.style.display = 'flex';
+                rowCaution.classList.remove('d-none');
                 montantCautionFinal.textContent = totalCaution.toFixed(2);
             } else if (rowCaution) {
-                rowCaution.style.display = 'none';
+                rowCaution.classList.add('d-none');
             }
         }
     },

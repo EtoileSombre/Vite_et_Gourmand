@@ -141,7 +141,7 @@ use App\Core\Session;
                                     <?php foreach ($menus as $menu): ?>
                                         <option value="<?= $menu['menu_id'] ?>" 
                                                 data-prix="<?= $menu['prix_par_personne'] ?>"
-                                                data-min-personnes="<?= $menu['nombre_personne_minimum'] ?? 2 ?>"
+                                                data-min="<?= $menu['nombre_personne_minimum'] ?? 2 ?>"
                                                 <?= ($menuIdFromUrl == $menu['menu_id']) ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($menu['titre']) ?> - 
                                             <?= number_format($menu['prix_par_personne'], 2) ?> € /pers 
@@ -157,12 +157,10 @@ use App\Core\Session;
                                 </label>
                                 <input type="number" class="form-control" id="nombre_personnes" name="nombre_personnes" 
                                        min="2" value="2" required>
-                                <small class="form-text" id="min-personnes-info"></small>
-                            </div>
-
-                            <div class="alert alert-warning d-none" id="reduction-alert">
-                                <i class="bi bi-percent"></i> <strong>Réduction de 10% appliquée !</strong><br>
-                                Vous commandez pour 5 personnes ou plus au-dessus du minimum requis.
+                                <small class="form-text text-muted" id="min-personnes-info"></small>
+                                <div class="alert alert-info alert-permanent alert-sm mt-2 mb-0">
+                                    <i class="bi bi-tag-fill"></i> <strong>Bon à savoir :</strong> Une réduction de 10% est appliquée automatiquement pour toute commande de 5 personnes ou plus au-dessus du minimum.
+                                </div>
                             </div>
                         </div>
 

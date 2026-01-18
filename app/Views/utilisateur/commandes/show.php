@@ -87,7 +87,7 @@ include __DIR__ . '/../../layouts/header.php';
                         <dd class="col-sm-8">
                             <div class="mb-2">
                                 <small class="text-muted">Sous-total menus :</small>
-                                <strong><?= number_format($commande['sousTotal'] ?? 0, 2) ?> €</strong>
+                                <strong><?= number_format($commande['sousTotal'] ?? 0, 2) ?> € HT</strong>
                             </div>
                             <?php if (isset($commande['prix_livraison']) && $commande['prix_livraison'] > 0): ?>
                                 <div class="mb-2">
@@ -97,12 +97,12 @@ include __DIR__ . '/../../layouts/header.php';
                                         <?php endif; ?>
                                         :
                                     </small>
-                                    <strong><?= number_format($commande['prix_livraison'], 2) ?> €</strong>
+                                    <strong><?= number_format($commande['prix_livraison'], 2) ?> € HT</strong>
                                 </div>
                             <?php endif; ?>
                             <hr class="my-2">
                             <h4 class="text-primary mb-0">
-                                Total final : <?= number_format($commande['total_final'] ?? 0, 2) ?> €
+                                Total TTC : <?= number_format($commande['total_final'] ?? 0, 2) ?> €
                             </h4>
                         </dd>
 

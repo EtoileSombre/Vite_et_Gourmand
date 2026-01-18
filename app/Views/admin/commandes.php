@@ -1,4 +1,7 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php
+$additionalStyles = ['/assets/css/pages/commandes.css'];
+include __DIR__ . '/../layouts/header.php';
+?>
 
 <div class="container mt-5">
     <h2>Gestion des commandes</h2>
@@ -27,19 +30,11 @@
                         <td><?= date('d/m/Y', strtotime($commande['date_livraison'])) ?></td>
                         <td>
                             <?php
-                            $statutClass = match($commande['statut']) {
-                                'en_attente' => 'warning text-dark',
-                                'acceptee' => 'success',
-                                'en_preparation' => 'primary',
-                                'en_cours_livraison' => 'purple',
-                                'livree' => 'orange text-dark',
-                                'attente_retour_materiel' => 'brown text-white',
-                                'terminee' => 'dark-green text-white',
-                                'annulee' => 'danger',
-                                default => 'secondary'
-                            };
+                            $statut = $commande['statut'];
+                            $statutLabel = $statuts[$statut] ?? ucfirst(str_replace('_', ' ', $statut));
+                            $badgeClass = 'badge-statut-' . str_replace('_', '-', $statut);
                             ?>
-                            <span class="badge bg-<?= $statutClass ?>"><?= htmlspecialchars($commande['statut']) ?></span>
+                            <span class="badge <?= $badgeClass ?>"><?= $statutLabel ?></span>
                         </td>
                         <td><?= date('d/m/Y H:i', strtotime($commande['date_commande'])) ?></td>
                     </tr>

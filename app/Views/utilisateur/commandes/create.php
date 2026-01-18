@@ -1,9 +1,9 @@
 <?php 
 use App\Core\Session;
-?>
-<?php include __DIR__ . '/../../layouts/header.php'; ?>
 
-<link rel="stylesheet" href="/assets/css/pages/commandes.css">
+$additionalStyles = ['/assets/css/pages/commandes.css'];
+include __DIR__ . '/../../layouts/header.php';
+?>
 
 <div class="container mt-5 mb-5">
     <div class="row justify-content-center">
@@ -25,10 +25,10 @@ use App\Core\Session;
                 <div class="card-body p-4">
                     <form method="post" action="/commande/nouvelle" id="formCommande">
                         
-                        <!-- ÉTAPE 1 : INFORMATIONS CLIENT (auto-remplies) -->
+                        <!-- INFORMATIONS CLIENT (auto-remplies) -->
                         <div class="mb-4">
-                            <h5 class="border-bottom pb-2 mb-3">
-                                <i class="bi bi-person-circle"></i>Vos informations
+                            <h5 class="border-bottom pb-2 mb-3 fw-bold">
+                                Vos informations
                             </h5>
                             
                             <div class="row">
@@ -67,10 +67,10 @@ use App\Core\Session;
                             </p>
                         </div>
 
-                        <!-- ÉTAPE 2 : INFORMATIONS PRESTATION -->
+                        <!-- INFORMATIONS PRESTATION -->
                         <div class="mb-4">
-                            <h5 class="border-bottom pb-2 mb-3">
-                                <i class="bi bi-calendar-event"></i>Détails de la prestation
+                            <h5 class="border-bottom pb-2 mb-3 fw-bold">
+                                Détails de la prestation
                             </h5>
                             
                             <div class="row">
@@ -121,14 +121,14 @@ use App\Core\Session;
                             </div>
                         </div>
 
-                        <!-- ÉTAPE 3 : CHOIX DU MENU -->
+                        <!-- CHOIX DU MENU -->
                         <div class="mb-4">
-                            <h5 class="border-bottom pb-2 mb-3">
-                                <i class="bi bi-card-list"></i>Choix du menu
+                            <h5 class="border-bottom pb-2 mb-3 fw-bold">
+                                Choix du menu
                             </h5>
                             
                             <?php if ($menuPreselectionne): ?>
-                                <div class="alert alert-success">
+                                <div class="alert alert-success alert-dismissible">
                                     <i class="bi bi-check-circle-fill"></i> 
                                     Menu pré-sélectionné : <strong><?= htmlspecialchars($menuPreselectionne['titre']) ?></strong>
                                 </div>
@@ -158,16 +158,16 @@ use App\Core\Session;
                                 <input type="number" class="form-control" id="nombre_personnes" name="nombre_personnes" 
                                        min="2" value="2" required>
                                 <small class="form-text text-muted" id="min-personnes-info"></small>
-                                <div class="alert alert-info alert-permanent alert-sm mt-2 mb-0">
-                                    <i class="bi bi-tag-fill"></i> <strong>Bon à savoir :</strong> Une réduction de 10% est appliquée automatiquement pour toute commande de 5 personnes ou plus au-dessus du minimum.
+                                <div class="alert alert-info alert-permanent mt-2 mb-0 small">
+                                    <i class="bi bi-tag-fill"></i> <strong>Bon à savoir : </strong> -10% dès 5 personnes au dessus du minimum requis.
                                 </div>
                             </div>
                         </div>
 
-                        <!-- ÉTAPE 4 : BOISSONS -->
+                        <!-- BOISSONS -->
                         <div class="mb-4">
-                            <h5 class="border-bottom pb-2 mb-3">
-                                <i class="bi bi-cup-straw"></i>Boissons (optionnel)
+                            <h5 class="border-bottom pb-2 mb-3 fw-bold">
+                                Boissons (optionnel)
                             </h5>
                             
                             <div class="mb-3">
@@ -212,17 +212,11 @@ use App\Core\Session;
                             </div>
                         </div>
 
-                        <!-- ÉTAPE 5 : MATÉRIEL -->
+                        <!-- MATÉRIEL -->
                         <div class="mb-4">
-                            <h5 class="border-bottom pb-2 mb-3">
-                                <i class="bi bi-box-seam"></i>Prêt de matériel (optionnel)
+                            <h5 class="border-bottom pb-2 mb-3 fw-bold">
+                                Prêt de matériel (optionnel)
                             </h5>
-                            
-                            <div class="alert alert-info">
-                                <i class="bi bi-info-circle-fill"></i>
-                                <strong>Important :</strong> Le matériel doit être restitué sous 10 jours 
-                                (pénalité de 600€ après ce délai). La caution est restituable.
-                            </div>
                             
                             <div class="mb-3">
                                 <label for="materiel_select" class="form-label">Ajouter du matériel</label>
@@ -253,6 +247,11 @@ use App\Core\Session;
                                 </div>
                             </div>
                             
+                            <div class="alert alert-info small">
+                                <i class="bi bi-info-circle-fill"></i>
+                                <strong>Important :</strong> Retour matériels sous 10 jours (sous réserve de pénalité de 600€). Caution restituable.
+                            </div>
+                            
                             <div id="liste_materiel" class="mt-3">
                                 <!-- Le matériel ajouté apparaîtra ici -->
                             </div>
@@ -272,14 +271,14 @@ use App\Core\Session;
 
                         <!-- RÉCAPITULATIF PRIX -->
                         <div class="mb-4">
-                            <h5 class="border-bottom pb-2 mb-3">
-                                <i class="bi bi-calculator"></i>Récapitulatif de la commande
+                            <h5 class="border-bottom pb-2 mb-3 fw-bold">
+                                Récapitulatif de la commande
                             </h5>
                             
                             <div class="card bg-light">
                                 <div class="card-body">
                                     <div class="row mb-2">
-                                        <div class="col-8"><strong>Prix du menu</strong></div>
+                                        <div class="col-8">Prix du menu</div>
                                         <div class="col-4 text-end">
                                             <span id="prix-menu-base">0,00</span> €
                                         </div>
@@ -287,8 +286,7 @@ use App\Core\Session;
                                     
                                     <div class="row mb-2 d-none" id="reduction-row">
                                         <div class="col-8 text-success">
-                                            <i class="bi bi-tag-fill"></i> <strong>Réduction 10%</strong>
-                                        </div>
+                                            <i class="bi bi-tag-fill"></i>Réduction 10%</div>
                                         <div class="col-4 text-end text-success">
                                             - <span id="montant-reduction">0,00</span> €
                                         </div>
@@ -302,7 +300,7 @@ use App\Core\Session;
                                     </div>
                                     
                                     <div class="row mb-2">
-                                        <div class="col-8"><strong>Frais de livraison</strong></div>
+                                        <div class="col-8">Frais de livraison</div>
                                         <div class="col-4 text-end">
                                             <span id="frais-livraison">5,00</span> €
                                         </div>
@@ -310,11 +308,27 @@ use App\Core\Session;
                                     
                                     <hr>
                                     
+                                    <div class="row mb-2">
+                                        <div class="col-8"><strong>Total HT</strong></div>
+                                        <div class="col-4 text-end">
+                                            <strong><span id="total-ht">5,00</span> €</strong>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="row mb-2">
+                                        <div class="col-8">TVA (10%)</div>
+                                        <div class="col-4 text-end">
+                                            <span id="montant-tva">0,50</span> €
+                                        </div>
+                                    </div>
+                                    
+                                    <hr>
+                                    
                                     <div class="row">
-                                        <div class="col-8"><h5 class="mb-0">TOTAL TTC</h5></div>
+                                        <div class="col-8"><h5 class="mb-0 fw-bold">TOTAL TTC</h5></div>
                                         <div class="col-4 text-end">
                                             <h5 class="mb-0 text-primary">
-                                                <strong><span id="total-final">5,00</span> €</strong>
+                                                <strong><span id="total-final">5,50</span> €</strong>
                                             </h5>
                                         </div>
                                     </div>
@@ -333,11 +347,11 @@ use App\Core\Session;
                         </div>
                         
                         <!-- BOUTONS ACTION -->
-                        <div class="d-flex justify-content-between mt-4">
+                        <div class="d-flex justify-content-between align-items-center mt-4">
                             <a href="/menus" class="btn btn-outline-secondary rounded-pill">
                                 <i class="bi bi-arrow-left"></i> Retour aux menus
                             </a>
-                            <button type="submit" class="btn btn-success btn-lg rounded-pill">
+                            <button type="submit" class="btn btn-success rounded-pill">
                                 <i class="bi bi-check-circle"></i> Valider la commande
                             </button>
                         </div>

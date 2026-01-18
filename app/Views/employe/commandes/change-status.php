@@ -1,5 +1,6 @@
 <?php
 //Contact utilisateur obligatoire avant modification statut
+$additionalStyles = ['/assets/css/pages/commandes.css'];
 require_once __DIR__ . '/../../layouts/header.php';
 ?>
 

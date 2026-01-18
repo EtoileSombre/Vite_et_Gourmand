@@ -1,22 +1,52 @@
-/* Badges de statut */
-.badge-status-en-attente {
-    background-color: #ffc107;
-    color: #000;
+/* Badges de statut de commande */
+.badge-statut-en-attente {
+    background-color: #D4AF37;
+    color: #7B1E1E;
 }
 
-.badge-status-validee {
-    background-color: #28a745;
-    color: #fff;
+.badge-statut-acceptee {
+    background-color: #7cb342;
+    color: white;
 }
 
-.badge-status-terminee {
-    background-color: #17a2b8;
-    color: #fff;
+.badge-statut-en-preparation {
+    background-color: #5c9bd5;
+    color: white;
 }
 
-.badge-status-annulee {
-    background-color: #dc3545;
-    color: #fff;
+.badge-statut-en-cours-livraison {
+    background-color: #4a7ba7;
+    color: white;
+}
+
+.badge-statut-livree {
+    background-color: #689f38;
+    color: white;
+}
+
+.badge-statut-attente-retour-materiel {
+    background-color: #e67e22;
+    color: white;
+}
+
+.badge-statut-terminee {
+    background-color: #6b7280;
+    color: white;
+}
+
+.badge-statut-annulee {
+    background-color: #c0392b;
+    color: white;
+}
+
+.badge-statut-refusee {
+    background-color: #c0392b;
+    color: white;
+}
+
+.badge-statut-default {
+    background-color: #95a5a6;
+    color: white;
 }
 
 /* Timeline */

@@ -665,6 +665,18 @@ input[type="time"]:focus {
     display: none !important;
 }
 
+/* Border utilities */
+.border-2 {
+    border-width: 2px !important;
+}
+
+/* Image utilities */
+.home-hero-image {
+    max-height: 350px;
+    width: auto;
+    object-fit: cover;
+}
+
 /* Custom button styles */
 .btn-commande-custom {
     padding: 0.9rem 2.5rem;

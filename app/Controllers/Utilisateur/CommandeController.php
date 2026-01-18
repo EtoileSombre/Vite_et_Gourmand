@@ -17,6 +17,30 @@ class CommandeController extends Controller
         parent::__construct();
     }
 
+    /**
+     * Calculer la réduction totale d'une commande à partir de ses lignes de menu
+     */
+    private function calculateTotalReduction(array $lignesMenus): float
+    {
+        $reductionTotale = 0;
+        foreach ($lignesMenus as $ligne) {
+            $reductionTotale += floatval($ligne['reduction'] ?? 0);
+        }
+        return $reductionTotale;
+    }
+
+    /**
+     * Calculer le sous-total des menus (somme des lignes)
+     */
+    private function calculateSousTotal(array $lignesMenus): float
+    {
+        $sousTotal = 0;
+        foreach ($lignesMenus as $ligne) {
+            $sousTotal += floatval($ligne['total_ligne'] ?? 0);
+        }
+        return $sousTotal;
+    }
+
     public function index()
     {
         $userId = Session::get('user_id');
@@ -32,9 +56,13 @@ class CommandeController extends Controller
         foreach ($commandes as &$commande) {
             $commande['lignesMenus'] = $commandeMenuModel->findByCommande($commande['numero_commande']);
             $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($commande['numero_commande']);
+            $commande['reductionTotale'] = $this->calculateTotalReduction($commande['lignesMenus']);
         }
         
-        $this->render('utilisateur/commandes/index', ['commandes' => $commandes]);
+        $this->render('utilisateur/commandes/index', [
+            'commandes' => $commandes,
+            'statuts' => Commande::STATUTS
+        ]);
     }
 
     public function create()
@@ -494,6 +522,8 @@ class CommandeController extends Controller
         $commandeMenuModel = new CommandeMenu();
         $commande['lignesMenus'] = $commandeMenuModel->findByCommande($numeroCommande);
         $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($numeroCommande);
+        $commande['reductionTotale'] = $this->calculateTotalReduction($commande['lignesMenus']);
+        $commande['sousTotal'] = $this->calculateSousTotal($commande['lignesMenus']);
 
         // Récupérer l'historique de suivi
         $suiviModel = new \App\Models\SuiviCommande();
@@ -507,7 +537,8 @@ class CommandeController extends Controller
             'title' => 'Détail de la commande #' . $numeroCommande,
             'commande' => $commande,
             'historique' => $historique,
-            'avisExistant' => $avisExistant
+            'avisExistant' => $avisExistant,
+            'statuts' => Commande::STATUTS
         ]);
     }
 }

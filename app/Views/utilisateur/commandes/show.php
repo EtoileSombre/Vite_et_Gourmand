@@ -1,5 +1,7 @@
-<?php include __DIR__ . '/../../layouts/header.php'; ?>
-<link rel="stylesheet" href="/assets/css/pages/commandes.css">
+<?php
+$additionalStyles = ['/assets/css/pages/commandes.css'];
+include __DIR__ . '/../../layouts/header.php';
+?>
 
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -62,6 +64,16 @@
                         <dt class="col-sm-4">Nombre total de personnes :</dt>
                         <dd class="col-sm-8"><strong><?= htmlspecialchars($commande['totalPersonnes'] ?? 0) ?></strong></dd>
 
+                        <?php if ($commande['reductionTotale'] > 0): ?>
+                            <dt class="col-sm-4">Réduction appliquée :</dt>
+                            <dd class="col-sm-8">
+                                <span class="badge bg-success">
+                                    <i class="bi bi-tag-fill"></i> -<?= number_format($commande['reductionTotale'], 2, ',', ' ') ?> €
+                                </span>
+                                <br>
+                            </dd>
+                        <?php endif; ?>
+
                         <?php if ($commande['pret_materiel']): ?>
                             <dt class="col-sm-4">Prêt de matériel :</dt>
                             <dd class="col-sm-8">
@@ -73,17 +85,9 @@
 
                         <dt class="col-sm-4">Montant total :</dt>
                         <dd class="col-sm-8">
-                            <?php 
-                            $sousTotal = 0;
-                            if (!empty($commande['lignesMenus'])) {
-                                foreach ($commande['lignesMenus'] as $ligne) {
-                                    $sousTotal += $ligne['total_ligne'] ?? 0;
-                                }
-                            }
-                            ?>
                             <div class="mb-2">
                                 <small class="text-muted">Sous-total menus :</small>
-                                <strong><?= number_format($sousTotal, 2) ?> €</strong>
+                                <strong><?= number_format($commande['sousTotal'] ?? 0, 2) ?> €</strong>
                             </div>
                             <?php if (isset($commande['prix_livraison']) && $commande['prix_livraison'] > 0): ?>
                                 <div class="mb-2">
@@ -96,12 +100,6 @@
                                     <strong><?= number_format($commande['prix_livraison'], 2) ?> €</strong>
                                 </div>
                             <?php endif; ?>
-                            <?php if (isset($commande['reduction_appliquee']) && $commande['reduction_appliquee'] > 0): ?>
-                                <div class="mb-2">
-                                    <small class="text-success">Réduction appliquée :</small>
-                                    <strong class="text-success">-<?= number_format($commande['reduction_appliquee'], 2) ?> €</strong>
-                                </div>
-                            <?php endif; ?>
                             <hr class="my-2">
                             <h4 class="text-primary mb-0">
                                 Total final : <?= number_format($commande['total_final'] ?? 0, 2) ?> €
@@ -112,11 +110,10 @@
                         <dd class="col-sm-8">
                             <?php
                             $statut = $commande['statut'] ?? 'en_attente';
-                            $statutConfig = require __DIR__ . '/../../../config/statuts_commande.php';
-                            $badgeStyle = $statutConfig['styles'][$statut] ?? $statutConfig['styles']['default'];
-                            $statutLabel = $statutConfig['labels'][$statut] ?? ucfirst(str_replace('_', ' ', $statut));
+                            $statutLabel = $statuts[$statut] ?? ucfirst(str_replace('_', ' ', $statut));
+                            $badgeClass = 'badge-statut-' . str_replace('_', '-', $statut);
                             ?>
-                            <h5><span class="badge" style="<?= $badgeStyle ?>"><?= $statutLabel ?></span></h5>
+                            <h5><span class="badge <?= $badgeClass ?>"><?= $statutLabel ?></span></h5>
                         </dd>
                     </dl>
 
@@ -153,24 +150,16 @@
                 </div>
                 <div class="card-body">
                     <?php if (!empty($historique)): ?>
-                        <?php 
-                        // Charger la configuration des statuts une seule fois
-                        $statutConfigTimeline = require __DIR__ . '/../../../config/statuts_commande.php';
-                        ?>
                         <div class="timeline">
                             <?php foreach ($historique as $index => $suivi): ?>
                                 <div class="timeline-item mb-3 pb-3 <?= $index < count($historique) - 1 ? 'border-bottom' : '' ?>">
                                     <div class="d-flex align-items-start">
                                         <div class="flex-shrink-0 me-3">
                                             <?php
-                                            // Utiliser les couleurs du fichier de configuration
                                             $timelineStatut = $suivi['nouveau_statut'];
-                                            $timelineStyle = $statutConfigTimeline['styles'][$timelineStatut] ?? $statutConfigTimeline['styles']['default'];
-                                            // Extraire uniquement la couleur de fond du style
-                                            preg_match('/background-color:\s*([^;]+);/', $timelineStyle, $matches);
-                                            $timelineBgColor = $matches[1] ?? '#95a5a6';
+                                            $timelineBadgeClass = 'badge-statut-' . str_replace('_', '-', $timelineStatut);
                                             ?>
-                                            <div class="rounded-circle p-2 timeline-badge" style="background-color: <?= $timelineBgColor ?>; color: white;">
+                                            <div class="rounded-circle p-2 timeline-badge <?= $timelineBadgeClass ?>">
                                                 <i class="bi bi-<?= match($suivi['nouveau_statut']) {
                                                     'en_attente' => 'hourglass-split',
                                                     'acceptee' => 'check-circle',
@@ -185,7 +174,7 @@
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1"><?= $statutConfigTimeline['labels'][$suivi['nouveau_statut']] ?? ucfirst(str_replace('_', ' ', $suivi['nouveau_statut'])) ?></h6>
+                                            <h6 class="mb-1"><?= $statuts[$suivi['nouveau_statut']] ?? ucfirst(str_replace('_', ' ', $suivi['nouveau_statut'])) ?></h6>
                                             <small class="text-muted">
                                                 <?= date('d/m/Y à H:i', strtotime($suivi['date_changement'])) ?>
                                             </small>

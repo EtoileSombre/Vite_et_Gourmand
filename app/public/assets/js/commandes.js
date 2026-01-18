@@ -42,96 +42,6 @@ const CommandeModule = {
     },
 
     /**
-     * Initialiser le calcul dynamique sur la page commander.php
-     */
-    initCommanderPage: function() {
-        const menuSelect = document.getElementById('menu_id');
-        const nombrePersonneInput = document.getElementById('nombre_personne');
-        const summaryDiv = document.getElementById('summary');
-        const reductionInfo = document.getElementById('reductionInfo');
-
-        if (!menuSelect || !nombrePersonneInput || !summaryDiv) {
-            return; // Pas sur la page commander
-        }
-
-        function updateSummary() {
-            const selectedOption = menuSelect.options[menuSelect.selectedIndex];
-            const prixParPersonne = parseFloat(selectedOption.dataset.prix) || 0;
-            const minPersonnes = parseInt(selectedOption.dataset.min) || 0;
-            const nombrePersonnes = parseInt(nombrePersonneInput.value) || 0;
-            
-            if (prixParPersonne === 0 || nombrePersonnes === 0) {
-                summaryDiv.innerHTML = '<p class="text-muted text-center">Sélectionnez un menu et le nombre de personnes</p>';
-                if (reductionInfo) reductionInfo.style.display = 'none';
-                return;
-            }
-            nombrePersonneInput.min = minPersonnes;
-            if (nombrePersonnes < minPersonnes) {
-                nombrePersonneInput.value = minPersonnes;
-                return;
-            }
-            
-            // Calculs
-            const calcul = CommandeModule.calculatePrice(prixParPersonne, nombrePersonnes, minPersonnes);
-            
-            // Afficher ou masquer l'info réduction
-            if (reductionInfo) {
-                reductionInfo.style.display = calcul.reduction > 0 ? 'block' : 'none';
-            }
-            
-            // Frais de livraison (calculés côté serveur selon la ville)
-            const fraisLivraisonEstime = '<em>calculés selon la ville</em>';
-            
-            summaryDiv.innerHTML = `
-                <table class="table table-sm">
-                    <tr>
-                        <td>Menu sélectionné:</td>
-                        <td class="text-end"><strong>${selectedOption.text.split(' - ')[0]}</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Prix unitaire:</td>
-                        <td class="text-end">${prixParPersonne.toFixed(2).replace('.', ',')} €</td>
-                    </tr>
-                    <tr>
-                        <td>Nombre de personnes:</td>
-                        <td class="text-end">${nombrePersonnes}</td>
-                    </tr>
-                    <tr>
-                        <td>Sous-total menu:</td>
-                        <td class="text-end">${calcul.sousTotal.toFixed(2).replace('.', ',')} €</td>
-                    </tr>
-                    ${calcul.reduction > 0 ? `
-                    <tr class="text-success">
-                        <td>Réduction -10%:</td>
-                        <td class="text-end">-${calcul.reduction.toFixed(2).replace('.', ',')} €</td>
-                    </tr>
-                    ` : ''}
-                    <tr>
-                        <td>Prix menu final:</td>
-                        <td class="text-end"><strong>${calcul.prixMenu.toFixed(2).replace('.', ',')} €</strong></td>
-                    </tr>
-                    <tr>
-                        <td>Frais de livraison:</td>
-                        <td class="text-end">${fraisLivraisonEstime}</td>
-                    </tr>
-                </table>
-                <div class="alert alert-info small mb-0">
-                    <i class="bi bi-info-circle"></i>
-                    Le montant final sera calculé en fonction de votre ville de livraison
-                </div>
-            `;
-        }
-
-        menuSelect.addEventListener('change', updateSummary);
-        nombrePersonneInput.addEventListener('input', updateSummary);
-
-        // Initialisation
-        if (menuSelect.value) {
-            updateSummary();
-        }
-    },
-
-    /**
      * Initialiser la page modifier-commande.php
      */
     initModifierCommandePage: function() {
@@ -216,6 +126,44 @@ const CommandeModule = {
             // Événements matériel
             const btnMateriel = document.getElementById('btn_ajouter_materiel');
             if (btnMateriel) btnMateriel.addEventListener('click', () => this.ajouterMateriel());
+            
+            // Délégation d'événements pour les boutons des boissons
+            const containerBoissons = document.getElementById('liste_boissons');
+            if (containerBoissons) {
+                containerBoissons.addEventListener('click', (e) => {
+                    const btn = e.target.closest('[data-action]');
+                    if (!btn) return;
+                    
+                    const item = btn.closest('[data-index]');
+                    if (!item) return;
+                    
+                    const index = parseInt(item.dataset.index);
+                    const action = btn.dataset.action;
+                    
+                    if (action === 'decrease-boisson') this.updateBoissonQty(index, -1);
+                    else if (action === 'increase-boisson') this.updateBoissonQty(index, 1);
+                    else if (action === 'remove-boisson') this.removeBoisson(index);
+                });
+            }
+            
+            // Délégation d'événements pour les boutons des matériels
+            const containerMateriels = document.getElementById('liste_materiel');
+            if (containerMateriels) {
+                containerMateriels.addEventListener('click', (e) => {
+                    const btn = e.target.closest('[data-action]');
+                    if (!btn) return;
+                    
+                    const item = btn.closest('[data-index]');
+                    if (!item) return;
+                    
+                    const index = parseInt(item.dataset.index);
+                    const action = btn.dataset.action;
+                    
+                    if (action === 'decrease-materiel') this.updateMaterielQty(index, -1);
+                    else if (action === 'increase-materiel') this.updateMaterielQty(index, 1);
+                    else if (action === 'remove-materiel') this.removeMateriel(index);
+                });
+            }
         },
         
         ajouterBoisson() {
@@ -287,7 +235,7 @@ const CommandeModule = {
             }
             
             container.innerHTML = this.boissons.map((b, index) => `
-                <div class="boisson-item">
+                <div class="boisson-item" data-index="${index}">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="flex-grow-1">
                             <strong>${b.nom}</strong>
@@ -295,15 +243,14 @@ const CommandeModule = {
                             <div class="price-badge">${b.prix.toFixed(2)} € / unité</div>
                         </div>
                         <div class="qty-control">
-                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" onclick="CommandeModule.app.updateBoissonQty(${index}, -1)">
+                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" data-action="decrease-boisson">
                                 <i class="bi bi-dash"></i>
                             </button>
-                            <input type="number" class="qty-input" value="${b.quantite}" min="1" 
-                                   onchange="CommandeModule.app.setBoissonQty(${index}, this.value)" readonly>
-                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" onclick="CommandeModule.app.updateBoissonQty(${index}, 1)">
+                            <input type="number" class="qty-input" value="${b.quantite}" min="1" readonly>
+                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" data-action="increase-boisson">
                                 <i class="bi bi-plus"></i>
                             </button>
-                            <button type="button" class="btn btn-sm btn-danger btn-remove rounded-pill" onclick="CommandeModule.app.removeBoisson(${index})">
+                            <button type="button" class="btn btn-sm btn-danger btn-remove rounded-pill" data-action="remove-boisson">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -333,7 +280,7 @@ const CommandeModule = {
             }
             
             container.innerHTML = this.materiels.map((m, index) => `
-                <div class="materiel-item">
+                <div class="materiel-item" data-index="${index}">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="flex-grow-1">
                             <strong>${m.nom}</strong>
@@ -341,15 +288,14 @@ const CommandeModule = {
                             <small class="text-muted">Max disponible: ${m.quantiteDispo}</small>
                         </div>
                         <div class="qty-control">
-                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" onclick="CommandeModule.app.updateMaterielQty(${index}, -1)">
+                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" data-action="decrease-materiel">
                                 <i class="bi bi-dash"></i>
                             </button>
-                            <input type="number" class="qty-input" value="${m.quantite}" min="1" max="${m.quantiteDispo}"
-                                   onchange="CommandeModule.app.setMaterielQty(${index}, this.value)" readonly>
-                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" onclick="CommandeModule.app.updateMaterielQty(${index}, 1)">
+                            <input type="number" class="qty-input" value="${m.quantite}" min="1" max="${m.quantiteDispo}" readonly>
+                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" data-action="increase-materiel">
                                 <i class="bi bi-plus"></i>
                             </button>
-                            <button type="button" class="btn btn-sm btn-danger btn-remove rounded-pill" onclick="CommandeModule.app.removeMateriel(${index})">
+                            <button type="button" class="btn btn-sm btn-danger btn-remove rounded-pill" data-action="remove-materiel">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </div>
@@ -456,19 +402,25 @@ const CommandeModule = {
             
             const totalBoissons = this.boissons.reduce((sum, b) => sum + (b.prix * b.quantite), 0);
             const fraisLivraison = 5.00 + (distanceKm * 0.59);
-            const totalFinal = prixMenuBase - reduction + totalBoissons + fraisLivraison;
+            const totalHT = prixMenuBase - reduction + totalBoissons + fraisLivraison;
+            const montantTVA = totalHT * 0.10; // TVA à 10%
+            const totalTTC = totalHT + montantTVA;
             const totalCaution = this.materiels.reduce((sum, m) => sum + (m.caution * m.quantite), 0);
             
             // Affichage
             const prixMenuBaseEl = document.getElementById('prix-menu-base');
             const montantReductionEl = document.getElementById('montant-reduction');
             const fraisLivraisonEl = document.getElementById('frais-livraison');
+            const totalHTEl = document.getElementById('total-ht');
+            const montantTVAEl = document.getElementById('montant-tva');
             const totalFinalEl = document.getElementById('total-final');
             
             if (prixMenuBaseEl) prixMenuBaseEl.textContent = prixMenuBase.toFixed(2);
             if (montantReductionEl) montantReductionEl.textContent = reduction.toFixed(2);
             if (fraisLivraisonEl) fraisLivraisonEl.textContent = fraisLivraison.toFixed(2);
-            if (totalFinalEl) totalFinalEl.textContent = totalFinal.toFixed(2);
+            if (totalHTEl) totalHTEl.textContent = totalHT.toFixed(2);
+            if (montantTVAEl) montantTVAEl.textContent = montantTVA.toFixed(2);
+            if (totalFinalEl) totalFinalEl.textContent = totalTTC.toFixed(2);
             
             // Boissons
             const rowBoissons = document.getElementById('row-boissons');
@@ -509,14 +461,40 @@ const CommandeModule = {
                 motifTextarea.focus();
             }
         });
+    },
+
+    /*Initialiser la page view.php (détails commande employé)*/
+    initEmployeViewPage: function() {
+        // Bouton pour afficher le formulaire de modification
+        const btnShowEditForm = document.querySelector('[data-action="show-edit-form"]');
+        if (btnShowEditForm) {
+            btnShowEditForm.addEventListener('click', function() {
+                const editForm = document.getElementById('formEditCommandeSection');
+                if (editForm) {
+                    editForm.classList.remove('d-none');
+                    editForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        }
+
+        // Bouton pour annuler la modification
+        const btnCancelEdit = document.querySelector('[data-action="hide-edit-form"]');
+        if (btnCancelEdit) {
+            btnCancelEdit.addEventListener('click', function() {
+                const editForm = document.getElementById('formEditCommandeSection');
+                if (editForm) {
+                    editForm.classList.add('d-none');
+                }
+            });
+        }
     }
 };
 
 document.addEventListener('DOMContentLoaded', function() {
     CommandeModule.initCreatePage();
-    CommandeModule.initCommanderPage();
     CommandeModule.initModifierCommandePage();
     CommandeModule.initAnnulerCommandePage();
+    CommandeModule.initEmployeViewPage();
     CommandeModule.initConfirmationAnnulation();
     
     // Initialiser l'app pour create.php si les éléments existent

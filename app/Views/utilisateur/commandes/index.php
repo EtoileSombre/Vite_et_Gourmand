@@ -1,5 +1,7 @@
-<?php include __DIR__ . '/../../layouts/header.php'; ?>
-<link rel="stylesheet" href="/assets/css/pages/commandes.css">
+<?php
+$additionalStyles = ['/assets/css/pages/commandes.css'];
+include __DIR__ . '/../../layouts/header.php';
+?>
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -45,16 +47,15 @@
                             <td>
                                 <?php
                                 $statut = $commande['statut'] ?? 'en_attente';
-                                $statutConfig = require __DIR__ . '/../../../config/statuts_commande.php';
-                                $badgeStyle = $statutConfig['styles'][$statut] ?? $statutConfig['styles']['default'];
-                                $statutLabel = $statutConfig['labels'][$statut] ?? ucfirst(str_replace('_', ' ', $statut));
+                                $statutLabel = $statuts[$statut] ?? ucfirst(str_replace('_', ' ', $statut));
+                                $badgeClass = 'badge-statut-' . str_replace('_', '-', $statut);
                                 ?>
-                                <span class="badge" style="<?= $badgeStyle ?>"><?= $statutLabel ?></span>
+                                <span class="badge <?= $badgeClass ?>"><?= $statutLabel ?></span>
                             </td>
                             <td>
                                 <?= number_format($commande['total_final'] ?? 0, 2, ',', ' ') ?> €
-                                <?php if (isset($commande['reduction_appliquee']) && $commande['reduction_appliquee'] > 0): ?>
-                                    <br><small class="text-success">-<?= number_format($commande['reduction_appliquee'], 2, ',', ' ') ?> € de réduction</small>
+                                <?php if ($commande['reductionTotale'] > 0): ?>
+                                    <br><small class="text-success">-<?= number_format($commande['reductionTotale'], 2, ',', ' ') ?> € de réduction</small>
                                 <?php endif; ?>
                             </td>
                             <td>

@@ -9,7 +9,7 @@ include __DIR__ . '/../../layouts/header.php';
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
+                <ol class="breadcrumb breadcrumb-vg">
                     <li class="breadcrumb-item"><a href="/">Accueil</a></li>
                     <li class="breadcrumb-item"><a href="/menus">Menus</a></li>
                     <li class="breadcrumb-item active">Nouvelle commande</li>

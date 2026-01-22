@@ -6,7 +6,7 @@
         <!-- En-tête -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1 class="h2 mb-1">🍽️ Gestion des plats</h1>
+                <h1 class="h2 mb-1"><i class="bi bi-egg-fried"></i> Gestion des plats</h1>
                 <p class="text-muted mb-0">Créez et gérez votre catalogue de plats</p>
             </div>
             <div>
@@ -14,7 +14,7 @@
                     <i class="bi bi-arrow-left"></i> Retour Dashboard
                 </a>
                 <a href="/admin/plats/create" class="btn btn-primary rounded-pill">
-                    <span aria-hidden="true">➕</span> Créer un plat
+                    <i class="bi bi-plus-circle"></i> Créer un plat
                 </a>
             </div>
         </div>
@@ -40,7 +40,7 @@
             <div class="card-body">
                 <form method="GET" action="/admin/plats" class="row g-3">
                     <div class="col-md-4">
-                        <label for="type" class="form-label">Filtrer 🔍</label>
+                        <label for="type" class="form-label">Filtrer par type</label>
                         <select name="type" id="type" class="form-select" data-auto-submit>
                             <option value="">Tous les types</option>
                             <?php foreach ($typesPlat as $type): ?>
@@ -53,7 +53,7 @@
                     <div class="col-md-8 d-flex align-items-end">
                         <?php if ($typeFiltre): ?>
                             <a href="/admin/plats" class="btn btn-outline-secondary rounded-pill">
-                                <span aria-hidden="true">🔄</span> Réinitialiser
+                                <i class="bi bi-arrow-clockwise"></i> Réinitialiser
                             </a>
                         <?php endif; ?>
                     </div>
@@ -64,7 +64,7 @@
         <!-- Liste des plats -->
         <?php if (empty($plats)): ?>
             <div class="alert alert-info">
-                <span aria-hidden="true">ℹ️</span>
+                <i class="bi bi-info-circle"></i>
                 Aucun plat <?= $typeFiltre ? "de type « $typeFiltre »" : '' ?> n'est enregistré.
                 <a href="/admin/plats/create">Créez votre premier plat</a>.
             </div>
@@ -75,31 +75,15 @@
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th scope="col" class="w-5">ID</th>
-                                    <th scope="col" class="w-8">Photo</th>
-                                    <th scope="col" class="w-25">Titre</th>
-                                    <th scope="col" class="w-35">Description</th>
-                                    <th scope="col" class="w-12">Type</th>
+                                    <th scope="col" class="w-30">Titre</th>
+                                    <th scope="col" class="w-40">Description</th>
+                                    <th scope="col" class="w-15">Type</th>
                                     <th scope="col" class="w-15 text-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($plats as $plat): ?>
                                 <tr>
-                                    <td><?= $plat['plat_id'] ?></td>
-                                    <td>
-                                        <?php if (!empty($plat['photo'])): ?>
-                                            <img src="<?= htmlspecialchars($plat['photo']) ?>" 
-                                                 alt="<?= htmlspecialchars($plat['titre_plat']) ?>" 
-                                                 class="img-thumbnail" 
-                                                 class="img-plat-cover">
-                                        <?php else: ?>
-                                            <div class="bg-light d-flex align-items-center justify-content-center" 
-                                                 class="img-plat-placeholder">
-                                                <span class="text-muted" aria-hidden="true">🍽️</span>
-                                            </div>
-                                        <?php endif; ?>
-                                    </td>
                                     <td>
                                         <strong><?= htmlspecialchars($plat['titre_plat']) ?></strong>
                                     </td>
@@ -127,7 +111,7 @@
                                         <a href="/admin/plats/edit?id=<?= $plat['plat_id'] ?>" 
                                            class="btn btn-sm btn-outline-primary rounded-pill" 
                                            title="Modifier">
-                                            <span aria-hidden="true">✏️</span>
+                                            <i class="bi bi-pencil"></i>
                                             <span class="visually-hidden">Modifier <?= htmlspecialchars($plat['titre_plat']) ?></span>
                                         </a>
                                         
@@ -137,7 +121,7 @@
                                               data-confirm="Êtes-vous sûr de vouloir supprimer ce plat ?">
                                             <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
                                             <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" title="Supprimer">
-                                                <span aria-hidden="true">🗑️</span>
+                                                <i class="bi bi-trash"></i>
                                                 <span class="visually-hidden">Supprimer <?= htmlspecialchars($plat['titre_plat']) ?></span>
                                             </button>
                                         </form>

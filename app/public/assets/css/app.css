@@ -161,8 +161,8 @@ h4.text-success,
 }
 
 .btn-vg-bordeaux:hover {
-    background-color: var(--vg-bordeaux-600);
-    color: #fff;
+    background-color: #944040 !important;
+    color: #fff !important;
 }
 
 .btn-outline-vg-bordeaux {
@@ -177,15 +177,23 @@ h4.text-success,
     border-color: var(--vg-bordeaux) !important;
 }
 
+/* Bouton de suppression avec hover orange */
+.btn-delete:hover {
+    background-color: #ff9800 !important;
+    border-color: #ff9800 !important;
+    color: #fff !important;
+}
+
 .btn-vg-cream {
-    background-color: var(--vg-cream);
+    background-color: #FFF4D6;
     color: var(--vg-bordeaux);
-    border: 2px solid var(--vg-bordeaux);
+    border: 2px solid transparent;
 }
 
 .btn-vg-cream:hover {
     background-color: #fff;
     color: var(--vg-bordeaux);
+    border: 2px solid var(--vg-bordeaux);
 }
 
 /* Overrides Bootstrap buttons */
@@ -203,8 +211,9 @@ h4.text-success,
 .btn-primary:hover,
 .btn-danger:hover,
 .btn-bordeaux:hover {
-    background-color: var(--vg-bordeaux-600);
-    border-color: var(--vg-bordeaux-600);
+    background-color: #944040 !important;
+    border-color: #944040 !important;
+    color: #fff !important;
 }
 
 .btn-outline-success {
@@ -682,4 +691,43 @@ input[type="time"]:focus {
     padding: 0.9rem 2.5rem;
     font-size: 1.15rem;
     font-weight: 600;
+}
+
+/* Breadcrumb personnalisé Vite & Gourmand */
+.breadcrumb-vg,
+.breadcrumb {
+    background-color: transparent;
+    padding: 0.75rem 0;
+    margin-bottom: 1rem;
+}
+
+.breadcrumb-vg .breadcrumb-item a,
+.breadcrumb .breadcrumb-item a {
+    color: #6c757d;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.breadcrumb-vg .breadcrumb-item a:hover,
+.breadcrumb .breadcrumb-item a:hover {
+    color: var(--vg-bordeaux);
+}
+
+.breadcrumb-vg .breadcrumb-item.active,
+.breadcrumb .breadcrumb-item.active {
+    color: var(--vg-gold);
+    font-weight: 500;
+}
+
+.breadcrumb-vg .breadcrumb-item + .breadcrumb-item::before,
+.breadcrumb .breadcrumb-item + .breadcrumb-item::before {
+    color: #6c757d;
+}
+
+/* Bouton avec hover très clair */
+.btn-hover-light:hover,
+.btn-hover-light:active {
+    background-color: #FFF9F0 !important;
+    color: var(--vg-bordeaux) !important;
+    border-color: var(--vg-bordeaux) !important;
 }

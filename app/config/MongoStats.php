@@ -3,9 +3,12 @@
 namespace App\Config;
 
 use Exception;
-use MongoDB\BSON\UTCDateTime;
 use MongoDB\Driver\Exception\Exception as MongoException;
 
+/**
+ * Classe de statistiques MongoDB
+ * @psalm-suppress UndefinedClass
+ */
 class MongoStats
 {
     private $mongodb;
@@ -245,12 +248,23 @@ class MongoStats
             $result = $this->collections['commande_stats']->aggregate($pipeline);
             $data = [];
             foreach ($result as $row) {
+                $caTTC = (float)$row['chiffre_affaires'];
+                $caHT = round($caTTC / 1.10, 2); // TVA 10%
+                $montantTVA = round($caTTC - $caHT, 2);
+                $moyenneTTC = round($row['montant_moyen'] ?? 0, 2);
+                $moyenneHT = round($moyenneTTC / 1.10, 2);
+                
                 $data[] = [
                     '_id' => $row['_id'],
-                    'chiffre_affaires' => (float)$row['chiffre_affaires'],
+                    'chiffre_affaires' => $caTTC,
+                    'ca_ht' => $caHT,
+                    'ca_ttc' => $caTTC,
+                    'tva' => $montantTVA,
                     'nombre_commandes' => $row['nombre_commandes'],
                     'total_personnes' => $row['total_personnes'] ?? 0,
-                    'montant_moyen' => round($row['montant_moyen'] ?? 0, 2)
+                    'montant_moyen' => $moyenneTTC,
+                    'montant_moyen_ht' => $moyenneHT,
+                    'montant_moyen_ttc' => $moyenneTTC
                 ];
             }
             return $data;

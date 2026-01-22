@@ -55,14 +55,11 @@
                                     <tr>
                                         <th>Menu</th>
                                         <th class="text-center">Nombre de Commandes</th>
-                                        <th class="text-center">Total Personnes</th>
-                                        <th class="text-center">Moyenne Personnes/Commande</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php 
                                     $totalCmdGlobal = 0;
-                                    $totalPersGlobal = 0;
                                     foreach ($commandesParMenu as $data): 
                                         $menuId = $data['_id'];
                                         $menuTitre = 'Menu #' . $menuId;
@@ -73,17 +70,12 @@
                                             }
                                         }
                                         $totalCmdGlobal += $data['nombre_commandes'];
-                                        $totalPersGlobal += $data['total_personnes'];
-                                        $moyennePersonnes = $data['nombre_commandes'] > 0 ? 
-                                            round($data['total_personnes'] / $data['nombre_commandes'], 1) : 0;
                                     ?>
                                         <tr>
                                             <td><strong><?= htmlspecialchars($menuTitre) ?></strong></td>
                                             <td class="text-center">
                                                 <span class="badge bg-primary fs-6"><?= $data['nombre_commandes'] ?></span>
                                             </td>
-                                            <td class="text-center"><?= $data['total_personnes'] ?> personne<?= $data['total_personnes'] > 1 ? 's' : '' ?></td>
-                                            <td class="text-center"><?= $moyennePersonnes ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
@@ -91,10 +83,6 @@
                                     <tr>
                                         <td>TOTAL</td>
                                         <td class="text-center"><?= $totalCmdGlobal ?></td>
-                                        <td class="text-center"><?= $totalPersGlobal ?></td>
-                                        <td class="text-center">
-                                            <?= $totalCmdGlobal > 0 ? round($totalPersGlobal / $totalCmdGlobal, 1) : 0 ?>
-                                        </td>
                                     </tr>
                                 </tfoot>
                             </table>
@@ -151,17 +139,16 @@
                                 <thead class="table-success">
                                     <tr>
                                         <th>Menu</th>
-                                        <th>Chiffre d'Affaires</th>
-                                        <th>Nombre de Commandes</th>
-                                        <th>Total Personnes</th>
-                                        <th>Montant Moyen</th>
+                                        <th class="text-center">CA HT</th>
+                                        <th class="text-center">CA TTC</th>
+                                        <th class="text-center">Nombre de Commandes</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php 
                                     $totalCA = 0;
+                                    $totalCAHT = 0;
                                     $totalCommandes = 0;
-                                    $totalPersonnes = 0;
                                     foreach ($caParMenu as $data): 
                                         $menuId = $data['_id'];
                                         $menuTitre = 'Menu #' . $menuId;
@@ -171,26 +158,24 @@
                                                 break;
                                             }
                                         }
-                                        $totalCA += $data['chiffre_affaires'];
+                                        $totalCA += $data['ca_ttc'];
+                                        $totalCAHT += $data['ca_ht'];
                                         $totalCommandes += $data['nombre_commandes'];
-                                        $totalPersonnes += $data['total_personnes'];
                                     ?>
                                         <tr>
                                             <td><strong><?= htmlspecialchars($menuTitre) ?></strong></td>
-                                            <td><span class="badge bg-success fs-6"><?= number_format($data['chiffre_affaires'], 2, ',', ' ') ?> €</span></td>
-                                            <td><?= $data['nombre_commandes'] ?> commande<?= $data['nombre_commandes'] > 1 ? 's' : '' ?></td>
-                                            <td><?= $data['total_personnes'] ?> personne<?= $data['total_personnes'] > 1 ? 's' : '' ?></td>
-                                            <td><?= number_format($data['montant_moyen'], 2, ',', ' ') ?> €</td>
+                                            <td class="text-center"><?= number_format($data['ca_ht'], 2, ',', ' ') ?> €</td>
+                                            <td class="text-center"><span class="badge bg-success fs-6"><?= number_format($data['ca_ttc'], 2, ',', ' ') ?> €</span></td>
+                                            <td class="text-center"><?= $data['nombre_commandes'] ?> commande<?= $data['nombre_commandes'] > 1 ? 's' : '' ?></td>
                                         </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                                 <tfoot class="table-success fw-bold">
                                     <tr>
                                         <td>TOTAL</td>
-                                        <td><?= number_format($totalCA, 2, ',', ' ') ?> €</td>
-                                        <td><?= $totalCommandes ?></td>
-                                        <td><?= $totalPersonnes ?></td>
-                                        <td><?= $totalCommandes > 0 ? number_format($totalCA / $totalCommandes, 2, ',', ' ') : '0,00' ?> €</td>
+                                        <td class="text-center"><?= number_format($totalCAHT, 2, ',', ' ') ?> €</td>
+                                        <td class="text-center"><?= number_format($totalCA, 2, ',', ' ') ?> €</td>
+                                        <td class="text-center"><?= $totalCommandes ?></td>
                                     </tr>
                                 </tfoot>
                             </table>

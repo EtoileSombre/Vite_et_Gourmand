@@ -172,7 +172,7 @@ include __DIR__ . '/../../layouts/header.php';
                             
                             <div class="mb-3">
                                 <label for="boisson_select" class="form-label">Ajouter des boissons</label>
-                                <div class="input-group">
+                                <div class="d-flex align-items-center gap-2">
                                     <select class="form-select" id="boisson_select">
                                         <option value="">Choisir une boisson...</option>
                                         <?php if (!empty($boissons)): ?>
@@ -192,7 +192,7 @@ include __DIR__ . '/../../layouts/header.php';
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
-                                    <button type="button" class="btn btn-primary rounded-pill" id="btn_ajouter_boisson">
+                                    <button type="button" class="btn btn-vg-gold rounded-pill" id="btn_ajouter_boisson" style="padding: 0.4rem 0.9rem; font-size: 0.9rem; white-space: nowrap;">
                                         <i class="bi bi-plus-lg"></i> Ajouter
                                     </button>
                                 </div>
@@ -220,7 +220,7 @@ include __DIR__ . '/../../layouts/header.php';
                             
                             <div class="mb-3">
                                 <label for="materiel_select" class="form-label">Ajouter du matériel</label>
-                                <div class="input-group">
+                                <div class="d-flex align-items-center gap-2">
                                     <select class="form-select" id="materiel_select">
                                         <option value="">Choisir du matériel...</option>
                                         <?php if (!empty($materiels)): ?>
@@ -241,7 +241,7 @@ include __DIR__ . '/../../layouts/header.php';
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
-                                    <button type="button" class="btn btn-success rounded-pill" id="btn_ajouter_materiel">
+                                    <button type="button" class="btn btn-vg-gold rounded-pill" id="btn_ajouter_boisson" style="padding: 0.4rem 0.9rem; font-size: 0.9rem; white-space: nowrap;">
                                         <i class="bi bi-plus-lg"></i> Ajouter
                                     </button>
                                 </div>
@@ -272,7 +272,7 @@ include __DIR__ . '/../../layouts/header.php';
                         <!-- RÉCAPITULATIF PRIX -->
                         <div class="mb-4">
                             <h5 class="border-bottom pb-2 mb-3 fw-bold">
-                                Récapitulatif de la commande
+                                <i class="bi bi-receipt"></i> Récapitulatif de la commande
                             </h5>
                             
                             <div class="card bg-light">
@@ -310,8 +310,8 @@ include __DIR__ . '/../../layouts/header.php';
                                     
                                     <div class="row mb-2">
                                         <div class="col-8"><strong>Total HT</strong></div>
-                                        <div class="col-4 text-end">
-                                            <strong><span id="total-ht">5,00</span> €</strong>
+                                        <div class="col-4 text-end fw-bold">
+                                            <span id="total-ht">5,00</span> €
                                         </div>
                                     </div>
                                     
@@ -327,8 +327,8 @@ include __DIR__ . '/../../layouts/header.php';
                                     <div class="row">
                                         <div class="col-8"><h5 class="mb-0 fw-bold">TOTAL TTC</h5></div>
                                         <div class="col-4 text-end">
-                                            <h5 class="mb-0 text-primary">
-                                                <strong><span id="total-final">5,50</span> €</strong>
+                                            <h5 class="mb-0 text-vg-bordeaux fw-bold" style="font-size: 1.2rem;">
+                                                <span id="total-final">5,50</span> €
                                             </h5>
                                         </div>
                                     </div>
@@ -351,7 +351,7 @@ include __DIR__ . '/../../layouts/header.php';
                             <a href="/menus" class="btn btn-outline-secondary rounded-pill">
                                 <i class="bi bi-arrow-left"></i> Retour aux menus
                             </a>
-                            <button type="submit" class="btn btn-success rounded-pill">
+                            <button type="submit" class="btn btn-vg-gold rounded-pill">
                                 <i class="bi bi-check-circle"></i> Valider la commande
                             </button>
                         </div>

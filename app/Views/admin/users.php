@@ -4,7 +4,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2><i class="bi bi-people-fill"></i> Gestion des Employés</h2>
         <div>
-            <button type="button" class="btn btn-vg-bordeaux rounded-pill" data-bs-toggle="modal" data-bs-target="#createEmployeModal">
+            <button type="button" class="btn btn-vg-gold rounded-pill" data-bs-toggle="modal" data-bs-target="#createEmployeModal">
                 <i class="bi bi-person-plus"></i> Créer un Employé
             </button>
             <a href="/admin" class="btn btn-vg-bordeaux rounded-pill">

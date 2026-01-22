@@ -61,34 +61,32 @@ require_once __DIR__ . '/../../layouts/header.php';
                                         ?>
                                     </td>
                                     <td class="text-end">
-                                        <div class="btn-group btn-group-sm" role="group">
-                                            <a href="/admin/menus/edit?id=<?= $menu['menu_id'] ?>" 
-                                               class="btn btn-outline-primary rounded-pill" 
-                                               title="Modifier">
-                                                <i class="bi bi-pencil"></i>
-                                            </a>
-                                            
-                                            <?php if ($menu['quantite_restante'] > 0): ?>
-                                                <button type="button" 
-                                                        class="btn btn-outline-danger rounded-pill" 
-                                                        title="Désactiver"
-                                                        data-bs-toggle="modal" 
-                                                        data-bs-target="#deleteMenuModal"
-                                                        data-menu-id="<?= $menu['menu_id'] ?>"
-                                                        data-menu-titre="<?= htmlspecialchars($menu['titre']) ?>">
-                                                    <i class="bi bi-trash"></i>
+                                        <a href="/admin/menus/edit?id=<?= $menu['menu_id'] ?>" 
+                                           class="btn btn-sm btn-outline-vg-bordeaux rounded-pill me-2" 
+                                           title="Modifier">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        
+                                        <?php if ($menu['quantite_restante'] > 0): ?>
+                                            <button type="button" 
+                                                    class="btn btn-sm btn-outline-vg-bordeaux rounded-pill" 
+                                                    title="Désactiver"
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#deleteMenuModal"
+                                                    data-menu-id="<?= $menu['menu_id'] ?>"
+                                                    data-menu-titre="<?= htmlspecialchars($menu['titre']) ?>">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        <?php else: ?>
+                                            <form method="POST" action="/admin/menus/activate" class="d-inline">
+                                                <input type="hidden" name="menu_id" value="<?= $menu['menu_id'] ?>">
+                                                <button type="submit" 
+                                                        class="btn btn-sm btn-outline-vg-bordeaux rounded-pill" 
+                                                        title="Réactiver">
+                                                    <i class="bi bi-arrow-clockwise"></i>
                                                 </button>
-                                            <?php else: ?>
-                                                <form method="POST" action="/admin/menus/activate" class="d-inline">
-                                                    <input type="hidden" name="menu_id" value="<?= $menu['menu_id'] ?>">
-                                                    <button type="submit" 
-                                                            class="btn btn-outline-success rounded-pill" 
-                                                            title="Réactiver">
-                                                        <i class="bi bi-arrow-clockwise"></i>
-                                                    </button>
-                                                </form>
-                                            <?php endif; ?>
-                                        </div>
+                                            </form>
+                                        <?php endif; ?>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>

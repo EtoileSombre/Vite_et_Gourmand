@@ -6,7 +6,7 @@ include __DIR__ . '/../../layouts/header.php';
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="mb-0">Mes commandes</h2>
-        <a href="/commande/nouvelle" class="btn btn-success rounded-pill">
+        <a href="/commande/nouvelle" class="btn btn-vg-gold rounded-pill">
             <i class="bi bi-plus-circle"></i> Nouvelle commande
         </a>
     </div>

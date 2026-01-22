@@ -112,7 +112,6 @@
             
             <div class="card mt-3">
                 <div class="card-body">
-                    <h5>Informations du compte</h5>
                     <p class="mb-0"><strong>Date d'inscription :</strong> 
                         <?= date('d/m/Y', strtotime($user['created_at'])) ?>
                     </p>

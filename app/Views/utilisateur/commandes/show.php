@@ -101,7 +101,7 @@ include __DIR__ . '/../../layouts/header.php';
                                 </div>
                             <?php endif; ?>
                             <hr class="my-2">
-                            <h4 class="text-primary mb-0">
+                            <h4 class="text-vg-bordeaux mb-0">
                                 Total TTC : <?= number_format($commande['total_final'] ?? 0, 2) ?> €
                             </h4>
                         </dd>

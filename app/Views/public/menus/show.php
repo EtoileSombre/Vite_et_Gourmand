@@ -62,25 +62,25 @@
 
         <div class="col-md-6 offset-md-1">
             <!-- En-tête avec titre et prix -->
-            <div class="d-flex justify-content-between align-items-start mb-3">
-                <h2 class="mb-0"><?= htmlspecialchars($menu['titre']) ?></h2>
-                <div class="text-end">
-                    <span class="fs-3 fw-bold menu-prix-principal"><?= number_format($menu['prix_par_personne'], 2) ?> €<span class="text-muted menu-prix-par-personne">&nbsp;/&nbsp;personne</span></span>
-                </div>
+            <div class="menu-header-flex">
+                <h1 class="menu-title"><?= htmlspecialchars($menu['titre']) ?></h1>
+                <span class="menu-price"><?= number_format($menu['prix_par_personne'], 2) ?> € <small>/ personne</small></span>
             </div>
             
-            <!-- Prévoir commande avant-->
-            <div class="card border-warning border-2 mb-3 shadow-sm">
-                <div class="card-body bg-warning bg-opacity-25 text-center py-2 px-3">
-                    <p class="mb-0">
-                        <i class="bi bi-calendar-event me-1"></i>
-                        <?php if (!empty($menu['conditions'])): ?>
-                            <?= htmlspecialchars($menu['conditions']) ?>
-                        <?php else: ?>
-                            Commande à prévoir 48h avant pour garantir la disponibilité des produits frais
-                        <?php endif; ?>
-                    </p>
-                </div>
+            <!-- Conditions de commande -->
+            <div class="menu-conditions-box mb-3">
+                <small class="text-muted">
+                    <i class="bi bi-calendar-event me-1"></i>
+                    <?php if (!empty($menu['conditions'])): ?>
+                        <?= htmlspecialchars($menu['conditions']) ?>
+                    <?php else: ?>
+                        Commande à prévoir 48h avant
+                    <?php endif; ?>
+                    <?php if (isset($menu['nombre_personne_minimum']) && $menu['nombre_personne_minimum'] > 1): ?>
+                        <span class="mx-2">•</span>
+                        <i class="bi bi-people me-1"></i> Minimum <?= $menu['nombre_personne_minimum'] ?> personnes
+                    <?php endif; ?>
+                </small>
             </div>
             
             <!-- COMPOSITION DU MENU - Liste des plats -->
@@ -148,17 +148,16 @@
                 <?php if ($isAuthenticated): ?>
                     <a href="/commande/nouvelle?menu_id=<?= $menu['menu_id'] ?>" 
                        id="btnCommander" 
-                       class="btn shadow menu-btn-commande rounded-pill" 
-                       class="btn btn-vg-bordeaux rounded-pill btn-commande-custom">
-                        <i class="bi bi-cart-plus fs-5"></i> Commander
+                       class="btn btn-lg shadow menu-btn-commande rounded-pill btn-commande-custom text-center">
+                        <i class="bi bi-basket"></i> Commander
                     </a>
                 <?php else: ?>
                     <button type="button" 
                             id="btnCommander" 
-                            class="btn shadow menu-btn-commande rounded-pill btn-commande-custom" 
+                            class="btn btn-lg shadow menu-btn-commande rounded-pill btn-commande-custom text-center" 
                             data-bs-toggle="modal" 
                             data-bs-target="#modalAuthentification">
-                        <i class="bi bi-cart-plus fs-5"></i> Commander
+                        <i class="bi bi-basket"></i> Commander
                     </button>
                 <?php endif; ?>
             </div>

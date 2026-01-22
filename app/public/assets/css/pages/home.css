@@ -45,7 +45,8 @@
 .hero h1 {
     font-family: "Playfair Display", serif;
     font-size: clamp(32px, 5vw, 56px);
-    line-height: 1.08;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
 }
 
 /* Animation pulse sur le bouton CTA */
@@ -55,10 +56,10 @@
 
 @keyframes pulse {
     0%, 100% {
-        box-shadow: 0 0 0 0 rgba(123, 30, 30, 0.7);
+        box-shadow: 0 0 0 0 rgba(196, 155, 99, 0.7);
     }
     50% {
-        box-shadow: 0 0 0 15px rgba(123, 30, 30, 0);
+        box-shadow: 0 0 0 15px rgba(196, 155, 99, 0);
     }
 }
 

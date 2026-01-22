@@ -102,7 +102,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     </td>
                                     <td class="text-center">
                                         <a href="/employe/commandes/view?id=<?= $cmd['numero_commande'] ?>" 
-                                           class="btn btn-sm btn-vg-bordeaux rounded-pill" title="Gérer la commande">
+                                           class="btn btn-sm btn-vg-bordeaux btn-hover-light rounded-pill" title="Gérer la commande">
                                             <i class="bi bi-gear"></i> Gérer
                                         </a>
                                     </td>

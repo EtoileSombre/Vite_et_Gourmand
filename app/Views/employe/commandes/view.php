@@ -347,7 +347,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                         <dt class="col-sm-5">Prêt matériel :</dt>
                         <dd class="col-sm-7">
                             <?php if ($commande['pret_materiel']): ?>
-                                <span class="badge bg-info">Oui</span>
+                                <span class="badge bg-success">Oui</span>
                             <?php else: ?>
                                 <span class="badge bg-secondary">Non</span>
                             <?php endif; ?>
@@ -400,7 +400,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
 
                         <dt class="col-sm-5"><strong>TOTAL TTC :</strong></dt>
                         <dd class="col-sm-7">
-                            <strong class="fs-5 text-primary">
+                            <strong class="fs-5 text-vg-bordeaux">
                                 <?= number_format($totalTTC, 2) ?> €
                             </strong>
                         </dd>

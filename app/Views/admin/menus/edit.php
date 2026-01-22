@@ -143,7 +143,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <a href="/admin/menus" class="btn btn-outline-secondary rounded-pill">
                                 <i class="bi bi-arrow-left"></i> Annuler
                             </a>
-                            <button type="submit" class="btn btn-primary rounded-pill">
+                            <button type="submit" class="btn btn-vg-gold rounded-pill">
                                 <i class="bi bi-save"></i> Enregistrer les Modifications
                             </button>
                         </div>

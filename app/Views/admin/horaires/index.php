@@ -120,11 +120,11 @@
                     <!-- Info et bouton -->
                     <div class="mt-4 d-flex justify-content-between align-items-center">
                         <div class="text-muted small">
-                            <span aria-hidden="true">💡</span>
+                            <i class="bi bi-lightbulb"></i>
                              Cochez "Fermé" pour indiquer qu'un jour est non travaillé
                         </div>
-                        <button type="submit" class="btn btn-primary rounded-pill">
-                            <span aria-hidden="true">💾</span>
+                        <button type="submit" class="btn btn-vg-gold rounded-pill">
+                            <i class="bi bi-check-circle"></i>
                             Enregistrer les horaires
                         </button>
                     </div>

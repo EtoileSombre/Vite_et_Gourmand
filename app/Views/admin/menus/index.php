@@ -10,7 +10,7 @@ require_once __DIR__ . '/../../layouts/header.php';
             <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux me-2 rounded-pill">
                 <i class="bi bi-arrow-left"></i> Retour Dashboard
             </a>
-            <a href="/admin/menus/create" class="btn btn-primary rounded-pill">
+            <a href="/admin/menus/create" class="btn btn-vg-gold rounded-pill">
                 <i class="bi bi-plus-circle"></i> Créer un Menu
             </a>
         </div>

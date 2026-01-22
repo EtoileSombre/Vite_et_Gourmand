@@ -27,24 +27,24 @@
                             </select>
                         </div>
                         <div class="col-md-3">
-                            <label for="date_debut_cmd" class="form-label">📅 Date début</label>
+                            <label for="date_debut_cmd" class="form-label">Date début</label>
                             <input type="date" name="date_debut" id="date_debut_cmd" class="form-control" 
                                    value="<?= htmlspecialchars($filtreDateDebut ?? '') ?>">
                         </div>
                         <div class="col-md-3">
-                            <label for="date_fin_cmd" class="form-label">📅 Date fin</label>
+                            <label for="date_fin_cmd" class="form-label">Date fin</label>
                             <input type="date" name="date_fin" id="date_fin_cmd" class="form-control" 
                                    value="<?= htmlspecialchars($filtreDateFin ?? '') ?>">
                         </div>
                         <div class="col-md-2 d-flex align-items-end">
-                            <button type="submit" class="btn btn-primary w-100 rounded-pill">🔍 Filtrer</button>
+                            <button type="submit" class="btn btn-vg-gold w-100 rounded-pill"><i class="bi bi-funnel"></i> Filtrer</button>
                         </div>
                     </form>
 
                     <!-- Graphique comparatif des commandes par menu -->
                     <?php if (!empty($commandesParMenu)): ?>
                         <div class="mb-4">
-                            <h6 class="text-primary mb-3">📈 Graphique Comparatif</h6>
+                            <h6 class="text-primary mb-3">Graphique Comparatif</h6>
                             <canvas id="chartCommandesParMenu" height="120"></canvas>
                         </div>
 

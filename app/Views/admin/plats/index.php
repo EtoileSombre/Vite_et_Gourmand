@@ -7,7 +7,6 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <h1 class="h2 mb-1"><i class="bi bi-egg-fried"></i> Gestion des plats</h1>
-                <p class="text-muted mb-0">Créez et gérez votre catalogue de plats</p>
             </div>
             <div>
                 <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux me-2 rounded-pill">
@@ -18,22 +17,6 @@
                 </a>
             </div>
         </div>
-
-        <!-- Statistiques -->
-        <?php if (!empty($stats)): ?>
-        <div class="row mb-4">
-            <?php foreach ($stats as $stat): ?>
-            <div class="col-md-3 mb-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h3 class="mb-0"><?= $stat['total'] ?></h3>
-                        <small class="text-muted"><?= htmlspecialchars($stat['type_plat']) ?></small>
-                    </div>
-                </div>
-            </div>
-            <?php endforeach; ?>
-        </div>
-        <?php endif; ?>
 
         <!-- Filtres -->
         <div class="card mb-4">
@@ -109,7 +92,7 @@
                                     </td>
                                     <td class="text-end">
                                         <a href="/admin/plats/edit?id=<?= $plat['plat_id'] ?>" 
-                                           class="btn btn-sm btn-outline-primary rounded-pill" 
+                                           class="btn btn-sm btn-outline-vg-bordeaux rounded-pill me-2" 
                                            title="Modifier">
                                             <i class="bi bi-pencil"></i>
                                             <span class="visually-hidden">Modifier <?= htmlspecialchars($plat['titre_plat']) ?></span>
@@ -120,7 +103,7 @@
                                               class="d-inline" 
                                               data-confirm="Êtes-vous sûr de vouloir supprimer ce plat ?">
                                             <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill" title="Supprimer">
+                                            <button type="submit" class="btn btn-sm btn-outline-vg-bordeaux rounded-pill" title="Supprimer">
                                                 <i class="bi bi-trash"></i>
                                                 <span class="visually-hidden">Supprimer <?= htmlspecialchars($plat['titre_plat']) ?></span>
                                             </button>

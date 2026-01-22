@@ -74,6 +74,12 @@
                         <button type="submit" class="btn btn-vg-gold w-100 rounded-pill">
                             <i class="bi bi-send"></i> Envoyer le message
                         </button>
+                        
+                        <div class="text-center mt-3">
+                            <small class="text-muted" style="opacity: 0.8;">
+                                <i class="bi bi-shield-check"></i> Vos données ne seront jamais partagées
+                            </small>
+                        </div>
                     </form>
                 </div>
             </div>

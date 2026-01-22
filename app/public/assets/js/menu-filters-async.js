@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="mb-3">
                             ${regime.split(',').map(r => 
-                                `<span class="badge bg-light text-dark border me-1">${escapeHtml(r.trim())}</span>`
+                                `<span class="badge bg-secondary me-1">${escapeHtml(r.trim())}</span>`
                             ).join('')}
                         </div>
                         <div class="d-flex justify-content-between align-items-center">

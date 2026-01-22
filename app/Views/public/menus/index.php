@@ -64,7 +64,7 @@
 
                 <!-- Bouton Réinitialiser -->
                 <div class="col-md-4 d-flex align-items-end">
-                    <button class="btn btn-success w-100 rounded-pill" id="btnResetFilters">
+                    <button class="btn btn-outline-light w-100 rounded-pill" id="btnResetFilters" style="border-color: #dee2e6; color: #6c757d;">
                         <i class="bi bi-x-circle"></i> Réinitialiser
                     </button>
                 </div>
@@ -73,7 +73,6 @@
             <!-- Compteur de résultats -->
             <div class="mt-3">
                 <small class="text-muted">
-                    <i class="bi bi-info-circle"></i> 
                     <span id="menuCount"></span>
                 </small>
             </div>
@@ -133,9 +132,16 @@
                             <p class="card-text"><?= htmlspecialchars($menu['description'] ?? '') ?></p>
                             
                             <?php if (!empty($menu['regime'])): ?>
-                                <span class="badge bg-secondary mb-2">
-                                    <?= htmlspecialchars($menu['regime']) ?>
-                                </span>
+                                <div class="mb-2">
+                                    <?php 
+                                    $regimes = explode(',', $menu['regime']);
+                                    foreach ($regimes as $regime): 
+                                    ?>
+                                        <span class="badge bg-secondary me-1">
+                                            <?= htmlspecialchars(trim($regime)) ?>
+                                        </span>
+                                    <?php endforeach; ?>
+                                </div>
                             <?php endif; ?>
                             
                             <?php if (isset($menu['nombre_personne_minimum']) && $menu['nombre_personne_minimum'] > 1): ?>

@@ -27,10 +27,10 @@ require_once __DIR__ . '/../layouts/header.php';
     <div class="row g-4 mb-4">
         <!-- Employés -->
         <div class="col-md-4">
-            <div class="card shadow-sm h-100 border-vg-bordeaux-2">
+            <div class="card dashboard-card shadow-sm h-100 border-vg-bordeaux-2">
                 <div class="card-body text-center">
                     <i class="bi bi-people-fill fs-1 text-vg-bordeaux"></i>
-                    <h2 class="mt-3 mb-1"><?= $totalUsers ?></h2>
+                    <h2 class="dashboard-number mt-3 mb-1"><?= $totalUsers ?></h2>
                     <p class="text-muted mb-3">Employés</p>
                     <a href="/admin/utilisateurs" class="btn btn-sm btn-vg-bordeaux rounded-pill">
                         <i class="bi bi-person-plus"></i> Créer
@@ -41,10 +41,10 @@ require_once __DIR__ . '/../layouts/header.php';
 
         <!-- Statistiques MongoDB -->
         <div class="col-md-4">
-            <div class="card shadow-sm h-100 border-vg-bordeaux-2">
+            <div class="card dashboard-card shadow-sm h-100 border-vg-bordeaux-2">
                 <div class="card-body text-center">
                     <i class="bi bi-graph-up fs-1 text-vg-bordeaux"></i>
-                    <h2 class="mt-3 mb-1"><?= $totalCommandes ?></h2>
+                    <h2 class="dashboard-number mt-3 mb-1"><?= $totalCommandes ?></h2>
                     <p class="text-muted mb-3">Statistiques</p>
                     <a href="/admin/stats" class="btn btn-sm btn-vg-bordeaux rounded-pill">
                         <i class="bi bi-bar-chart"></i> Voir
@@ -55,12 +55,12 @@ require_once __DIR__ . '/../layouts/header.php';
 
         <!-- Menus -->
         <div class="col-md-4">
-            <div class="card shadow-sm h-100 border-vg-gold-2">
+            <div class="card dashboard-card shadow-sm h-100 border-vg-bordeaux-2">
                 <div class="card-body text-center">
-                    <i class="bi bi-card-list fs-1 text-vg-gold"></i>
-                    <h2 class="mt-3 mb-1"><?= $totalMenus ?></h2>
+                    <i class="bi bi-card-list fs-1 text-vg-bordeaux"></i>
+                    <h2 class="dashboard-number mt-3 mb-1"><?= $totalMenus ?></h2>
                     <p class="text-muted mb-3">Menus</p>
-                    <a href="/admin/menus" class="btn btn-sm btn-vg-gold rounded-pill">
+                    <a href="/admin/menus" class="btn btn-sm btn-vg-bordeaux rounded-pill">
                         <i class="bi bi-pencil"></i> Gérer
                     </a>
                 </div>

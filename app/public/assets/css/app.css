@@ -3,14 +3,14 @@
 
 /* Variables globales */
 :root {
-    --vg-bordeaux: #7B1E1E;
+    --vg-bordeaux: #7a1f1f;
     --vg-bordeaux-600: #6a1919;
-    --vg-gold: #D4AF37;
+    --vg-gold: #c49b63;
     --vg-cream: #FFF8F0;
     --vg-ink: #1f1f1f;
     --vg-muted: #6b7280;
     --vg-radius: 18px;
-    --vg-shadow: 0 10px 30px rgba(0, 0, 0, .10);
+    --vg-shadow: 0 2px 10px rgba(0, 0, 0, .06);
 }
 
 /* Base */
@@ -20,9 +20,81 @@ body {
 }
 
 body {
-    font-family: 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+    font-family: 'Inter', 'Montserrat', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
     color: var(--vg-ink);
     background-color: var(--vg-cream);
+}
+
+/* 2. Hiérarchie des titres améliorée */
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+h2 {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.2rem;
+    font-weight: 600;
+}
+
+.subtitle {
+    color: #777;
+    font-weight: 400;
+}
+
+.text-muted {
+    color: #555 !important;
+}
+
+/* 3. Respiration verticale */
+.section {
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+}
+
+.card {
+    border: none !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
+    margin-bottom: 1.5rem;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem !important;
+}
+
+.mb-4 {
+    margin-bottom: 2rem !important;
+}
+
+.my-5 {
+    margin-top: 3rem !important;
+    margin-bottom: 3rem !important;
+}
+
+/* Placeholders plus clairs */
+::placeholder {
+    color: #9ca3af !important;
+    opacity: 1 !important;
+}
+
+:-ms-input-placeholder {
+    color: #9ca3af !important;
+}
+
+::-ms-input-placeholder {
+    color: #9ca3af !important;
 }
 
 .container {
@@ -143,26 +215,43 @@ h4.text-success,
 
 /*BOUTONS*/
 
+/* Uniformisation taille des boutons rounded-pill */
+.btn.rounded-pill:not(.btn-lg):not(.btn-commande-custom):not(.btn-pulse) {
+    padding: 10px 24px !important;
+    font-size: 0.95rem !important;
+}
+
 .btn-vg-gold {
-    background-color: var(--vg-gold);
-    color: var(--vg-bordeaux);
+    background: linear-gradient(135deg, #c49b63 0%, #d4af6f 100%);
+    color: #fff;
     border: none;
+    padding: 12px 28px;
+    font-weight: 600;
+    font-size: 1.05rem;
+    letter-spacing: 0.2px;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
 .btn-vg-gold:hover {
-    background-color: #c4a030;
-    color: var(--vg-bordeaux);
+    background: linear-gradient(135deg, #d4af6f 0%, #c49b63 100%);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
 .btn-vg-bordeaux {
     background-color: var(--vg-bordeaux);
     color: #fff;
     border: none;
+    padding: 12px 28px;
+    font-weight: 600;
 }
 
 .btn-vg-bordeaux:hover {
     background-color: #944040 !important;
     color: #fff !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(122,31,31,0.25);
 }
 
 .btn-outline-vg-bordeaux {
@@ -280,6 +369,40 @@ h4.text-success,
     color: white;
 }
 
+/* Style badge uniforme pour toute l'application */
+.badge {
+    background-color: #ffffff !important;
+    color: #555 !important;
+    border: 1px solid #dee2e6 !important;
+    font-weight: 500 !important;
+    font-size: 0.75rem !important;
+    padding: 4px 10px !important;
+}
+
+/* Badge secondaire (même style) */
+.badge.bg-secondary,
+.bg-secondary.badge {
+    background-color: #ffffff !important;
+    color: #555 !important;
+    border: 1px solid #dee2e6 !important;
+    font-weight: 500 !important;
+}
+
+/* Dashboard KPI cards */
+.dashboard-number {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.dashboard-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
+}
+
 /*CARD*/
 
 .card {
@@ -313,15 +436,15 @@ h4.text-success,
 }
 
 .gradient-gold {
-    background: linear-gradient(135deg, #D4AF37 0%, #c4a030 100%);
+    background: linear-gradient(135deg, #c49b63 0%, #d4af6f 100%);
 }
 
 .gradient-bordeaux-gold {
-    background: linear-gradient(135deg, #7B1E1E 0%, #D4AF37 100%);
+    background: linear-gradient(135deg, #7B1E1E 0%, #c49b63 100%);
 }
 
 .gradient-dark-gold {
-    background: linear-gradient(135deg, #6a1919 0%, #c4a030 100%);
+    background: linear-gradient(135deg, #6a1919 0%, #d4af6f 100%);
 }
 
 /*ICÔNES*/
@@ -428,6 +551,13 @@ a:active {
     outline-offset: 2px;
 }
 
+/* 1. Labels formulaire renforcés */
+.form-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #333;
+}
+
 .form-control:focus,
 .form-select:focus,
 textarea:focus,
@@ -438,8 +568,8 @@ input[type="password"]:focus,
 input[type="number"]:focus,
 input[type="date"]:focus,
 input[type="time"]:focus {
-    border-color: var(--vg-gold) !important;
-    box-shadow: 0 0 0 .25rem rgba(212, 175, 55, .25) !important;
+    border-color: #7a1f1f !important;
+    box-shadow: 0 0 0 0.15rem rgba(122, 31, 31, 0.25) !important;
     outline: none !important;
 }
 
@@ -688,8 +818,8 @@ input[type="time"]:focus {
 
 /* Custom button styles */
 .btn-commande-custom {
-    padding: 0.9rem 2.5rem;
-    font-size: 1.15rem;
+    padding: 0.5rem 4rem;
+    font-size: 1.25rem;
     font-weight: 600;
 }
 

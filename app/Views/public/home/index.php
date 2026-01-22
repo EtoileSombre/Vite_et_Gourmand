@@ -7,15 +7,15 @@
     <div class="container">
         <div class="row align-items-center g-4">
             <div class="col-lg-7">
-                <h1>Cuisine maison, <span class="text-bordeaux"> pour toutes vos occasions</span>.</h1>
-                <p class="lead text-muted mb-4">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
+                <h1 data-aos="fade-right" data-aos-duration="800">Cuisine maison, <span class="text-bordeaux"> pour toutes vos occasions</span>.</h1>
+                <p class="lead text-muted mb-4" data-aos="fade-right" data-aos-delay="200">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
                 
-                <a class="btn btn-primary btn-lg rounded-pill" href="/menus">
+                <a class="btn btn-vg-bordeaux btn-lg rounded-pill btn-pulse" href="/menus" data-aos="zoom-in" data-aos-delay="400">
                     <i class="bi bi-basket"></i> Découvrir nos menus
                 </a>
             </div>
             <div class="col-lg-5">
-                <img class="img-fluid rounded shadow home-hero-image" alt="Cuisine traiteur gastronomique" src="/assets/img/Menu Gastronomique/magret_de_canard.webp">
+                <img class="img-fluid rounded shadow home-hero-image" alt="Cuisine traiteur gastronomique" src="/assets/img/Menu Gastronomique/magret_de_canard.webp" data-aos="fade-left" data-aos-duration="800">
             </div>
         </div>
     </div>
@@ -25,19 +25,19 @@
 <section class="py-4 key-figures">
     <div class="container">
         <div class="row text-center text-white">
-            <div class="col-md-3 col-6 mb-3 mb-md-0">
+            <div class="col-md-3 col-6 mb-3 mb-md-0" data-aos="fade-up" data-aos-delay="100">
                 <div class="display-4 fw-bold figure-number">25+</div>
                 <div>Années d'expérience</div>
             </div>
-            <div class="col-md-3 col-6 mb-3 mb-md-0">
+            <div class="col-md-3 col-6 mb-3 mb-md-0" data-aos="fade-up" data-aos-delay="200">
                 <div class="display-4 fw-bold figure-number">500+</div>
                 <div>Événements réalisés</div>
             </div>
-            <div class="col-md-3 col-6">
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="300">
                 <div class="display-4 fw-bold figure-number">98%</div>
                 <div>Utilisateurs satisfaits</div>
             </div>
-            <div class="col-md-3 col-6">
+            <div class="col-md-3 col-6" data-aos="fade-up" data-aos-delay="400">
                 <div class="display-4 fw-bold figure-number">24h</div>
                 <div>Délai de commande</div>
             </div>
@@ -49,14 +49,14 @@
 <section class="container py-5">
     <div class="row mb-5">
         <div class="col-lg-8 mx-auto">
-            <p class="text-center">
+            <p class="text-center" data-aos="fade-up">
                 Notre cuisine allie <strong>authenticité</strong> des recettes du terroir 
                 et <strong>créativité</strong> pour sublimer vos événements professionnels et familiaux.
             </p>
         </div>
     </div>
 
-    <div class="text-center mb-4">
+    <div class="text-center mb-4" data-aos="fade-up">
         <h3 class="h4 text-bordeaux">
             <i class="bi bi-award"></i> Notre professionnalisme
         </h3>
@@ -64,7 +64,7 @@
     </div>
 
     <div class="row g-4">
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
                 <div class="card-body p-4">
                     <div class="mb-3">
@@ -79,7 +79,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
             <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
                 <div class="card-body p-4">
                     <div class="mb-3">
@@ -94,7 +94,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
             <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
                 <div class="card-body p-4">
                     <div class="mb-3">
@@ -109,7 +109,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
                 <div class="card-body p-4">
                     <div class="mb-3">
@@ -124,7 +124,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
             <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
                 <div class="card-body p-4">
                     <div class="mb-3">
@@ -139,7 +139,7 @@
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
             <div class="card h-100 border-0 shadow-sm hover-shadow text-center">
                 <div class="card-body p-4">
                     <div class="mb-3">

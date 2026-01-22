@@ -1,4 +1,11 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php 
+/**
+ * @var array<string>|null $errors
+ * @var string|null $success
+ * @var bool|null $tokenValid
+ * @var string|null $token
+ */
+include __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="container mt-5">
     <div class="row justify-content-center">

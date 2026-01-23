@@ -8,14 +8,17 @@
                 
                 <!-- En-tête -->
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="h2 mb-0">✏️ Modifier un plat</h1>
-                    <a href="/admin/plats" class="btn btn-outline-secondary">
-                        <span aria-hidden="true">←</span> Retour
+                    <h1><i class="bi bi-pencil-square"></i> Modifier un plat</h1>
+                    <a href="/admin/plats" class="btn btn-outline-secondary rounded-pill">
+                        <i class="bi bi-arrow-left"></i> Retour
                     </a>
                 </div>
 
                 <!-- Formulaire -->
                 <div class="card shadow-sm">
+                    <div class="card-header text-white bg-vg-bordeaux">
+                        <h5 class="mb-0"><i class="bi bi-egg-fried"></i> Modification du Plat</h5>
+                    </div>
                     <div class="card-body">
                         <form method="POST" action="/admin/plats/update">
                             <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
@@ -79,7 +82,7 @@
                             </div>
 
                             <!-- Allergènes -->
-                            <div class="mb-3">
+                            <div class="mb-4">
                                 <label class="form-label">Allergènes</label>
                                 <p class="text-muted small">Sélectionnez les allergènes présents dans ce plat</p>
                                 <div class="d-flex flex-wrap gap-2">
@@ -101,9 +104,11 @@
 
                             <!-- Boutons -->
                             <div class="d-flex justify-content-between mt-4">
-                                <a href="/admin/plats" class="btn btn-secondary rounded-pill">Annuler</a>
+                                <a href="/admin/plats" class="btn btn-secondary rounded-pill">
+                                    <i class="bi bi-x-circle"></i> Annuler
+                                </a>
                                 <button type="submit" class="btn btn-vg-gold rounded-pill">
-                                    <span aria-hidden="true">💾</span> Enregistrer les modifications
+                                    <i class="bi bi-check-circle"></i> Enregistrer les modifications
                                 </button>
                             </div>
                         </form>
@@ -111,9 +116,9 @@
                 </div>
 
                 <!-- Informations supplémentaires -->
-                <div class="card mt-3">
+                <div class="card mt-3 shadow-sm">
                     <div class="card-body">
-                        <h5 class="card-title">ℹ️ Informations</h5>
+                        <h5 class="card-title"><i class="bi bi-info-circle"></i> Informations</h5>
                         <ul class="mb-0 small text-muted">
                             <li>Créé le : <?= date('d/m/Y à H:i', strtotime($plat['created_at'])) ?></li>
                             <li>Dernière modification : <?= date('d/m/Y à H:i', strtotime($plat['updated_at'])) ?></li>

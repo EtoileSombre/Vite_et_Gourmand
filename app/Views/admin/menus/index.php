@@ -60,33 +60,24 @@ require_once __DIR__ . '/../../layouts/header.php';
                                         }
                                         ?>
                                     </td>
-                                    <td class="text-end">
-                                        <a href="/admin/menus/edit?id=<?= $menu['menu_id'] ?>" 
-                                           class="btn btn-sm btn-outline-vg-bordeaux rounded-pill me-2" 
-                                           title="Modifier">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                        
-                                        <?php if ($menu['quantite_restante'] > 0): ?>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="/admin/menus/edit?id=<?= $menu['menu_id'] ?>" 
+                                               class="btn btn-action-circle btn-outline-vg-bordeaux" 
+                                               title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+                                            
                                             <button type="button" 
-                                                    class="btn btn-sm btn-outline-vg-bordeaux rounded-pill" 
-                                                    title="Désactiver"
+                                                    class="btn btn-action-circle btn-outline-vg-bordeaux" 
+                                                    title="Supprimer"
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#deleteMenuModal"
                                                     data-menu-id="<?= $menu['menu_id'] ?>"
                                                     data-menu-titre="<?= htmlspecialchars($menu['titre']) ?>">
                                                 <i class="bi bi-trash"></i>
                                             </button>
-                                        <?php else: ?>
-                                            <form method="POST" action="/admin/menus/activate" class="d-inline">
-                                                <input type="hidden" name="menu_id" value="<?= $menu['menu_id'] ?>">
-                                                <button type="submit" 
-                                                        class="btn btn-sm btn-outline-vg-bordeaux rounded-pill" 
-                                                        title="Réactiver">
-                                                    <i class="bi bi-arrow-clockwise"></i>
-                                                </button>
-                                            </form>
-                                        <?php endif; ?>
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -97,23 +88,25 @@ require_once __DIR__ . '/../../layouts/header.php';
         </div>
     </div>
 
-<!-- Modal unique de confirmation de désactivation -->
+<!-- Modal unique de confirmation de suppression -->
 <div class="modal fade" id="deleteMenuModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Confirmer la désactivation</h5>
+                <h5 class="modal-title">Confirmer la suppression</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <p>Voulez-vous vraiment désactiver le menu <strong id="menuTitreToDelete"></strong> ?</p>
-                <p class="text-muted small">Le menu ne sera plus visible par les utilisateurs mais restera dans la base de données.</p>
+                <p>Êtes-vous sûr de vouloir supprimer le menu <strong id="menuTitreToDelete"></strong> ?</p>
+                <p class="text-muted small">Cette action est irréversible.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annuler</button>
                 <form method="POST" action="/admin/menus/delete" id="deleteMenuForm">
                     <input type="hidden" name="menu_id" id="menuIdToDelete">
-                    <button type="submit" class="btn btn-danger rounded-pill">Désactiver</button>
+                    <button type="submit" class="btn btn-danger rounded-pill">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </button>
                 </form>
             </div>
         </div>
@@ -121,7 +114,7 @@ require_once __DIR__ . '/../../layouts/header.php';
 </div>
 
 <script>
-// Gestion du modal unique pour désactivation de menu
+// Gestion du modal unique pour suppression de menu
 document.addEventListener('DOMContentLoaded', function() {
     const deleteModal = document.getElementById('deleteMenuModal');
     if (deleteModal) {

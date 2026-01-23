@@ -57,35 +57,40 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <?php if (($_SESSION['user_role'] ?? '') === 'administrateur'): ?>
-                                    <li><a class="dropdown-item" href="/admin"><span aria-hidden="true">📊</span> Dashboard Admin</a></li>
-                                    <li><a class="dropdown-item" href="/admin/utilisateurs"><span aria-hidden="true">👥</span> Gestion Employés</a></li>
-                                    <li><a class="dropdown-item" href="/employe/commandes"><span aria-hidden="true">📦</span> Gestion Commandes</a></li>
-                                    <li><a class="dropdown-item" href="/employe/avis"><span aria-hidden="true">⭐</span> Modération Avis</a></li>
-                                    <li><a class="dropdown-item" href="/admin/menus"><span aria-hidden="true">🍽️</span> Gestion Menus</a></li>
-                                    <li><a class="dropdown-item" href="/admin/plats"><span aria-hidden="true">🥘</span> Gestion Plats</a></li>
-                                    <li><a class="dropdown-item" href="/admin/contacts"><span aria-hidden="true"></span> Messages Contact</a></li>
-                                    <li><a class="dropdown-item" href="/admin/horaires"><span aria-hidden="true">⏰</span> Gestion Horaires</a></li>
-                                    <li><a class="dropdown-item" href="/admin/stats"><span aria-hidden="true">📈</span> Statistiques MongoDB</a></li>
+                                    <li><a class="dropdown-item" href="/admin">📊 Dashboard Admin</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/profil"><span aria-hidden="true">👤</span> Mon Profil</a></li>
+                                    <li><a class="dropdown-item" href="/employe/commandes">📦 Gestion Commandes</a></li>
+                                    <li><a class="dropdown-item" href="/admin/menus">Gestion Menus</a></li>
+                                    <li><a class="dropdown-item" href="/admin/plats">Gestion Plats</a></li>
+                                    <li><a class="dropdown-item" href="/admin/horaires">Gestion Horaires</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/utilisateurs">👥 Gestion Employés</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/contacts">Messages Contact</a></li>
+                                    <li><a class="dropdown-item" href="/employe/avis">Modération Avis</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/stats">📈 Statistiques</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/profil">👤 Mon Profil</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php elseif (($_SESSION['user_role'] ?? '') === 'employé'): ?>
-                                    <li><a class="dropdown-item" href="/employe"><span aria-hidden="true">📋</span> Dashboard Employé</a></li>
-                                    <li><a class="dropdown-item" href="/employe/commandes"><span aria-hidden="true">📦</span> Gestion Commandes</a></li>
-                                    <li><a class="dropdown-item" href="/employe/avis"><span aria-hidden="true">⭐</span> Modération Avis</a></li>
-                                    <li><a class="dropdown-item" href="/admin/menus"><span aria-hidden="true">🍽️</span> Gestion Menus</a></li>
-                                    <li><a class="dropdown-item" href="/admin/plats"><span aria-hidden="true">🥘</span> Gestion Plats</a></li>
-                                    <li><a class="dropdown-item" href="/admin/horaires"><span aria-hidden="true">⏰</span> Gestion Horaires</a></li>
+                                    <li><a class="dropdown-item" href="/employe">📋 Dashboard Employé</a></li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="/profil"><span aria-hidden="true">👤</span> Mon Profil</a></li>
+                                    <li><a class="dropdown-item" href="/employe/commandes">📦 Gestion Commandes</a></li>
+                                    <li><a class="dropdown-item" href="/employe/avis">Modération Avis</a></li>
+                                    <li><a class="dropdown-item" href="/admin/menus">Gestion Menus</a></li>
+                                    <li><a class="dropdown-item" href="/admin/plats">Gestion Plats</a></li>
+                                    <li><a class="dropdown-item" href="/admin/horaires">Gestion Horaires</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/profil">👤 Mon Profil</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php else: ?>
-                                    <li><a class="dropdown-item" href="/mes-commandes"><span aria-hidden="true">📦</span> Mes commandes</a></li>
-                                    <li><a class="dropdown-item" href="/donner-avis"><span aria-hidden="true">⭐</span> Donner un avis</a></li>
-                                    <li><a class="dropdown-item" href="/profil"><span aria-hidden="true">👤</span> Mon compte</a></li>
+                                    <li><a class="dropdown-item" href="/mes-commandes">📦 Mes commandes</a></li>
+                                    <li><a class="dropdown-item" href="/donner-avis">Donner un avis</a></li>
+                                    <li><a class="dropdown-item" href="/profil">👤 Mon compte</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php endif; ?>
-                                <li><a class="dropdown-item text-danger" href="/logout"><span aria-hidden="true">🚪</span> Déconnexion</a></li>
+                                <li><a class="dropdown-item text-danger" href="/logout">Déconnexion</a></li>
                             </ul>
                         </li>
                     <?php else: ?>

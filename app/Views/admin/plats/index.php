@@ -5,9 +5,7 @@
         
         <!-- En-tête -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h1 class="h2 mb-1"><i class="bi bi-egg-fried"></i> Gestion des plats</h1>
-            </div>
+            <h1><i class="bi bi-egg-fried"></i> Gestion des plats</h1>
             <div>
                 <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux me-2 rounded-pill">
                     <i class="bi bi-arrow-left"></i> Retour Dashboard
@@ -17,6 +15,23 @@
                 </a>
             </div>
         </div>
+
+        <!-- Messages flash -->
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
 
         <!-- Filtres -->
         <div class="card mb-4">
@@ -90,24 +105,26 @@
                                             <?= htmlspecialchars($plat['type_plat']) ?>
                                         </span>
                                     </td>
-                                    <td class="text-end">
-                                        <a href="/admin/plats/edit?id=<?= $plat['plat_id'] ?>" 
-                                           class="btn btn-sm btn-outline-vg-bordeaux rounded-pill me-2" 
-                                           title="Modifier">
-                                            <i class="bi bi-pencil"></i>
-                                            <span class="visually-hidden">Modifier <?= htmlspecialchars($plat['titre_plat']) ?></span>
-                                        </a>
-                                        
-                                        <form method="POST" 
-                                              action="/admin/plats/delete" 
-                                              class="d-inline" 
-                                              data-confirm="Êtes-vous sûr de vouloir supprimer ce plat ?">
-                                            <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-outline-vg-bordeaux rounded-pill" title="Supprimer">
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="/admin/plats/edit?id=<?= $plat['plat_id'] ?>" 
+                                               class="btn btn-action-circle btn-outline-vg-bordeaux" 
+                                               title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                                <span class="visually-hidden">Modifier <?= htmlspecialchars($plat['titre_plat']) ?></span>
+                                            </a>
+                                            
+                                            <button type="button" 
+                                                    class="btn btn-action-circle btn-outline-vg-bordeaux" 
+                                                    title="Supprimer"
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#deletePlatModal"
+                                                    data-plat-id="<?= $plat['plat_id'] ?>"
+                                                    data-plat-titre="<?= htmlspecialchars($plat['titre_plat']) ?>">
                                                 <i class="bi bi-trash"></i>
                                                 <span class="visually-hidden">Supprimer <?= htmlspecialchars($plat['titre_plat']) ?></span>
                                             </button>
-                                        </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -120,6 +137,47 @@
 
     </div>
 </main>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deletePlatModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer le plat <strong id="platTitreToDelete"></strong> ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annuler</button>
+                <form method="POST" action="/admin/plats/delete" id="deletePlatForm">
+                    <input type="hidden" name="plat_id" id="platIdToDelete">
+                    <button type="submit" class="btn btn-danger rounded-pill">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gestion du modal de suppression de plat
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteModal = document.getElementById('deletePlatModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const platId = button.getAttribute('data-plat-id');
+            const platTitre = button.getAttribute('data-plat-titre');
+            
+            document.getElementById('platIdToDelete').value = platId;
+            document.getElementById('platTitreToDelete').textContent = platTitre;
+        });
+    }
+});
+</script>
 
 <?php 
 $additionalScripts = ['/assets/js/admin-plats.js'];

@@ -259,13 +259,13 @@ class MenuController extends Controller
             return;
         }
 
-        // Soft delete (désactivation plutôt que suppression - on met quantité à 0)
-        $success = $this->menuModel->update((int)$id, ['quantite_restante' => 0]);
+        // Suppression définitive du menu
+        $success = $this->menuModel->delete((int)$id);
 
         if ($success) {
-            Session::set('flash_success', "Menu désactivé avec succès !");
+            Session::set('flash_success', "Menu supprimé avec succès !");
         } else {
-            Session::set('flash_error', "Erreur lors de la désactivation du menu");
+            Session::set('flash_error', "Erreur lors de la suppression du menu");
         }
 
         $this->redirect('/admin/menus');

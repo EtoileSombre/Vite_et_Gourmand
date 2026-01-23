@@ -10,7 +10,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
 <div class="container my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
-        <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux rounded-pill d-inline-flex align-items-center">
+        <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-outline-secondary rounded-pill d-inline-flex align-items-center">
             <i class="bi bi-arrow-left me-2"></i>Retour
         </a>
     </div>
@@ -53,7 +53,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
         <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
             <div class="col-md-6 mb-4">
                 <div class="card h-100 shadow-sm border-0">
-                    <div class="card-header bg-vg-gold text-vg-bordeaux border-0">
+                    <div class="card-header bg-vg-gold text-white border-0">
                         <h5 class="mb-0"><i class="bi bi-arrow-repeat"></i> Changement de Statut</h5>
                     </div>
                     <div class="card-body">
@@ -66,15 +66,15 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                 </label>
                                 <select name="nouveau_statut" id="nouveau_statut" class="form-select" data-statut-actuel="<?= htmlspecialchars($commande['statut']) ?>" required>
                                     <option value="">-- Sélectionner le nouveau statut --</option>
-                                    <option value="acceptee" <?= $commande['statut'] === 'acceptee' ? 'selected' : '' ?>>✅ Acceptée</option>
-                                    <option value="en_preparation" <?= $commande['statut'] === 'en_preparation' ? 'selected' : '' ?>>🔄 En préparation</option>
-                                    <option value="en_cours_livraison" <?= $commande['statut'] === 'en_cours_livraison' ? 'selected' : '' ?>>🚚 En cours de livraison</option>
-                                    <option value="livree" <?= $commande['statut'] === 'livree' ? 'selected' : '' ?>>📦 Livrée</option>
+                                    <option value="acceptee" <?= $commande['statut'] === 'acceptee' ? 'selected' : '' ?>>Acceptée</option>
+                                    <option value="en_preparation" <?= $commande['statut'] === 'en_preparation' ? 'selected' : '' ?>>En préparation</option>
+                                    <option value="en_cours_livraison" <?= $commande['statut'] === 'en_cours_livraison' ? 'selected' : '' ?>>En cours de livraison</option>
+                                    <option value="livree" <?= $commande['statut'] === 'livree' ? 'selected' : '' ?>>Livrée</option>
                                     <?php if ($commande['pret_materiel']): ?>
-                                        <option value="attente_retour_materiel" <?= $commande['statut'] === 'attente_retour_materiel' ? 'selected' : '' ?>>⏳ Attente retour matériel (email auto 10j)</option>
+                                        <option value="attente_retour_materiel" <?= $commande['statut'] === 'attente_retour_materiel' ? 'selected' : '' ?>>Attente retour matériel (email auto 10j)</option>
                                     <?php endif; ?>
-                                    <option value="terminee" <?= $commande['statut'] === 'terminee' ? 'selected' : '' ?>>✅ Terminée</option>
-                                    <option value="annulee" <?= $commande['statut'] === 'annulee' ? 'selected' : '' ?>>❌ Annulée</option>
+                                    <option value="terminee" <?= $commande['statut'] === 'terminee' ? 'selected' : '' ?>>Terminée</option>
+                                    <option value="annulee" <?= $commande['statut'] === 'annulee' ? 'selected' : '' ?>>Annulée</option>
                                 </select>
                             </div>
 
@@ -167,15 +167,6 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                                    value="<?= htmlspecialchars($ligne['nombre_personne']) ?>" required>
                                         </div>
                                     <?php endforeach; ?>
-                                </div>
-
-                                <!-- Instructions spéciales -->
-                                <div class="col-md-12 mb-3">
-                                    <label for="instructions_speciales" class="form-label fw-bold">
-                                        <i class="bi bi-chat-left-text"></i> Instructions Spéciales
-                                    </label>
-                                    <textarea name="instructions_speciales" id="instructions_speciales" 
-                                              class="form-control" rows="3"><?= htmlspecialchars($commande['instructions_speciales'] ?? '') ?></textarea>
                                 </div>
 
                                 <!-- Contact utilisateur -->
@@ -277,7 +268,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                 <tr>
                                     <td class="text-center align-middle">
                                         <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
-                                            <button type="button" class="btn btn-vg-bordeaux rounded-pill" 
+                                            <button type="button" class="btn btn-vg-gold rounded-pill" 
                                                     data-action="show-edit-form">
                                                 <i class="bi bi-pencil-square me-1"></i> Modifier Commande
                                             </button>

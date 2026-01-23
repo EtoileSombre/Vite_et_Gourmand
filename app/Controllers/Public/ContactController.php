@@ -60,7 +60,7 @@ class ContactController extends Controller
 
                     $this->sendEmailToEntreprise($email, $titre, $description, $contactId);
 
-                    Session::set('flash_success', 'Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.');
+                    Session::set('contact_envoye', true);
                     $this->redirect('/contact');
                     
                 } catch (\Exception $e) {

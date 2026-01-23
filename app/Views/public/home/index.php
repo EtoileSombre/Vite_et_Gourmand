@@ -157,8 +157,8 @@
 </section>
 
 <!-- Avis utilisateurs -->
-<section id="avis" class="container py-5">
-    <h2 class="section-title text-center mb-3">Avis utilisateurs (validés)</h2>
+<section id="avis" class="container py-4">
+    <h2 class="section-title text-center mb-2">Avis utilisateurs (validés)</h2>
     <p class="text-center text-muted mb-4">Ils nous ont fait confiance pour leurs événements.</p>
 
     <?php if (!empty($avis)): ?>

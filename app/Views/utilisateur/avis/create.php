@@ -42,7 +42,43 @@
     </div>
 </div>
 
+<!-- Modal de confirmation d'envoi d'avis -->
 <?php 
-$additionalScripts = ['/assets/js/avis.js'];
+$avisEnvoye = isset($_SESSION['avis_envoye']) ? $_SESSION['avis_envoye'] : false;
+if ($avisEnvoye) {
+    unset($_SESSION['avis_envoye']);
+}
+?>
+<?php if ($avisEnvoye): ?>
+<div class="modal fade" id="modalConfirmationAvis" tabindex="-1" aria-labelledby="modalConfirmationAvisLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-vg-gold text-white">
+                <h5 class="modal-title" id="modalConfirmationAvisLabel">
+                    Avis enregistré
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                </div>
+                <h5 class="mb-3">Merci pour votre retour !</h5>
+                <p class="text-muted mb-4">
+                    Votre avis a été enregistré avec succès et sera publié après validation par notre équipe.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a href="/" class="btn btn-vg-gold rounded-pill">
+                    <i class="bi bi-house"></i> Retour à l'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php 
+$additionalScripts = ['/assets/js/avis.js', '/assets/js/modales.js'];
 include __DIR__ . '/../../layouts/footer.php'; 
 ?>

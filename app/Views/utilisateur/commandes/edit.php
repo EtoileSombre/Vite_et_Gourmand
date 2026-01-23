@@ -58,8 +58,8 @@ include __DIR__ . '/../../layouts/header.php';
                         </div>
                         
                         <div class="d-flex justify-content-between">
-                            <a href="/mes-commandes" class="btn btn-secondary rounded-pill">Annuler</a>
-                            <button type="submit" class="btn btn-primary rounded-pill">Enregistrer les modifications</button>
+                            <a href="/mes-commandes" class="btn btn-outline-vg-bordeaux rounded-pill">Annuler</a>
+                            <button type="submit" class="btn btn-vg-gold rounded-pill">Enregistrer les modifications</button>
                         </div>
                     </form>
                 </div>
@@ -68,4 +68,43 @@ include __DIR__ . '/../../layouts/header.php';
     </div>
 </div>
 
-<?php include __DIR__ . '/../../layouts/footer.php'; ?>
+<!-- Modal de confirmation de modification de commande -->
+<?php 
+$commandeModifiee = isset($_SESSION['commande_modifiee']) ? $_SESSION['commande_modifiee'] : false;
+if ($commandeModifiee) {
+    unset($_SESSION['commande_modifiee']);
+}
+?>
+<?php if ($commandeModifiee): ?>
+<div class="modal fade" id="modalConfirmationModification" tabindex="-1" aria-labelledby="modalConfirmationModificationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-vg-gold text-white">
+                <h5 class="modal-title" id="modalConfirmationModificationLabel">
+                    Commande modifiée
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                </div>
+                <h5 class="mb-3">Vos modifications ont bien été enregistrées !</h5>
+                <p class="text-muted mb-4">
+                    Un email de confirmation vous a été envoyé.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a href="/mes-commandes" class="btn btn-vg-gold rounded-pill">
+                    <i class="bi bi-arrow-left"></i> Retour à mes commandes
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php 
+$additionalScripts = ['/assets/js/modales.js'];
+include __DIR__ . '/../../layouts/footer.php'; 
+?>

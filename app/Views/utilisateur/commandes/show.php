@@ -120,12 +120,12 @@ include __DIR__ . '/../../layouts/header.php';
                     <!-- Actions selon le statut -->
                     <div class="mt-4">
                         <?php if ($statut === 'en_attente'): ?>
-                            <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-primary rounded-pill">
-                                <i class="bi bi-pencil"></i> Modifier la commande
-                            </a>
                             <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" 
                                class="btn btn-danger btn-annuler-commande rounded-pill">
                                 <i class="bi bi-x-circle"></i> Annuler la commande
+                            </a>
+                            <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-vg-gold rounded-pill">
+                                <i class="bi bi-pencil"></i> Modifier la commande
                             </a>
                         <?php elseif ($statut === 'terminee' && !$avisExistant): ?>
                             <a href="/avis/create?commande=<?= urlencode($commande['numero_commande']) ?>" 
@@ -145,7 +145,7 @@ include __DIR__ . '/../../layouts/header.php';
         <!-- Suivi de la commande -->
         <div class="col-lg-4">
             <div class="card shadow-sm">
-                <div class="card-header text-dark bg-vg-gold">
+                <div class="card-header text-white bg-vg-gold">
                     <h5 class="mb-0"><i class="bi bi-clock-history"></i> Suivi de la Commande</h5>
                 </div>
                 <div class="card-body">
@@ -203,4 +203,35 @@ include __DIR__ . '/../../layouts/header.php';
     </div>
 </div>
 
-<?php include __DIR__ . '/../../layouts/footer.php'; ?>
+<!-- Modal de confirmation d'annulation -->
+<div class="modal fade" id="modalAnnulerCommande" tabindex="-1" aria-labelledby="modalAnnulerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-vg-bordeaux text-white">
+                <h5 class="modal-title" id="modalAnnulerLabel">
+                    Confirmer l'annulation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-x-circle fs-1 text-vg-bordeaux"></i>
+                </div>
+                <h5 class="mb-3">Êtes-vous sûr de vouloir annuler cette commande ?</h5>
+                <p class="text-muted mb-4">
+                    Cette action est irréversible. Vous devrez créer une nouvelle commande si vous changez d'avis.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a href="#" id="confirmAnnulerBtn" class="btn btn-vg-bordeaux rounded-pill">
+                    <i class="bi bi-x-circle"></i> Oui, annuler
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php 
+$additionalScripts = ['/assets/js/modales.js'];
+include __DIR__ . '/../../layouts/footer.php'; 
+?>

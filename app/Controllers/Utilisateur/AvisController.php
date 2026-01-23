@@ -58,8 +58,8 @@ class AvisController extends Controller
             
             $avisId = $this->avisModel->createAvis($avisData);
             
-            Session::set('flash_success', 'Merci ! Votre avis a été enregistré avec succès et sera publié après validation par notre équipe.');
-            $this->redirect('/');
+            Session::set('avis_envoye', true);
+            $this->redirect('/avis/create');
         } catch (\Exception $e) {
             error_log("Erreur création avis : " . $e->getMessage());
             Session::set('flash_error', 'Erreur lors de l\'enregistrement de votre avis. Veuillez réessayer.');

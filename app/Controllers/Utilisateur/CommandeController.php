@@ -287,14 +287,8 @@ class CommandeController extends Controller
             'nombre_personne' => $nombrePersonnes,
             'statut' => 'en_attente'
         ]);
-
-        // Message de succès avec détails
-        $message = 'Votre commande a été enregistrée avec succès ! Un email de confirmation vous a été envoyé.';
-        if ($reductionAppliquee > 0) {
-            $message .= sprintf(' Une réduction de 10%% (%.2f €) a été appliquée !', $reductionAppliquee);
-        }
         
-        Session::set('success', $message);
+        Session::set('commande_numero', $numeroCommande);
         $this->redirect('/mes-commandes');
     }
 
@@ -416,7 +410,8 @@ class CommandeController extends Controller
             sendOrderUpdateEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
         }
 
-        $this->redirect('/mes-commandes');
+        Session::set('commande_modifiee', true);
+        $this->redirect('/commande/modifier?numero=' . urlencode($numeroCommande));
     }
 
     /**

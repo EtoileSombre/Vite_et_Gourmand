@@ -1,6 +1,12 @@
 <?php
 $additionalStyles = ['/assets/css/pages/commandes.css'];
 include __DIR__ . '/../../layouts/header.php';
+
+// Vérifier si une commande vient d'être créée
+$commandeNumero = isset($_SESSION['commande_numero']) ? $_SESSION['commande_numero'] : null;
+if ($commandeNumero) {
+    unset($_SESSION['commande_numero']);
+}
 ?>
 
 <div class="container mt-5">
@@ -59,24 +65,24 @@ include __DIR__ . '/../../layouts/header.php';
                             <td>
                                 <div class="d-flex gap-1 align-items-center justify-content-center">
                                     <a href="/commande/details?numero=<?= urlencode($commande['numero_commande']) ?>" 
-                                       class="btn btn-sm btn-outline-warning text-dark rounded-pill" 
+                                       class="btn btn-sm btn-outline-vg-bordeaux rounded-circle btn-action-circle" 
                                        title="Voir les détails et le suivi">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     <?php if ($statut === 'en_attente'): ?>
                                         <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" 
-                                           class="btn btn-sm btn-outline-secondary rounded-pill" 
+                                           class="btn btn-sm btn-outline-vg-bordeaux rounded-circle btn-action-circle" 
                                            title="Modifier">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                         <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" 
-                                           class="btn btn-sm btn-outline-danger btn-annuler-commande rounded-pill" 
+                                           class="btn btn-sm btn-outline-vg-bordeaux btn-annuler-commande rounded-circle btn-action-circle" 
                                            title="Annuler">
                                             <i class="bi bi-x-circle"></i>
                                         </a>
                                     <?php elseif ($statut === 'terminee'): ?>
                                         <a href="/avis/create?commande=<?= urlencode($commande['numero_commande']) ?>" 
-                                           class="btn btn-sm btn-vg-gold rounded-pill" 
+                                           class="btn btn-sm btn-outline-vg-bordeaux rounded-circle btn-action-circle" 
                                            title="Donner votre avis">
                                             <i class="bi bi-star-fill"></i>
                                         </a>
@@ -91,4 +97,68 @@ include __DIR__ . '/../../layouts/header.php';
     <?php endif; ?>
 </div>
 
-<?php include __DIR__ . '/../../layouts/footer.php'; ?>
+<!-- Modal de confirmation de création de commande -->
+<?php if ($commandeNumero): ?>
+<div class="modal fade" id="modalConfirmationCommande" tabindex="-1" aria-labelledby="modalConfirmationLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-vg-gold text-white">
+                <h5 class="modal-title" id="modalConfirmationLabel">
+                    Commande enregistrée
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                </div>
+                <h5 class="mb-3">Votre commande a bien été envoyée !</h5>
+                <p class="text-muted mb-2">
+                    Numéro de commande : <strong class="text-dark"><?= htmlspecialchars($commandeNumero) ?></strong>
+                </p>
+                <p class="text-muted mb-4">
+                    Un email de confirmation vous a été envoyé.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-vg-gold rounded-pill" data-bs-dismiss="modal">
+                    <i class="bi bi-check2"></i> J'ai compris
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<!-- Modal de confirmation d'annulation -->
+<div class="modal fade" id="modalAnnulerCommande" tabindex="-1" aria-labelledby="modalAnnulerLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-vg-bordeaux text-white">
+                <h5 class="modal-title" id="modalAnnulerLabel">
+                    Confirmer l'annulation
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-x-circle fs-1 text-vg-bordeaux"></i>
+                </div>
+                <h5 class="mb-3">Êtes-vous sûr de vouloir annuler cette commande ?</h5>
+                <p class="text-muted mb-4">
+                    Cette action est irréversible. Vous devrez créer une nouvelle commande si vous changez d'avis.
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <a href="#" id="confirmAnnulerBtn" class="btn btn-vg-bordeaux rounded-pill">
+                    <i class="bi bi-x-circle"></i> Oui, annuler
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php 
+$additionalScripts = ['/assets/js/modales.js'];
+include __DIR__ . '/../../layouts/footer.php'; 
+?>

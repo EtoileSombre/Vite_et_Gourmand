@@ -4,10 +4,12 @@ namespace App\Config;
 
 use Exception;
 use MongoDB\Driver\Exception\Exception as MongoException;
+use MongoDB\BSON\UTCDateTime;
 
 /**
  * Classe de statistiques MongoDB
  * @psalm-suppress UndefinedClass
+ * @phpstan-ignore-next-line
  */
 class MongoStats
 {
@@ -78,6 +80,7 @@ class MongoStats
             $this->collections['menu_views']->insertOne([
                 'menu_id' => $menuId,
                 'menu_titre' => $menuData['titre'] ?? null,
+                /** @phpstan-ignore-next-line */
                 'timestamp' => new \MongoDB\BSON\UTCDateTime(),
                 'date' => date('Y-m-d'),
                 'user_ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown'
@@ -100,6 +103,7 @@ class MongoStats
                 'action' => $action,
                 'utilisateur_id' => $utilisateurId,
                 'details' => $details,
+                /** @phpstan-ignore-next-line */
                 'timestamp' => new \MongoDB\BSON\UTCDateTime(),
                 'date' => date('Y-m-d'),
                 'user_ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
@@ -126,6 +130,7 @@ class MongoStats
                 'prix_total' => $commandeData['prix_total'] ?? 0,
                 'nombre_personne' => $commandeData['nombre_personne'] ?? 0,
                 'statut' => $commandeData['statut'] ?? 'en attente',
+                /** @phpstan-ignore-next-line */
                 'timestamp' => new \MongoDB\BSON\UTCDateTime(),
                 'date' => date('Y-m-d')
             ]);
@@ -150,10 +155,12 @@ class MongoStats
             
             // Filtrage sur timestamp (UTCDateTime) pour robustesse
             if ($dateDebut) {
+                /** @phpstan-ignore-next-line */
                 $timestampDebut = new \MongoDB\BSON\UTCDateTime(strtotime($dateDebut . ' 00:00:00') * 1000);
                 $match['timestamp'] = ['$gte' => $timestampDebut];
             }
             if ($dateFin) {
+                /** @phpstan-ignore-next-line */
                 $timestampFin = new \MongoDB\BSON\UTCDateTime(strtotime($dateFin . ' 23:59:59') * 1000);
                 if (isset($match['timestamp'])) {
                     $match['timestamp']['$lte'] = $timestampFin;
@@ -208,10 +215,12 @@ class MongoStats
             
             // Filtrage sur timestamp (UTCDateTime) pour robustesse
             if ($dateDebut) {
+                /** @phpstan-ignore-next-line */
                 $timestampDebut = new \MongoDB\BSON\UTCDateTime(strtotime($dateDebut . ' 00:00:00') * 1000);
                 $match['timestamp'] = ['$gte' => $timestampDebut];
             }
             if ($dateFin) {
+                /** @phpstan-ignore-next-line */
                 $timestampFin = new \MongoDB\BSON\UTCDateTime(strtotime($dateFin . ' 23:59:59') * 1000);
                 if (isset($match['timestamp'])) {
                     $match['timestamp']['$lte'] = $timestampFin;

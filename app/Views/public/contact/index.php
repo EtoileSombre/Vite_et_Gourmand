@@ -25,7 +25,7 @@ if ($contactEnvoye) {
                     <?php if (!empty($errors)): ?>
                         <div class="alert alert-danger">
                             <ul class="mb-0">
-                                <?php foreach ($errors as $error): ?>
+                                <?php /** @var array<string> $errors */ foreach ($errors as $error): ?>
                                     <li><?= htmlspecialchars($error) ?></li>
                                 <?php endforeach; ?>
                             </ul>

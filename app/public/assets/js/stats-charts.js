@@ -1,65 +1,61 @@
-/* Gestion des graphiques Chart.js pour la page de statistiques*/
+/* Gestion des graphiques Chart.js pour les statistiques */
+
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.getElementById('stats-container');
+    if (container && container.dataset.chartData) {
+        try {
+            const chartData = JSON.parse(container.dataset.chartData);
+            initStatsCharts(chartData);
+        } catch (e) {
+            console.error('Erreur lors du parsing des données:', e);
+        }
+    }
+});
 
 /**
- * Initialise tous les graphiques de la page stats
+ * Initialise les 2 graphiques
  */
 function initStatsCharts(chartData) {
-    console.log('Initialisation des graphiques avec:', chartData);
-    
-    // Graphique des menus les plus consultés (Doughnut)
-    if (chartData.menus && chartData.menus.data && chartData.menus.data.length > 0) {
-        initMenusChart(chartData.menus);
+    //Graphique des commandes par menu
+    if (chartData.commandesParMenu && chartData.commandesParMenu.labels && chartData.commandesParMenu.labels.length > 0) {
+        initCommandesParMenuChart(chartData.commandesParMenu);
     }
     
-    // Graphique Commandes par Menu (Bar Chart comparatif)
-    if (chartData.commandesParMenu && chartData.commandesParMenu.commandes && chartData.commandesParMenu.commandes.length > 0) {
-        initCommandesChart(chartData.commandesParMenu);
-    }
-    
-    // Graphique du CA par menu (Bar horizontal)
+    // Graphique du CA par menu
     if (chartData.ca && chartData.ca.data && chartData.ca.data.length > 0) {
         initCAChart(chartData.ca);
     }
 }
 
 /**
- * Initialise le graphique des menus les plus consultés
+ * Affiche un message dans un canvas vide
  */
-function initMenusChart(data) {
-    const ctx = document.getElementById('chartMenus');
-    if (!ctx) return;
-
-    new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: data.labels,
-            datasets: [{
-                data: data.data,
-                backgroundColor: data.colors,
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: true,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                },
-                title: {
-                    display: false
-                }
-            }
-        }
-    });
+function showEmptyChart(canvasId, message) {
+    const canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const width = canvas.width;
+    const height = canvas.height;
+    
+    // Fond gris clair
+    ctx.fillStyle = '#f8f9fa';
+    ctx.fillRect(0, 0, width, height);
+    
+    // Texte centré
+    ctx.fillStyle = '#6c757d';
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(message, width / 2, height / 2);
+    
+    // Icône
+    ctx.font = '32px Arial';
+    ctx.fillText('📊', width / 2, height / 2 - 40);
 }
 
-/**
- *Initialise le graphique Commandes par Menu (Bar)
- */
-function initCommandesChart(data) {
-    const ctx = document.getElementById('chartCommandes');
+function initCommandesParMenuChart(data) {
+    const ctx = document.getElementById('chartCommandesParMenu');
     if (!ctx) return;
 
     new Chart(ctx, {
@@ -70,16 +66,18 @@ function initCommandesChart(data) {
                 {
                     label: 'Nombre de Commandes',
                     data: data.commandes,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 2
+                    backgroundColor: 'rgba(139, 21, 56, 0.7)',
+                    borderColor: 'rgba(139, 21, 56, 1)',
+                    borderWidth: 2,
+                    yAxisID: 'y'
                 },
                 {
                     label: 'Total Personnes',
                     data: data.personnes,
-                    backgroundColor: 'rgba(255, 206, 86, 0.6)',
-                    borderColor: 'rgba(255, 206, 86, 1)',
-                    borderWidth: 2
+                    backgroundColor: 'rgba(218, 165, 32, 0.7)',
+                    borderColor: 'rgba(218, 165, 32, 1)',
+                    borderWidth: 2,
+                    yAxisID: 'y1'
                 }
             ]
         },
@@ -92,10 +90,34 @@ function initCommandesChart(data) {
             },
             scales: {
                 y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
                     beginAtZero: true,
                     ticks: {
-                        precision: 0,
-                        stepSize: 1
+                        precision: 0
+                    },
+                    title: {
+                        display: true,
+                        text: 'Nombre de Commandes',
+                        color: 'rgba(139, 21, 56, 1)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    beginAtZero: true,
+                    grid: {
+                        drawOnChartArea: false
+                    },
+                    ticks: {
+                        precision: 0
+                    },
+                    title: {
+                        display: true,
+                        text: 'Total Personnes',
+                        color: 'rgba(218, 165, 32, 1)'
                     }
                 }
             },
@@ -106,10 +128,23 @@ function initCommandesChart(data) {
                 },
                 title: {
                     display: true,
-                    text: 'Comparaison des Commandes par Menu (MongoDB)',
+                    text: 'Comparaison des Commandes par Menu',
                     font: {
-                        size: 14,
+                        size: 16,
                         weight: 'bold'
+                    },
+                    color: '#8B1538'
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.parsed.y;
+                            return label;
+                        }
                     }
                 }
             }
@@ -131,8 +166,8 @@ function initCAChart(data) {
             datasets: [{
                 label: 'Chiffre d\'Affaires (€)',
                 data: data.data,
-                backgroundColor: 'rgba(40, 167, 69, 0.7)',
-                borderColor: 'rgba(40, 167, 69, 1)',
+                backgroundColor: 'rgba(139, 21, 56, 0.7)',
+                borderColor: 'rgba(139, 21, 56, 1)',
                 borderWidth: 2
             }]
         },
@@ -156,7 +191,7 @@ function initCAChart(data) {
                 },
                 title: {
                     display: true,
-                    text: 'Chiffre d\'Affaires par Menu (MongoDB)',
+                    text: 'Chiffre d\'Affaires par Menu',
                     font: {
                         size: 14,
                         weight: 'bold'
@@ -181,3 +216,4 @@ function initCAChart(data) {
         }
     });
 }
+

@@ -27,3 +27,52 @@
     font-size: 4rem;
     text-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
 }
+
+/* 1. Alignement vertical parfait des cartes */
+.card {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-text {
+    flex-grow: 1;
+    min-height: 48px;
+}
+
+/* 2. Badges et métadonnées allégés */
+.badge {
+    font-size: 0.7rem;
+    opacity: 0.8;
+    padding: 2px 8px;
+}
+
+.text-muted.small {
+    color: #777 !important;
+    font-size: 0.85rem;
+}
+
+/* 3. Hiérarchie titre/prix renforcée */
+.card-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}
+
+.h4.fw-bold {
+    font-size: 1.3rem;
+    font-weight: 700 !important;
+    color: var(--vg-bordeaux) !important;
+}
+
+/* Labels des filtres plus visibles */
+.form-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #333;
+}

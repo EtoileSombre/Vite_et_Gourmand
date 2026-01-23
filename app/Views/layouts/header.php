@@ -13,7 +13,7 @@
     <link rel="shortcut icon" href="/assets/img/favicon.ico">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -21,12 +21,11 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     
+    <!-- AOS (Animate On Scroll) -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
     <!-- CSS Global -->
     <link rel="stylesheet" href="/assets/css/app.css">
-    
-    <!-- CSS Composants -->
-    <link rel="stylesheet" href="/assets/css/components/navbar.css">
-    <link rel="stylesheet" href="/assets/css/components/footer.css">
 
     <!-- CSS Pages additionnelles -->
     <?php if (isset($additionalStyles) && is_array($additionalStyles)): ?>
@@ -58,37 +57,46 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <?php if (($_SESSION['user_role'] ?? '') === 'administrateur'): ?>
-                                    <li><a class="dropdown-item" href="/admin"><span aria-hidden="true">📊</span> Dashboard Admin</a></li>
-                                    <li><a class="dropdown-item" href="/admin/users"><span aria-hidden="true">👥</span> Gestion Utilisateurs</a></li>
-                                    <li><a class="dropdown-item" href="/admin/commandes"><span aria-hidden="true">📦</span> Gestion Commandes</a></li>
-                                    <li><a class="dropdown-item" href="/admin/menus"><span aria-hidden="true">🍽️</span> Gestion Menus</a></li>
-                                    <li><a class="dropdown-item" href="/admin/plats"><span aria-hidden="true">🥘</span> Gestion Plats</a></li>
-                                    <li><a class="dropdown-item" href="/employe/avis"><span aria-hidden="true">⭐</span> Modération Avis</a></li>
-                                    <li><a class="dropdown-item" href="/admin/contacts"><span aria-hidden="true"></span> Messages Contact</a></li>
-                                    <li><a class="dropdown-item" href="/admin/horaires"><span aria-hidden="true">⏰</span> Gestion Horaires</a></li>
-                                    <li><a class="dropdown-item" href="/admin/stats"><span aria-hidden="true">📈</span> Statistiques</a></li>
+                                    <li><a class="dropdown-item" href="/admin">📊 Dashboard Admin</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/employe/commandes">📦 Gestion Commandes</a></li>
+                                    <li><a class="dropdown-item" href="/admin/menus">Gestion Menus</a></li>
+                                    <li><a class="dropdown-item" href="/admin/plats">Gestion Plats</a></li>
+                                    <li><a class="dropdown-item" href="/admin/horaires">Gestion Horaires</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/utilisateurs">👥 Gestion Employés</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/contacts">Messages Contact</a></li>
+                                    <li><a class="dropdown-item" href="/employe/avis">Modération Avis</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/admin/stats">📈 Statistiques</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/profil">👤 Mon Profil</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php elseif (($_SESSION['user_role'] ?? '') === 'employé'): ?>
-                                    <li><a class="dropdown-item" href="/employe"><span aria-hidden="true">📋</span> Dashboard Employé</a></li>
-                                    <li><a class="dropdown-item" href="/employe/commandes"><span aria-hidden="true">📦</span> Gestion Commandes</a></li>
-                                    <li><a class="dropdown-item" href="/employe/avis"><span aria-hidden="true">⭐</span> Modération Avis</a></li>
-                                    <li><a class="dropdown-item" href="/admin/menus"><span aria-hidden="true">🍽️</span> Gestion Menus</a></li>
-                                    <li><a class="dropdown-item" href="/admin/plats"><span aria-hidden="true">🥘</span> Gestion Plats</a></li>
-                                    <li><a class="dropdown-item" href="/admin/horaires"><span aria-hidden="true">⏰</span> Gestion Horaires</a></li>
+                                    <li><a class="dropdown-item" href="/employe">📋 Dashboard Employé</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/employe/commandes">📦 Gestion Commandes</a></li>
+                                    <li><a class="dropdown-item" href="/employe/avis">Modération Avis</a></li>
+                                    <li><a class="dropdown-item" href="/admin/menus">Gestion Menus</a></li>
+                                    <li><a class="dropdown-item" href="/admin/plats">Gestion Plats</a></li>
+                                    <li><a class="dropdown-item" href="/admin/horaires">Gestion Horaires</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item" href="/profil">👤 Mon Profil</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php else: ?>
-                                    <li><a class="dropdown-item" href="/mes-commandes"><span aria-hidden="true">📦</span> Mes commandes</a></li>
-                                    <li><a class="dropdown-item" href="/donner-avis"><span aria-hidden="true">⭐</span> Donner un avis</a></li>
-                                    <li><a class="dropdown-item" href="/profil"><span aria-hidden="true">👤</span> Mon compte</a></li>
+                                    <li><a class="dropdown-item" href="/mes-commandes">📦 Mes commandes</a></li>
+                                    <li><a class="dropdown-item" href="/donner-avis">Donner un avis</a></li>
+                                    <li><a class="dropdown-item" href="/profil">👤 Mon compte</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                 <?php endif; ?>
-                                <li><a class="dropdown-item text-danger" href="/logout"><span aria-hidden="true">🚪</span> Déconnexion</a></li>
+                                <li><a class="dropdown-item text-danger" href="/logout">Déconnexion</a></li>
                             </ul>
                         </li>
                     <?php else: ?>
                         <!-- Menu utilisateur non connecté -->
                         <li class="nav-item"><a class="nav-link" href="/login">Connexion</a></li>
-                        <li class="nav-item"><a class="nav-link btn btn-outline-danger btn-sm ms-2" href="/register">S'inscrire</a></li>
+                        <li class="nav-item"><a class="nav-link btn btn-outline-danger btn-sm ms-2 rounded-pill" href="/register">S'inscrire</a></li>
                     <?php endif; ?>
                 </ul>
             </div>

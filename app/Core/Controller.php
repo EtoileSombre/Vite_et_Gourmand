@@ -4,6 +4,12 @@ namespace App\Core;
 
 abstract class Controller
 {
+    protected $db;
+
+    public function __construct()
+    {
+        $this->db = Database::getInstance();
+    }
     protected function render($view, $data = [])
     {
         header('Content-Type: text/html; charset=UTF-8');

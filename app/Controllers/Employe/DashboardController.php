@@ -1,0 +1,102 @@
+<?php
+
+namespace App\Controllers\Employe;
+
+use App\Core\Controller;
+use App\Core\Session;
+use App\Models\Commande;
+use App\Models\CommandeMenu;
+use App\Models\Avis;
+
+/**
+ * Contrôleur Employé
+ * Dashboard et vue d'ensemble pour les employés
+ */
+class DashboardController extends Controller
+{
+    public function __construct()
+    {
+        // Vérifier que l'utilisateur est connecté et a le rôle employé ou admin
+        if (!Session::has('user_id')) {
+            header('Location: /login');
+            exit;
+        }
+
+        $userRole = Session::get('user_role');
+        if (!in_array($userRole, ['employé', 'administrateur'])) {
+            header('Location: /');
+            exit;
+        }
+    }
+
+    /**
+     * Dashboard employé
+     * Vue d'ensemble : commandes du jour, avis en attente, stats rapides
+     */
+    public function index(): void
+    {
+        $commandeModel = new Commande();
+        $avisModel = new Avis();
+
+        // Statistiques du jour
+        $aujourdhui = date('Y-m-d');
+        
+        // Commandes en attente (tous statuts sauf annulée et terminée)
+        $commandesEnAttente = $this->getCommandesEnAttente($commandeModel);
+        
+        // Enrichir avec lignesMenus
+        $commandeMenuModel = new CommandeMenu();
+        foreach ($commandesEnAttente as &$cmd) {
+            $cmd['lignesMenus'] = $commandeMenuModel->findByCommande($cmd['numero_commande']);
+            $cmd['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($cmd['numero_commande']);
+            // Afficher le premier menu comme menu_nom
+            if (!empty($cmd['lignesMenus'])) {
+                $cmd['menu_nom'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
+            }
+        }
+        
+        // Commandes du jour
+        $commandesDuJour = $this->getCommandesDuJour($commandeModel, $aujourdhui);
+        
+        // Avis en attente de modération
+        $avisEnAttente = $this->getAvisEnAttente($avisModel);
+
+        // Stats rapides
+        $stats = [
+            'commandes_en_attente' => count($commandesEnAttente),
+            'commandes_aujourdhui' => count($commandesDuJour),
+            'avis_non_moderes' => count($avisEnAttente)
+        ];
+
+        $this->render('employe/dashboard', [
+            'title' => 'Dashboard Employé',
+            'stats' => $stats,
+            'commandesEnAttente' => array_slice($commandesEnAttente, 0, 5), // 5 dernières
+            'avisEnAttente' => array_slice($avisEnAttente, 0, 3) // 3 derniers
+        ]);
+    }
+
+    /**
+     * Récupère les commandes en attente de traitement
+     */
+    private function getCommandesEnAttente(Commande $model): array
+    {
+        return $model->findByStatuts(['en_attente', 'acceptee', 'en_preparation']);
+    }
+
+    /**
+     * Récupère les commandes du jour (par date de prestation)
+     */
+    private function getCommandesDuJour(Commande $model, string $date): array
+    {
+        return $model->findByDate($date);
+    }
+
+    /**
+     * Récupère les avis en attente de modération
+     */
+    private function getAvisEnAttente(Avis $model): array
+    {
+        return $model->findByStatut('en_attente');
+    }
+}

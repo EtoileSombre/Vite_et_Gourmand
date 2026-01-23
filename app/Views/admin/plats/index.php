@@ -5,34 +5,32 @@
         
         <!-- En-tête -->
         <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="bi bi-egg-fried"></i> Gestion des plats</h1>
             <div>
-                <h1 class="h2 mb-1">🍽️ Gestion des plats</h1>
-                <p class="text-muted mb-0">Créez et gérez votre catalogue de plats</p>
-            </div>
-            <div>
-                <a href="/employe" class="btn btn-vg-bordeaux me-2">
+                <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux me-2 rounded-pill">
                     <i class="bi bi-arrow-left"></i> Retour Dashboard
                 </a>
-                <a href="/admin/plats/create" class="btn btn-primary">
-                    <span aria-hidden="true">➕</span> Créer un plat
+                <a href="/admin/plats/create" class="btn btn-vg-gold rounded-pill">
+                    <i class="bi bi-plus-circle"></i> Créer un plat
                 </a>
             </div>
         </div>
 
-        <!-- Statistiques -->
-        <?php if (!empty($stats)): ?>
-        <div class="row mb-4">
-            <?php foreach ($stats as $stat): ?>
-            <div class="col-md-3 mb-3">
-                <div class="card text-center">
-                    <div class="card-body">
-                        <h3 class="mb-0"><?= $stat['total'] ?></h3>
-                        <small class="text-muted"><?= htmlspecialchars($stat['type_plat']) ?></small>
-                    </div>
-                </div>
+        <!-- Messages flash -->
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
-            <?php endforeach; ?>
-        </div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         <?php endif; ?>
 
         <!-- Filtres -->
@@ -52,8 +50,8 @@
                     </div>
                     <div class="col-md-8 d-flex align-items-end">
                         <?php if ($typeFiltre): ?>
-                            <a href="/admin/plats" class="btn btn-outline-secondary">
-                                <span aria-hidden="true">🔄</span> Réinitialiser
+                            <a href="/admin/plats" class="btn btn-outline-secondary rounded-pill">
+                                <i class="bi bi-arrow-clockwise"></i> Réinitialiser
                             </a>
                         <?php endif; ?>
                     </div>
@@ -64,7 +62,7 @@
         <!-- Liste des plats -->
         <?php if (empty($plats)): ?>
             <div class="alert alert-info">
-                <span aria-hidden="true">ℹ️</span>
+                <i class="bi bi-info-circle"></i>
                 Aucun plat <?= $typeFiltre ? "de type « $typeFiltre »" : '' ?> n'est enregistré.
                 <a href="/admin/plats/create">Créez votre premier plat</a>.
             </div>
@@ -75,31 +73,15 @@
                         <table class="table table-hover align-middle">
                             <thead class="table-light">
                                 <tr>
-                                    <th scope="col" class="w-5">ID</th>
-                                    <th scope="col" class="w-8">Photo</th>
-                                    <th scope="col" class="w-25">Titre</th>
-                                    <th scope="col" class="w-35">Description</th>
-                                    <th scope="col" class="w-12">Type</th>
+                                    <th scope="col" class="w-30">Titre</th>
+                                    <th scope="col" class="w-40">Description</th>
+                                    <th scope="col" class="w-15">Type</th>
                                     <th scope="col" class="w-15 text-end">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php foreach ($plats as $plat): ?>
                                 <tr>
-                                    <td><?= $plat['plat_id'] ?></td>
-                                    <td>
-                                        <?php if (!empty($plat['photo'])): ?>
-                                            <img src="<?= htmlspecialchars($plat['photo']) ?>" 
-                                                 alt="<?= htmlspecialchars($plat['titre_plat']) ?>" 
-                                                 class="img-thumbnail" 
-                                                 class="img-plat-cover">
-                                        <?php else: ?>
-                                            <div class="bg-light d-flex align-items-center justify-content-center" 
-                                                 class="img-plat-placeholder">
-                                                <span class="text-muted" aria-hidden="true">🍽️</span>
-                                            </div>
-                                        <?php endif; ?>
-                                    </td>
                                     <td>
                                         <strong><?= htmlspecialchars($plat['titre_plat']) ?></strong>
                                     </td>
@@ -123,24 +105,26 @@
                                             <?= htmlspecialchars($plat['type_plat']) ?>
                                         </span>
                                     </td>
-                                    <td class="text-end">
-                                        <a href="/admin/plats/edit?id=<?= $plat['plat_id'] ?>" 
-                                           class="btn btn-sm btn-outline-primary" 
-                                           title="Modifier">
-                                            <span aria-hidden="true">✏️</span>
-                                            <span class="visually-hidden">Modifier <?= htmlspecialchars($plat['titre_plat']) ?></span>
-                                        </a>
-                                        
-                                        <form method="POST" 
-                                              action="/admin/plats/delete" 
-                                              class="d-inline" 
-                                              data-confirm="Êtes-vous sûr de vouloir supprimer ce plat ?">
-                                            <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Supprimer">
-                                                <span aria-hidden="true">🗑️</span>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <a href="/admin/plats/edit?id=<?= $plat['plat_id'] ?>" 
+                                               class="btn btn-action-circle btn-outline-vg-bordeaux" 
+                                               title="Modifier">
+                                                <i class="bi bi-pencil"></i>
+                                                <span class="visually-hidden">Modifier <?= htmlspecialchars($plat['titre_plat']) ?></span>
+                                            </a>
+                                            
+                                            <button type="button" 
+                                                    class="btn btn-action-circle btn-outline-vg-bordeaux" 
+                                                    title="Supprimer"
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#deletePlatModal"
+                                                    data-plat-id="<?= $plat['plat_id'] ?>"
+                                                    data-plat-titre="<?= htmlspecialchars($plat['titre_plat']) ?>">
+                                                <i class="bi bi-trash"></i>
                                                 <span class="visually-hidden">Supprimer <?= htmlspecialchars($plat['titre_plat']) ?></span>
                                             </button>
-                                        </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 <?php endforeach; ?>
@@ -153,6 +137,47 @@
 
     </div>
 </main>
+
+<!-- Modal de confirmation de suppression -->
+<div class="modal fade" id="deletePlatModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmer la suppression</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Êtes-vous sûr de vouloir supprimer le plat <strong id="platTitreToDelete"></strong> ?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annuler</button>
+                <form method="POST" action="/admin/plats/delete" id="deletePlatForm">
+                    <input type="hidden" name="plat_id" id="platIdToDelete">
+                    <button type="submit" class="btn btn-danger rounded-pill">
+                        <i class="bi bi-trash"></i> Supprimer
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Gestion du modal de suppression de plat
+document.addEventListener('DOMContentLoaded', function() {
+    const deleteModal = document.getElementById('deletePlatModal');
+    if (deleteModal) {
+        deleteModal.addEventListener('show.bs.modal', function(event) {
+            const button = event.relatedTarget;
+            const platId = button.getAttribute('data-plat-id');
+            const platTitre = button.getAttribute('data-plat-titre');
+            
+            document.getElementById('platIdToDelete').value = platId;
+            document.getElementById('platTitreToDelete').textContent = platTitre;
+        });
+    }
+});
+</script>
 
 <?php 
 $additionalScripts = ['/assets/js/admin-plats.js'];

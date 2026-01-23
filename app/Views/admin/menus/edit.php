@@ -104,10 +104,11 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     <div class="d-flex flex-wrap gap-2">
                                         <?php foreach ($platsType as $plat): 
                                             // Récupérer les allergènes du plat
-                                            $platAllergenes = \App\Models\Plat::getAllergenesForPlat($plat['plat_id']);
+                                            $platModel = new \App\Models\Plat();
+                                            $platAllergenes = $platModel->getAllergenesForPlat($plat['plat_id']);
                                             $allergenesLabels = [];
                                             if (!empty($platAllergenes)) {
-                                                $allAllergenes = \App\Models\Plat::getAllAllergenes();
+                                                $allAllergenes = $platModel->getAllAllergenes();
                                                 foreach ($platAllergenes as $allergeneId) {
                                                     $allergene = array_filter($allAllergenes, fn($a) => $a['allergene_id'] == $allergeneId);
                                                     if (!empty($allergene)) {
@@ -139,10 +140,10 @@ require_once __DIR__ . '/../../layouts/header.php';
 
                         <!-- Boutons d'action -->
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="/admin/menus" class="btn btn-outline-secondary">
+                            <a href="/admin/menus" class="btn btn-outline-secondary rounded-pill">
                                 <i class="bi bi-arrow-left"></i> Annuler
                             </a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-vg-gold rounded-pill">
                                 <i class="bi bi-save"></i> Enregistrer les Modifications
                             </button>
                         </div>

@@ -1,4 +1,5 @@
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php 
+include __DIR__ . '/../layouts/header.php'; ?>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -13,7 +14,7 @@
                             <i class="bi bi-check-circle-fill"></i> <?= htmlspecialchars($success) ?>
                         </div>
                         <p class="text-center mt-3">
-                            <a href="/login" class="btn btn-primary btn-lg">Se connecter maintenant</a>
+                            <a href="/login" class="btn btn-primary btn-lg rounded-pill">Se connecter maintenant</a>
                         </p>
                     <?php elseif (isset($tokenValid) && !$tokenValid): ?>
                         <div class="alert alert-danger" role="alert">
@@ -21,7 +22,7 @@
                             <p class="mb-0">Ce lien de réinitialisation n'est plus valide. Il a peut-être expiré ou déjà été utilisé.</p>
                         </div>
                         <p class="text-center mt-3">
-                            <a href="/forgot-password" class="btn btn-primary">Demander un nouveau lien</a>
+                            <a href="/forgot-password" class="btn btn-primary rounded-pill">Demander un nouveau lien</a>
                         </p>
                     <?php else: ?>
                         <?php if (!empty($errors)): ?>
@@ -81,7 +82,7 @@
                             </div>
 
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill">
                                     <i class="bi bi-shield-check"></i> Réinitialiser le mot de passe
                                 </button>
                             </div>
@@ -146,17 +147,5 @@ document.addEventListener('DOMContentLoaded', function() {
         strengthText.className = 'form-text ' + (strength >= 4 ? 'text-success' : 'text-danger');
     });
 
-    form.addEventListener('submit', function(e) {
-        const password = passwordInput.value;
-        const confirm = confirmInput.value;
-
-        if (password !== confirm) {
-            e.preventDefault();
-            alert('Les mots de passe ne correspondent pas !');
-            confirmInput.focus();
-        }
-    });
-});
-</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

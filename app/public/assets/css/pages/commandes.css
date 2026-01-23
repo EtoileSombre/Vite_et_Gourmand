@@ -1,22 +1,28 @@
-/* Badges de statut */
-.badge-status-en-attente {
-    background-color: #ffc107;
-    color: #000;
-}
-
-.badge-status-validee {
+/* Badges de statut de commande - Palette uniforme */
+.badge-statut-en-attente {
     background-color: #28a745;
-    color: #fff;
+    color: white;
 }
 
-.badge-status-terminee {
-    background-color: #17a2b8;
-    color: #fff;
+.badge-statut-acceptee,
+.badge-statut-en-preparation,
+.badge-statut-en-cours-livraison,
+.badge-statut-livree,
+.badge-statut-attente-retour-materiel,
+.badge-statut-default {
+    background-color: #6c757d;
+    color: white;
 }
 
-.badge-status-annulee {
+.badge-statut-terminee {
+    background-color: #6c757d;
+    color: white;
+}
+
+.badge-statut-annulee,
+.badge-statut-refusee {
     background-color: #dc3545;
-    color: #fff;
+    color: white;
 }
 
 /* Timeline */
@@ -81,4 +87,68 @@
     .timeline-item {
         padding-left: 30px;
     }
+}
+
+/* === Styles pour create.php === */
+
+/* Boissons et matériels */
+.boisson-item, .materiel-item {
+    background: #f8f9fa;
+    border-left: 3px solid #0d6efd;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.materiel-item {
+    border-left-color: #0d6efd;
+}
+
+.boisson-item:hover, .materiel-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+/* Contrôles de quantité */
+.qty-control {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.qty-btn {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qty-input {
+    width: 60px;
+    text-align: center;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 4px;
+}
+
+.btn-remove {
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border-radius: 50%;
+}
+
+/* Badges de prix et caution */
+.price-badge {
+    font-weight: 600;
+    color: #0d6efd;
+}
+
+.caution-badge {
+    font-weight: 600;
+    color: #0d6efd;
 }

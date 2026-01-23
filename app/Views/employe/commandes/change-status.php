@@ -1,12 +1,13 @@
 <?php
-// OBLIGATION ECF : Contact utilisateur obligatoire avant modification statut
+//Contact utilisateur obligatoire avant modification statut
+$additionalStyles = ['/assets/css/pages/commandes.css'];
 require_once __DIR__ . '/../../layouts/header.php';
 ?>
 
 <div class="container my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-pencil-square"></i> Modifier la Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
-        <a href="/employe/commandes" class="btn btn-outline-secondary">
+        <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux rounded-pill">
             <i class="bi bi-arrow-left"></i> Retour
         </a>
     </div>
@@ -136,15 +137,18 @@ require_once __DIR__ . '/../../layouts/header.php';
                                 
                                 <?php if ($commande['statut'] === 'en_cours_livraison'): ?>
                                     <option value="livree">📦 Livrée</option>
+                                    <option value="annulee">❌ Annulée</option>
                                 <?php endif; ?>
                                 
                                 <?php if ($commande['statut'] === 'livree'): ?>
                                     <option value="attente_retour_materiel">⏳ Attente retour matériel</option>
                                     <option value="terminee">✅ Terminée</option>
+                                    <option value="annulee">❌ Annulée</option>
                                 <?php endif; ?>
                                 
                                 <?php if ($commande['statut'] === 'attente_retour_materiel'): ?>
                                     <option value="terminee">✅ Terminée</option>
+                                    <option value="annulee">❌ Annulée</option>
                                 <?php endif; ?>
                             </select>
                         </div>
@@ -152,7 +156,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <hr>
 
                         <!-- Contact utilisateur (apparaît selon le statut choisi) -->
-                        <div id="contactUtilisateurSection" class="hidden-section">
+                        <div id="contactUtilisateurSection" class="d-none">
                             <h6 class="border-bottom pb-2">
                                 <i class="bi bi-telephone-fill"></i> Contact Utilisateur Obligatoire
                             </h6>
@@ -213,4 +217,7 @@ require_once __DIR__ . '/../../layouts/header.php';
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../layouts/footer.php'; ?>
+<?php 
+$additionalScripts = ['/assets/js/employe-commandes.js'];
+require_once __DIR__ . '/../../layouts/footer.php'; 
+?>

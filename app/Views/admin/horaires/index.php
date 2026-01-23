@@ -5,14 +5,28 @@
         
         <!-- En-tête -->
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h1 class="h2 mb-1">⏰ Gestion des horaires</h1>
-                <p class="text-muted mb-0">Définissez les horaires d'ouverture de votre établissement</p>
-            </div>
-            <a href="/employe" class="btn btn-vg-bordeaux">
+            <h1><i class="bi bi-clock"></i> Gestion des horaires</h1>
+            <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux rounded-pill">
                 <i class="bi bi-arrow-left"></i> Retour Dashboard
             </a>
         </div>
+
+        <!-- Messages flash -->
+        <?php if (isset($_SESSION['success'])): ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['success']); unset($_SESSION['success']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                <?= htmlspecialchars($_SESSION['error']); unset($_SESSION['error']); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        <?php endif; ?>
 
         <!-- Formulaire de mise à jour des horaires -->
         <div class="card shadow-sm">
@@ -33,13 +47,13 @@
                                 <?php 
                                 $jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
                                 $joursIcons = [
-                                    'Lundi' => '📅',
-                                    'Mardi' => '📅',
-                                    'Mercredi' => '📅',
-                                    'Jeudi' => '📅',
-                                    'Vendredi' => '📅',
-                                    'Samedi' => '🎉',
-                                    'Dimanche' => '☀️'
+                                    'Lundi' => '',
+                                    'Mardi' => '',
+                                    'Mercredi' => '',
+                                    'Jeudi' => '',
+                                    'Vendredi' => '',
+                                    'Samedi' => '',
+                                    'Dimanche' => ''
                                 ];
                                 
                                 // Créer un tableau indexé par jour pour un accès facile
@@ -103,32 +117,15 @@
                     <!-- Info et bouton -->
                     <div class="mt-4 d-flex justify-content-between align-items-center">
                         <div class="text-muted small">
-                            <span aria-hidden="true">💡</span>
-                            <strong>Astuce :</strong> Cochez "Fermé" pour indiquer qu'un jour est non travaillé
+                            <i class="bi bi-lightbulb"></i>
+                             Cochez "Fermé" pour indiquer qu'un jour est non travaillé
                         </div>
-                        <button type="submit" class="btn btn-primary">
-                            <span aria-hidden="true">💾</span>
+                        <button type="submit" class="btn btn-vg-gold rounded-pill">
+                            <i class="bi bi-check-circle"></i>
                             Enregistrer les horaires
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
-
-        <!-- Aperçu de l'affichage -->
-        <div class="card shadow-sm mt-4">
-            <div class="card-body">
-                <h3 class="h5 mb-3">
-                    <span aria-hidden="true">👁️</span>
-                    Aperçu de l'affichage dans le footer
-                </h3>
-                <div class="alert alert-info mb-0">
-                    <strong>Horaires actuels :</strong>
-                    <?php
-                    use App\Models\Horaire;
-                    echo htmlspecialchars(Horaire::getHorairesFormatted());
-                    ?>
-                </div>
             </div>
         </div>
 

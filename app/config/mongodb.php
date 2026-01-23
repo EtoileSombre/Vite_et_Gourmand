@@ -1,12 +1,13 @@
 <?php
-// Connexion MongoDB pour statistiques
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 try {
-    // Connexion MongoDB avec les bons identifiants
+    $mongoUri = getenv('MONGO_URI') ?: 'mongodb://vgroot:vgrootpass@mongo:27017';
+    $mongoDb = getenv('MONGO_DATABASE') ?: 'vg';
+    
     $mongoClient = new MongoDB\Client(
-        "mongodb://vgroot:vgrootpass@mongo:27017",
+        $mongoUri,
         [],
         [
             'typeMap' => [
@@ -17,8 +18,7 @@ try {
         ]
     );
 
-    // Sélection de la base de données
-    $mongodb = $mongoClient->vg;
+    $mongodb = $mongoClient->$mongoDb;
 
     // Collections principales
     $mongoCollections = [

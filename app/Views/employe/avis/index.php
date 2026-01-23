@@ -1,26 +1,20 @@
 <?php require_once __DIR__ . '/../../layouts/header.php'; ?>
 
 <div class="container my-5">
-    <div class="row mb-4">
-        <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h1 class="h3 mb-0">
-                    <i class="bi bi-star-fill text-warning me-2"></i>
-                    Modération des Avis
-                </h1>
-                <a href="/employe" class="btn btn-vg-bordeaux">
-                    <i class="bi bi-arrow-left me-2"></i>
-                    Retour Dashboard
-                </a>
-            </div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-star-fill text-warning"></i> Modération des Avis</h1>
+        <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-vg-bordeaux rounded-pill">
+            <i class="bi bi-arrow-left"></i> Retour Dashboard
+        </a>
+    </div>
 
-            <!-- Filtres -->
-            <div class="card mb-4">
+    <!-- Filtres -->
+    <div class="card mb-4">
                 <div class="card-body">
                     <form method="GET" action="/employe/avis" class="row g-3 align-items-end">
                         <div class="col-md-4">
                             <label for="statut" class="form-label">Statut</label>
-                            <select name="statut" id="statut" class="form-select">
+                            <select name="statut" id="statut" class="form-select" data-auto-submit>
                                 <option value="en_attente" <?= ($statut_filtre ?? '') === 'en_attente' ? 'selected' : '' ?>>
                                     En attente (<?= $count_en_attente ?? 0 ?>)
                                 </option>
@@ -43,7 +37,7 @@
             <?php if (empty($avis)): ?>
                 <div class="alert alert-info">
                     <i class="bi bi-info-circle me-2"></i>
-                    Aucun avis <?= $statut_filtre !== 'tous' ? 'en statut "' . htmlspecialchars($statut_filtre) . '"' : '' ?>.
+                    Aucun avis en attente
                 </div>
             <?php else: ?>
                 <div class="row">
@@ -124,14 +118,14 @@
                                             <div class="col-6">
                                                 <form method="POST" action="/employe/avis/approve">
                                                     <input type="hidden" name="avis_id" value="<?= $item['avis_id'] ?>">
-                                                    <button type="submit" class="btn btn-success btn-sm w-100">
+                                                    <button type="submit" class="btn btn-vg-gold btn-sm w-100 rounded-pill">
                                                         <i class="bi bi-check-circle me-1"></i>
                                                         Approuver
                                                     </button>
                                                 </form>
                                             </div>
                                             <div class="col-6">
-                                                <button type="button" class="btn btn-danger btn-sm w-100" 
+                                                <button type="button" class="btn btn-danger btn-sm w-100 rounded-pill" 
                                                         data-bs-toggle="modal" 
                                                         data-bs-target="#rejectModal<?= $item['avis_id'] ?>">
                                                     <i class="bi bi-x-circle me-1"></i>
@@ -176,8 +170,8 @@
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                            <button type="submit" class="btn btn-danger">
+                                            <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annuler</button>
+                                            <button type="submit" class="btn btn-danger rounded-pill">
                                                 <i class="bi bi-x-circle me-1"></i>
                                                 Confirmer le rejet
                                             </button>
@@ -193,7 +187,4 @@
     </div>
 </div>
 
-<?php 
-$additionalScripts = ['/assets/js/employe-avis.js'];
-require_once __DIR__ . '/../../layouts/footer.php'; 
-?>
+<?php require_once __DIR__ . '/../../layouts/footer.php'; ?>

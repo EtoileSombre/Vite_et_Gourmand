@@ -2,179 +2,94 @@
 
 **Projet ECF – Titre Professionnel Développeur Web & Web Mobile (DWWM)**
 
----
+Plateforme de gestion de restaurant pour **Julie et José** (Bordeaux) : présentation des menus, prise de commandes automatisée, suivi des statistiques (MongoDB) et gestion des avis.
 
-## 🔗 Liens du projet
-
-- 🔗 **GitHub** : <https://github.com/EtoileSombre/Vite_et_Gourmand>
-- 🌐 **Démo en ligne** : _[À compléter]_
-- 🎨 **Maquettes Figma** : _[À compléter]_
-- 🗓️ **Gestion de projet** : _[À compléter]_
-
----
-
-## 📋 Contexte du projet
-
-**Julie et José**, restaurateurs à Bordeaux, gèrent actuellement leurs
-commandes par emails. Afin de gagner en productivité et en visibilité,
-ils souhaitent :
-
-- ✅ Présenter leurs menus en ligne
-- ✅ Automatiser la prise de commandes
-- ✅ Suivre leurs statistiques de vente
-- ✅ Gérer les avis utilisateurs
-- ✅ Améliorer leur visibilité numérique
+**Architecture MVC PHP** avec séparation claire entre logique métier (MySQL) et analytics (MongoDB).
 
 ---
 
 ## ⚙️ Stack technique
 
-| Catégorie | Technologies |
-| --------- | ----------- |
-| **Frontend** | HTML5, CSS3, Bootstrap 5, JavaScript (Vanilla), Chart.js |
-| **Backend** | PHP 8.3 (Architecture MVC), Apache 2.4 + mod_rewrite |
-| **Bases de données** | MySQL 8.3, MongoDB 6.0 |
-| **DevOps** | Docker, Git/GitHub |
-| **Outils** | PHPMailer, MailHog, Composer (PSR-4) |
-
-### Architecture
-
-```
-app/
-├── Controllers/   → 14 contrôleurs métier
-├── Models/        → 6 modèles (User, Menu, CommandeMenu, Commande, Avis, PasswordReset)
-├── Views/         → 32 templates organisés par fonctionnalité
-├── Core/          → Router, Database, Model, Controller
-├── config/        → Configuration (MySQL, MongoDB, Mail)
-└── public/        → Point d'entrée + assets
-```
+**Frontend** : HTML5, CSS3, Bootstrap 5, JavaScript, Chart.js  
+**Backend** : PHP 8.3 (MVC), Apache 2.4  
+**Bases de données** : MySQL 8.3, MongoDB 6.0  
+**DevOps** : Docker Compose, Git/GitHub
 
 ---
 
-## 🚀 Installation
+## 🚀 Installation rapide
 
 ### Prérequis
-
-- Docker Desktop 20.10+
-- Git 2.30+
-
-### Étapes
+- Docker + Docker Compose installés
+- Git installé
 
 ```bash
-# 1. Cloner le projet
+# Cloner et configurer
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd Vite_et_Gourmand
+cp infra/.env.example infra/.env
 
-# 2. Configurer l'environnement
-cd infra/.env.example infra/.env
+# Lancer Docker
+cd infra && docker compose up -d
+cd ..
 
-# 3. Lancer Docker
-cd infra
-docker compose build
-docker compose up -d
-
-# 4. Vérifier les services
-docker compose ps
-```
-
-### Importer la base de données
-
-**Via phpMyAdmin** (<http://localhost:8090>) :
-1. Se connecter avec `root` / `rootpass`
-2. Importer **dans l'ordre** :
-   - `app/sql/structure.sql` (crée la base + 25 tables)
-   - `app/sql/donnees.sql` (insère les données de test)
-
-**Ou en ligne de commande** :
-```bash
+# Importer MySQL
 docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/structure.sql
 docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/donnees.sql
+
+# Créer index MongoDB
+docker exec -it vitegourmand-app php /var/www/html/scripts/create-mongo-indexes.php
 ```
 
----
-
-## 🌐 Accès aux services
-
-| Service | URL | Identifiants | Description |
-| ------- | --- | ------------ | ----------- |
-| **Application** | <http://localhost:8080> | - | Site principal |
-| **phpMyAdmin** | <http://localhost:8090> | `root` / `rootpass` | Gestion MySQL |
-| **Mongo Express** | <http://localhost:8081> | `vgroot` / `vgrootpass` | Gestion MongoDB |
-| **MailHog** | <http://localhost:8025> | - | Capture emails (dev) |
+**Accès** : <http://localhost:8080>  
+**phpMyAdmin** : <http://localhost:8090> (`root` / `rootpass`)  
+**Mongo Express** : <http://localhost:8081> (`vgroot` / `vgrootpass`)
 
 ---
 
 ## 🔑 Comptes de test
 
-| Rôle | Email | Mot de passe | Accès |
-| ---- | ----- | ------------ | ----- |
-| 👑 **Admin** | `admin@viteetgourmand.fr` | `Admin123!` | Stats |
-| 👷 **Employé** | `employe@viteetgourmand.fr` | `Employe123!` | Modération |
-| 👤 **Utilisateur** | `utilisateur@test.fr` | `Utilisateur123!` | Profil |
-
-⚠️ _Identifiants fournis à des fins de démonstration uniquement._
+| Rôle | Email | Mot de passe |
+|------|-------|--------------|
+| 👑 Admin | `admin@viteetgourmand.fr` | `Admin123!` |
+| 👷 Employé | `employe@viteetgourmand.fr` | `Employe123!` |
+| 👤 Client | `utilisateur@test.fr` | `Utilisateur123!` |
 
 ---
 
-## 🎯 Fonctionnalités principales
+## 🎯 Fonctionnalités clés
 
-### 👤 Espace Utilisateur
-- Inscription / Connexion sécurisée (bcrypt)
-- Réinitialisation de mot de passe par email
-- Consultation des menus avec filtres (thème, régime, prix)
-- Passage et suivi de commandes
-- Modification de commandes (si non traitée)
-- Dépôt d'avis après validation
-- Gestion du profil
+**👤 Client** : Inscription, commandes avec filtres, avis, profil  
+**👷 Employé** : Gestion commandes, modération avis  
+**👑 Admin** : CRUD menus/plats, utilisateurs, **statistiques MongoDB**
 
-### 👷 Espace Employé
-- Dashboard avec statistiques
-- Gestion des commandes (changement de statut)
-- Modération des avis (validation/rejet)
-- Notifications
-
-### 👑 Espace Administrateur
-- Tableau de bord complet
-- Gestion des utilisateurs (activation/désactivation)
-- CRUD complet des menus
-- Gestion des stocks (quantités)
-- Statistiques MongoDB :
-  - Top menus consultés
-  - Évolution des vues par jour
-  - Activité utilisateurs
-  - Graphiques Chart.js
+### 📊 Statistiques MongoDB (NoSQL)
+- Nombre de commandes par menu (graphique comparatif 2 axes)
+- CA par menu avec filtres (menu + dates)
+- Agrégations natives (`$match`, `$group`, `$sort`)
+- Index composés (< 100ms) + TTL 90j (RGPD)
+- **Accès** : `/admin/stats` (compte administrateur requis)
+- **Conforme énoncé ECF** → [docs/AMELIORATIONS_MONGODB_ECF.md](docs/AMELIORATIONS_MONGODB_ECF.md)
 
 ---
 
-## 🔒 Sécurité implémentée
+## 🔒 Sécurité
 
-- ✅ Hashage bcrypt des mots de passe
-- ✅ Requêtes préparées PDO (anti-injection SQL)
-- ✅ Validation côté serveur de toutes les entrées
-- ✅ Échappement HTML (`htmlspecialchars`) contre XSS
-- ✅ Sessions PHP sécurisées
-- ✅ Tokens de réinitialisation avec expiration (24h)
-- ✅ Gestion des rôles (utilisateur, employé, administrateur)
-- ✅ Headers de sécurité Apache (.htaccess)
-- ✅ Variables d'environnement pour credentials
+✅ Hash des mots de passe (bcrypt), requêtes PDO préparées, protections XSS, gestion des sessions, RBAC (rôles), variables d'environnement (.env)
 
 ---
 
-## 🎓 Compétences DWWM
+## 🎓 Compétences DWWM validées
 
-### CCP 1 - Développer la partie front-end
-- ✅ Maquetter une application (Design responsive)
-- ✅ Réaliser une interface web statique (HTML5, CSS3, Bootstrap 5)
-- ✅ Développer une interface dynamique (JavaScript, filtres, validation)
+**CCP 1** : Maquettage responsive, HTML/CSS/Bootstrap, JavaScript dynamique  
+**CCP 2** : MySQL + MongoDB, MVC PHP 8.3, 17 contrôleurs, Agrégations NoSQL  
+**Transversal** : Docker, Git, RGPD, Performance (index)
 
-### CCP 2 - Développer la partie back-end
-- ✅ Créer une base de données (MySQL + MongoDB)
-- ✅ Développer les composants d'accès aux données (PDO, Composer)
-- ✅ Développer la partie back-end (Architecture MVC en PHP 8.3)
-- ✅ Élaborer des composants métier (14 contrôleurs)
+---
 
-### Compétences transversales
-- ✅ Sécurité (XSS, injection SQL, bcrypt)
-- ✅ Gestion de projet (Git, documentation)
-- ✅ Déploiement (Docker Compose multi-services)
-- ✅ Performance (Requêtes optimisées, indexes)
+## 📚 Documentation complète
+
+- **Architecture** : `docs/Architecture.md`
+- **MongoDB (détaillé)** : `docs/AMELIORATIONS_MONGODB_ECF.md`
+- **Installation** : `docs/01_Installation_Environnement.md`
+- **Tests** : `docs/Guide_Tests_Complet.md`

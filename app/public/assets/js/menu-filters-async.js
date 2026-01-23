@@ -90,15 +90,10 @@ document.addEventListener('DOMContentLoaded', function() {
         return `
             <div class="col-md-6 col-lg-4 menu-item">
                 <div class="card h-100 shadow-sm menu-card">
-                    <div class="position-relative">
-                        <img src="${escapeHtml(imageUrl)}" 
-                             class="card-img-top menu-image" 
-                             alt="${escapeHtml(menu.titre)}"
-                             onerror="this.src='/assets/img/placeholder-menu.jpg'">
-                        <span class="badge bg-vg-bordeaux position-absolute top-0 end-0 m-2">
-                            ${prix}€/pers
-                        </span>
-                    </div>
+                    <img src="${escapeHtml(imageUrl)}" 
+                         class="card-img-top menu-image" 
+                         alt="${escapeHtml(menu.titre)}"
+                         onerror="this.src='/assets/img/placeholder-menu.jpg'">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title text-vg-bordeaux">${escapeHtml(menu.titre)}</h5>
                         <p class="card-text text-muted small flex-grow-1">
@@ -112,12 +107,17 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                         <div class="mb-3">
                             ${regime.split(',').map(r => 
-                                `<span class="badge bg-light text-dark border me-1">${escapeHtml(r.trim())}</span>`
+                                `<span class="badge bg-secondary me-1">${escapeHtml(r.trim())}</span>`
                             ).join('')}
                         </div>
-                        <a href="/menu?id=${menu.menu_id}" class="btn btn-vg-bordeaux mt-auto">
-                            <i class="bi bi-eye"></i> Voir le menu
-                        </a>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="h4 mb-0 fw-bold text-bordeaux">
+                                ${prix.replace('.', ',')} €
+                            </span>
+                            <a href="/menu?id=${menu.menu_id}" class="btn btn-bordeaux btn-sm rounded-pill">
+                                <i class="bi bi-eye"></i> Détails
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -191,6 +191,6 @@ document.addEventListener('DOMContentLoaded', function() {
         btnResetFilters.addEventListener('click', resetFilters);
     }
 
-    // Charger tous les menus au démarrage
-    applyFiltersAsync();
+    // Ne pas charger tous les menus au démarrage - utiliser le HTML initial
+    // applyFiltersAsync();
 });

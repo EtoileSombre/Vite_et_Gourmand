@@ -1,18 +1,17 @@
 <?php
+$additionalStyles = ['/assets/css/pages/commandes.css'];
 require_once __DIR__ . '/../../layouts/header.php';
 
-// Charger la configuration des statuts
-$statutConfig = require __DIR__ . '/statuts_commande.php';
 $currentStatut = $commande['statut'];
-$currentStyle = $statutConfig['styles'][$currentStatut] ?? $statutConfig['styles']['default'];
-$currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('_', ' ', $currentStatut));
+$currentLabel = $statuts[$currentStatut] ?? ucfirst(str_replace('_', ' ', $currentStatut));
+$badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
 ?>
 
 <div class="container my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
-        <a href="/employe/commandes" class="btn btn-outline-secondary">
-            <i class="bi bi-arrow-left"></i> Retour
+        <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-outline-secondary rounded-pill d-inline-flex align-items-center">
+            <i class="bi bi-arrow-left me-2"></i>Retour
         </a>
     </div>
 
@@ -54,11 +53,11 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
         <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
             <div class="col-md-6 mb-4">
                 <div class="card h-100 shadow-sm border-0">
-                    <div class="card-header bg-vg-gold text-vg-bordeaux border-0">
+                    <div class="card-header bg-vg-gold text-white border-0">
                         <h5 class="mb-0"><i class="bi bi-arrow-repeat"></i> Changement de Statut</h5>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="/employe/commandes/change-status?id=<?= htmlspecialchars($commande['numero_commande']) ?>" id="formChangeStatus">
+                        <form method="POST" action="/employe/commandes/change-status?id=<?= htmlspecialchars($commande['numero_commande']) ?>">
                             
                             <!-- Nouveau statut -->
                             <div class="mb-3">
@@ -67,71 +66,21 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                                 </label>
                                 <select name="nouveau_statut" id="nouveau_statut" class="form-select" data-statut-actuel="<?= htmlspecialchars($commande['statut']) ?>" required>
                                     <option value="">-- Sélectionner le nouveau statut --</option>
-                                    <option value="acceptee">✅ Acceptée</option>
-                                    <option value="en_preparation">🔄 En préparation</option>
-                                    <option value="en_cours_livraison">🚚 En cours de livraison</option>
-                                    <option value="livree">📦 Livrée</option>
+                                    <option value="acceptee" <?= $commande['statut'] === 'acceptee' ? 'selected' : '' ?>>Acceptée</option>
+                                    <option value="en_preparation" <?= $commande['statut'] === 'en_preparation' ? 'selected' : '' ?>>En préparation</option>
+                                    <option value="en_cours_livraison" <?= $commande['statut'] === 'en_cours_livraison' ? 'selected' : '' ?>>En cours de livraison</option>
+                                    <option value="livree" <?= $commande['statut'] === 'livree' ? 'selected' : '' ?>>Livrée</option>
                                     <?php if ($commande['pret_materiel']): ?>
-                                        <option value="attente_retour_materiel">⏳ Attente retour matériel (email auto 10j)</option>
+                                        <option value="attente_retour_materiel" <?= $commande['statut'] === 'attente_retour_materiel' ? 'selected' : '' ?>>Attente retour matériel (email auto 10j)</option>
                                     <?php endif; ?>
-                                    <option value="terminee">✅ Terminée</option>
-                                    <option value="annulee">❌ Annulée</option>
+                                    <option value="terminee" <?= $commande['statut'] === 'terminee' ? 'selected' : '' ?>>Terminée</option>
+                                    <option value="annulee" <?= $commande['statut'] === 'annulee' ? 'selected' : '' ?>>Annulée</option>
                                 </select>
-                            </div>
-
-                            <!-- Contact utilisateur (apparaît selon le statut choisi) -->
-                            <div id="contactUtilisateurSection" class="d-none">
-                                <div class="card bg-light mb-3">
-                                    <div class="card-body p-3">
-                                        <h6 class="border-bottom pb-2 mb-2">
-                                            <i class="bi bi-telephone-fill text-danger"></i> Contact Utilisateur Obligatoire
-                                        </h6>
-
-                                        <!-- Confirmation contact -->
-                                        <div class="mb-2">
-                                            <div class="form-check">
-                                                <input type="checkbox" name="contacte_utilisateur" id="contacte_utilisateur" class="form-check-input">
-                                                <label for="contacte_utilisateur" class="form-check-label fw-bold">
-                                                    Je confirme avoir contacté l'utilisateur <span class="text-danger">*</span>
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <!-- Mode de contact -->
-                                        <div class="mb-2">
-                                            <label class="form-label fw-bold mb-1">
-                                                Mode de contact <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="form-check">
-                                                <input type="radio" name="mode_contact" id="mode_gsm" class="form-check-input" value="GSM">
-                                                <label for="mode_gsm" class="form-check-label">
-                                                    <i class="bi bi-phone"></i> Téléphone
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input type="radio" name="mode_contact" id="mode_email" class="form-check-input" value="Email">
-                                                <label for="mode_email" class="form-check-label">
-                                                    <i class="bi bi-envelope"></i> Email
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <!-- Motif -->
-                                        <div class="mb-2">
-                                            <label for="motif_contact" class="form-label fw-bold mb-1">
-                                                Motif <span class="text-danger">*</span>
-                                            </label>
-                                            <textarea name="motif_contact" id="motif_contact" class="form-control form-control-sm" rows="3" 
-                                                      placeholder="Raison du contact..."></textarea>
-                                            <small class="text-muted">Min. 10 caractères</small>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                             <!-- Bouton Validation -->
                             <div class="text-end">
-                                <button type="submit" class="btn btn-vg-bordeaux">
+                                <button type="submit" class="btn btn-vg-bordeaux rounded-pill">
                                     <i class="bi bi-check-circle me-1"></i> Valider
                                 </button>
                             </div>
@@ -143,14 +92,14 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
 
         <!-- FORMULAIRE DE MODIFICATION DE COMMANDE -->
         <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
-            <div class="col-md-12 mb-4" id="formEditCommandeSection" class="d-none">
+            <div class="col-md-12 mb-4 d-none" id="formEditCommandeSection">
                 <div class="card border-0 shadow-sm overflow-hidden">
                     <div class="card-header bg-white text-vg-bordeaux d-flex justify-content-between align-items-center border-0 border-bottom-bordeaux">
                         <h5 class="mb-0"><i class="bi bi-pencil-square"></i> Modifier la Commande</h5>
-                        <button type="button" class="btn btn-sm btn-outline-light border-white" 
-                                onclick="document.getElementById('formEditCommandeSection').style.display='none';"
-                                style="border: 2px solid white;">
-                            <i class="bi bi-x-lg"></i>
+                        <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" 
+                                data-action="hide-edit-form"
+                                title="Fermer le formulaire">
+                            <i class="bi bi-x-lg"></i> Fermer
                         </button>
                     </div>
                     <div class="card-body">
@@ -220,15 +169,6 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                                     <?php endforeach; ?>
                                 </div>
 
-                                <!-- Instructions spéciales -->
-                                <div class="col-md-12 mb-3">
-                                    <label for="instructions_speciales" class="form-label fw-bold">
-                                        <i class="bi bi-chat-left-text"></i> Instructions Spéciales
-                                    </label>
-                                    <textarea name="instructions_speciales" id="instructions_speciales" 
-                                              class="form-control" rows="3"><?= htmlspecialchars($commande['instructions_speciales'] ?? '') ?></textarea>
-                                </div>
-
                                 <!-- Contact utilisateur -->
                                 <div class="col-md-12 mb-3">
                                     <div class="card bg-light">
@@ -282,10 +222,10 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                             </div>
 
                             <div class="d-flex gap-2 justify-content-end">
-                                <button type="button" class="btn btn-outline-secondary" onclick="document.getElementById('formEditCommande').reset()">
+                                <button type="button" class="btn btn-outline-secondary rounded-pill" data-action="reset-edit-form">
                                     <i class="bi bi-x-circle"></i> Réinitialiser
                                 </button>
-                                <button type="submit" class="btn btn-vg-bordeaux">
+                                <button type="submit" class="btn btn-vg-bordeaux rounded-pill">
                                     <i class="bi bi-check-circle"></i> Enregistrer les Modifications
                                 </button>
                             </div>
@@ -328,8 +268,8 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                                 <tr>
                                     <td class="text-center align-middle">
                                         <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
-                                            <button type="button" class="btn btn-vg-bordeaux" 
-                                                    onclick="document.getElementById('formEditCommandeSection').style.display='block'; document.getElementById('formEditCommandeSection').scrollIntoView({behavior: 'smooth'});">
+                                            <button type="button" class="btn btn-vg-gold rounded-pill" 
+                                                    data-action="show-edit-form">
                                                 <i class="bi bi-pencil-square me-1"></i> Modifier Commande
                                             </button>
                                         <?php endif; ?>
@@ -368,7 +308,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                         <dt class="col-sm-5 mb-4">Lieu :</dt>
                         <dd class="col-sm-7 mb-4">
                             <?= htmlspecialchars($commande['lieu_livraison']) ?><br>
-                            <small class="text-muted"><?= htmlspecialchars($commande['ville_livraison']) ?> <?= htmlspecialchars($commande['code_postal_livraison'] ?? '') ?></small>
+                            <?= htmlspecialchars($commande['ville_livraison']) ?> <?= htmlspecialchars($commande['code_postal_livraison'] ?? '') ?>
                         </dd>
 
                         <?php if (!empty($commande['distance_km'])): ?>
@@ -390,7 +330,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                     <dl class="row mb-0">
                         <dt class="col-sm-5">Statut actuel :</dt>
                         <dd class="col-sm-7">
-                            <span class="badge fs-6" style="<?= $currentStyle ?>">
+                            <span class="badge fs-6 <?= $badgeClass ?>">
                                 <?= $currentLabel ?>
                             </span>
                         </dd>
@@ -398,7 +338,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                         <dt class="col-sm-5">Prêt matériel :</dt>
                         <dd class="col-sm-7">
                             <?php if ($commande['pret_materiel']): ?>
-                                <span class="badge bg-info">Oui (600€ caution)</span>
+                                <span class="badge bg-success">Oui</span>
                             <?php else: ?>
                                 <span class="badge bg-secondary">Non</span>
                             <?php endif; ?>
@@ -407,7 +347,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                         <?php if ($commande['pret_materiel']): ?>
                             <dt class="col-sm-5">Restitution :</dt>
                             <dd class="col-sm-7">
-                                <?php if ($commande['restitution_materiel']): ?>
+                                <?php if ($commande['restitution_materiel'] || $commande['statut'] === 'terminee'): ?>
                                     <span class="badge bg-success"><i class="bi bi-check-circle"></i> Restitué</span>
                                 <?php else: ?>
                                     <span class="badge bg-danger"><i class="bi bi-exclamation-triangle"></i> En attente</span>
@@ -432,10 +372,27 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
                             <dd class="col-sm-7">+ <?= number_format($commande['prix_livraison'], 2) ?> €</dd>
                         <?php endif; ?>
 
-                        <dt class="col-sm-5"><strong>TOTAL :</strong></dt>
+                        <hr class="my-2">
+
+                        <?php
+                        // Calcul HT et TVA
+                        $totalTTC = $commande['total_final'] ?? 0;
+                        $totalHT = $totalTTC / 1.10;
+                        $montantTVA = $totalTTC - $totalHT;
+                        ?>
+
+                        <dt class="col-sm-5">Total HT :</dt>
+                        <dd class="col-sm-7"><?= number_format($totalHT, 2) ?> €</dd>
+
+                        <dt class="col-sm-5">TVA (10%) :</dt>
+                        <dd class="col-sm-7">+ <?= number_format($montantTVA, 2) ?> €</dd>
+
+                        <hr class="my-2">
+
+                        <dt class="col-sm-5"><strong>TOTAL TTC :</strong></dt>
                         <dd class="col-sm-7">
-                            <strong class="fs-5 text-primary">
-                                <?= number_format($commande['total_final'] ?? 0, 2) ?> €
+                            <strong class="fs-5 text-vg-bordeaux">
+                                <?= number_format($totalTTC, 2) ?> €
                             </strong>
                         </dd>
                     </dl>
@@ -476,4 +433,7 @@ $currentLabel = $statutConfig['labels'][$currentStatut] ?? ucfirst(str_replace('
     </div>
 </div>
 
-<?php require_once __DIR__ . '/../../layouts/footer.php'; ?>
+<?php 
+$additionalScripts = ['/assets/js/employe-commandes.js'];
+require_once __DIR__ . '/../../layouts/footer.php'; 
+?>

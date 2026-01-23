@@ -64,7 +64,7 @@
 
                 <!-- Bouton Réinitialiser -->
                 <div class="col-md-4 d-flex align-items-end">
-                    <button class="btn btn-outline-light w-100 rounded-pill" id="btnResetFilters" style="border-color: #dee2e6; color: #6c757d;">
+                    <button class="btn btn-outline-secondary w-100 rounded-pill" id="btnResetFilters">
                         <i class="bi bi-x-circle"></i> Réinitialiser
                     </button>
                 </div>

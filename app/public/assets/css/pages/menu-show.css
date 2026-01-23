@@ -15,16 +15,65 @@
 .w-25 { width: 25% !important; }
 .w-35 { width: 35% !important; }
 
-/* Encadré conditions léger */
+/* Conditions sans encadré */
 .menu-conditions-box {
-    border: 1.5px solid #d4af6f;
-    background-color: rgba(212, 175, 111, 0.05);
-    border-radius: 8px;
-    padding: 12px 16px;
+    padding: 0;
+}
+
+.menu-conditions-box i {
+    color: #c49b63;
+    font-size: 1.2rem;
 }
 
 .menu-conditions-box small {
     font-size: 0.8rem;
+}
+
+/* Options disponibles - étiquettes simples */
+.option-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.option-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(123, 30, 30, 0.08);
+    border-color: rgba(196, 155, 99, 0.3);
+}
+
+.option-icon-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    background-color: white !important;
+    border: 2px solid var(--vg-bordeaux);
+}
+
+.option-icon-circle i {
+    font-size: 1.4rem;
+    color: var(--vg-bordeaux);
+}
+
+.option-content h6 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.option-content p {
+    font-size: 0.8rem;
+    line-height: 1.4;
 }
 
 /* Carrousel photos menu */
@@ -36,9 +85,19 @@
     cursor: pointer;
 }
 
+.carousel-premium {
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(123, 30, 30, 0.12), 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
 .carousel-img-menu {
     height: 550px;
     object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.carousel-item:hover .carousel-img-menu {
+    transform: scale(1.05);
 }
 
 .carousel-control-icon-shadow {
@@ -380,8 +439,8 @@
 }
 
 .menu-header-flex .menu-price {
-    font-size: 1.4rem;
-    font-weight: 600;
+    font-size: 1.75rem;
+    font-weight: 700;
     color: #7a1f1f;
     white-space: nowrap;
 }

@@ -1,4 +1,7 @@
-<?php include __DIR__ . '/../../layouts/header.php'; ?>
+<?php 
+$additionalStyles = ['/assets/css/password-strength.css'];
+include __DIR__ . '/../../layouts/header.php'; 
+?>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -15,12 +18,6 @@
                                     <li><?= htmlspecialchars($error) ?></li>
                                 <?php endforeach; ?>
                             </ul>
-                        </div>
-                    <?php endif; ?>
-                    
-                    <?php if ($success): ?>
-                        <div class="alert alert-success">
-                            Votre profil a été mis à jour avec succès !
                         </div>
                     <?php endif; ?>
                     
@@ -80,13 +77,46 @@
                         
                         <div class="mb-3">
                             <label for="password" class="form-label">Nouveau mot de passe</label>
-                            <input type="password" class="form-control" id="password" name="password" minlength="10">
-                            <small class="form-text text-muted">Minimum 10 caractères : 1 majuscule, 1 minuscule, 1 chiffre, 1 caractère spécial</small>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" minlength="10">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Jauge de force du mot de passe -->
+                            <div class="mt-2" id="passwordStrengthSection" style="display: none;">
+                                <div class="password-strength-bar">
+                                    <div class="password-strength-fill" id="passwordStrengthFill"></div>
+                                </div>
+                                <div class="password-requirements mt-2">
+                                    <small class="password-req" id="req-length">
+                                        <i class="bi bi-circle"></i> Au moins 10 caractères
+                                    </small>
+                                    <small class="password-req" id="req-uppercase">
+                                        <i class="bi bi-circle"></i> Une majuscule
+                                    </small>
+                                    <small class="password-req" id="req-lowercase">
+                                        <i class="bi bi-circle"></i> Une minuscule
+                                    </small>
+                                    <small class="password-req" id="req-number">
+                                        <i class="bi bi-circle"></i> Un chiffre
+                                    </small>
+                                    <small class="password-req" id="req-special">
+                                        <i class="bi bi-circle"></i> Un caractère spécial
+                                    </small>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="password_confirm" class="form-label">Confirmer le nouveau mot de passe</label>
-                            <input type="password" class="form-control" id="password_confirm" name="password_confirm" minlength="10">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password_confirm" name="password_confirm" minlength="10">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirm">
+                                    <i class="bi bi-eye" id="togglePasswordConfirmIcon"></i>
+                                </button>
+                            </div>
                         </div>
                         
                         <div class="d-flex justify-content-between mt-4">
@@ -100,7 +130,7 @@
                             }
                             ?>
                             <a href="<?= $returnUrl ?>" class="btn btn-vg-bordeaux rounded-pill">
-                                <i class="bi bi-arrow-left"></i> Retour Dashboard
+                                <i class="bi bi-arrow-left"></i> Retour
                             </a>
                             <button type="submit" class="btn btn-vg-gold rounded-pill">
                                 <i class="bi bi-save"></i> Enregistrer les modifications
@@ -121,4 +151,36 @@
     </div>
 </div>
 
-<?php include __DIR__ . '/../../layouts/footer.php'; ?>
+<script src="/assets/js/password-strength.js"></script>
+
+<!-- Modal de confirmation de mise à jour du profil -->
+<?php if ($success): ?>
+<div class="modal fade" id="modalConfirmationProfil" tabindex="-1" aria-labelledby="modalConfirmationProfilLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-vg-gold text-white">
+                <h5 class="modal-title" id="modalConfirmationProfilLabel">
+                    Profil mis à jour
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-4">
+                    <i class="bi bi-check-circle fs-1 text-success"></i>
+                </div>
+                <h5 class="mb-3">Vos informations ont bien été mises à jour !</h5>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-vg-gold rounded-pill" data-bs-dismiss="modal">
+                    <i class="bi bi-check2"></i> Fermer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<?php endif; ?>
+
+<?php 
+$additionalScripts = ['/assets/js/password-strength.js', '/assets/js/modales.js'];
+include __DIR__ . '/../../layouts/footer.php'; 
+?>

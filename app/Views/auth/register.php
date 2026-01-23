@@ -4,6 +4,7 @@
  * @var string|null $redirect
  */
 include __DIR__ . '/../layouts/header.php'; ?>
+<link rel="stylesheet" href="/assets/css/password-strength.css">
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -49,7 +50,7 @@ include __DIR__ . '/../layouts/header.php'; ?>
                         
                         <div class="mb-3">
                             <label for="telephone" class="form-label">Numéro de GSM <span class="text-danger">*</span></label>
-                            <input type="tel" class="form-control" id="telephone" name="telephone" required placeholder="0612345678" pattern="[0-9]{10}" value="<?= htmlspecialchars($_POST['telephone'] ?? '') ?>">
+                            <input type="tel" class="form-control" id="telephone" name="telephone" required placeholder="0612345678" pattern="[0-9]{10}" maxlength="10" value="<?= htmlspecialchars($_POST['telephone'] ?? '') ?>">
                             <div class="invalid-feedback">Le téléphone doit contenir 10 chiffres.</div>
                         </div>
                         
@@ -74,16 +75,47 @@ include __DIR__ . '/../layouts/header.php'; ?>
                         
                         <div class="mb-3">
                             <label for="password" class="form-label">Mot de passe <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control" id="password" name="password" required minlength="10">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password" name="password" required minlength="10">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="bi bi-eye" id="togglePasswordIcon"></i>
+                                </button>
+                            </div>
                             <div class="invalid-feedback">Le mot de passe doit contenir au moins 10 caractères.</div>
-                            <div class="form-text">
-                                Minimum 10 caractères avec au moins : 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial
+                            
+                            <!-- Jauge de force du mot de passe -->
+                            <div class="mt-2">
+                                <div class="password-strength-bar">
+                                    <div class="password-strength-fill" id="passwordStrengthFill"></div>
+                                </div>
+                                <div class="password-requirements mt-2">
+                                    <small class="password-req" id="req-length">
+                                        <i class="bi bi-circle"></i> Au moins 10 caractères
+                                    </small>
+                                    <small class="password-req" id="req-uppercase">
+                                        <i class="bi bi-circle"></i> Une majuscule
+                                    </small>
+                                    <small class="password-req" id="req-lowercase">
+                                        <i class="bi bi-circle"></i> Une minuscule
+                                    </small>
+                                    <small class="password-req" id="req-number">
+                                        <i class="bi bi-circle"></i> Un chiffre
+                                    </small>
+                                    <small class="password-req" id="req-special">
+                                        <i class="bi bi-circle"></i> Un caractère spécial
+                                    </small>
+                                </div>
                             </div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="password_confirm" class="form-label">Confirmer le mot de passe <span class="text-danger">*</span></label>
-                            <input type="password" class="form-control" id="password_confirm" name="password_confirm" required minlength="10">
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="password_confirm" name="password_confirm" required minlength="10">
+                                <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirm">
+                                    <i class="bi bi-eye" id="togglePasswordConfirmIcon"></i>
+                                </button>
+                            </div>
                             <div class="invalid-feedback">Les mots de passe ne correspondent pas.</div>
                         </div>
                         
@@ -98,5 +130,7 @@ include __DIR__ . '/../layouts/header.php'; ?>
         </div>
     </div>
 </div>
+
+<script src="/assets/js/password-strength.js"></script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

@@ -111,7 +111,7 @@ h3 {
 }
 
 .bg-vg-gold {
-    background-color: var(--vg-gold) !important;
+    background: linear-gradient(135deg, #c49b63 0%, #d4af6f 100%) !important;
 }
 
 .bg-vg-cream {
@@ -279,6 +279,28 @@ h4.text-success,
     border: 2px solid transparent;
 }
 
+/* Boutons d'action circulaires */
+.btn-action-circle {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Bouton compact */
+.btn-compact {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+/* Prix total en gros */
+.price-total {
+    font-size: 1.2rem;
+}
+
 .btn-vg-cream:hover {
     background-color: #fff;
     color: var(--vg-bordeaux);
@@ -295,14 +317,21 @@ h4.text-success,
     color: #fff;
 }
 
+.btn-bordeaux {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 6px rgba(123, 30, 30, 0.2);
+}
+
 .btn-success:hover,
 .btn-success:focus,
 .btn-primary:hover,
 .btn-danger:hover,
 .btn-bordeaux:hover {
-    background-color: #944040 !important;
-    border-color: #944040 !important;
+    background-color: #6a1919 !important;
+    border-color: #6a1919 !important;
     color: #fff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(123, 30, 30, 0.4) !important;
 }
 
 .btn-outline-success {
@@ -422,11 +451,13 @@ h4.text-success,
 
 .hover-shadow {
     transition: all .3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .08) !important;
 }
 
 .hover-shadow:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15) !important;
+    transform: translateY(-8px);
+    box-shadow: 0 12px 24px rgba(123, 30, 30, .15) !important;
+    border-top: 3px solid var(--vg-bordeaux);
 }
 
 /*GRADIENTS*/

@@ -14,7 +14,7 @@
     <div class="row">
         <div class="col-md-5 mb-4 menu-carousel-col">
             <?php if (!empty($photos)): ?>
-                <div id="menuCarousel" class="carousel slide shadow-lg rounded-3 overflow-hidden" data-bs-ride="carousel">
+                <div id="menuCarousel" class="carousel slide carousel-premium overflow-hidden" data-bs-ride="carousel">
                     <div class="carousel-indicators">
                         <?php foreach ($photos as $index => $photo): ?>
                             <button type="button" data-bs-target="#menuCarousel" data-bs-slide-to="<?= $index ?>" 
@@ -99,13 +99,13 @@
                             $platsByType[$plat['type_plat']][] = $plat;
                         }
                         
-                        $typeOrder = ['Entree' => 'Entrées', 'Plat' => 'Plats', 'Accompagnement' => 'Accompagnements', 'Dessert' => 'Desserts'];
+                        $typeOrder = ['Entree' => 'Entrée', 'Plat' => 'Plat', 'Accompagnement' => 'Accompagnements', 'Dessert' => 'Dessert'];
                         
                         foreach ($typeOrder as $typeKey => $typeLabel):
                             if (!empty($platsByType[$typeKey])):
                         ?>
                             <h6 class="mt-3 mb-2 menu-titre-section">
-                                <i class="bi bi-arrow-right-circle-fill"></i> <?= $typeLabel ?>
+                                <?= $typeLabel ?>
                             </h6>
                             <ul class="list-unstyled ms-3">
                                 <?php foreach ($platsByType[$typeKey] as $plat): ?>
@@ -162,39 +162,36 @@
                 <?php endif; ?>
             </div>
 
-            <!-- Informations sur les options disponibles -->
-            <div class="card shadow-sm border-0 mt-0">
-                <div class="card-header bg-vg-bordeaux text-white border-bottom">
-                    <h6 class="mb-0">
-                        <i class="bi bi-info-circle-fill"></i> Options disponibles à la commande
-                    </h6>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <?php if (!empty($boissons)): ?>
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-cup-straw fs-4 text-vg-bordeaux me-3"></i>
-                                    <div>
-                                        <strong>Boissons disponibles</strong>
-                                        <p class="mb-0 small text-muted">Vous pourrez ajouter des boissons lors de la commande</p>
-                                    </div>
+            <!-- Options disponibles -->
+            <div class="mt-3 mb-4">
+                <div class="row g-3">
+                    <?php if (!empty($boissons)): ?>
+                        <div class="col-md-6">
+                            <div class="option-card">
+                                <div class="option-icon-circle bg-vg-bordeaux">
+                                    <i class="bi bi-cup-straw"></i>
+                                </div>
+                                <div class="option-content">
+                                    <h6 class="mb-1">Boissons disponibles</h6>
+                                    <p class="mb-0 small text-muted">Ajout des boissons lors de la commande</p>
                                 </div>
                             </div>
-                        <?php endif; ?>
-                        
-                        <?php if (!empty($materiels)): ?>
-                            <div class="col-md-6">
-                                <div class="d-flex align-items-center">
-                                    <i class="bi bi-box-seam fs-4 text-success me-3"></i>
-                                    <div>
-                                        <strong>Prêt de matériel</strong>
-                                        <p class="mb-0 small text-muted">Matériel disponible avec caution restituable</p>
-                                    </div>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <?php if (!empty($materiels)): ?>
+                        <div class="col-md-6">
+                            <div class="option-card">
+                                <div class="option-icon-circle bg-vg-bordeaux">
+                                    <i class="bi bi-box-seam"></i>
+                                </div>
+                                <div class="option-content">
+                                    <h6 class="mb-1">Prêt de matériel</h6>
+                                    <p class="mb-0 small text-muted">Matériel avec caution restituable</p>
                                 </div>
                             </div>
-                        <?php endif; ?>
-                    </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -280,5 +277,7 @@
         </div>
     </div>
 </div>
+
+<script src="/assets/js/menu-lightbox.js"></script>
 
 <?php require_once __DIR__ . '/../../layouts/footer.php'; ?>

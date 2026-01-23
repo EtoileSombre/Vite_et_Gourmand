@@ -65,6 +65,14 @@
 }
 
 .h4.fw-bold {
-    font-size: 1.1rem;
-    font-weight: 600 !important;
+    font-size: 1.3rem;
+    font-weight: 700 !important;
+    color: var(--vg-bordeaux) !important;
+}
+
+/* Labels des filtres plus visibles */
+.form-label {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: #333;
 }

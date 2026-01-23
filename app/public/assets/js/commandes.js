@@ -28,21 +28,6 @@ const CommandeModule = {
     },
 
     /**
-     * Gérer les confirmations d'annulation de commande
-     */
-    initConfirmationAnnulation: function() {
-        const btnsAnnuler = document.querySelectorAll('.btn-annuler-commande');
-        btnsAnnuler.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                if (!confirm('Êtes-vous sûr de vouloir annuler cette commande ?')) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
-        });
-    },
-
-    /**
      * Initialiser la page modifier-commande.php
      */
     initModifierCommandePage: function() {
@@ -93,9 +78,52 @@ const CommandeModule = {
         
         // Événements - utiliser app.updateCalculations() pour gérer tous les calculs
         menuSelect.addEventListener('change', () => {
+            // Mettre à jour le minimum de personnes selon le menu sélectionné
+            const selectedOption = menuSelect.options[menuSelect.selectedIndex];
+            const minPersonnes = parseInt(selectedOption.dataset.min) || 2;
+            
+            nbPersonnesInput.min = minPersonnes;
+            
+            // Si le nombre actuel est inférieur au minimum, l'ajuster
+            if (parseInt(nbPersonnesInput.value) < minPersonnes) {
+                nbPersonnesInput.value = minPersonnes;
+            }
+            
+            // Mettre à jour le message d'information
+            const minPersonnesInfo = document.getElementById('min-personnes-info');
+            if (minPersonnesInfo && selectedOption.value) {
+                minPersonnesInfo.textContent = `Minimum requis : ${minPersonnes} personne${minPersonnes > 1 ? 's' : ''}`;
+            }
+            
             if (this.app) this.app.updateCalculations();
         });
+        
+        // Valider le nombre de personnes à la saisie
         nbPersonnesInput.addEventListener('input', () => {
+            const minPersonnes = parseInt(nbPersonnesInput.min) || 2;
+            const currentValue = parseInt(nbPersonnesInput.value);
+            const errorDiv = document.getElementById('nombre-personnes-error');
+            
+            if (currentValue < minPersonnes) {
+                nbPersonnesInput.classList.add('is-invalid');
+                nbPersonnesInput.classList.remove('is-valid');
+                nbPersonnesInput.setCustomValidity(`Le nombre minimum de personnes est ${minPersonnes}`);
+                
+                if (errorDiv) {
+                    errorDiv.textContent = `Le nombre minimum de personnes pour ce menu est ${minPersonnes}`;
+                    errorDiv.style.display = 'block';
+                }
+            } else {
+                nbPersonnesInput.classList.remove('is-invalid');
+                nbPersonnesInput.classList.add('is-valid');
+                nbPersonnesInput.setCustomValidity('');
+                
+                if (errorDiv) {
+                    errorDiv.textContent = '';
+                    errorDiv.style.display = 'none';
+                }
+            }
+            
             if (this.app) this.app.updateCalculations();
         });
         if (distanceInput) {
@@ -106,6 +134,8 @@ const CommandeModule = {
         
         // Calcul initial si menu pré-sélectionné
         if (menuSelect.value && this.app) {
+            // Déclencher l'événement change pour initialiser le minimum
+            menuSelect.dispatchEvent(new Event('change'));
             setTimeout(() => this.app.updateCalculations(), 100);
         }
     },
@@ -496,7 +526,6 @@ document.addEventListener('DOMContentLoaded', function() {
     CommandeModule.initModifierCommandePage();
     CommandeModule.initAnnulerCommandePage();
     CommandeModule.initEmployeViewPage();
-    CommandeModule.initConfirmationAnnulation();
     
     // Initialiser l'app pour create.php si les éléments existent
     if (document.getElementById('btn_ajouter_boisson') || document.getElementById('btn_ajouter_materiel')) {

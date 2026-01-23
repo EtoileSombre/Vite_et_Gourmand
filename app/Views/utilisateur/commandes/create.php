@@ -157,6 +157,7 @@ include __DIR__ . '/../../layouts/header.php';
                                 </label>
                                 <input type="number" class="form-control" id="nombre_personnes" name="nombre_personnes" 
                                        min="2" value="2" required>
+                                <div class="invalid-feedback d-block" id="nombre-personnes-error"></div>
                                 <small class="form-text text-muted" id="min-personnes-info"></small>
                                 <div class="alert alert-info alert-permanent mt-2 mb-0 small">
                                     <i class="bi bi-tag-fill"></i> <strong>Bon à savoir : </strong> -10% dès 5 personnes au dessus du minimum requis.
@@ -192,7 +193,7 @@ include __DIR__ . '/../../layouts/header.php';
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
-                                    <button type="button" class="btn btn-vg-gold rounded-pill" id="btn_ajouter_boisson" style="padding: 0.4rem 0.9rem; font-size: 0.9rem; white-space: nowrap;">
+                                    <button type="button" class="btn btn-outline-vg-bordeaux rounded-pill btn-compact" id="btn_ajouter_boisson">
                                         <i class="bi bi-plus-lg"></i> Ajouter
                                     </button>
                                 </div>
@@ -241,7 +242,7 @@ include __DIR__ . '/../../layouts/header.php';
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
-                                    <button type="button" class="btn btn-vg-gold rounded-pill" id="btn_ajouter_boisson" style="padding: 0.4rem 0.9rem; font-size: 0.9rem; white-space: nowrap;">
+                                    <button type="button" class="btn btn-outline-vg-bordeaux rounded-pill btn-compact" id="btn_ajouter_boisson">
                                         <i class="bi bi-plus-lg"></i> Ajouter
                                     </button>
                                 </div>
@@ -327,7 +328,7 @@ include __DIR__ . '/../../layouts/header.php';
                                     <div class="row">
                                         <div class="col-8"><h5 class="mb-0 fw-bold">TOTAL TTC</h5></div>
                                         <div class="col-4 text-end">
-                                            <h5 class="mb-0 text-vg-bordeaux fw-bold" style="font-size: 1.2rem;">
+                                            <h5 class="mb-0 text-vg-bordeaux fw-bold price-total">
                                                 <span id="total-final">5,50</span> €
                                             </h5>
                                         </div>

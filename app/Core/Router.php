@@ -28,8 +28,11 @@ class Router
 
     public function dispatch()
     {
-        $request = new Request();
+       $request = new Request();
        $requestMethod = $request->getMethod();
+   if ($requestMethod === 'HEAD') {
+       $requestMethod = 'GET';
+}
 
     // Normalisation URI (ignore ?query + gère slash final)
                 $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';

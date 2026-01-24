@@ -29,8 +29,11 @@ class Router
     public function dispatch()
     {
         $request = new Request();
-        $requestMethod = $request->getMethod();
-        $requestUri = $request->getUri();
+       $requestMethod = $request->getMethod();
+
+    // Normalisation URI (ignore ?query + gère slash final)
+                $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+                $requestUri = rtrim($requestUri, '/') ?: '/';
 
         foreach ($this->routes as $route) {
             if ($route['method'] === $requestMethod && $route['path'] === $requestUri) {

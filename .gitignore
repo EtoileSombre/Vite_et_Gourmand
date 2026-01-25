@@ -119,3 +119,7 @@ coverage/
 # 📝 Documentation (temporaire)
 # -----------------------------
 docs/
+
+# Local dev files (server)
+infra/docker-compose.dev.yml
+app/Config/

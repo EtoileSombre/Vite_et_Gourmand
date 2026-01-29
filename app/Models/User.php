@@ -9,17 +9,19 @@ class User extends Model
     protected $table = 'utilisateur';
     protected $primaryKey = 'utilisateur_id';
 
-    public static function findByEmail($email)
-    {
-        $model = new self();
-        $stmt = $model->db->prepare('
-            SELECT u.*, r.libelle as role 
-            FROM utilisateur u 
-            LEFT JOIN role r ON u.role_id = r.role_id 
-            WHERE u.email = ?
-        ');
-        $stmt->execute([$email]);
-        return $stmt->fetch();
+    public function findByEmail(string $email): ?array
+{
+    $stmt = $this->db->prepare('
+        SELECT u.*, r.libelle as role
+        FROM utilisateur u
+        LEFT JOIN role r ON u.role_id = r.role_id
+        WHERE u.email = :email
+        LIMIT 1
+    ');
+    $stmt->execute(['email' => $email]);
+
+    $user = $stmt->fetch();
+    return $user ?: null;
     }
 
     public function createUser($data)
@@ -31,7 +33,7 @@ class User extends Model
     {
         $stmt = $this->db->prepare('
             UPDATE utilisateur 
-            SET est_actif = ? 
+            SET actif = ? 
             WHERE utilisateur_id = ?
         ');
         return $stmt->execute([$actif ? 1 : 0, $userId]);
@@ -60,7 +62,7 @@ class User extends Model
     public function createEmployeWithPassword($email, $prenom, $nom, $password)
     {
         // Vérifier que l'email n'existe pas déjà
-        if (self::findByEmail($email)) {
+        if ($this->findByEmail($email)) {
             return false;
         }
         
@@ -115,7 +117,7 @@ class User extends Model
     public function createEmploye($email, $prenom, $nom)
     {
         // Vérifier que l'email n'existe pas déjà
-        if (self::findByEmail($email)) {
+        if ($this->findByEmail($email)) {
             return false;
         }
 
@@ -123,7 +125,7 @@ class User extends Model
         $tempPassword = bin2hex(random_bytes(16));
         
         $stmt = $this->db->prepare('
-            INSERT INTO utilisateur (email, password, prenom, nom, role_id, est_actif) 
+            INSERT INTO utilisateur (email, password, prenom, nom, role_id, actif) 
             VALUES (?, ?, ?, ?, 2, 1)
         ');
         

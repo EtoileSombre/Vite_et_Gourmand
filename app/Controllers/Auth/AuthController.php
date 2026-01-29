@@ -24,7 +24,8 @@ class AuthController extends Controller
             if (empty($email) || empty($password)) {
                 $errors[] = "Tous les champs sont obligatoires.";
             } else {
-                $user = User::findByEmail($email);
+                $userModel = new User();
+                $user = $userModel->findByEmail($email);
                 
                 if ($user && password_verify($password, $user['password'])) {
                     Session::set('user_id', $user['utilisateur_id']);
@@ -126,7 +127,8 @@ class AuthController extends Controller
                 $errors[] = "Les mots de passe ne correspondent pas.";
             }
             
-            if (User::findByEmail($email)) {
+            $userModel = new User();
+            if ($userModel->findByEmail($email)) {
                 $errors[] = "Cet email est déjà utilisé.";
             }
             
@@ -204,7 +206,8 @@ class AuthController extends Controller
                 $errors[] = "Veuillez saisir une adresse email valide.";
             } else {
                 // Vérifier si l'email existe
-                $user = User::findByEmail($email);
+                $userModel = new User();
+                $user = $userModel->findByEmail($email);
                 
                 if ($user) {
                     // Générer un token unique
@@ -293,7 +296,8 @@ class AuthController extends Controller
             
             if (empty($errors)) {
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $user = User::findByEmail($resetRequest['email']);
+                $userModel = new User();
+                $user = $userModel->findByEmail($resetRequest['email']);
                 
                 if ($user) {
                     $userModel = new User();

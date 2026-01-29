@@ -146,6 +146,7 @@ document.addEventListener('DOMContentLoaded', function() {
         strengthText.textContent = text;
         strengthText.className = 'form-text ' + (strength >= 4 ? 'text-success' : 'text-danger');
     });
-
+});
+</script>
 
 <?php include __DIR__ . '/../layouts/footer.php'; ?>

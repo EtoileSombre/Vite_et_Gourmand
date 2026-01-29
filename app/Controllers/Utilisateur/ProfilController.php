@@ -45,7 +45,9 @@ class ProfilController extends Controller
                 $errors[] = "L'email n'est pas valide.";
             }
 
-            $existingUser = User::findByEmail($email);
+            $userModel = new User();
+            $existingUser = $userModel->findByEmail($email);
+            
             if ($existingUser && $existingUser['utilisateur_id'] != $userId) {
                 $errors[] = "Cet email est déjà utilisé.";
             }

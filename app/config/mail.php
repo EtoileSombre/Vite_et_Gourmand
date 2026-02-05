@@ -313,9 +313,9 @@ function getEmailTemplate($title, $content, $footerNote = '') {
                 
                 <div class='email-footer'>
                     <p style='font-size: 16px; font-weight: 600; margin-bottom: 15px;'>Vite & Gourmand</p>
-                    <p>10 Rue du Commerce, 33000 Bordeaux</p>
+                    <p>42 Rue des Gourmets, 33000 Bordeaux</p>
                     <p>
-                        <a href='mailto:contact@viteetgourmand.fr'>contact@viteetgourmand.fr</a> · 
+                        <a href='mailto:contact@viteetgourmand.com'>contact@viteetgourmand.com</a> · 
                         📞 05 56 12 34 56
                     </p>
                     <p>Ouvert du lundi au dimanche, 10h - 22h</p>

@@ -15,6 +15,11 @@
 !.vscode/*.code-snippets
 
 # -----------------------------
+# 🔒 Configuration Production (credentials)
+# -----------------------------
+app/public/.htaccess
+
+# -----------------------------
 # 🧾 Logs & Historique
 # -----------------------------
 *.log

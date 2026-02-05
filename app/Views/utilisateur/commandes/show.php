@@ -14,9 +14,111 @@ include __DIR__ . '/../../layouts/header.php';
     <div class="row">
         <!-- Informations de la commande -->
         <div class="col-lg-8">
+            <!-- Récapitulatif Commande -->
             <div class="card mb-4 shadow-sm">
                 <div class="card-header text-white bg-vg-bordeaux">
-                    <h5 class="mb-0"><i class="bi bi-info-circle"></i> Détails de la Commande</h5>
+                    <h5 class="mb-0">Votre commande</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Menus -->
+                    <?php if (!empty($commande['lignesMenus'])): ?>
+                        <h6 class="text-vg-bordeaux mb-3">Menus</h6>
+                        <?php foreach ($commande['lignesMenus'] as $ligne): ?>
+                            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                                <div>
+                                    <strong><?= htmlspecialchars($ligne['menu_nom']) ?></strong><br>
+                                    <small class="text-muted"><?= $ligne['nombre_personne'] ?> personne(s)</small>
+                                </div>
+                                <div class="text-end">
+                                    <strong><?= number_format($ligne['total_ligne'] ?? 0, 2) ?> €</strong>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+                    <!-- Matériel -->
+                    <?php if (!empty($commande['lignesMateriels'])): ?>
+                        <h6 class="text-vg-bordeaux mb-3 mt-4">Matériel emprunté</h6>
+                        <?php foreach ($commande['lignesMateriels'] as $mat): ?>
+                            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                                <div>
+                                    <strong><?= htmlspecialchars($mat['nom']) ?></strong>
+                                    <?php if (!empty($mat['description'])): ?>
+                                        <br><small class="text-muted"><?= htmlspecialchars($mat['description']) ?></small>
+                                    <?php endif; ?>
+                                    <br><small class="text-muted"><?= htmlspecialchars($mat['quantite']) ?> pièce(s)</small>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-warning">Caution: <?= number_format($mat['total_caution'], 2) ?> €</small>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+                    <!-- Boissons -->
+                    <?php if (!empty($commande['lignesBoissons'])): ?>
+                        <h6 class="text-vg-bordeaux mb-3 mt-4">Boissons</h6>
+                        <?php foreach ($commande['lignesBoissons'] as $boisson): ?>
+                            <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
+                                <div>
+                                    <strong><?= htmlspecialchars($boisson['nom']) ?></strong><br>
+                                    <small class="text-muted"><?= htmlspecialchars($boisson['contenance']) ?> × <?= htmlspecialchars($boisson['quantite']) ?></small>
+                                </div>
+                                <div class="text-end">
+                                    <strong><?= number_format($boisson['total_ligne'], 2) ?> €</strong>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+
+                    <!-- Totaux -->
+                    <hr class="my-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Total menus :</span>
+                        <strong><?= number_format($commande['sousTotal'] ?? 0, 2) ?> €</strong>
+                    </div>
+                    <?php if (!empty($commande['totalBoissons'])): ?>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Total boissons :</span>
+                            <strong><?= number_format($commande['totalBoissons'], 2) ?> €</strong>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (isset($commande['prix_livraison']) && $commande['prix_livraison'] > 0): ?>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Frais de livraison<?php if (isset($commande['distance_km']) && $commande['distance_km'] > 0): ?> (<?= number_format($commande['distance_km'], 1) ?> km)<?php endif; ?> :</span>
+                            <strong><?= number_format($commande['prix_livraison'], 2) ?> €</strong>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <hr class="my-3">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-muted">Total HT :</span>
+                        <span class="small text-muted"><?= number_format(($commande['total_final'] ?? 0) / 1.1, 2) ?> €</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-muted">TVA (10%) :</span>
+                        <span class="small text-muted"><?= number_format(($commande['total_final'] ?? 0) - (($commande['total_final'] ?? 0) / 1.1), 2) ?> €</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <h5 class="mb-0">TOTAL TTC :</h5>
+                        <h5 class="mb-0 text-vg-bordeaux"><?= number_format($commande['total_final'] ?? 0, 2) ?> €</h5>
+                    </div>
+
+                    <?php if (!empty($commande['totalCaution'])): ?>
+                        <div class="alert alert-warning mb-0 py-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span><strong>Cautions matériel</strong> <small class="text-muted">(restituable)</small></span>
+                                <strong class="text-warning"><?= number_format($commande['totalCaution'], 2) ?> €</strong>
+                            </div>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Informations générales -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header text-white bg-vg-bordeaux">
+                    <h5 class="mb-0">Informations de livraison</h5>
                 </div>
                 <div class="card-body">
                     <dl class="row mb-0">
@@ -38,106 +140,53 @@ include __DIR__ . '/../../layouts/header.php';
                                 <br><small class="text-muted">
                                     <?= htmlspecialchars($commande['ville_livraison']) ?>
                                     <?php if (!empty($commande['code_postal_livraison'])): ?>
-                                        (<?= htmlspecialchars($commande['code_postal_livraison']) ?>)
+                                        <?= htmlspecialchars($commande['code_postal_livraison']) ?>
                                     <?php endif; ?>
                                 </small>
                             <?php endif; ?>
                         </dd>
-
-                        <dt class="col-sm-4">Menu(s) commandé(s) :</dt>
-                        <dd class="col-sm-8">
-                            <?php if (!empty($commande['lignesMenus'])): ?>
-                                <?php foreach ($commande['lignesMenus'] as $ligne): ?>
-                                    <div class="mb-2">
-                                        <strong><?= htmlspecialchars($ligne['menu_nom']) ?></strong><br>
-                                        <small class="text-muted">
-                                            <?= $ligne['nombre_personne'] ?> personne(s) × <?= number_format($ligne['prix_par_personne'], 2) ?> € = 
-                                            <?= number_format($ligne['total_ligne'] ?? 0, 2) ?> €
-                                        </small>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <span class="text-muted">Aucun menu</span>
-                            <?php endif; ?>
-                        </dd>
-
-                        <dt class="col-sm-4">Nombre total de personnes :</dt>
-                        <dd class="col-sm-8"><strong><?= htmlspecialchars($commande['totalPersonnes'] ?? 0) ?></strong></dd>
-
-                        <?php if ($commande['reductionTotale'] > 0): ?>
-                            <dt class="col-sm-4">Réduction appliquée :</dt>
-                            <dd class="col-sm-8">
-                                <span class="badge bg-success">
-                                    <i class="bi bi-tag-fill"></i> -<?= number_format($commande['reductionTotale'], 2, ',', ' ') ?> €
-                                </span>
-                                <br>
-                            </dd>
-                        <?php endif; ?>
-
-                        <?php if ($commande['pret_materiel']): ?>
-                            <dt class="col-sm-4">Prêt de matériel :</dt>
-                            <dd class="col-sm-8">
-                                <span class="badge bg-info">
-                                    <i class="bi bi-box-seam"></i> Oui
-                                </span>
-                            </dd>
-                        <?php endif; ?>
-
-                        <dt class="col-sm-4">Montant total :</dt>
-                        <dd class="col-sm-8">
-                            <div class="mb-2">
-                                <small class="text-muted">Sous-total menus :</small>
-                                <strong><?= number_format($commande['sousTotal'] ?? 0, 2) ?> € HT</strong>
-                            </div>
-                            <?php if (isset($commande['prix_livraison']) && $commande['prix_livraison'] > 0): ?>
-                                <div class="mb-2">
-                                    <small class="text-muted">Frais de livraison 
-                                        <?php if (isset($commande['distance_km']) && $commande['distance_km'] > 0): ?>
-                                            (<?= number_format($commande['distance_km'], 1) ?> km)
-                                        <?php endif; ?>
-                                        :
-                                    </small>
-                                    <strong><?= number_format($commande['prix_livraison'], 2) ?> € HT</strong>
-                                </div>
-                            <?php endif; ?>
-                            <hr class="my-2">
-                            <h4 class="text-vg-bordeaux mb-0">
-                                Total TTC : <?= number_format($commande['total_final'] ?? 0, 2) ?> €
-                            </h4>
-                        </dd>
-
-                        <dt class="col-sm-4">Statut actuel :</dt>
-                        <dd class="col-sm-8">
-                            <?php
-                            $statut = $commande['statut'] ?? 'en_attente';
-                            $statutLabel = $statuts[$statut] ?? ucfirst(str_replace('_', ' ', $statut));
-                            $badgeClass = 'badge-statut-' . str_replace('_', '-', $statut);
-                            ?>
-                            <h5><span class="badge <?= $badgeClass ?>"><?= $statutLabel ?></span></h5>
-                        </dd>
                     </dl>
 
-                    <!-- Actions selon le statut -->
-                    <div class="mt-4">
-                        <?php if ($statut === 'en_attente'): ?>
-                            <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" 
-                               class="btn btn-danger btn-annuler-commande rounded-pill">
-                                <i class="bi bi-x-circle"></i> Annuler la commande
-                            </a>
-                            <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" class="btn btn-vg-gold rounded-pill">
-                                <i class="bi bi-pencil"></i> Modifier la commande
-                            </a>
-                        <?php elseif ($statut === 'terminee' && !$avisExistant): ?>
-                            <a href="/avis/create?commande=<?= urlencode($commande['numero_commande']) ?>" 
-                               class="btn btn-warning rounded-pill">
-                                <i class="bi bi-star-fill"></i> Donner votre avis
-                            </a>
-                        <?php elseif ($statut === 'terminee' && $avisExistant): ?>
-                            <div class="alert alert-info">
-                                <i class="bi bi-check-circle"></i> Vous avez déjà donné votre avis pour cette commande. Merci !
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                    <!-- Carte OpenStreetMap -->
+                    <?php if (!empty($commande['lieu_livraison']) && !empty($commande['ville_livraison'])): ?>
+                        <hr class="my-3">
+                        <div id="map-<?= htmlspecialchars($commande['numero_commande']) ?>" style="height: 250px;" class="rounded"></div>
+                        
+                        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                        <script>
+                            (function() {
+                                const address = <?= json_encode($commande['lieu_livraison'] . ', ' . $commande['ville_livraison'] . ' ' . ($commande['code_postal_livraison'] ?? '')) ?>;
+                                const mapId = 'map-<?= htmlspecialchars($commande['numero_commande']) ?>';
+                                
+                                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address))
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data && data.length > 0) {
+                                            const lat = parseFloat(data[0].lat);
+                                            const lon = parseFloat(data[0].lon);
+                                            
+                                            const map = L.map(mapId).setView([lat, lon], 15);
+                                            
+                                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                                attribution: '&copy; OpenStreetMap',
+                                                maxZoom: 19
+                                            }).addTo(map);
+                                            
+                                            L.marker([lat, lon]).addTo(map)
+                                                .bindPopup('<strong>Lieu de livraison</strong><br>' + address)
+                                                .openPopup();
+                                        } else {
+                                            document.getElementById(mapId).innerHTML = '<div class="alert alert-warning mb-0">Adresse introuvable</div>';
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur:', error);
+                                        document.getElementById(mapId).innerHTML = '<div class="alert alert-danger mb-0">Erreur de chargement</div>';
+                                    });
+                            })();
+                        </script>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

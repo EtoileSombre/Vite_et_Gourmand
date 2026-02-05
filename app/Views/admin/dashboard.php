@@ -30,7 +30,7 @@ require_once __DIR__ . '/../layouts/header.php';
             <div class="card dashboard-card shadow-sm h-100 border-vg-bordeaux-2">
                 <div class="card-body text-center">
                     <i class="bi bi-people-fill fs-1 text-vg-bordeaux"></i>
-                    <h2 class="dashboard-number mt-3 mb-1"><?= $totalUsers ?></h2>
+                    <h2 class="dashboard-number mt-3 mb-1"><?= $totalEmployes ?></h2>
                     <p class="text-muted mb-3">Employés</p>
                     <a href="/admin/utilisateurs" class="btn btn-sm btn-vg-bordeaux rounded-pill">
                         <i class="bi bi-person-plus"></i> Créer

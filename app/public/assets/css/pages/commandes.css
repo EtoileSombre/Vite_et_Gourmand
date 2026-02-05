@@ -94,7 +94,7 @@
 /* Boissons et matériels */
 .boisson-item, .materiel-item {
     background: #f8f9fa;
-    border-left: 3px solid #0d6efd;
+    border-left: 3px solid #8B1538;
     padding: 12px;
     margin-bottom: 10px;
     border-radius: 6px;
@@ -102,7 +102,7 @@
 }
 
 .materiel-item {
-    border-left-color: #0d6efd;
+    border-left-color: #8B1538;
 }
 
 .boisson-item:hover, .materiel-item:hover {
@@ -140,15 +140,18 @@
     height: 32px;
     padding: 0;
     border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* Badges de prix et caution */
 .price-badge {
     font-weight: 600;
-    color: #0d6efd;
+    color: #8B1538;
 }
 
 .caution-badge {
     font-weight: 600;
-    color: #0d6efd;
+    color: #8B1538;
 }

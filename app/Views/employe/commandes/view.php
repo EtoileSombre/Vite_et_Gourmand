@@ -221,13 +221,25 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                 </div>
                             </div>
 
-                            <div class="d-flex gap-2 justify-content-end">
-                                <button type="button" class="btn btn-outline-secondary rounded-pill" data-action="reset-edit-form">
-                                    <i class="bi bi-x-circle"></i> Réinitialiser
-                                </button>
-                                <button type="submit" class="btn btn-vg-bordeaux rounded-pill">
-                                    <i class="bi bi-check-circle"></i> Enregistrer les Modifications
-                                </button>
+                            <hr>
+
+                            <div class="d-flex gap-3 justify-content-between align-items-center">
+                                <!-- Option pour annuler la commande -->
+                                <div class="form-check form-switch mb-0">
+                                    <input type="checkbox" class="form-check-input" name="annuler_commande" id="annuler_commande" value="1" style="cursor: pointer;">
+                                    <label class="form-check-label fw-bold text-vg-bordeaux" for="annuler_commande" style="cursor: pointer;">
+                                        Annuler cette commande
+                                    </label>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <button type="button" class="btn btn-outline-secondary rounded-pill" data-action="reset-edit-form">
+                                        <i class="bi bi-x-circle"></i> Réinitialiser
+                                    </button>
+                                    <button type="submit" class="btn btn-vg-bordeaux rounded-pill">
+                                        <i class="bi bi-check-circle"></i> Enregistrer les Modifications
+                                    </button>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -235,38 +247,60 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
             </div>
         <?php endif; ?>
 
-        <!-- Informations Menus -->
+        <!-- Récapitulatif Commande -->
         <div class="col-md-12 mb-4">
             <div class="card h-100 shadow-sm">
                 <div class="card-header bg-white text-vg-bordeaux border-0 border-bottom-bordeaux">
-                    <h5 class="mb-0"><i class="bi bi-card-list"></i> Menus Commandés</h5>
+                    <h5 class="mb-0"><i class="bi bi-card-list"></i> Récapitulatif de la Commande</h5>
                 </div>
                 <div class="card-body">
-                    <?php if (!empty($commande['lignesMenus'])): ?>
+                    <?php if (!empty($commande['lignesMenus']) || !empty($lignesMateriels) || !empty($lignesBoissons)): ?>
                         <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Menu</th>
-                                    <th>Nb Personnes</th>
-                                    <th>Prix/personne</th>
-                                    <th>Réduction</th>
-                                    <th>Total ligne</th>
-                                </tr>
-                            </thead>
                             <tbody>
-                                <?php foreach ($commande['lignesMenus'] as $ligne): ?>
-                                    <tr>
-                                        <td><strong><?= htmlspecialchars($ligne['menu_nom']) ?></strong></td>
-                                        <td><?= htmlspecialchars($ligne['nombre_personne']) ?></td>
-                                        <td><?= number_format($ligne['prix_par_personne'], 2) ?> €</td>
-                                        <td><?= number_format($ligne['reduction'], 2) ?> €</td>
-                                        <td><strong><?= number_format($ligne['total_ligne'], 2) ?> €</strong></td>
-                                    </tr>
-                                <?php endforeach; ?>
+                                <!-- Menus -->
+                                <?php if (!empty($commande['lignesMenus'])): ?>
+                                    <?php foreach ($commande['lignesMenus'] as $ligne): ?>
+                                        <tr>
+                                            <td>Menu</td>
+                                            <td><strong><?= htmlspecialchars($ligne['menu_nom']) ?></strong></td>
+                                            <td><?= htmlspecialchars($ligne['nombre_personne']) ?> personnes</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+
+                                <!-- Matériel -->
+                                <?php if (!empty($lignesMateriels)): ?>
+                                    <?php foreach ($lignesMateriels as $mat): ?>
+                                        <tr>
+                                            <td>Matériel</td>
+                                            <td>
+                                                <strong><?= htmlspecialchars($mat['nom']) ?></strong>
+                                                <?php if (!empty($mat['description'])): ?>
+                                                    <br><small class="text-muted"><?= htmlspecialchars($mat['description']) ?></small>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td><?= htmlspecialchars($mat['quantite']) ?> pièce(s)</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+
+                                <!-- Boissons -->
+                                <?php if (!empty($lignesBoissons)): ?>
+                                    <?php foreach ($lignesBoissons as $boisson): ?>
+                                        <tr>
+                                            <td>Boisson</td>
+                                            <td>
+                                                <strong><?= htmlspecialchars($boisson['nom']) ?></strong>
+                                                <br><small class="text-muted"><?= htmlspecialchars($boisson['type_boisson']) ?> - <?= htmlspecialchars($boisson['contenance']) ?></small>
+                                            </td>
+                                            <td><?= htmlspecialchars($boisson['quantite']) ?> unité(s)</td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td class="text-center align-middle">
+                                    <td colspan="3" class="text-center">
                                         <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
                                             <button type="button" class="btn btn-vg-gold rounded-pill" 
                                                     data-action="show-edit-form">
@@ -274,13 +308,11 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                             </button>
                                         <?php endif; ?>
                                     </td>
-                                    <td colspan="3" class="text-end"><strong>Total personnes :</strong></td>
-                                    <td><strong><?= $commande['totalPersonnes'] ?? 0 ?></strong></td>
                                 </tr>
                             </tfoot>
                         </table>
                     <?php else: ?>
-                        <p class="text-muted">Aucun menu commandé</p>
+                        <p class="text-muted">Aucun élément commandé</p>
                     <?php endif; ?>
                 </div>
             </div>
@@ -316,6 +348,49 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                             <dd class="col-sm-7"><?= htmlspecialchars($commande['distance_km']) ?> km</dd>
                         <?php endif; ?>
                     </dl>
+
+                    <!-- Carte OpenStreetMap -->
+                    <?php if (!empty($commande['lieu_livraison']) && !empty($commande['ville_livraison'])): ?>
+                        <hr class="my-3">
+                        <div id="map-<?= htmlspecialchars($commande['numero_commande']) ?>" style="height: 300px;" class="rounded"></div>
+                        
+                        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+                        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+                        <script>
+                            (function() {
+                                const address = <?= json_encode($commande['lieu_livraison'] . ', ' . $commande['ville_livraison'] . ' ' . ($commande['code_postal_livraison'] ?? '')) ?>;
+                                const mapId = 'map-<?= htmlspecialchars($commande['numero_commande']) ?>';
+                                
+                                // Géocodage avec Nominatim (OpenStreetMap)
+                                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address))
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        if (data && data.length > 0) {
+                                            const lat = parseFloat(data[0].lat);
+                                            const lon = parseFloat(data[0].lon);
+                                            
+                                            const map = L.map(mapId).setView([lat, lon], 15);
+                                            
+                                            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                                                maxZoom: 19
+                                            }).addTo(map);
+                                            
+                                            L.marker([lat, lon]).addTo(map)
+                                                .bindPopup('<strong>Lieu de livraison</strong><br>' + address)
+                                                .openPopup();
+                                        } else {
+                                            document.getElementById(mapId).innerHTML = '<div class="alert alert-warning mb-0">Adresse introuvable sur la carte</div>';
+                                        }
+                                    })
+                                    .catch(error => {
+                                        console.error('Erreur de géocodage:', error);
+                                        document.getElementById(mapId).innerHTML = '<div class="alert alert-danger mb-0">Erreur lors du chargement de la carte</div>';
+                                    });
+                            })();
+                        </script>
+                    <?php endif; ?>
+                    </dl>
                 </div>
             </div>
         </div>
@@ -329,14 +404,14 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-5">Statut actuel :</dt>
-                        <dd class="col-sm-7">
+                        <dd class="col-sm-7 mb-3">
                             <span class="badge fs-6 <?= $badgeClass ?>">
                                 <?= $currentLabel ?>
                             </span>
                         </dd>
 
                         <dt class="col-sm-5">Prêt matériel :</dt>
-                        <dd class="col-sm-7">
+                        <dd class="col-sm-7 mb-3">
                             <?php if ($commande['pret_materiel']): ?>
                                 <span class="badge bg-success">Oui</span>
                             <?php else: ?>
@@ -346,7 +421,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
 
                         <?php if ($commande['pret_materiel']): ?>
                             <dt class="col-sm-5">Restitution :</dt>
-                            <dd class="col-sm-7">
+                            <dd class="col-sm-7 mb-0">
                                 <?php if ($commande['restitution_materiel'] || $commande['statut'] === 'terminee'): ?>
                                     <span class="badge bg-success"><i class="bi bi-check-circle"></i> Restitué</span>
                                 <?php else: ?>
@@ -359,17 +434,23 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
 
                 <!-- Récapitulatif Prix -->
                 <div class="text-white px-3 py-2 bg-gray">
-                    <h5 class="mb-0"><i class="bi bi-calculator"></i> Total</h5>
+                    <h5 class="mb-0">Total</h5>
                 </div>
 
                 <div class="card-body">
                     <dl class="row mb-0">
-                        <dt class="col-sm-5">Total menus :</dt>
-                        <dd class="col-sm-7"><strong><?= number_format($commande['total_menus'] ?? 0, 2) ?> €</strong></dd>
+                        <dt class="col-sm-5"><i class="bi bi-card-list text-vg-bordeaux"></i> Total menus :</dt>
+                        <dd class="col-sm-7 mb-2"><strong><?= number_format($commande['total_menus'] ?? 0, 2) ?> €</strong></dd>
+
+                        <?php if (!empty($totalBoissons)): ?>
+                            <dt class="col-sm-5"><i class="bi bi-cup-straw text-vg-bordeaux"></i> Total boissons :</dt>
+                            <dd class="col-sm-7 mb-2"><strong><?= number_format($totalBoissons, 2) ?> €</strong></dd>
+                        <?php endif; ?>
 
                         <?php if (!empty($commande['prix_livraison']) && $commande['prix_livraison'] > 0): ?>
-                            <dt class="col-sm-5">Frais livraison :</dt>
-                            <dd class="col-sm-7">+ <?= number_format($commande['prix_livraison'], 2) ?> €</dd>
+                            <hr class="my-2">
+                            <dt class="col-sm-5"><i class="bi bi-truck text-secondary"></i> Frais livraison :</dt>
+                            <dd class="col-sm-7 mb-2"><?= number_format($commande['prix_livraison'], 2) ?> €</dd>
                         <?php endif; ?>
 
                         <hr class="my-2">
@@ -381,20 +462,32 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                         $montantTVA = $totalTTC - $totalHT;
                         ?>
 
-                        <dt class="col-sm-5">Total HT :</dt>
-                        <dd class="col-sm-7"><?= number_format($totalHT, 2) ?> €</dd>
+                        <dt class="col-sm-5 small text-muted">Total HT :</dt>
+                        <dd class="col-sm-7 small text-muted mb-2"><?= number_format($totalHT, 2) ?> €</dd>
 
-                        <dt class="col-sm-5">TVA (10%) :</dt>
-                        <dd class="col-sm-7">+ <?= number_format($montantTVA, 2) ?> €</dd>
+                        <dt class="col-sm-5 small text-muted">TVA (10%) :</dt>
+                        <dd class="col-sm-7 small text-muted mb-2"><?= number_format($montantTVA, 2) ?> €</dd>
 
                         <hr class="my-2">
 
                         <dt class="col-sm-5"><strong>TOTAL TTC :</strong></dt>
-                        <dd class="col-sm-7">
+                        <dd class="col-sm-7 mb-0">
                             <strong class="fs-5 text-vg-bordeaux">
                                 <?= number_format($totalTTC, 2) ?> €
                             </strong>
                         </dd>
+
+                        <?php if (!empty($totalCaution)): ?>
+                            <hr class="my-3">
+                            <dd class="col-12">
+                                <div class="alert alert-warning mb-0 py-2">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span><i class="bi bi-box-seam"></i> <strong>Cautions matériel</strong> <small class="text-muted">(restituable)</small></span>
+                                        <strong class="text-warning"><?= number_format($totalCaution, 2) ?> €</strong>
+                                    </div>
+                                </div>
+                            </dd>
+                        <?php endif; ?>
                     </dl>
                 </div>
             </div>

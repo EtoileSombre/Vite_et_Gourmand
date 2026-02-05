@@ -1,16 +1,31 @@
-/* Badges de statut de commande - Palette uniforme */
+/* Badges de statut de commande */
 .badge-statut-en-attente {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.badge-statut-acceptee {
     background-color: #28a745;
     color: white;
 }
 
-.badge-statut-acceptee,
-.badge-statut-en-preparation,
-.badge-statut-en-cours-livraison,
-.badge-statut-livree,
-.badge-statut-attente-retour-materiel,
-.badge-statut-default {
-    background-color: #6c757d;
+.badge-statut-en-preparation {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.badge-statut-en-cours-livraison {
+    background-color: #007bff;
+    color: white;
+}
+
+.badge-statut-livree {
+    background-color: #20c997;
+    color: white;
+}
+
+.badge-statut-attente-retour-materiel {
+    background-color: #fd7e14;
     color: white;
 }
 
@@ -19,8 +34,7 @@
     color: white;
 }
 
-.badge-statut-annulee,
-.badge-statut-refusee {
+.badge-statut-annulee {
     background-color: #dc3545;
     color: white;
 }
@@ -59,10 +73,6 @@
     border-bottom: none !important;
 }
 
-.progress-xs {
-    height: 3px;
-}
-
 /* Alerte frais de livraison */
 #alerte-frais-livraison {
     border-left: 5px solid #ffc107 !important;
@@ -89,7 +99,20 @@
     }
 }
 
-/* === Styles pour create.php === */
+/* Curseur pointer pour les checkboxes et labels */
+.form-check-input[type="checkbox"],
+.form-check-label {
+    cursor: pointer;
+}
+
+/* Carte OpenStreetMap */
+.map-container {
+    height: 300px;
+}
+
+.map-container-small {
+    height: 250px;
+}
 
 /* Boissons et matériels */
 .boisson-item, .materiel-item {

@@ -85,7 +85,7 @@ include __DIR__ . '/../../layouts/header.php';
                             </div>
                             
                             <!-- Jauge de force du mot de passe -->
-                            <div class="mt-2" id="passwordStrengthSection" style="display: none;">
+                            <div class="mt-2" id="passwordStrengthSection">
                                 <div class="password-strength-bar">
                                     <div class="password-strength-fill" id="passwordStrengthFill"></div>
                                 </div>

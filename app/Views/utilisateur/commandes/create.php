@@ -242,7 +242,7 @@ include __DIR__ . '/../../layouts/header.php';
                                             <?php endforeach; ?>
                                         <?php endif; ?>
                                     </select>
-                                    <button type="button" class="btn btn-outline-vg-bordeaux rounded-pill btn-compact" id="btn_ajouter_boisson">
+                                    <button type="button" class="btn btn-outline-vg-bordeaux rounded-pill btn-compact" id="btn_ajouter_materiel">
                                         <i class="bi bi-plus-lg"></i> Ajouter
                                     </button>
                                 </div>

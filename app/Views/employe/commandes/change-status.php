@@ -14,9 +14,11 @@ require_once __DIR__ . '/../../layouts/header.php';
 
     <?php if (isset($_SESSION['flash_error'])): ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <?= $_SESSION['flash_error']; unset($_SESSION['flash_error']); ?>
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <?= htmlspecialchars($_SESSION['flash_error']) ?>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
+        <?php unset($_SESSION['flash_error']); ?>
     <?php endif; ?>
 
     <div class="row">
@@ -114,49 +116,15 @@ require_once __DIR__ . '/../../layouts/header.php';
                     <form method="POST" action="/employe/commandes/change-status?id=<?= htmlspecialchars($commande['numero_commande']) ?>" id="formChangeStatus">
                         
                         <!-- Nouveau statut -->
-                        <div class="mb-4">
-                            <label for="nouveau_statut" class="form-label fw-bold">
-                                Nouveau Statut <span class="text-danger">*</span>
-                            </label>
-                            <select name="nouveau_statut" id="nouveau_statut" class="form-select" data-statut-actuel="<?= htmlspecialchars($commande['statut']) ?>" required>
-                                <option value="">-- Sélectionner --</option>
-                                <?php if ($commande['statut'] === 'en_attente'): ?>
-                                    <option value="acceptee">✅ Acceptée</option>
-                                    <option value="annulee">❌ Refusée</option>
-                                <?php endif; ?>
-                                
-                                <?php if ($commande['statut'] === 'acceptee'): ?>
-                                    <option value="en_preparation">🔄 En préparation</option>
-                                    <option value="annulee">❌ Annulée</option>
-                                <?php endif; ?>
-                                
-                                <?php if ($commande['statut'] === 'en_preparation'): ?>
-                                    <option value="en_cours_livraison">🚚 En cours de livraison</option>
-                                    <option value="annulee">❌ Annulée</option>
-                                <?php endif; ?>
-                                
-                                <?php if ($commande['statut'] === 'en_cours_livraison'): ?>
-                                    <option value="livree">📦 Livrée</option>
-                                    <option value="annulee">❌ Annulée</option>
-                                <?php endif; ?>
-                                
-                                <?php if ($commande['statut'] === 'livree'): ?>
-                                    <option value="attente_retour_materiel">⏳ Attente retour matériel</option>
-                                    <option value="terminee">✅ Terminée</option>
-                                    <option value="annulee">❌ Annulée</option>
-                                <?php endif; ?>
-                                
-                                <?php if ($commande['statut'] === 'attente_retour_materiel'): ?>
-                                    <option value="terminee">✅ Terminée</option>
-                                    <option value="annulee">❌ Annulée</option>
-                                <?php endif; ?>
-                            </select>
+                        <input type="hidden" name="nouveau_statut" id="nouveau_statut" value="annulee" data-statut-actuel="<?= htmlspecialchars($commande['statut']) ?>">
+                        
+                        <div class="alert alert-danger mb-4">
+                            <h5 class="mb-2"><i class="bi bi-x-circle"></i> Annulation de la commande</h5>
+                            <p class="mb-0">Vous êtes sur le point d'annuler cette commande. Veuillez remplir le formulaire ci-dessous après avoir contacté le client.</p>
                         </div>
 
-                        <hr>
-
-                        <!-- Contact utilisateur (apparaît selon le statut choisi) -->
-                        <div id="contactUtilisateurSection" class="d-none">
+                        <!-- Contact utilisateur -->
+                        <div id="contactUtilisateurSection">
                             <h6 class="border-bottom pb-2">
                                 <i class="bi bi-telephone-fill"></i> Contact Utilisateur Obligatoire
                             </h6>

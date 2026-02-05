@@ -160,7 +160,7 @@
 
 <!-- Avis utilisateurs -->
 <section id="avis" class="container py-4">
-    <h2 class="section-title text-center mb-2">Avis utilisateurs (validés)</h2>
+    <h2 class="section-title text-center mb-2">Avis utilisateurs</h2>
     <p class="text-center text-muted mb-4">Ils nous ont fait confiance pour leurs événements.</p>
 
     <?php if (!empty($avis)): ?>

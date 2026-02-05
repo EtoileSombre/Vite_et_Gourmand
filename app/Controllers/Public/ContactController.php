@@ -88,8 +88,8 @@ class ContactController extends Controller
             $mail = getMailer();
             
             // Destinataire : entreprise Vite & Gourmand
-            $mail->addAddress('contact@viteetgourmand.fr', 'Vite & Gourmand');
-            $mail->setFrom('noreply@viteetgourmand.fr', 'Formulaire Contact Site Web');
+            $mail->addAddress('contact@viteetgourmand.com', 'Vite & Gourmand');
+            $mail->setFrom('noreply@viteetgourmand.com', 'Formulaire Contact Site Web');
             $mail->addReplyTo($email, $email); // Permet de répondre directement
 
             $mail->Subject = "📩 Nouveau message de contact - #$contactId : " . htmlspecialchars($titre);

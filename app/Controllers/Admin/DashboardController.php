@@ -27,8 +27,11 @@ class DashboardController extends Controller
         $userModel = new User();
         $commandeModel = new Commande();
         $menuModel = new Menu();
-
-        $totalUsers = count($userModel->findAll());
+        $allUsers = $userModel->findAllWithRole();
+        $totalEmployes = count(array_filter($allUsers, function($user) {
+            return in_array($user['role_nom'], ['employé', 'administrateur']);
+        }));
+        
         $totalCommandes = count($commandeModel->findAll());
         $totalMenus = count($menuModel->findAll());
 
@@ -49,7 +52,7 @@ class DashboardController extends Controller
         }
 
         $this->render('admin/dashboard', [
-            'totalUsers' => $totalUsers,
+            'totalEmployes' => $totalEmployes,
             'totalCommandes' => $totalCommandes,
             'totalMenus' => $totalMenus,
             'dernieresCommandes' => $dernieresCommandes
@@ -68,7 +71,12 @@ class DashboardController extends Controller
         }
 
         $userModel = new User();
-        $users = $userModel->findAllWithRole();
+        $allUsers = $userModel->findAllWithRole();
+        
+        // Filtrer pour n'afficher que les employés et administrateurs
+        $users = array_filter($allUsers, function($user) {
+            return in_array($user['role_nom'], ['employé', 'administrateur']);
+        });
 
         $this->render('admin/users', ['users' => $users]);
     }

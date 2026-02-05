@@ -7,6 +7,8 @@ use App\Core\Request;
 use App\Core\Session;
 use App\Models\Commande;
 use App\Models\CommandeMenu;
+use App\Models\Materiel;
+use App\Models\Boisson;
 use App\Config\MongoStats;
 
 /**
@@ -55,11 +57,17 @@ class CommandeController extends Controller
             });
         }
 
-        // Enrichir chaque commande avec ses lignes de menus
+        // Enrichir chaque commande avec ses lignes de menus, matériel et boissons
         $commandeMenuModel = new CommandeMenu();
+        $materielModel = new Materiel();
+        $boissonModel = new Boisson();
         foreach ($commandes as &$cmd) {
             $cmd['lignesMenus'] = $commandeMenuModel->findByCommande($cmd['numero_commande']);
             $cmd['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($cmd['numero_commande']);
+            $cmd['lignesMateriels'] = $materielModel->getByCommande($cmd['numero_commande']);
+            $cmd['totalCaution'] = $materielModel->getTotalCautionByCommande($cmd['numero_commande']);
+            $cmd['lignesBoissons'] = $boissonModel->getByCommande($cmd['numero_commande']);
+            $cmd['totalBoissons'] = $boissonModel->getTotalByCommande($cmd['numero_commande']);
             // Afficher le premier menu comme info principale
             if (!empty($cmd['lignesMenus'])) {
                 $cmd['menu_titre'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
@@ -120,31 +128,20 @@ class CommandeController extends Controller
 
         // Récupérer les données du formulaire
         $nouveauStatut = $_POST['nouveau_statut'] ?? '';
-        $motifContact = trim($_POST['motif_contact'] ?? '');
-        $modeContact = $_POST['mode_contact'] ?? '';
-        $contacteUtilisateur = isset($_POST['contacte_utilisateur']);
 
         // Validation
         if (empty($nouveauStatut)) {
             $errors[] = "Le nouveau statut est obligatoire";
         }
 
-        // Vérifier le contact utilisateur UNIQUEMENT pour refus/annulations
-        // Accepter une commande en attente ne nécessite PAS de contact
-        $requiresContact = false;
-        
-        // Contact obligatoire UNIQUEMENT si : annulation explicite
-        if (in_array($nouveauStatut, ['annulee'])) {
-            $requiresContact = true;
-        }
-
-        if ($requiresContact) {
-            $errors[] = "Contact client obligatoire veuillez utiliser le formulaire \"Modifier Commande\" pour annuler cette commande";
+        // Bloquer les annulations - elles doivent passer par le formulaire de modification
+        if ($nouveauStatut === 'annulee') {
+            $errors[] = "Vous devez contacter l'utilisateur en remplissant le formulaire \"Modifier Commande\".";
         }
 
         if (!empty($errors)) {
-            Session::set('flash_error', implode('<br>', $errors));
-            $this->redirect('/employe/commandes/change-status?id=' . $numeroCommande);
+            Session::set('flash_error', implode(' ', $errors));
+            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
             return;
         }
         $updateData = [
@@ -154,11 +151,6 @@ class CommandeController extends Controller
         // Si la commande passe à "terminée", marquer la restitution du matériel comme effectuée
         if ($nouveauStatut === 'terminee') {
             $updateData['restitution_materiel'] = 1;
-        }
-
-        // Ajouter les informations de contact si nécessaire
-        if ($requiresContact) {
-            $updateData['motif_annulation'] = "[Contact: $modeContact] $motifContact";
         }
 
         $success = $this->commandeModel->updateByNumero($numeroCommande, $updateData);
@@ -171,7 +163,7 @@ class CommandeController extends Controller
                 $commande['statut'],
                 $nouveauStatut,
                 Session::get('user_id'),
-                $motifContact ?: null
+                null
             );
 
             // Logger dans MongoDB
@@ -179,9 +171,7 @@ class CommandeController extends Controller
             $mongoStats->logUserActivity('change_order_status', Session::get('user_id'), [
                 'numero_commande' => $numeroCommande,
                 'ancien_statut' => $commande['statut'],
-                'nouveau_statut' => $nouveauStatut,
-                'mode_contact' => $modeContact ?? 'N/A',
-                'motif' => $motifContact ?? 'N/A'
+                'nouveau_statut' => $nouveauStatut
             ]);
 
             // Envoyer les emails automatiques selon le nouveau statut
@@ -257,10 +247,16 @@ class CommandeController extends Controller
             return;
         }
 
-        // Récupérer les lignes de menus de cette commande
+        // Récupérer les lignes de menus, matériel et boissons de cette commande
         $commandeMenuModel = new \App\Models\CommandeMenu();
+        $materielModel = new \App\Models\Materiel();
+        $boissonModel = new \App\Models\Boisson();
         $lignesMenus = $commandeMenuModel->findByCommande($numeroCommande);
         $totalPersonnes = $commandeMenuModel->getTotalPersonnes($numeroCommande);
+        $lignesMateriels = $materielModel->getByCommande($numeroCommande);
+        $totalCaution = $materielModel->getTotalCautionByCommande($numeroCommande);
+        $lignesBoissons = $boissonModel->getByCommande($numeroCommande);
+        $totalBoissons = $boissonModel->getTotalByCommande($numeroCommande);
         $totalMenus = 0;
         foreach ($lignesMenus as $ligne) {
             $totalMenus += $ligne['total_ligne'] ?? 0;
@@ -279,7 +275,11 @@ class CommandeController extends Controller
             'title' => 'Détails de la Commande',
             'commande' => $commande,
             'suivis' => $suivis,
-            'statuts' => Commande::STATUTS
+            'statuts' => Commande::STATUTS,
+            'lignesMateriels' => $lignesMateriels,
+            'totalCaution' => $totalCaution,
+            'lignesBoissons' => $lignesBoissons,
+            'totalBoissons' => $totalBoissons
         ]);
     }
 
@@ -313,6 +313,7 @@ class CommandeController extends Controller
         }
 
         // Récupérer les données du formulaire
+        $annulerCommande = isset($_POST['annuler_commande']) && $_POST['annuler_commande'] == '1';
         $datePrestation = $_POST['date_prestation'] ?? '';
         $heureLivraison = $_POST['heure_livraison'] ?? '';
         $lieuLivraison = trim($_POST['lieu_livraison'] ?? '');
@@ -336,7 +337,51 @@ class CommandeController extends Controller
             $errors[] = "Le motif de modification doit contenir au moins 10 caractères";
         }
 
-        // Validation des données
+        // Si annulation, pas besoin de valider les autres champs
+        if ($annulerCommande) {
+            if (!empty($errors)) {
+                Session::set('flash_error', implode('<br>', $errors));
+                $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
+                return;
+            }
+
+            // Annuler la commande
+            $updateData = [
+                'statut' => 'annulee',
+                'motif_annulation' => "[Contact: $modeContact - ANNULATION] $motifModification"
+            ];
+
+            $success = $this->commandeModel->updateByNumero($numeroCommande, $updateData);
+
+            if ($success) {
+                // Enregistrer dans l'historique
+                $suiviModel = new \App\Models\SuiviCommande();
+                $suiviModel->enregistrerChangement(
+                    $numeroCommande,
+                    $commande['statut'],
+                    'annulee',
+                    Session::get('user_id'),
+                    "[ANNULATION] $motifModification"
+                );
+
+                // Logger dans MongoDB
+                $mongoStats = new \App\Config\MongoStats();
+                $mongoStats->logUserActivity('cancel_order', Session::get('user_id'), [
+                    'numero_commande' => $numeroCommande,
+                    'mode_contact' => $modeContact,
+                    'motif' => $motifModification
+                ]);
+
+                Session::set('flash_success', 'Commande annulée avec succès !');
+            } else {
+                Session::set('flash_error', 'Erreur lors de l\'annulation de la commande');
+            }
+
+            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
+            return;
+        }
+
+        // Validation des données pour modification normale
         if (empty($datePrestation)) {
             $errors[] = "La date de prestation est obligatoire";
         }

@@ -333,7 +333,7 @@ function getEmailTemplate($title, $content, $footerNote = '') {
                     <p>42 Rue des Gourmets, 33000 Bordeaux</p>
                     <p>
                         <a href='mailto:contact@viteetgourmand.com'>contact@viteetgourmand.com</a> · 
-                        📞 05 56 12 34 56
+                        📞 05 56 00 00 00
                     </p>
                     <p>Ouvert du lundi au dimanche, 10h - 22h</p>
                     
@@ -359,7 +359,7 @@ function sendOrderConfirmationEmail($email, $prenom, $numeroCommande, $detailsCo
     
     try {
         $mail->addAddress($email, $prenom);
-        $mail->Subject = "✅ Commande confirmée #$numeroCommande - Vite & Gourmand";
+        $mail->Subject = "✅ Commande confirmée # $numeroCommande - Vite & Gourmand";
         
         $lignesMenus = $detailsCommande['lignesMenus'] ?? [];
         $datePrestation = $detailsCommande['date_prestation'] ?? 'À définir';
@@ -394,7 +394,7 @@ function sendOrderConfirmationEmail($email, $prenom, $numeroCommande, $detailsCo
             <div class='card'>
                 <div class='detail-row'>
                     <span class='detail-label'>Numéro</span>
-                    <span class='detail-value'><strong>#$numeroCommande</strong></span>
+                    <span class='detail-value'><strong># $numeroCommande</strong></span>
                 </div>
                 $htmlMenus
                 <div class='detail-row'>
@@ -427,7 +427,7 @@ function sendOrderConfirmationEmail($email, $prenom, $numeroCommande, $detailsCo
         $mail->Body = getEmailTemplate('Confirmation de commande', $content);
         
         // Version texte
-        $mail->AltBody = "Bonjour $prenom,\n\nNous avons bien reçu votre commande #$numeroCommande !\n\nDate de prestation : $dateFormatee\nTotal : " . number_format($prixTotal, 2) . " €\n\nStatut : En attente de validation\n\nCordialement,\nL'équipe Vite & Gourmand";
+        $mail->AltBody = "Bonjour $prenom,\n\nNous avons bien reçu votre commande # $numeroCommande !\n\nDate de prestation : $dateFormatee\nTotal : " . number_format($prixTotal, 2) . " €\n\nStatut : En attente de validation\n\nCordialement,\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;
@@ -483,7 +483,7 @@ function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande
     
     try {
         $mail->addAddress($email, $prenom);
-        $mail->Subject = "✏️ Modification de commande #$numeroCommande";
+        $mail->Subject = "✏️ Modification de commande # $numeroCommande";
         
         $lignesMenus = $detailsCommande['lignesMenus'] ?? [];
         $datePrestation = $detailsCommande['date_prestation'] ?? 'À définir';
@@ -512,7 +512,7 @@ function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande
                 <h3 style='margin-top: 0;'>📋 Détails mis à jour</h3>
                 <div class='detail-row'>
                     <span class='detail-label'>Numéro</span>
-                    <span class='detail-value'><strong>#$numeroCommande</strong></span>
+                    <span class='detail-value'><strong># $numeroCommande</strong></span>
                 </div>
                 $htmlMenus
                 <div class='detail-row'>
@@ -530,7 +530,7 @@ function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande
         
         $mail->Body = getEmailTemplate('Modification de commande', $content);
         
-        $mail->AltBody = "Bonjour $prenom,\n\nVotre commande #$numeroCommande a été modifiée.\n\nDate de prestation : $dateFormatee\n\nSi vous n'êtes pas à l'origine de cette modification, contactez-nous.\n\nCordialement,\nL'équipe Vite & Gourmand";
+        $mail->AltBody = "Bonjour $prenom,\n\nVotre commande # $numeroCommande a été modifiée.\n\nDate de prestation : $dateFormatee\n\nSi vous n'êtes pas à l'origine de cette modification, contactez-nous.\n\nCordialement,\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;
@@ -604,7 +604,7 @@ function sendOrderCompletedEmail($email, $prenom, $numeroCommande, $commandeId) 
             
             <h1>Commande terminée</h1>
             
-            <p>Votre commande <strong>#$numeroCommande</strong> est terminée. Merci pour votre confiance !</p>
+            <p>Votre commande <strong># $numeroCommande</strong> est terminée. Merci pour votre confiance !</p>
             
             <div class='card'>
                 <p style='margin: 0;'>Votre avis nous intéresse pour améliorer nos services.</p>
@@ -619,7 +619,7 @@ function sendOrderCompletedEmail($email, $prenom, $numeroCommande, $commandeId) 
         
         $mail->Body = getEmailTemplate('Commande terminée', $content);
         
-        $mail->AltBody = "Bonjour $prenom,\n\nVotre commande #$numeroCommande est terminée.\n\nNous aimerions connaître votre avis :\nhttp://localhost:8080/avis/nouveau?commande=$commandeId\n\nMerci,\nL'équipe Vite & Gourmand";
+        $mail->AltBody = "Bonjour $prenom,\n\nVotre commande # $numeroCommande est terminée.\n\nNous aimerions connaître votre avis :\nhttp://localhost:8080/avis/nouveau?commande=$commandeId\n\nMerci,\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;
@@ -638,7 +638,7 @@ function sendMaterialReturnReminderEmail($email, $prenom, $numeroCommande, $mate
     
     try {
         $mail->addAddress($email, $prenom);
-        $mail->Subject = "⏰ Rappel - Retour du matériel #$numeroCommande";
+        $mail->Subject = "⏰ Rappel - Retour du matériel # $numeroCommande";
         
         $dateRetourFormatee = date('d/m/Y', strtotime($dateRetour));
         
@@ -669,7 +669,7 @@ function sendMaterialReturnReminderEmail($email, $prenom, $numeroCommande, $mate
                 <h3 style='margin-top: 0;'>📦 Matériel à retourner</h3>
                 <div class='detail-row'>
                     <span class='detail-label'>Commande</span>
-                    <span class='detail-value'><strong>#$numeroCommande</strong></span>
+                    <span class='detail-value'><strong># $numeroCommande</strong></span>
                 </div>
                 $htmlMateriels
             </div>
@@ -679,7 +679,7 @@ function sendMaterialReturnReminderEmail($email, $prenom, $numeroCommande, $mate
         
         $mail->Body = getEmailTemplate('Rappel retour matériel', $content);
         
-        $mail->AltBody = "Bonjour $prenom,\n\nRappel : Merci de retourner le matériel emprunté (commande #$numeroCommande) avant le $dateRetourFormatee.\n\nCordialement,\nL'équipe Vite & Gourmand";
+        $mail->AltBody = "Bonjour $prenom,\n\nRappel : Merci de retourner le matériel emprunté (commande # $numeroCommande) avant le $dateRetourFormatee.\n\nCordialement,\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;
@@ -838,7 +838,7 @@ function sendCancellationEmailToUser($email, $prenom, $numeroCommande) {
     
     try {
         $mail->addAddress($email, $prenom);
-        $mail->Subject = "❌ Annulation de commande #$numeroCommande";
+        $mail->Subject = "❌ Annulation de commande # $numeroCommande";
         
         $content = "
             <p class='greeting'>Bonjour " . htmlspecialchars($prenom) . ",</p>
@@ -850,7 +850,7 @@ function sendCancellationEmailToUser($email, $prenom, $numeroCommande) {
             <div class='card'>
                 <div class='detail-row' style='border: none;'>
                     <span class='detail-label'>Commande</span>
-                    <span class='detail-value'><strong>#$numeroCommande</strong></span>
+                    <span class='detail-value'><strong># $numeroCommande</strong></span>
                 </div>
             </div>
             
@@ -863,7 +863,7 @@ function sendCancellationEmailToUser($email, $prenom, $numeroCommande) {
         
         $mail->Body = getEmailTemplate('Annulation de commande', $content);
         
-        $mail->AltBody = "Bonjour $prenom,\n\nVotre commande #$numeroCommande a été annulée.\n\nPour toute question, contactez-nous.\n\nCordialement,\nL'équipe Vite & Gourmand";
+        $mail->AltBody = "Bonjour $prenom,\n\nVotre commande # $numeroCommande a été annulée.\n\nPour toute question, contactez-nous.\n\nCordialement,\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;
@@ -882,7 +882,7 @@ function sendCancellationEmailToRestaurant($numeroCommande, $clientNom, $clientE
     
     try {
         $mail->addAddress('contact@viteetgourmand.fr', 'Service Gestion');
-        $mail->Subject = "⚠️ Annulation commande #$numeroCommande";
+        $mail->Subject = "⚠️ Annulation commande # $numeroCommande";
         
         $content = "
             <h1>Annulation de commande</h1>
@@ -892,7 +892,7 @@ function sendCancellationEmailToRestaurant($numeroCommande, $clientNom, $clientE
             <div class='card'>
                 <div class='detail-row'>
                     <span class='detail-label'>Numéro de commande</span>
-                    <span class='detail-value'><strong>#$numeroCommande</strong></span>
+                    <span class='detail-value'><strong># $numeroCommande</strong></span>
                 </div>
                 <div class='detail-row'>
                     <span class='detail-label'>Client</span>
@@ -911,7 +911,7 @@ function sendCancellationEmailToRestaurant($numeroCommande, $clientNom, $clientE
         
         $mail->Body = getEmailTemplate('Annulation commande', $content);
         
-        $mail->AltBody = "Annulation de commande\n\nCommande : #$numeroCommande\nClient : $clientNom ($clientEmail)\n\nMettre à jour le planning.";
+        $mail->AltBody = "Annulation de commande\n\nCommande : # $numeroCommande\nClient : $clientNom ($clientEmail)\n\nMettre à jour le planning.";
         
         $mail->send();
         return true;
@@ -985,7 +985,7 @@ function sendOrderStatusChangeEmail($email, $prenom, $numeroCommande, $nouveauSt
         
         $conf = $config[$nouveauStatut] ?? $config['acceptee'];
         
-        $mail->Subject = $conf['sujet'] . " #$numeroCommande";
+        $mail->Subject = $conf['sujet'] . " # $numeroCommande";
         
         $dateInfo = $datePrestation ? "
             <div class='detail-row'>
@@ -1004,7 +1004,7 @@ function sendOrderStatusChangeEmail($email, $prenom, $numeroCommande, $nouveauSt
             <div class='card {$conf['card']}'>
                 <div class='detail-row'>
                     <span class='detail-label'>Numéro de commande</span>
-                    <span class='detail-value'><strong>#$numeroCommande</strong></span>
+                    <span class='detail-value'><strong># $numeroCommande</strong></span>
                 </div>
                 $dateInfo
                 <div class='detail-row' style='border: none;'>
@@ -1022,7 +1022,7 @@ function sendOrderStatusChangeEmail($email, $prenom, $numeroCommande, $nouveauSt
         
         $mail->Body = getEmailTemplate($conf['sujet'], $content);
         
-        $mail->AltBody = "Bonjour $prenom,\n\n{$conf['titre']}\n\nCommande #$numeroCommande\nStatut : {$conf['badgeText']}\n\nCordialement,\nL'équipe Vite & Gourmand";
+        $mail->AltBody = "Bonjour $prenom,\n\n{$conf['titre']}\n\nCommande # $numeroCommande\nStatut : {$conf['badgeText']}\n\nCordialement,\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;

@@ -150,7 +150,7 @@ include __DIR__ . '/../../layouts/header.php';
                     <!-- Carte OpenStreetMap -->
                     <?php if (!empty($commande['lieu_livraison']) && !empty($commande['ville_livraison'])): ?>
                         <hr class="my-3">
-                        <div id="map-<?= htmlspecialchars($commande['numero_commande']) ?>" style="height: 250px;" class="rounded"></div>
+                        <div id="map-<?= htmlspecialchars($commande['numero_commande']) ?>" class="map-container-small rounded"></div>
                         
                         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
                         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

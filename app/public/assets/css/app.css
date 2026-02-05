@@ -1,6 +1,4 @@
 ﻿/* ===== DESIGN SYSTEM VITE & GOURMAND ===== */
-/* Ce fichier contient uniquement les variables CSS et les classes utilitaires globales */
-
 /* Variables globales */
 :root {
     --vg-bordeaux: #7a1f1f;
@@ -11,9 +9,9 @@
     --vg-muted: #6b7280;
     --vg-radius: 18px;
     --vg-shadow: 0 2px 10px rgba(0, 0, 0, .06);
+    --vg-transition: all 0.3s ease;
 }
 
-/* Base */
 html,
 body {
     scroll-behavior: smooth;
@@ -25,7 +23,6 @@ body {
     background-color: var(--vg-cream);
 }
 
-/* 2. Hiérarchie des titres améliorée */
 h1 {
     font-size: 2.2rem;
     margin-bottom: 1.5rem;
@@ -54,16 +51,9 @@ h3 {
     color: #555 !important;
 }
 
-/* 3. Respiration verticale */
 .section {
     margin-top: 4rem;
     margin-bottom: 4rem;
-}
-
-.card {
-    border: none !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.06) !important;
-    margin-bottom: 1.5rem;
 }
 
 .card-body {
@@ -103,19 +93,13 @@ h3 {
     margin: 0 auto;
 }
 
-/*CLASSES UTILITAIRES DE COULEURS*/
-
 /* Backgrounds */
 .bg-vg-bordeaux {
     background-color: var(--vg-bordeaux) !important;
 }
 
 .bg-vg-gold {
-    background: linear-gradient(135deg, #c49b63 0%, #d4af6f 100%) !important;
-}
-
-.bg-vg-cream {
-    background-color: var(--vg-cream) !important;
+    background: linear-gradient(135deg, var(--vg-gold) 0%, #d4af6f 100%) !important;
 }
 
 .bg-readonly {
@@ -209,12 +193,6 @@ h4.text-success,
     border: 2px solid var(--vg-gold) !important;
 }
 
-.border-success {
-    border-color: var(--vg-bordeaux) !important;
-}
-
-/*BOUTONS*/
-
 /* Uniformisation taille des boutons rounded-pill */
 .btn.rounded-pill:not(.btn-lg):not(.btn-commande-custom):not(.btn-pulse) {
     padding: 10px 24px !important;
@@ -222,7 +200,7 @@ h4.text-success,
 }
 
 .btn-vg-gold {
-    background: linear-gradient(135deg, #c49b63 0%, #d4af6f 100%);
+    background: linear-gradient(135deg, var(--vg-gold) 0%, #d4af6f 100%);
     color: #fff;
     border: none;
     padding: 12px 28px;
@@ -233,7 +211,7 @@ h4.text-success,
 }
 
 .btn-vg-gold:hover {
-    background: linear-gradient(135deg, #d4af6f 0%, #c49b63 100%);
+    background: linear-gradient(135deg, #d4af6f 0%, var(--vg-gold) 100%);
     color: #fff;
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
@@ -316,10 +294,7 @@ h4.text-success,
     background-color: var(--vg-bordeaux);
     border-color: var(--vg-bordeaux);
     color: #fff;
-}
-
-.btn-bordeaux {
-    transition: all 0.3s ease;
+    transition: var(--vg-transition);
     box-shadow: 0 2px 6px rgba(123, 30, 30, 0.2);
 }
 
@@ -328,37 +303,17 @@ h4.text-success,
 .btn-primary:hover,
 .btn-danger:hover,
 .btn-bordeaux:hover {
-    background-color: #6a1919 !important;
-    border-color: #6a1919 !important;
+    background-color: var(--vg-bordeaux-600) !important;
+    border-color: var(--vg-bordeaux-600) !important;
     color: #fff !important;
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(123, 30, 30, 0.4) !important;
 }
 
-.btn-outline-success {
-    color: var(--vg-bordeaux);
-    border-color: var(--vg-bordeaux);
-}
-
-.btn-outline-success:hover,
-.btn-outline-success:focus {
-    background-color: var(--vg-bordeaux);
-    border-color: var(--vg-bordeaux);
-    color: #fff;
-}
-
-/*ALERTS & BADGES*/
-
 .alert-success {
     background-color: rgba(123, 30, 30, 0.1);
     border-color: var(--vg-bordeaux);
     color: var(--vg-bordeaux);
-}
-
-.badge-gold {
-    background: #fff3d1;
-    border: 1px dashed #f2c97d;
-    color: #7a5a00;
 }
 
 /* Badges de rôles */
@@ -433,12 +388,11 @@ h4.text-success,
     box-shadow: 0 6px 20px rgba(0,0,0,0.12) !important;
 }
 
-/*CARD*/
-
 .card {
     border: 0;
     border-radius: var(--vg-radius);
     box-shadow: var(--vg-shadow);
+    margin-bottom: 1.5rem;
 }
 
 .card-header {
@@ -461,48 +415,24 @@ h4.text-success,
     border-top: 3px solid var(--vg-bordeaux);
 }
 
-/*GRADIENTS*/
-
 .gradient-bordeaux {
-    background: linear-gradient(135deg, #7B1E1E 0%, #6a1919 100%);
+    background: linear-gradient(135deg, #7B1E1E 0%, var(--vg-bordeaux-600) 100%);
 }
 
 .gradient-gold {
-    background: linear-gradient(135deg, #c49b63 0%, #d4af6f 100%);
+    background: linear-gradient(135deg, var(--vg-gold) 0%, #d4af6f 100%);
 }
 
 .gradient-bordeaux-gold {
-    background: linear-gradient(135deg, #7B1E1E 0%, #c49b63 100%);
+    background: linear-gradient(135deg, #7B1E1E 0%, var(--vg-gold) 100%);
 }
 
 .gradient-dark-gold {
-    background: linear-gradient(135deg, #6a1919 0%, #d4af6f 100%);
+    background: linear-gradient(135deg, var(--vg-bordeaux-600) 0%, #d4af6f 100%);
 }
-
-/*ICÔNES*/
 
 .icon-bordeaux {
     color: var(--vg-bordeaux);
-}
-
-.icon-xl {
-    font-size: 4rem;
-}
-
-.icon-large {
-    font-size: 4rem;
-    color: #ccc;
-}
-
-/*UTILITAIRES GÉNÉRAUX*/
-
-.cursor-pointer {
-    cursor: pointer;
-}
-
-.sticky-sidebar {
-    position: sticky;
-    top: 20px;
 }
 
 .tag {
@@ -520,14 +450,6 @@ h4.text-success,
     margin-bottom: 14px;
 }
 
-.transition {
-    transition: all .3s ease;
-}
-
-.fade-in {
-    animation: fadeIn .3s ease-in;
-}
-
 .empty-state {
     text-align: center;
     padding: 3rem 1rem;
@@ -539,12 +461,6 @@ h4.text-success,
     color: #ccc;
     margin-bottom: 1rem;
 }
-
-.hidden-section {
-    display: none;
-}
-
-/*ÉTATS DE FOCUS & ACTIVE*/
 
 .btn:focus,
 .btn:active,
@@ -583,7 +499,6 @@ a:active {
     outline-offset: 2px;
 }
 
-/* 1. Labels formulaire renforcés */
 .form-label {
     font-weight: 600;
     font-size: 0.95rem;
@@ -600,7 +515,7 @@ input[type="password"]:focus,
 input[type="number"]:focus,
 input[type="date"]:focus,
 input[type="time"]:focus {
-    border-color: #7a1f1f !important;
+    border-color: var(--vg-bordeaux) !important;
     box-shadow: 0 0 0 0.15rem rgba(122, 31, 31, 0.25) !important;
     outline: none !important;
 }
@@ -616,14 +531,7 @@ input[type="time"]:focus {
     border-color: var(--vg-bordeaux) !important;
 }
 
-.pagination .page-link:focus,
-.pagination .page-item.active .page-link {
-    background-color: var(--vg-bordeaux) !important;
-    border-color: var(--vg-bordeaux) !important;
-    box-shadow: 0 0 0 .25rem rgba(123, 30, 30, .25) !important;
-}
-
-.nav-link:focus,
+.pagination .nav-link:focus,
 .nav-link:active,
 .nav-link.active {
     color: var(--vg-bordeaux) !important;
@@ -638,8 +546,6 @@ input[type="time"]:focus {
     outline: 2px solid var(--vg-bordeaux) !important;
     outline-offset: 2px;
 }
-
-/*ANIMATIONS*/
 
 @keyframes fadeIn {
     from {
@@ -675,20 +581,6 @@ input[type="time"]:focus {
     }
 }
 
-.animate-fade-in {
-    animation: fadeInUp 1s ease-out;
-}
-
-.animate-fade-in-delay {
-    animation: fadeInUp 1s ease-out .3s backwards;
-}
-
-.animate-fade-in-delay-2 {
-    animation: fadeInUp 1s ease-out .6s backwards;
-}
-
-/*RESPONSIVE*/
-
 @media (max-width: 575.98px) {
     .btn {
         width: 100%;
@@ -711,19 +603,12 @@ input[type="time"]:focus {
     border-bottom: 2px solid var(--vg-bordeaux) !important;
 }
 
-.border-white {
-    border: 2px solid white !important;
-}
-
 .bg-gray {
     background-color: #6b7280 !important;
 }
 
 @media (min-width: 768px) and (max-width: 991.98px) {
-    .sticky-sidebar {
-        position: static;
     }
-}
 
 @media (min-width: 992px) and (max-width: 1199.98px) {
     .container {
@@ -744,8 +629,6 @@ input[type="time"]:focus {
     }
 }
 
-/*PRINT*/
-
 @media print {
     .navbar,
     footer,
@@ -760,8 +643,6 @@ input[type="time"]:focus {
         page-break-inside: avoid;
     }
 }
-
-/* ===== COMPONENTS ===== */
 
 /* Navbar */
 .navbar {
@@ -829,18 +710,12 @@ input[type="time"]:focus {
     text-decoration: underline;
 }
 
-/* ===== UTILITY CLASSES ===== */
-
 /* Display utilities */
 .d-none {
     display: none !important;
 }
 
 /* Border utilities */
-.border-2 {
-    border-width: 2px !important;
-}
-
 /* Image utilities */
 .home-hero-image {
     max-height: 350px;
@@ -889,7 +764,23 @@ input[type="time"]:focus {
 /* Bouton avec hover très clair */
 .btn-hover-light:hover,
 .btn-hover-light:active {
-    background-color: #FFF9F0 !important;
+    background-color: var(--vg-cream) !important;
     color: var(--vg-bordeaux) !important;
     border-color: var(--vg-bordeaux) !important;
 }
+
+/* Curseur pointer pour éléments interactifs */
+/* Ombres standardisées */
+/* Overflow */
+.overflow-hidden {
+    overflow: hidden !important;
+}
+
+/* Max-width */
+.mw-200 {
+    max-width: 200px !important;
+}
+
+/* Largeurs personnalisées (pour tableaux admin) */
+.w-15 { width: 15% !important; }
+.w-30 { width: 30% !important; }

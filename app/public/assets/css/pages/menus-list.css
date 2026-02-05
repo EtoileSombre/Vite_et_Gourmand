@@ -28,7 +28,6 @@
     text-shadow: 2px 2px 8px rgba(0, 0, 0, .3);
 }
 
-/* 1. Alignement vertical parfait des cartes */
 .card {
     display: flex;
     flex-direction: column;
@@ -45,7 +44,6 @@
     min-height: 48px;
 }
 
-/* 2. Badges et métadonnées allégés */
 .badge {
     font-size: 0.7rem;
     opacity: 0.8;
@@ -57,7 +55,6 @@
     font-size: 0.85rem;
 }
 
-/* 3. Hiérarchie titre/prix renforcée */
 .card-title {
     font-weight: 600;
     margin-bottom: 0.5rem;

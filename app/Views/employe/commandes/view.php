@@ -226,8 +226,8 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                             <div class="d-flex gap-3 justify-content-between align-items-center">
                                 <!-- Option pour annuler la commande -->
                                 <div class="form-check form-switch mb-0">
-                                    <input type="checkbox" class="form-check-input" name="annuler_commande" id="annuler_commande" value="1" style="cursor: pointer;">
-                                    <label class="form-check-label fw-bold text-vg-bordeaux" for="annuler_commande" style="cursor: pointer;">
+                                    <input type="checkbox" class="form-check-input" name="annuler_commande" id="annuler_commande" value="1">
+                                    <label class="form-check-label fw-bold text-vg-bordeaux" for="annuler_commande">
                                         Annuler cette commande
                                     </label>
                                 </div>
@@ -352,7 +352,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                     <!-- Carte OpenStreetMap -->
                     <?php if (!empty($commande['lieu_livraison']) && !empty($commande['ville_livraison'])): ?>
                         <hr class="my-3">
-                        <div id="map-<?= htmlspecialchars($commande['numero_commande']) ?>" style="height: 300px;" class="rounded"></div>
+                        <div id="map-<?= htmlspecialchars($commande['numero_commande']) ?>" class="map-container rounded"></div>
                         
                         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
                         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>

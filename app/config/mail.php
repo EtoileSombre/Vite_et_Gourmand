@@ -11,15 +11,32 @@ function getMailer() {
     $mail = new PHPMailer(true);
     
     try {
-        // Configuration serveur SMTP (MailHog)
+        // Détection environnement
+        $isProduction = getenv('APP_ENV') === 'production' || getenv('APP_ENV') === 'prod';
+        
+        // Configuration serveur SMTP
         $mail->isSMTP();
-        $mail->Host = getenv('MAILHOG_HOST') ?: 'mailhog';
-        $mail->Port = 1025;
-        $mail->SMTPAuth = false;
-        $mail->SMTPAutoTLS = false;
+        
+        if ($isProduction) {
+            // Production - SMTP Hostinger
+            $mail->Host = getenv('MAIL_HOST') ?: 'smtp.hostinger.com';
+            $mail->Port = (int)(getenv('MAIL_PORT') ?: 587);
+            $mail->SMTPAuth = true;
+            $mail->Username = getenv('MAIL_USERNAME') ?: 'contact@viteetgourmand.com';
+            $mail->Password = getenv('MAIL_PASSWORD');
+            $mail->SMTPSecure = getenv('MAIL_ENCRYPTION') ?: PHPMailer::ENCRYPTION_STARTTLS;
+        } else {
+            // Développement - MailHog
+            $mail->Host = getenv('MAIL_HOST') ?: 'mailhog';
+            $mail->Port = (int)(getenv('MAIL_PORT') ?: 1025);
+            $mail->SMTPAuth = false;
+            $mail->SMTPAutoTLS = false;
+        }
         
         // Configuration par défaut
-        $mail->setFrom('noreply@viteetgourmand.fr', 'Vite & Gourmand');
+        $fromAddress = getenv('MAIL_FROM_ADDRESS') ?: 'contact@viteetgourmand.com';
+        $fromName = getenv('MAIL_FROM_NAME') ?: 'Vite & Gourmand';
+        $mail->setFrom($fromAddress, $fromName);
         $mail->CharSet = 'UTF-8';
         $mail->isHTML(true);
         

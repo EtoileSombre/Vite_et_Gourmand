@@ -27,7 +27,7 @@ class MenuController extends Controller
         $regimes = $this->menuModel->getAllRegimes();
 
         // Log MongoDB
-        $mongoStats = new \App\Config\MongoStats();
+        $mongoStats = new \App\Stats\MongoStats();
         $mongoStats->logUserActivity('view_menus_list', Session::get('user_id'), [
             'count' => count($menus)
         ]);
@@ -66,7 +66,7 @@ class MenuController extends Controller
         $photos = $this->menuModel->getPhotosMenu((int)$id);
 
         // Log MongoDB
-        $mongoStats = new \App\Config\MongoStats();
+        $mongoStats = new \App\Stats\MongoStats();
         $mongoStats->logMenuView((int)$id, ['titre' => $menu['titre']]);
 
         // Afficher la vue

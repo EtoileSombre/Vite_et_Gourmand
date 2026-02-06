@@ -280,7 +280,7 @@ class CommandeController extends Controller
         }
 
         // LOGGING MONGODB
-        $mongoStats = new \App\Config\MongoStats();
+        $mongoStats = new \App\Stats\MongoStats();
         $mongoStats->logCommande($numeroCommande, [
             'menu_id' => $menuId,
             'prix_total' => $prixTotal,

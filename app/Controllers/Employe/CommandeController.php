@@ -167,7 +167,7 @@ class CommandeController extends Controller
             );
 
             // Logger dans MongoDB
-            $mongoStats = new \App\Config\MongoStats();
+            $mongoStats = new \App\Stats\MongoStats();
             $mongoStats->logUserActivity('change_order_status', Session::get('user_id'), [
                 'numero_commande' => $numeroCommande,
                 'ancien_statut' => $commande['statut'],
@@ -365,7 +365,7 @@ class CommandeController extends Controller
                 );
 
                 // Logger dans MongoDB
-                $mongoStats = new \App\Config\MongoStats();
+                $mongoStats = new \App\Stats\MongoStats();
                 $mongoStats->logUserActivity('cancel_order', Session::get('user_id'), [
                     'numero_commande' => $numeroCommande,
                     'mode_contact' => $modeContact,
@@ -432,7 +432,7 @@ class CommandeController extends Controller
             );
 
             // Logger dans MongoDB
-            $mongoStats = new \App\Config\MongoStats();
+            $mongoStats = new \App\Stats\MongoStats();
             $mongoStats->logUserActivity('edit_order', Session::get('user_id'), [
                 'numero_commande' => $numeroCommande,
                 'mode_contact' => $modeContact,

@@ -9,7 +9,7 @@ use App\Models\Commande;
 use App\Models\CommandeMenu;
 use App\Models\Materiel;
 use App\Models\Boisson;
-use App\Config\MongoStats;
+use App\Stats\MongoStats;
 
 /**
  * Contrôleur Employé - Gestion des Commandes

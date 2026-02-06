@@ -52,7 +52,7 @@ function getMailer() {
  * Design moderne avec charte graphique bordeaux/or
  */
 function getEmailTemplate($title, $content, $footerNote = '') {
-    $baseUrl = 'http://localhost:8080';
+    $baseUrl = getenv('APP_URL') ?: 'http://localhost:8082';
     $year = date('Y');
     
     return "
@@ -418,7 +418,7 @@ function sendOrderConfirmationEmail($email, $prenom, $numeroCommande, $detailsCo
             </div>
             
             <div class='text-center'>
-                <a href='http://localhost:8080/mes-commandes' class='btn btn-primary'>Suivre ma commande</a>
+                <a href='" . (getenv('APP_URL') ?: 'http://localhost:8082') . "/mes-commandes' class='btn btn-primary'>Suivre ma commande</a>
             </div>
             
             <p style='margin-top: 30px;'>Cordialement,<br><strong>L'équipe Vite & Gourmand</strong></p>
@@ -456,7 +456,7 @@ function sendWelcomeEmail($email, $prenom) {
             <p>Merci d'avoir créé votre compte. Vous pouvez maintenant commander en ligne.</p>
             
             <div class='text-center'>
-                <a href='http://localhost:8080/menus' class='btn btn-primary'>Découvrir nos menus</a>
+                <a href='" . (getenv('APP_URL') ?: 'http://localhost:8082') . "/menus' class='btn btn-primary'>Découvrir nos menus</a>
             </div>
             
             <p style='margin-top: 30px;'>À bientôt,<br><strong>L'équipe Vite & Gourmand</strong></p>
@@ -464,7 +464,8 @@ function sendWelcomeEmail($email, $prenom) {
         
         $mail->Body = getEmailTemplate('Bienvenue', $content);
         
-        $mail->AltBody = "Bienvenue $prenom !\n\nMerci d'avoir créé votre compte sur Vite & Gourmand.\n\nVotre compte est maintenant actif.\n\nDécouvrez nos menus : http://localhost:8080/menus\n\nÀ bientôt,\nL'équipe Vite & Gourmand";
+        $baseUrl = getenv('APP_URL') ?: 'http://localhost:8082';
+        $mail->AltBody = "Bienvenue $prenom !\n\nMerci d'avoir créé votre compte sur Vite & Gourmand.\n\nVotre compte est maintenant actif.\n\nDécouvrez nos menus : $baseUrl/menus\n\nÀ bientôt,\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;
@@ -522,7 +523,7 @@ function sendOrderUpdateEmail($email, $prenom, $numeroCommande, $detailsCommande
             </div>
             
             <div class='text-center'>
-                <a href='http://localhost:8080/mes-commandes' class='btn btn-primary'>Voir mes commandes</a>
+                <a href='" . (getenv('APP_URL') ?: 'http://localhost:8082') . "/mes-commandes' class='btn btn-primary'>Voir mes commandes</a>
             </div>
             
             <p style='margin-top: 30px;'>Cordialement,<br><strong>L'équipe Vite & Gourmand</strong></p>
@@ -611,7 +612,7 @@ function sendOrderCompletedEmail($email, $prenom, $numeroCommande, $commandeId) 
             </div>
             
             <div class='text-center'>
-                <a href='http://localhost:8080/avis/nouveau?commande=$commandeId' class='btn btn-primary'>Laisser un avis</a>
+                <a href='" . (getenv('APP_URL') ?: 'http://localhost:8082') . "/avis/nouveau?commande=$commandeId' class='btn btn-primary'>Laisser un avis</a>
             </div>
             
             <p style='margin-top: 30px;'>Merci encore,<br><strong>L'équipe Vite & Gourmand</strong></p>
@@ -619,7 +620,8 @@ function sendOrderCompletedEmail($email, $prenom, $numeroCommande, $commandeId) 
         
         $mail->Body = getEmailTemplate('Commande terminée', $content);
         
-        $mail->AltBody = "Bonjour $prenom,\n\nVotre commande # $numeroCommande est terminée.\n\nNous aimerions connaître votre avis :\nhttp://localhost:8080/avis/nouveau?commande=$commandeId\n\nMerci,\nL'équipe Vite & Gourmand";
+        $baseUrl = getenv('APP_URL') ?: 'http://localhost:8082';
+        $mail->AltBody = "Bonjour $prenom,\n\nVotre commande # $numeroCommande est terminée.\n\nNous aimerions connaître votre avis :\n$baseUrl/avis/nouveau?commande=$commandeId\n\nMerci,\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;
@@ -708,7 +710,7 @@ function sendEmployeeWelcomeEmail($email, $prenom, $nom, $role) {
             <p>Nous sommes heureux de vous accueillir en tant que <strong>" . htmlspecialchars($role) . "</strong>.</p>
             
             <div class='text-center'>
-                <a href='http://localhost:8080/login' class='btn btn-primary'>Se connecter</a>
+                <a href='" . (getenv('APP_URL') ?: 'http://localhost:8082') . "/login' class='btn btn-primary'>Se connecter</a>
             </div>
             
             <p style='margin-top: 30px;'>Bienvenue,<br><strong>L'équipe Vite & Gourmand</strong></p>
@@ -716,7 +718,8 @@ function sendEmployeeWelcomeEmail($email, $prenom, $nom, $role) {
         
         $mail->Body = getEmailTemplate('Bienvenue employé', $content);
         
-        $mail->AltBody = "Bonjour $prenom $nom,\n\nBienvenue dans l'équipe en tant que $role !\n\nConnectez-vous : http://localhost:8080/login\n\nL'équipe Vite & Gourmand";
+        $baseUrl = getenv('APP_URL') ?: 'http://localhost:8082';
+        $mail->AltBody = "Bonjour $prenom $nom,\n\nBienvenue dans l'équipe en tant que $role !\n\nConnectez-vous : $baseUrl/login\n\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;
@@ -756,7 +759,7 @@ function sendEmployeeAccountCreatedEmail($email, $prenom, $nom) {
             </div>
             
             <div class='text-center'>
-                <a href='http://localhost:8080/login' class='btn btn-primary'>Se connecter</a>
+                <a href='" . (getenv('APP_URL') ?: 'http://localhost:8082') . "/login' class='btn btn-primary'>Se connecter</a>
             </div>
             
             <p style='margin-top: 30px;'>Cordialement,<br><strong>L'équipe Vite & Gourmand</strong></p>
@@ -764,7 +767,8 @@ function sendEmployeeAccountCreatedEmail($email, $prenom, $nom) {
         
         $mail->Body = getEmailTemplate('Compte employé créé', $content);
         
-        $mail->AltBody = "Bonjour $prenom $nom,\n\nUn compte Employé a été créé pour vous.\n\nEmail : $email\n\nContactez l'administrateur pour obtenir votre mot de passe.\n\nConnexion : http://localhost:8080/login\n\nL'équipe Vite & Gourmand";
+        $baseUrl = getenv('APP_URL') ?: 'http://localhost:8082';
+        $mail->AltBody = "Bonjour $prenom $nom,\n\nUn compte Employé a été créé pour vous.\n\nEmail : $email\n\nContactez l'administrateur pour obtenir votre mot de passe.\n\nConnexion : $baseUrl/login\n\nL'équipe Vite & Gourmand";
         
         $mail->send();
         return true;
@@ -855,7 +859,7 @@ function sendCancellationEmailToUser($email, $prenom, $numeroCommande) {
             </div>
             
             <div class='text-center'>
-                <a href='http://localhost:8080/menus' class='btn btn-primary'>Voir nos menus</a>
+                <a href='" . (getenv('APP_URL') ?: 'http://localhost:8082') . "/menus' class='btn btn-primary'>Voir nos menus</a>
             </div>
             
             <p style='margin-top: 30px;'>Cordialement,<br><strong>L'équipe Vite & Gourmand</strong></p>
@@ -905,7 +909,7 @@ function sendCancellationEmailToRestaurant($numeroCommande, $clientNom, $clientE
             </div>
             
             <div class='text-center'>
-                <a href='http://localhost:8080/admin/commandes' class='btn btn-primary'>Voir les commandes</a>
+                <a href='" . (getenv('APP_URL') ?: 'http://localhost:8082') . "/admin/commandes' class='btn btn-primary'>Voir les commandes</a>
             </div>
         ";
         
@@ -1014,7 +1018,7 @@ function sendOrderStatusChangeEmail($email, $prenom, $numeroCommande, $nouveauSt
             </div>
             
             <div class='text-center'>
-                <a href='http://localhost:8080/mes-commandes' class='btn btn-primary'>Suivre ma commande</a>
+                <a href='" . (getenv('APP_URL') ?: 'http://localhost:8082') . "/mes-commandes' class='btn btn-primary'>Suivre ma commande</a>
             </div>
             
             <p style='margin-top: 30px;'>Cordialement,<br><strong>L'équipe Vite & Gourmand</strong></p>

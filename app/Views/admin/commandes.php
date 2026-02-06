@@ -17,6 +17,7 @@ include __DIR__ . '/../layouts/header.php';
                     <th>Quantité</th>
                     <th>Date de livraison</th>
                     <th>Statut</th>
+                    <th>Total TTC</th>
                     <th>Date de commande</th>
                 </tr>
             </thead>
@@ -36,6 +37,7 @@ include __DIR__ . '/../layouts/header.php';
                             ?>
                             <span class="badge <?= $badgeClass ?>"><?= $statutLabel ?></span>
                         </td>
+                        <td><?= number_format($commande['total_final'] ?? 0, 2, ',', ' ') ?> €</td>
                         <td><?= date('d/m/Y H:i', strtotime($commande['date_commande'])) ?></td>
                     </tr>
                 <?php endforeach; ?>

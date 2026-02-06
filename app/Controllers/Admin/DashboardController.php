@@ -9,6 +9,7 @@ use App\Models\Commande;
 use App\Models\CommandeMenu;
 use App\Models\Menu;
 use App\Core\Session;
+use App\MongoDB\MongoStats;
 
 class DashboardController extends Controller
 {
@@ -144,7 +145,7 @@ class DashboardController extends Controller
             Session::set('flash_success', "Compte employé créé avec succès ! Email de notification envoyé.");
             
             // Logger dans MongoDB
-            $mongoStats = new \App\Stats\MongoStats();
+            $mongoStats = new MongoStats();
             $mongoStats->logUserActivity('create_employee', Session::get('user_id'), [
                 'employee_id' => $userId,
                 'employee_email' => $email,
@@ -186,7 +187,7 @@ class DashboardController extends Controller
             Session::set('flash_success', "Compte employé désactivé avec succès");
             
             // Logger dans MongoDB
-            $mongoStats = new \App\Stats\MongoStats();
+            $mongoStats = new MongoStats();
             $mongoStats->logUserActivity('deactivate_employee', Session::get('user_id'), [
                 'employee_id' => $utilisateurId,
                 'deactivated_by' => Session::get('user_email')
@@ -227,7 +228,7 @@ class DashboardController extends Controller
             Session::set('flash_success', "Compte employé réactivé avec succès");
             
             // Logger dans MongoDB
-            $mongoStats = new \App\Stats\MongoStats();
+            $mongoStats = new MongoStats();
             $mongoStats->logUserActivity('activate_employee', Session::get('user_id'), [
                 'employee_id' => $utilisateurId,
                 'activated_by' => Session::get('user_email')

@@ -31,7 +31,7 @@ class Commande extends Model
                    u.nom as utilisateur_nom
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-            ORDER BY c.date_commande DESC
+            ORDER BY c.date_prestation DESC
         ');
         $stmt->execute();
         return $stmt->fetchAll();
@@ -43,7 +43,7 @@ class Commande extends Model
             SELECT c.*
             FROM commande c
             WHERE c.utilisateur_id = ?
-            ORDER BY c.date_commande DESC
+            ORDER BY c.date_prestation DESC
         ');
         $stmt->execute([$userId]);
         return $stmt->fetchAll();
@@ -102,7 +102,7 @@ class Commande extends Model
                    u.telephone as utilisateur_telephone
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-            ORDER BY c.date_prestation DESC, c.created_at DESC
+            ORDER BY c.date_prestation DESC
         ");
         $stmt->execute();
         return $stmt->fetchAll();
@@ -145,7 +145,7 @@ class Commande extends Model
             FROM commande c
             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
             WHERE c.statut IN ($placeholders)
-            ORDER BY c.date_prestation ASC, c.created_at DESC
+            ORDER BY c.date_prestation DESC
         ");
         $stmt->execute($statuts);
         return $stmt->fetchAll();

@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Stats;
+namespace App\MongoDB;
 
 use Exception;
 use MongoDB\Driver\Exception\Exception as MongoException;
 
-/**
- * Classe de statistiques MongoDB
- * @psalm-suppress UndefinedClass
- */
+/*Classe MongoDB - Gestion des statistiques et logging*/
+
 class MongoStats
 {
     private $mongodb;
@@ -17,13 +15,6 @@ class MongoStats
     public function __construct()
     {
         try {
-            global $mongodb, $mongoCollections;
-            if ($mongodb !== null && !empty($mongoCollections)) {
-                $this->mongodb = $mongodb;
-                $this->collections = $mongoCollections;
-                return;
-            }
-
             $vendorPath = __DIR__ . '/../vendor/autoload.php';
             if (!file_exists($vendorPath)) {
                 $vendorPath = __DIR__ . '/../../vendor/autoload.php';
@@ -32,11 +23,11 @@ class MongoStats
                 require_once $vendorPath;
             }
             
-            $mongoUri = getenv('MONGO_URI') ?: 'mongodb://vgroot:vgrootpass@mongo:27017';
-            $mongoDbName = getenv('MONGO_DATABASE') ?: 'vg';
+            // Configuration depuis variables d'environnement
+            $config = $this->getMongoConfig();
             
             $mongoClient = new \MongoDB\Client(
-                $mongoUri,
+                $config['uri'],
                 [],
                 [
                     'typeMap' => [
@@ -47,7 +38,8 @@ class MongoStats
                 ]
             );
 
-            $this->mongodb = $mongoClient->$mongoDbName;
+            $dbName = $config['database'];
+            $this->mongodb = $mongoClient->$dbName;
 
             $this->collections = [
                 'menu_views' => $this->mongodb->menu_views,
@@ -61,6 +53,18 @@ class MongoStats
             $this->mongodb = null;
             $this->collections = [];
         }
+    }
+
+    /**
+     * Récupère la configuration MongoDB depuis les variables d'environnement
+     * @return array Configuration avec uri et database
+     */
+    private function getMongoConfig(): array
+    {
+        return [
+            'uri' => getenv('MONGO_URI') ?: 'mongodb://vgroot:vgrootpass@mongo:27017',
+            'database' => getenv('MONGO_DATABASE') ?: 'vg'
+        ];
     }
 
     public function isAvailable(): bool
@@ -148,7 +152,7 @@ class MongoStats
                 $match['menu_id'] = $menuId;
             }
             
-            // Filtrage sur timestamp (UTCDateTime) pour robustesse
+            // Filtrage timestamp
             if ($dateDebut) {
                 $timestampDebut = new \MongoDB\BSON\UTCDateTime(strtotime($dateDebut . ' 00:00:00') * 1000);
                 $match['timestamp'] = ['$gte' => $timestampDebut];
@@ -206,7 +210,7 @@ class MongoStats
                 $match['menu_id'] = $menuId;
             }
             
-            // Filtrage sur timestamp (UTCDateTime) pour robustesse
+            // Filtrage timestamp
             if ($dateDebut) {
                 $timestampDebut = new \MongoDB\BSON\UTCDateTime(strtotime($dateDebut . ' 00:00:00') * 1000);
                 $match['timestamp'] = ['$gte' => $timestampDebut];

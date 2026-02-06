@@ -784,3 +784,95 @@ input[type="time"]:focus {
 /* Largeurs personnalisées (pour tableaux admin) */
 .w-15 { width: 15% !important; }
 .w-30 { width: 30% !important; }
+
+/* Nav Pills - Style Vite & Gourmand */
+.nav-pills .nav-link {
+    background-color: transparent;
+    color: var(--vg-bordeaux);
+    border: 2px solid transparent;
+    transition: var(--vg-transition);
+    font-weight: 500;
+}
+
+.nav-pills .nav-link:hover {
+    background-color: rgba(122, 31, 31, 0.05);
+    color: var(--vg-bordeaux);
+}
+
+.nav-pills .nav-link.active {
+    background-color: var(--vg-bordeaux);
+    color: #fff;
+    border-color: var(--vg-bordeaux);
+}
+
+.nav-pills .nav-link.active:hover {
+    background-color: #944040;
+    border-color: #944040;
+}
+
+/* Accordéons/Collapse - Animation chevron */
+[data-bs-toggle="collapse"] .bi-chevron-down {
+    transition: transform 0.3s ease;
+}
+
+[data-bs-toggle="collapse"]:not(.collapsed) .bi-chevron-down {
+    transform: rotate(180deg);
+}
+
+[data-bs-toggle="collapse"] {
+    transition: var(--vg-transition);
+}
+
+.bg-vg-bordeaux[data-bs-toggle="collapse"]:hover {
+    background-color: #944040 !important;
+}
+
+.bg-vg-gold[data-bs-toggle="collapse"]:hover {
+    background: linear-gradient(135deg, #d4af6f 0%, #c49b63 100%) !important;
+}
+
+.bg-white[data-bs-toggle="collapse"]:hover {
+    background-color: #f8f9fb !important;
+}
+
+/* KPI Cards moderne */
+.kpi-card {
+    border: none !important;
+    border-radius: 20px !important;
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+}
+
+.kpi-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Form controls modernes */
+.form-select, .form-control {
+    border: 1px solid #e0e0e0 !important;
+    transition: all 0.2s ease;
+}
+
+.form-select:focus, .form-control:focus {
+    border-color: var(--vg-bordeaux) !important;
+    box-shadow: 0 0 0 3px rgba(122, 31, 31, 0.1) !important;
+}
+
+.fw-500 {
+    font-weight: 500;
+}

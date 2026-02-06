@@ -64,7 +64,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <th class="text-center">Nb Pers.</th>
                             <th class="text-center">Menu</th>
                             <th class="text-center">Date Prestation</th>
-                            <th class="text-center">Total HT</th>
+                            <th class="text-center">Total TTC</th>
                             <th class="text-center">Statut</th>
                             <th class="text-center">Actions</th>
                         </tr>
@@ -90,8 +90,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                         <br><small class="text-muted"><?= htmlspecialchars($cmd['heure_livraison'] ?? '') ?></small>
                                     </td>
                                     <td class="text-center">
-                                        <?php $totalHT = ($cmd['total_final'] ?? 0) / 1.10; ?>
-                                        <strong><?= number_format($totalHT, 2) ?> €</strong>
+                                        <strong><?= number_format($cmd['total_final'] ?? 0, 2, ',', ' ') ?> €</strong>
                                     </td>
                                     <td class="text-center">
                                         <span class="badge <?= $badgeClass ?>">

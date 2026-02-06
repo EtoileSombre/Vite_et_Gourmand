@@ -1,6 +1,17 @@
 # Configuration UTF-8
 AddDefaultCharset UTF-8
 
+# Variables d'environnement (à configurer selon votre environnement)
+# En production, décommentez et configurez ces valeurs :
+# SetEnv APP_ENV production
+# SetEnv MAIL_HOST smtp.hostinger.com
+# SetEnv MAIL_PORT 587
+# SetEnv MAIL_ENCRYPTION tls
+# SetEnv MAIL_USERNAME contact@viteetgourmand.com
+# SetEnv MAIL_PASSWORD votre_mot_de_passe_email
+# SetEnv MAIL_FROM_ADDRESS contact@viteetgourmand.com
+# SetEnv MAIL_FROM_NAME "Vite & Gourmand"
+
 # Active la réécriture d'URL
 RewriteEngine On
 
@@ -10,16 +21,33 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 
 # Empêche l'accès aux fichiers sensibles
-<FilesMatch "\.(env|sql|log)$">
+<FilesMatch "\.(env|sql|log|md|git|gitignore)$">
     Order allow,deny
     Deny from all
 </FilesMatch>
 
-# Protection contre les injections
+# Headers de sécurité avancés
 <IfModule mod_headers.c>
+    # Protection XSS
     Header set X-Content-Type-Options "nosniff"
     Header set X-Frame-Options "SAMEORIGIN"
     Header set X-XSS-Protection "1; mode=block"
+    
+    # HSTS - Force HTTPS (activez uniquement si SSL configuré)
+    # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    
+    # Politique de référents
+    Header set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Content Security Policy (CSP)
+    # À ajuster selon vos besoins (Google Fonts, Bootstrap CDN, etc.)
+    Header set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self'"
+    
+    # Permissions Policy (anciennement Feature Policy)
+    Header set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+    
+    # Retire le header X-Powered-By pour masquer la version PHP
+    Header unset X-Powered-By
 </IfModule>
 
 # Cache des ressources statiques
@@ -29,6 +57,25 @@ RewriteRule ^(.*)$ index.php [QSA,L]
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/gif "access plus 1 year"
     ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
     ExpiresByType text/css "access plus 1 month"
     ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+</IfModule>
+
+# Compression Gzip
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css application/javascript application/json
+</IfModule>
+
+# Désactive l'indexation des répertoires
+Options -Indexes
+
+# Protection contre les injections de fichiers
+<IfModule mod_rewrite.c>
+    RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+    RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+    RewriteRule ^(.*)$ index.php [F,L]
 </IfModule>

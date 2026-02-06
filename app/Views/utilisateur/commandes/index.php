@@ -31,7 +31,7 @@ if ($commandeNumero) {
                         <th>Quantité</th>
                         <th>Date de livraison</th>
                         <th>Statut</th>
-                        <th>Total HT</th>
+                        <th>Total TTC</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -59,8 +59,7 @@ if ($commandeNumero) {
                                 <span class="badge <?= $badgeClass ?>"><?= $statutLabel ?></span>
                             </td>
                             <td>
-                                <?php $totalHT = ($commande['total_final'] ?? 0) / 1.10; ?>
-                                <?= number_format($totalHT, 2, ',', ' ') ?> €
+                                <?= number_format($commande['total_final'] ?? 0, 2, ',', ' ') ?> €
                             </td>
                             <td>
                                 <div class="d-flex gap-1 align-items-center justify-content-center">

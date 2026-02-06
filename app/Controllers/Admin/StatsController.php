@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Session;
-use App\Stats\MongoStats;
+use App\MongoDB\MongoStats;
 use App\Models\Menu;
 
 class StatsController extends Controller
@@ -38,6 +38,7 @@ class StatsController extends Controller
 
         // Préparer les données pour Chart.js
         $chartData = $this->prepareChartData($commandesParMenu, $caParMenu, $allMenus);
+        $kpis = $this->calculateKPIs($commandesParMenu, $caParMenu, $allMenus, $filtreDateDebut, $filtreDateFin);
 
         $this->render('admin/stats', [
             'title' => 'Statistiques MongoDB - Commandes et CA',
@@ -45,6 +46,7 @@ class StatsController extends Controller
             'caParMenu' => $caParMenu,
             'chartData' => $chartData,
             'allMenus' => $allMenus,
+            'kpis' => $kpis,
             'filtreMenuId' => $filtreMenuId,
             'filtreDateDebut' => $filtreDateDebut,
             'filtreDateFin' => $filtreDateFin
@@ -111,6 +113,84 @@ class StatsController extends Controller
                 'commandes' => $commandesCAValues,
                 'colors' => $couleursCa
             ]
+        ];
+    }
+
+    /**
+     * Calcule les KPIs clés pour le dashboard
+     */
+    private function calculateKPIs(
+        array $commandesParMenu,
+        array $caParMenu,
+        array $allMenus,
+        ?string $dateDebut,
+        ?string $dateFin
+    ): array
+    {
+        $menuTitres = [];
+        foreach ($allMenus as $menu) {
+            $menuTitres[$menu['menu_id']] = $menu['titre'];
+        }
+
+        // Total commandes et personnes
+        $totalCommandes = 0;
+        $totalPersonnes = 0;
+        $topMenuCommandes = ['id' => null, 'titre' => '', 'count' => 0];
+        
+        foreach ($commandesParMenu as $data) {
+            $totalCommandes += $data['nombre_commandes'];
+            $totalPersonnes += $data['total_personnes'] ?? 0;
+            
+            if ($data['nombre_commandes'] > $topMenuCommandes['count']) {
+                $topMenuCommandes = [
+                    'id' => $data['_id'],
+                    'titre' => $menuTitres[$data['_id']] ?? 'Menu #' . $data['_id'],
+                    'count' => $data['nombre_commandes']
+                ];
+            }
+        }
+
+        // CA total et meilleur menu par CA
+        $totalCA = 0;
+        $totalCAHT = 0;
+        $topMenuCA = ['id' => null, 'titre' => '', 'ca' => 0];
+        
+        foreach ($caParMenu as $data) {
+            $totalCA += $data['ca_ttc'];
+            $totalCAHT += $data['ca_ht'];
+            
+            if ($data['ca_ttc'] > $topMenuCA['ca']) {
+                $topMenuCA = [
+                    'id' => $data['_id'],
+                    'titre' => $menuTitres[$data['_id']] ?? 'Menu #' . $data['_id'],
+                    'ca' => $data['ca_ttc']
+                ];
+            }
+        }
+
+        // Moyenne par commande
+        $moyenneParCommande = $totalCommandes > 0 ? $totalCA / $totalCommandes : 0;
+
+        // Période
+        $periode = 'Toutes périodes';
+        if ($dateDebut && $dateFin) {
+            $periode = date('d/m/Y', strtotime($dateDebut)) . ' - ' . date('d/m/Y', strtotime($dateFin));
+        } elseif ($dateDebut) {
+            $periode = 'Depuis le ' . date('d/m/Y', strtotime($dateDebut));
+        } elseif ($dateFin) {
+            $periode = 'Jusqu\'au ' . date('d/m/Y', strtotime($dateFin));
+        }
+
+        return [
+            'totalCommandes' => $totalCommandes,
+            'totalPersonnes' => $totalPersonnes,
+            'totalCA' => $totalCA,
+            'totalCAHT' => $totalCAHT,
+            'moyenneParCommande' => $moyenneParCommande,
+            'topMenuCommandes' => $topMenuCommandes,
+            'topMenuCA' => $topMenuCA,
+            'periode' => $periode,
+            'nbMenusActifs' => count($commandesParMenu)
         ];
     }
 }

@@ -8,7 +8,7 @@ use App\Models\CommandeMenu;
 use App\Models\Menu;
 use App\Core\Request;
 use App\Core\Session;
-use App\Helpers\MongoLogger;
+use App\MongoDB\MongoStats;
 
 class CommandeController extends Controller
 {
@@ -280,7 +280,7 @@ class CommandeController extends Controller
         }
 
         // LOGGING MONGODB
-        $mongoStats = new \App\Stats\MongoStats();
+        $mongoStats = new MongoStats();
         $mongoStats->logCommande($numeroCommande, [
             'menu_id' => $menuId,
             'prix_total' => $prixTotal,

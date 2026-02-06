@@ -1,0 +1,72 @@
+/* Styles pour les pages légales (CGV et Mentions légales) */
+/* Les variables CSS sont définies dans app.css */
+
+/* Carte principale avec bordure bordeaux */
+.legal-card-bordeaux {
+    border: 2px solid var(--vg-bordeaux);
+}
+
+/* Carte avec fond dégradé beige/or */
+.legal-card-beige {
+    background: linear-gradient(135deg, var(--vg-beige) 0%, #ffffff 100%);
+    border: 1px solid var(--vg-gold);
+}
+
+/* En-tête avec dégradé bordeaux */
+.legal-header-bordeaux {
+    background: linear-gradient(135deg, var(--vg-bordeaux) 0%, var(--vg-bordeaux-dark) 100%);
+}
+
+/* Titres bordeaux */
+.legal-title-bordeaux {
+    color: var(--vg-bordeaux);
+}
+
+/* Sous-titres or */
+.legal-subtitle-gold {
+    color: var(--vg-gold);
+}
+
+/* Liens bordeaux */
+/* Bouton "Retour en haut" or */
+.legal-btn-top {
+    background-color: var(--vg-gold);
+    color: white;
+    border: none;
+}
+
+.legal-btn-top:hover {
+    background-color: #b38a52;
+    color: white;
+}
+
+/* Séparateur horizontal or */
+.legal-divider-gold {
+    border-color: var(--vg-gold);
+    opacity: 0.3;
+}
+
+/* Boutons d'action */
+.legal-btn-print,
+.legal-btn-home {
+    background-color: var(--vg-bordeaux);
+    color: white;
+    border: none;
+}
+
+.legal-btn-print:hover,
+.legal-btn-home:hover {
+    background-color: var(--vg-bordeaux-dark);
+    color: white;
+}
+
+.legal-btn-secondary {
+    background-color: transparent;
+    color: var(--vg-bordeaux);
+    border: 2px solid var(--vg-bordeaux);
+}
+
+.legal-btn-secondary:hover {
+    background-color: var(--vg-bordeaux);
+    color: white;
+}

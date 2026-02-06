@@ -115,7 +115,7 @@
                     <div class="mb-3">
                         <label for="email" class="form-label">Email (Username) <span class="text-danger">*</span></label>
                         <input type="email" name="email" id="email" class="form-control" required
-                               placeholder="employe@viteetgourmand.fr">
+                               placeholder="employe@viteetgourmand.com">
                     </div>
 
                     <div class="mb-3">

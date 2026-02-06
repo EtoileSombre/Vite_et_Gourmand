@@ -131,8 +131,8 @@ class CommandeController extends Controller
         $distanceKm = floatval($request->post('distance_km') ?: 0);
         $pretMateriel = $request->post('pret_materiel') ? 1 : 0;
 
-        // Générer un numéro de commande unique
-        $numeroCommande = 'CMD' . date('Ymd') . '-' . str_pad($userId, 4, '0', STR_PAD_LEFT) . '-' . uniqid();
+        // Générer un numéro de commande unique 
+        $numeroCommande = 'C-' . date('ymd') . '-' . strtoupper(substr(uniqid(), -4));
 
         // Récupérer les infos du menu pour les calculs
         $menuModel = new Menu();
@@ -513,12 +513,18 @@ class CommandeController extends Controller
             return;
         }
 
-        // Enrichir avec les lignes de menus
+        // Enrichir avec les lignes de menus, matériel et boissons
         $commandeMenuModel = new CommandeMenu();
+        $materielModel = new \App\Models\Materiel();
+        $boissonModel = new \App\Models\Boisson();
         $commande['lignesMenus'] = $commandeMenuModel->findByCommande($numeroCommande);
         $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($numeroCommande);
         $commande['reductionTotale'] = $this->calculateTotalReduction($commande['lignesMenus']);
         $commande['sousTotal'] = $this->calculateSousTotal($commande['lignesMenus']);
+        $commande['lignesMateriels'] = $materielModel->getByCommande($numeroCommande);
+        $commande['totalCaution'] = $materielModel->getTotalCautionByCommande($numeroCommande);
+        $commande['lignesBoissons'] = $boissonModel->getByCommande($numeroCommande);
+        $commande['totalBoissons'] = $boissonModel->getTotalByCommande($numeroCommande);
 
         // Récupérer l'historique de suivi
         $suiviModel = new \App\Models\SuiviCommande();

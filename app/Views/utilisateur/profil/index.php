@@ -14,7 +14,7 @@ include __DIR__ . '/../../layouts/header.php';
                     <?php if (!empty($errors)): ?>
                         <div class="alert alert-danger">
                             <ul class="mb-0">
-                                <?php foreach ($errors as $error): ?>
+                                <?php /** @var array<string> $errors */ foreach ($errors as $error): ?>
                                     <li><?= htmlspecialchars($error) ?></li>
                                 <?php endforeach; ?>
                             </ul>
@@ -85,7 +85,7 @@ include __DIR__ . '/../../layouts/header.php';
                             </div>
                             
                             <!-- Jauge de force du mot de passe -->
-                            <div class="mt-2" id="passwordStrengthSection" style="display: none;">
+                            <div class="mt-2" id="passwordStrengthSection">
                                 <div class="password-strength-bar">
                                     <div class="password-strength-fill" id="passwordStrengthFill"></div>
                                 </div>

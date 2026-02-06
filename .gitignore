@@ -7,6 +7,7 @@
 # -----------------------------
 .vs/
 .vscode/*
+*.code-workspace
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
@@ -119,3 +120,7 @@ coverage/
 # 📝 Documentation (temporaire)
 # -----------------------------
 docs/
+
+# Local dev files (server)
+infra/docker-compose.dev.yml
+app/Config/

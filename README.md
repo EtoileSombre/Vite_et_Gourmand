@@ -2,9 +2,18 @@
 
 **Projet ECF – Titre Professionnel Développeur Web & Web Mobile (DWWM)**
 
-Plateforme de gestion de restaurant pour **Julie et José** (Bordeaux) : présentation des menus, prise de commandes automatisée, suivi des statistiques (MongoDB) et gestion des avis.
+Application web de gestion de commandes destinée au restaurant Vite et Gourmand de Julie et José, permettant d’optimiser leur organisation interne, de faciliter la prise de commandes en ligne et d’améliorer la visibilité de leur établissement.
 
-**Architecture MVC PHP** avec séparation claire entre logique métier (MySQL) et analytics (MongoDB).
+---
+
+## 🎯 Fonctionnalités principales
+
+- Consultation des menus et plats
+- Commande en ligne avec suivi du statut
+- Gestion des utilisateurs (administrateur / employé / utilisateur)
+- Tableau de bord statistiques
+- Formulaire de contact avec envoi d’email
+- Gestion sécurisée des avis clients
 
 ---
 
@@ -12,38 +21,61 @@ Plateforme de gestion de restaurant pour **Julie et José** (Bordeaux) : présen
 
 **Frontend** : HTML5, CSS3, Bootstrap 5, JavaScript, Chart.js  
 **Backend** : PHP 8.3 (MVC), Apache 2.4  
-**Bases de données** : MySQL 8.3, MongoDB 6.0  
+**BDD** : MySQL 8.3, MongoDB 6.0
+**Architecture MVC PHP 8.3** avec séparation données métier (MySQL) et analytics (MongoDB). 
 **DevOps** : Docker Compose, Git/GitHub
 
 ---
 
-## 🚀 Installation rapide
+## 🚀 Installation locale
 
 ### Prérequis
-- Docker + Docker Compose installés
-- Git installé
+- Docker Desktop
+- Git
 
+### Commandes
 ```bash
-# Cloner et configurer
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd Vite_et_Gourmand
+
 cp infra/.env.example infra/.env
 
-# Lancer Docker
-cd infra && docker compose up -d
-cd ..
-
-# Importer MySQL
-docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/structure.sql
-docker exec -i vitegourmand-mysql mysql -uroot -prootpass < app/sql/donnees.sql
-
-# Créer index MongoDB
-docker exec -it vitegourmand-app php /var/www/html/scripts/create-mongo-indexes.php
+cd infra
+docker compose up -d
 ```
 
-**Accès** : <http://localhost:8080>  
-**phpMyAdmin** : <http://localhost:8090> (`root` / `rootpass`)  
-**Mongo Express** : <http://localhost:8081> (`vgroot` / `vgrootpass`)
+### Initialisation des bases de données
+
+**MySQL** (structure + jeu de données)
+```bash
+docker compose exec -T mysql mysql -uroot -pchangeme vite_et_gourmand < ../app/sql/structure.sql
+docker compose exec -T mysql mysql -uroot -pchangeme vite_et_gourmand < ../app/sql/donnees.sql
+```
+
+**MongoDB** (index)
+```bash
+docker compose exec app php /var/www/html/scripts/create-mongo-indexes.php
+```
+
+### Accès
+**Application** : http://localhost:8080  
+**phpMyAdmin** : http://localhost:8090  
+**Mongo Express** : http://localhost:8081  
+**MailHog** : http://localhost:8025
+
+> 💌 **Test des emails** : En local MailHog intercepte les emails (formulaire de contact, notifications). Consultez http://localhost:8025 pour les visualiser.  
+> Pour tester l'envoi réel, utilisez le site en production : https://viteetgourmand.com
+
+---
+
+## 🌐 Déploiement VPS chez Hostinger
+
+**URL publique** : https://viteetgourmand.com  
+**Environnement** : VPS avec Docker Compose + Caddy (HTTPS)  
+**SMTP** : Serveur SMTP Hostinger réel configuré 
+**Séparation** : Environnement DEV (`/opt/Vite_et_Gourmand_dev`) distinct de la PROD (`/opt/Vite_et_Gourmand`)
+
+Le projet est **déployé et accessible en ligne** pour démontrer la mise en production professionnelle avec **gestion complète des emails** (contact, notifications).
 
 ---
 
@@ -57,39 +89,16 @@ docker exec -it vitegourmand-app php /var/www/html/scripts/create-mongo-indexes.
 
 ---
 
-## 🎯 Fonctionnalités clés
-
-**👤 Client** : Inscription, commandes avec filtres, avis, profil  
-**👷 Employé** : Gestion commandes, modération avis  
-**👑 Admin** : CRUD menus/plats, utilisateurs, **statistiques MongoDB**
-
-### 📊 Statistiques MongoDB (NoSQL)
-- Nombre de commandes par menu (graphique comparatif 2 axes)
-- CA par menu avec filtres (menu + dates)
-- Agrégations natives (`$match`, `$group`, `$sort`)
-- Index composés (< 100ms) + TTL 90j (RGPD)
-- **Accès** : `/admin/stats` (compte administrateur requis)
-- **Conforme énoncé ECF** → [docs/AMELIORATIONS_MONGODB_ECF.md](docs/AMELIORATIONS_MONGODB_ECF.md)
-
----
-
 ## 🔒 Sécurité
 
-✅ Hash des mots de passe (bcrypt), requêtes PDO préparées, protections XSS, gestion des sessions, RBAC (rôles), variables d'environnement (.env)
+- Mots de passe hashés avec bcrypt
+- Requêtes préparées (PDO)
+- Protection XSS
+- Gestion des rôles (RBAC)
+- Variables sensibles isolées dans `.env`
 
 ---
 
-## 🎓 Compétences DWWM validées
+## 📚 Documentation
 
-**CCP 1** : Maquettage responsive, HTML/CSS/Bootstrap, JavaScript dynamique  
-**CCP 2** : MySQL + MongoDB, MVC PHP 8.3, 17 contrôleurs, Agrégations NoSQL  
-**Transversal** : Docker, Git, RGPD, Performance (index)
-
----
-
-## 📚 Documentation complète
-
-- **Architecture** : `docs/Architecture.md`
-- **MongoDB (détaillé)** : `docs/AMELIORATIONS_MONGODB_ECF.md`
-- **Installation** : `docs/01_Installation_Environnement.md`
-- **Tests** : `docs/Guide_Tests_Complet.md`
+A faire

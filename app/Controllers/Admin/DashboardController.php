@@ -144,7 +144,7 @@ class DashboardController extends Controller
             Session::set('flash_success', "Compte employé créé avec succès ! Email de notification envoyé.");
             
             // Logger dans MongoDB
-            $mongoStats = new \App\Config\MongoStats();
+            $mongoStats = new \App\Stats\MongoStats();
             $mongoStats->logUserActivity('create_employee', Session::get('user_id'), [
                 'employee_id' => $userId,
                 'employee_email' => $email,
@@ -186,7 +186,7 @@ class DashboardController extends Controller
             Session::set('flash_success', "Compte employé désactivé avec succès");
             
             // Logger dans MongoDB
-            $mongoStats = new \App\Config\MongoStats();
+            $mongoStats = new \App\Stats\MongoStats();
             $mongoStats->logUserActivity('deactivate_employee', Session::get('user_id'), [
                 'employee_id' => $utilisateurId,
                 'deactivated_by' => Session::get('user_email')
@@ -227,7 +227,7 @@ class DashboardController extends Controller
             Session::set('flash_success', "Compte employé réactivé avec succès");
             
             // Logger dans MongoDB
-            $mongoStats = new \App\Config\MongoStats();
+            $mongoStats = new \App\Stats\MongoStats();
             $mongoStats->logUserActivity('activate_employee', Session::get('user_id'), [
                 'employee_id' => $utilisateurId,
                 'activated_by' => Session::get('user_email')

@@ -4,7 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Session;
-use App\Config\MongoStats;
+use App\Stats\MongoStats;
 use App\Models\Menu;
 
 class StatsController extends Controller

@@ -1,41 +1,41 @@
 /* Badges de statut de commande */
 .badge-statut-en-attente {
-    background-color: #ffc107;
+    background-color: var(--vg-warning);
     color: #000;
 }
 
 .badge-statut-acceptee {
-    background-color: #28a745;
+    background-color: var(--vg-success);
     color: white;
 }
 
 .badge-statut-en-preparation {
-    background-color: #17a2b8;
+    background-color: var(--vg-info);
     color: white;
 }
 
 .badge-statut-en-cours-livraison {
-    background-color: #007bff;
+    background-color: var(--vg-info);
     color: white;
 }
 
 .badge-statut-livree {
-    background-color: #20c997;
+    background-color: var(--vg-success);
     color: white;
 }
 
 .badge-statut-attente-retour-materiel {
-    background-color: #fd7e14;
+    background-color: var(--vg-warning);
     color: white;
 }
 
 .badge-statut-terminee {
-    background-color: #6c757d;
+    background-color: var(--vg-muted);
     color: white;
 }
 
 .badge-statut-annulee {
-    background-color: #dc3545;
+    background-color: var(--vg-error);
     color: white;
 }
 
@@ -60,7 +60,7 @@
     top: 30px;
     bottom: -20px;
     width: 2px;
-    background-color: #e9ecef;
+    background-color: var(--vg-gray-200);
 }
 
 /* Progress bars */
@@ -75,7 +75,7 @@
 
 /* Alerte frais de livraison */
 #alerte-frais-livraison {
-    border-left: 5px solid #ffc107 !important;
+    border-left: 5px solid var(--vg-warning) !important;
     display: block !important;
     opacity: 1 !important;
     visibility: visible !important;
@@ -116,8 +116,8 @@
 
 /* Boissons et matériels */
 .boisson-item, .materiel-item {
-    background: #f8f9fa;
-    border-left: 3px solid #8B1538;
+    background: var(--vg-gray-50);
+    border-left: 3px solid var(--vg-bordeaux);
     padding: 12px;
     margin-bottom: 10px;
     border-radius: 6px;
@@ -125,7 +125,7 @@
 }
 
 .materiel-item {
-    border-left-color: #8B1538;
+    border-left-color: var(--vg-bordeaux);
 }
 
 .boisson-item:hover, .materiel-item:hover {
@@ -153,7 +153,7 @@
 .qty-input {
     width: 60px;
     text-align: center;
-    border: 1px solid #dee2e6;
+    border: 1px solid var(--vg-gray-200);
     border-radius: 4px;
     padding: 4px;
 }
@@ -171,10 +171,10 @@
 /* Badges de prix et caution */
 .price-badge {
     font-weight: 600;
-    color: #8B1538;
+    color: var(--vg-bordeaux);
 }
 
 .caution-badge {
     font-weight: 600;
-    color: #8B1538;
+    color: var(--vg-bordeaux);
 }

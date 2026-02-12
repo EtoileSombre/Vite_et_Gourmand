@@ -21,7 +21,7 @@
     font-size: 1.1rem;
     font-style: italic;
     line-height: 1.6;
-    color: #495057;
+    color: var(--vg-muted);
 }
 
 .testimonial-card .quote-mark {
@@ -32,7 +32,7 @@
 
 .testimonial-card .who {
     font-size: .95rem;
-    color: #6c757d;
+    color: var(--vg-muted);
 }
 
 #carouselAvis .carousel-control-prev,

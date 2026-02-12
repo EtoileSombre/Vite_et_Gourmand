@@ -7,7 +7,10 @@
     <div class="container">
         <div class="row align-items-center g-4">
             <div class="col-lg-7">
-                <h1 data-aos="fade-right" data-aos-duration="800">Cuisine maison, <span class="text-bordeaux"> pour toutes vos occasions</span>.</h1>
+                <h1 data-aos="fade-right" data-aos-duration="800">
+                    <img src="/assets/img/Logo_VG.png" alt="Logo Vite & Gourmand" class="home-logo">
+                    Cuisine maison, <span class="text-bordeaux"> pour toutes vos occasions</span>.
+                </h1>
                 <p class="lead text-muted mb-4" data-aos="fade-right" data-aos-delay="200">Julie & José, 25 ans de savoir-faire traiteur à Bordeaux.</p>
                 
                 <div data-aos="zoom-in" data-aos-delay="400">

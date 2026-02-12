@@ -8,9 +8,9 @@
     <title><?= $title ?? 'Vite & Gourmand' ?></title>
     
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/assets/img/favicon.ico">
-    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon.png">
-    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/Favicon_VG.png">
+    <link rel="icon" type="image/png" href="/assets/img/Favicon_VG.png">
+    <link rel="shortcut icon" href="/assets/img/Favicon_VG.png">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">

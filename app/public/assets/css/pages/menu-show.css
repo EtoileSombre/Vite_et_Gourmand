@@ -51,7 +51,7 @@
 .option-content h6 {
     font-size: 0.95rem;
     font-weight: 600;
-    color: #333;
+    color: var(--vg-ink);
 }
 
 .option-content p {
@@ -120,7 +120,7 @@
 /* Titre page menus (index.php) */
 /* Fil d'Ariane custom */
 .breadcrumb-vg a {
-    color: #333;
+    color: var(--vg-ink);
     text-decoration: none;
     transition: color 0.2s;
 }
@@ -137,7 +137,7 @@
  * Styles personnalisés pour la page de détail d'un menu (menus/show.php)*/
 
 .menu-price {
-    color: #7c1e3f;
+    color: var(--vg-bordeaux);
     font-weight: 600;
     font-size: 1.4rem;
 }
@@ -147,13 +147,13 @@
 }
 
 .menu-allergenes {
-    background: linear-gradient(135deg, #fff3cd 0%, #fff8e1 100%);
+    background: linear-gradient(135deg, var(--vg-cream) 0%, var(--vg-gold-light) 30%);
     border-left: 4px solid var(--vg-gold) !important;
-    color: #7c1e3f;
+    color: var(--vg-bordeaux);
 }
 
 .menu-btn-commande {
-    background: linear-gradient(135deg, var(--vg-gold) 0%, #d4af6f 100%);
+    background: linear-gradient(135deg, var(--vg-gold) 0%, var(--vg-gold-light) 100%);
     color: #fff;
     border: none;
     font-weight: 500;
@@ -205,7 +205,7 @@
 
 .menu-header-flex .menu-price small {
     font-size: 0.85rem;
-    color: #777;
+    color: var(--vg-muted);
     font-weight: 400;
 }
 
@@ -243,7 +243,7 @@
 }
 
 .text-muted, small.text-muted {
-    color: #777 !important;
+    color: var(--vg-muted) !important;
     font-size: 0.95rem;
 }
 

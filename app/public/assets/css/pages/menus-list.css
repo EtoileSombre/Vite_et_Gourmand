@@ -51,7 +51,7 @@
 }
 
 .text-muted.small {
-    color: #777 !important;
+    color: var(--vg-muted) !important;
     font-size: 0.85rem;
 }
 
@@ -71,5 +71,5 @@
 .form-label {
     font-weight: 600;
     font-size: 0.95rem;
-    color: #333;
+    color: var(--vg-ink);
 }

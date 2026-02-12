@@ -1,10 +1,29 @@
 /* Hero section */
 .hero {
-    padding: 60px 0 40px;
+    padding: 0 0 40px;
+    margin-top: -30px;
     background: radial-gradient(1000px 400px at 90% -10%, rgba(212, 175, 55, .15), transparent 60%),
                 var(--vg-cream);
     position: relative;
     overflow: hidden;
+}
+
+/* Logo Vite & Gourmand page d'accueil */
+.home-logo {
+    max-width: 105px;
+    height: auto;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 12px;
+    margin-top: -10px;
+}
+
+@media (max-width: 768px) {
+    .home-logo {
+        max-width: 65px;
+        margin-right: 10px;
+        margin-top: -6px;
+    }
 }
 
 /* Particules dorées subtiles */

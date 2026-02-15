@@ -94,13 +94,15 @@ include __DIR__ . '/../../layouts/header.php';
                                 <input type="text" class="form-control" id="adresse_livraison" name="adresse_livraison" 
                                        value="<?= htmlspecialchars($user['adresse_postale'] ?? '') ?>"
                                        placeholder="Numéro et rue" required>
+                                <!-- DEBUG: Adresse = <?= htmlspecialchars($user['adresse_postale'] ?? 'VIDE') ?> -->
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="ville_livraison" class="form-label">Ville <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="ville_livraison" name="ville_livraison" 
-                                           value="Bordeaux" required>
+                                           value="<?= htmlspecialchars($user['ville'] ?? 'Bordeaux') ?>" required>
+                                    <!-- DEBUG: Ville = <?= htmlspecialchars($user['ville'] ?? 'VIDE') ?> -->
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">

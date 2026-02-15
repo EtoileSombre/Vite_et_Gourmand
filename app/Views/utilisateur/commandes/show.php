@@ -159,13 +159,15 @@ include __DIR__ . '/../../layouts/header.php';
                                 const address = <?= json_encode($commande['lieu_livraison'] . ', ' . $commande['ville_livraison'] . ' ' . ($commande['code_postal_livraison'] ?? '')) ?>;
                                 const mapId = 'map-<?= htmlspecialchars($commande['numero_commande']) ?>';
                                 
-                                // Attendre que Leaflet soit chargé
+                                // Attendre le chargement complet de la page et de Leaflet
                                 function initMap() {
                                     if (typeof L === 'undefined') {
-                                        setTimeout(initMap, 100);
+                                        console.log('Leaflet pas encore chargé, nouvelle tentative...');
+                                        setTimeout(initMap, 150);
                                         return;
                                     }
                                     
+                                    console.log('Initialisation de la carte pour:', address);
                                     fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address))
                                     .then(response => response.json())
                                     .then(data => {
@@ -188,12 +190,19 @@ include __DIR__ . '/../../layouts/header.php';
                                         }
                                     })
                                     .catch(error => {
-                                        console.error('Erreur:', error);
+                                        console.error('Erreur carte:', error);
                                         document.getElementById(mapId).innerHTML = '<div class="alert alert-danger mb-0">Erreur de chargement</div>';
                                     });
                                 }
                                 
-                                initMap();
+                                // Attendre que le DOM et les ressources soient chargés
+                                if (document.readyState === 'loading') {
+                                    document.addEventListener('DOMContentLoaded', function() {
+                                        setTimeout(initMap, 200);
+                                    });
+                                } else {
+                                    setTimeout(initMap, 200);
+                                }
                             })();
                         </script>
                     <?php endif; ?>

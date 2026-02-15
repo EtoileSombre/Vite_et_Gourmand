@@ -361,8 +361,15 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                 const address = <?= json_encode($commande['lieu_livraison'] . ', ' . $commande['ville_livraison'] . ' ' . ($commande['code_postal_livraison'] ?? '')) ?>;
                                 const mapId = 'map-<?= htmlspecialchars($commande['numero_commande']) ?>';
                                 
-                                // Géocodage avec Nominatim (OpenStreetMap)
-                                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address))
+                                // Attendre que Leaflet soit chargé
+                                function initMap() {
+                                    if (typeof L === 'undefined') {
+                                        setTimeout(initMap, 100);
+                                        return;
+                                    }
+                                    
+                                    // Géocodage avec Nominatim (OpenStreetMap)
+                                    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address))
                                     .then(response => response.json())
                                     .then(data => {
                                         if (data && data.length > 0) {
@@ -387,6 +394,9 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                         console.error('Erreur de géocodage:', error);
                                         document.getElementById(mapId).innerHTML = '<div class="alert alert-danger mb-0">Erreur lors du chargement de la carte</div>';
                                     });
+                                }
+                                
+                                initMap();
                             })();
                         </script>
                     <?php endif; ?>

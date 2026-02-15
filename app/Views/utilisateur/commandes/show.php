@@ -159,7 +159,14 @@ include __DIR__ . '/../../layouts/header.php';
                                 const address = <?= json_encode($commande['lieu_livraison'] . ', ' . $commande['ville_livraison'] . ' ' . ($commande['code_postal_livraison'] ?? '')) ?>;
                                 const mapId = 'map-<?= htmlspecialchars($commande['numero_commande']) ?>';
                                 
-                                fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address))
+                                // Attendre que Leaflet soit chargé
+                                function initMap() {
+                                    if (typeof L === 'undefined') {
+                                        setTimeout(initMap, 100);
+                                        return;
+                                    }
+                                    
+                                    fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(address))
                                     .then(response => response.json())
                                     .then(data => {
                                         if (data && data.length > 0) {
@@ -184,6 +191,9 @@ include __DIR__ . '/../../layouts/header.php';
                                         console.error('Erreur:', error);
                                         document.getElementById(mapId).innerHTML = '<div class="alert alert-danger mb-0">Erreur de chargement</div>';
                                     });
+                                }
+                                
+                                initMap();
                             })();
                         </script>
                     <?php endif; ?>

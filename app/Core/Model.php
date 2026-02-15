@@ -50,9 +50,9 @@ abstract class Model
             $fields[] = "$field = :$field";
         }
         
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $fields) . " WHERE {$this->primaryKey} = :id";
+        $sql = "UPDATE {$this->table} SET " . implode(', ', $fields) . " WHERE {$this->primaryKey} = :pk_id";
 
-        $data['id'] = $id;
+        $data['pk_id'] = $id;
         $stmt = $this->db->prepare($sql);
         
         return $stmt->execute($data);

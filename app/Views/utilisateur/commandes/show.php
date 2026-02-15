@@ -186,7 +186,34 @@ include __DIR__ . '/../../layouts/header.php';
                                                 .bindPopup('<strong>Lieu de livraison</strong><br>' + address)
                                                 .openPopup();
                                         } else {
-                                            document.getElementById(mapId).innerHTML = '<div class="alert alert-warning mb-0">Adresse introuvable</div>';
+                                            // Fallback : essayer juste avec la ville
+                                            console.log('Adresse précise non trouvée, recherche de la ville...');
+                                            const ville = '<?= addslashes($commande['ville_livraison']) ?>';
+                                            fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(ville + ', France'))
+                                                .then(response => response.json())
+                                                .then(villeData => {
+                                                    if (villeData && villeData.length > 0) {
+                                                        const lat = parseFloat(villeData[0].lat);
+                                                        const lon = parseFloat(villeData[0].lon);
+                                                        
+                                                        const map = L.map(mapId).setView([lat, lon], 12);
+                                                        
+                                                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                                            attribution: '&copy; OpenStreetMap',
+                                                            maxZoom: 19
+                                                        }).addTo(map);
+                                                        
+                                                        L.marker([lat, lon]).addTo(map)
+                                                            .bindPopup('<strong>Zone de livraison</strong><br>' + ville + '<br><small class="text-muted">Adresse précise non géolocalisée</small>');
+                                                        
+                                                        document.getElementById(mapId).style.opacity = '0.8';
+                                                    } else {
+                                                        document.getElementById(mapId).innerHTML = '<div class="alert alert-warning mb-0"><i class="bi bi-geo-alt-fill"></i> Adresse non géolocalisable</div>';
+                                                    }
+                                                })
+                                                .catch(() => {
+                                                    document.getElementById(mapId).innerHTML = '<div class="alert alert-warning mb-0"><i class="bi bi-geo-alt-fill"></i> Adresse non géolocalisable</div>';
+                                                });
                                         }
                                     })
                                     .catch(error => {

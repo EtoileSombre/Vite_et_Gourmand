@@ -4,9 +4,10 @@ namespace App\Controllers\Employe;
 
 use App\Core\Controller;
 use App\Core\Session;
-use App\Models\Commande;
-use App\Models\CommandeMenu;
-use App\Models\Avis;
+use App\Repository\CommandeRepositoryInterface;
+use App\Repository\AvisRepositoryInterface;
+use App\Repository\CommandeMenuRepositoryInterface;
+use App\Factory\RepositoryFactory;
 
 /**
  * Contrôleur Employé
@@ -14,8 +15,18 @@ use App\Models\Avis;
  */
 class DashboardController extends Controller
 {
+    private CommandeRepositoryInterface $commandeRepository;
+    private AvisRepositoryInterface $avisRepository;
+    private CommandeMenuRepositoryInterface $commandeMenuRepository;
+
     public function __construct()
     {
+        // Utilisation de la Factory pour créer les repositories
+        $factory = RepositoryFactory::getInstance();
+        $this->commandeRepository = $factory->createCommandeRepository();
+        $this->avisRepository = $factory->createAvisRepository();
+        $this->commandeMenuRepository = $factory->createCommandeMenuRepository();
+
         // Vérifier que l'utilisateur est connecté et a le rôle employé ou admin
         if (!Session::has('user_id')) {
             header('Location: /login');
@@ -35,20 +46,16 @@ class DashboardController extends Controller
      */
     public function index(): void
     {
-        $commandeModel = new Commande();
-        $avisModel = new Avis();
-
         // Statistiques du jour
         $aujourdhui = date('Y-m-d');
         
         // Commandes en attente (tous statuts sauf annulée et terminée)
-        $commandesEnAttente = $this->getCommandesEnAttente($commandeModel);
+        $commandesEnAttente = $this->getCommandesEnAttente();
         
         // Enrichir avec lignesMenus
-        $commandeMenuModel = new CommandeMenu();
         foreach ($commandesEnAttente as &$cmd) {
-            $cmd['lignesMenus'] = $commandeMenuModel->findByCommande($cmd['numero_commande']);
-            $cmd['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($cmd['numero_commande']);
+            $cmd['lignesMenus'] = $this->commandeMenuRepository->findByCommande($cmd['numero_commande']);
+            $cmd['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($cmd['numero_commande']);
             // Afficher le premier menu comme menu_nom
             if (!empty($cmd['lignesMenus'])) {
                 $cmd['menu_nom'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
@@ -56,10 +63,10 @@ class DashboardController extends Controller
         }
         
         // Commandes du jour
-        $commandesDuJour = $this->getCommandesDuJour($commandeModel, $aujourdhui);
+        $commandesDuJour = $this->getCommandesDuJour($aujourdhui);
         
         // Avis en attente de modération
-        $avisEnAttente = $this->getAvisEnAttente($avisModel);
+        $avisEnAttente = $this->getAvisEnAttente();
 
         // Stats rapides
         $stats = [
@@ -79,24 +86,24 @@ class DashboardController extends Controller
     /**
      * Récupère les commandes en attente de traitement
      */
-    private function getCommandesEnAttente(Commande $model): array
+    private function getCommandesEnAttente(): array
     {
-        return $model->findByStatuts(['en_attente', 'acceptee', 'en_preparation']);
+        return $this->commandeRepository->findByStatuts(['en_attente', 'acceptee', 'en_preparation']);
     }
 
     /**
      * Récupère les commandes du jour (par date de prestation)
      */
-    private function getCommandesDuJour(Commande $model, string $date): array
+    private function getCommandesDuJour(string $date): array
     {
-        return $model->findByDate($date);
+        return $this->commandeRepository->findByDate($date);
     }
 
     /**
      * Récupère les avis en attente de modération
      */
-    private function getAvisEnAttente(Avis $model): array
+    private function getAvisEnAttente(): array
     {
-        return $model->findByStatut('en_attente');
+        return $this->avisRepository->findByStatut('en_attente');
     }
 }

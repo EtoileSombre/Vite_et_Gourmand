@@ -3,13 +3,26 @@
 namespace App\Controllers\Auth;
 
 use App\Core\Controller;
-use App\Models\User;
-use App\Models\PasswordReset;
+use App\Repository\UserRepositoryInterface;
+use App\Repository\PasswordResetRepositoryInterface;
+use App\Factory\RepositoryFactory;
 use App\Core\Request;
 use App\Core\Session;
 
 class AuthController extends Controller
 {
+    private UserRepositoryInterface $userRepository;
+    private PasswordResetRepositoryInterface $passwordResetRepository;
+
+    public function __construct()
+    {
+        parent::__construct();
+        // Utilisation de la Factory pour créer le repository
+        $factory = RepositoryFactory::getInstance();
+        $this->userRepository = $factory->createUserRepository();
+        $this->passwordResetRepository = $factory->createPasswordResetRepository();
+    }
+
     public function login()
     {
         $errors = [];
@@ -24,8 +37,7 @@ class AuthController extends Controller
             if (empty($email) || empty($password)) {
                 $errors[] = "Tous les champs sont obligatoires.";
             } else {
-                $userModel = new User();
-                $user = $userModel->findByEmail($email);
+                $user = $this->userRepository->findByEmail($email);
                 
                 if ($user && password_verify($password, $user['password'])) {
                     Session::set('user_id', $user['utilisateur_id']);
@@ -127,15 +139,13 @@ class AuthController extends Controller
                 $errors[] = "Les mots de passe ne correspondent pas.";
             }
             
-            $userModel = new User();
-            if ($userModel->findByEmail($email)) {
+            if ($this->userRepository->findByEmail($email)) {
                 $errors[] = "Cet email est déjà utilisé.";
             }
             
             // Créer l'utilisateur
             if (empty($errors)) {
-                $userModel = new User();
-                $userId = $userModel->createUser([
+                $userId = $this->userRepository->create([
                     'nom' => $nom,
                     'prenom' => $prenom,
                     'email' => $email,
@@ -206,17 +216,15 @@ class AuthController extends Controller
                 $errors[] = "Veuillez saisir une adresse email valide.";
             } else {
                 // Vérifier si l'email existe
-                $userModel = new User();
-                $user = $userModel->findByEmail($email);
+                $user = $this->userRepository->findByEmail($email);
                 
                 if ($user) {
                     // Générer un token unique
                     $token = bin2hex(random_bytes(32));
                     $expiresAt = date('Y-m-d H:i:s', strtotime('+1 hour'));
                     
-                    // Stocker le token via le modèle PasswordReset
-                    $passwordResetModel = new PasswordReset();
-                    $passwordResetModel->createToken($email, $token, $expiresAt);
+                    // Stocker le token via le repository PasswordReset
+                    $this->passwordResetRepository->createToken($email, $token, $expiresAt);
                     
                     // Envoyer l'email avec le lien de réinitialisation
                     require_once __DIR__ . '/../../config/mail.php';
@@ -254,9 +262,8 @@ class AuthController extends Controller
             return;
         }
         
-        // Vérifier la validité du token via le modèle
-        $passwordResetModel = new PasswordReset();
-        $resetRequest = $passwordResetModel->findValidToken($token);
+        // Vérifier la validité du token via le repository
+        $resetRequest = $this->passwordResetRepository->findValidToken($token);
         
         if (!$resetRequest) {
             $errors[] = "Ce lien de réinitialisation est invalide ou a expiré.";
@@ -297,16 +304,14 @@ class AuthController extends Controller
             
             if (empty($errors)) {
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $userModel = new User();
-                $user = $userModel->findByEmail($resetRequest['email']);
+                $user = $this->userRepository->findByEmail($resetRequest['email']);
                 
                 if ($user) {
-                    $userModel = new User();
-                    $userModel->update($user['utilisateur_id'], ['password' => $hashedPassword]);
+                    $this->userRepository->update($user['utilisateur_id'], ['password' => $hashedPassword]);
                 }
                 
                 // Marquer le token comme utilisé
-                $passwordResetModel->markTokenAsUsed($token);
+                $this->passwordResetRepository->markTokenAsUsed($token);
                 
                 $success = "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter.";
             }

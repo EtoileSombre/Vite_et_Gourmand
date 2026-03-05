@@ -3,18 +3,44 @@
 namespace App\Controllers\Utilisateur;
 
 use App\Core\Controller;
-use App\Models\Commande;
-use App\Models\CommandeMenu;
-use App\Models\Menu;
+use App\Repository\CommandeRepositoryInterface;
+use App\Repository\MenuRepositoryInterface;
+use App\Repository\UserRepositoryInterface;
+use App\Repository\AvisRepositoryInterface;
+use App\Repository\CommandeMenuRepositoryInterface;
+use App\Repository\SuiviCommandeRepositoryInterface;
+use App\Repository\BoissonRepositoryInterface;
+use App\Repository\MaterielRepositoryInterface;
+use App\Factory\RepositoryFactory;
 use App\Core\Request;
 use App\Core\Session;
 use App\MongoDB\MongoStats;
 
 class CommandeController extends Controller
 {
+    private CommandeRepositoryInterface $commandeRepository;
+    private MenuRepositoryInterface $menuRepository;
+    private UserRepositoryInterface $userRepository;
+    private AvisRepositoryInterface $avisRepository;
+    private CommandeMenuRepositoryInterface $commandeMenuRepository;
+    private SuiviCommandeRepositoryInterface $suiviCommandeRepository;
+    private BoissonRepositoryInterface $boissonRepository;
+    private MaterielRepositoryInterface $materielRepository;
+
     public function __construct()
     {
         parent::__construct();
+        // Utilisation de la Factory pour créer les repositories
+        $factory = RepositoryFactory::getInstance();
+        $this->commandeRepository = $factory->createCommandeRepository();
+        $this->menuRepository = $factory->createMenuRepository();
+        $this->userRepository = $factory->createUserRepository();
+        $this->avisRepository = $factory->createAvisRepository();
+        $this->commandeMenuRepository = $factory->createCommandeMenuRepository();
+        $this->suiviCommandeRepository = $factory->createSuiviCommandeRepository();
+        $this->boissonRepository = $factory->createBoissonRepository();
+        $this->materielRepository = $factory->createMaterielRepository();
+        $this->suiviCommandeRepository = $factory->createSuiviCommandeRepository();
     }
 
     /**
@@ -48,20 +74,18 @@ class CommandeController extends Controller
             $this->redirect('/login');
         }
 
-        $commandeModel = new Commande();
-        $commandeMenuModel = new CommandeMenu();
-        $commandes = $commandeModel->findByUser($userId);
+        $commandes = $this->commandeRepository->findByUser($userId);
         
         // Enrichir chaque commande avec ses lignes de menus
         foreach ($commandes as &$commande) {
-            $commande['lignesMenus'] = $commandeMenuModel->findByCommande($commande['numero_commande']);
-            $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($commande['numero_commande']);
+            $commande['lignesMenus'] = $this->commandeMenuRepository->findByCommande($commande['numero_commande']);
+            $commande['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($commande['numero_commande']);
             $commande['reductionTotale'] = $this->calculateTotalReduction($commande['lignesMenus']);
         }
         
         $this->render('utilisateur/commandes/index', [
             'commandes' => $commandes,
-            'statuts' => Commande::STATUTS
+            'statuts' => \App\Repository\CommandeRepository::STATUTS
         ]);
     }
 
@@ -73,22 +97,18 @@ class CommandeController extends Controller
         }
 
         // Récupérer les informations de l'utilisateur pour auto-remplissage
-        $userModel = new \App\Models\User();
-        $user = $userModel->findById($userId);
+        $user = $this->userRepository->findById($userId);
         
         if (!$user) {
             Session::set('error', 'Utilisateur introuvable.');
             $this->redirect('/');
         }
 
-        $menuModel = new Menu();
-        $menus = $menuModel->findActiveWithPhotos();
+        $menus = $this->menuRepository->findActiveWithPhotos();
         
         // Récupérer TOUTES les boissons et matériels disponibles
-        $boissonModel = new \App\Models\Boisson();
-        $materielModel = new \App\Models\Materiel();
-        $boissons = $boissonModel->findAllAvailable();
-        $materiels = $materielModel->findAllAvailable();
+        $boissons = $this->boissonRepository->findAllAvailable();
+        $materiels = $this->materielRepository->findAllAvailable();
         
         // Récupérer le menu pré-sélectionné depuis l'URL
         $request = new Request();
@@ -97,7 +117,7 @@ class CommandeController extends Controller
         // Si un menu est pré-sélectionné, récupérer ses détails
         $menuPreselectionne = null;
         if ($menuIdFromUrl) {
-            $menuPreselectionne = $menuModel->findActiveById((int)$menuIdFromUrl);
+            $menuPreselectionne = $this->menuRepository->findActiveById((int)$menuIdFromUrl);
         }
         
         $this->render('utilisateur/commandes/create', [
@@ -135,8 +155,7 @@ class CommandeController extends Controller
         $numeroCommande = 'C-' . date('ymd') . '-' . strtoupper(substr(uniqid(), -4));
 
         // Récupérer les infos du menu pour les calculs
-        $menuModel = new Menu();
-        $menu = $menuModel->findById($menuId);
+        $menu = $this->menuRepository->findById($menuId);
         
         if (!$menu) {
             Session::set('error', 'Menu introuvable.');
@@ -165,8 +184,7 @@ class CommandeController extends Controller
 
         // CRÉATION DE LA COMMANDE (EN-TÊTE)
         
-        $commandeModel = new Commande();
-        $commandeModel->create([
+        $this->commandeRepository->create([
             'numero_commande' => $numeroCommande,
             'utilisateur_id' => $userId,
             'date_prestation' => $dateLivraison,
@@ -183,8 +201,7 @@ class CommandeController extends Controller
 
         // AJOUT DES LIGNES DE MENU
         
-        $commandeMenuModel = new \App\Models\CommandeMenu();
-        $commandeMenuModel->addMenuToCommande(
+        $this->commandeMenuRepository->addMenuToCommande(
             $numeroCommande,
             $menuId,
             $nombrePersonnes,
@@ -305,8 +322,7 @@ class CommandeController extends Controller
         $request = new Request();
         $numeroCommande = $request->get('numero');
 
-        $commandeModel = new Commande();
-        $commande = $commandeModel->findByNumero($numeroCommande);
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
 
         // Vérifier que la commande appartient à l'utilisateur
         if (!$commande || $commande['utilisateur_id'] != $userId) {
@@ -323,12 +339,10 @@ class CommandeController extends Controller
         }
 
         // Enrichir avec lignesMenus
-        $commandeMenuModel = new CommandeMenu();
-        $commande['lignesMenus'] = $commandeMenuModel->findByCommande($numeroCommande);
-        $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($numeroCommande);
+        $commande['lignesMenus'] = $this->commandeMenuRepository->findByCommande($numeroCommande);
+        $commande['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($numeroCommande);
 
-        $menuModel = new Menu();
-        $menus = $menuModel->findAll();
+        $menus = $this->menuRepository->findAll();
 
         $this->render('utilisateur/commandes/edit', [
             'commande' => $commande,
@@ -351,8 +365,7 @@ class CommandeController extends Controller
         $nombrePersonnes = $request->post('nombre_personnes');
         $dateLivraison = $request->post('date_livraison');
 
-        $commandeModel = new Commande();
-        $commande = $commandeModel->findByNumero($numeroCommande);
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
 
         // Vérifier que la commande appartient à l'utilisateur
         if (!$commande || $commande['utilisateur_id'] != $userId) {
@@ -369,15 +382,14 @@ class CommandeController extends Controller
         }
 
         // Récupérer les lignes de menus
-        $commandeMenuModel = new \App\Models\CommandeMenu();
-        $lignesMenus = $commandeMenuModel->findByCommande($numeroCommande);
+        $lignesMenus = $this->commandeMenuRepository->findByCommande($numeroCommande);
         $commandeModel->updateByNumero($numeroCommande, [
             'date_prestation' => $dateLivraison
         ]);
 
         // Si nombre de personnes changé, mettre à jour la première ligne de menu
         if (!empty($lignesMenus) && $nombrePersonnes != $lignesMenus[0]['nombre_personne']) {
-            $commandeMenuModel->updateLigne(
+            $this->commandeMenuRepository->updateLigne(
                 $lignesMenus[0]['commande_menu_id'],
                 $nombrePersonnes,
                 $lignesMenus[0]['prix_par_personne'],
@@ -427,8 +439,7 @@ class CommandeController extends Controller
         $request = new Request();
         $numeroCommande = $request->get('numero');
 
-        $commandeModel = new Commande();
-        $commande = $commandeModel->findByNumero($numeroCommande);
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
 
         // Vérifier que la commande appartient à l'utilisateur
         if (!$commande || $commande['utilisateur_id'] != $userId) {
@@ -446,8 +457,7 @@ class CommandeController extends Controller
         $commandeModel->updateByNumero($numeroCommande, ['statut' => 'annulee']);
         
         // Enregistrer dans l'historique de suivi
-        $suiviModel = new \App\Models\SuiviCommande();
-        $suiviModel->enregistrerChangement(
+        $this->suiviCommandeRepository->enregistrerChangement(
             $numeroCommande,
             $commande['statut'],
             'annulee',
@@ -460,8 +470,7 @@ class CommandeController extends Controller
             require_once __DIR__ . '/../../config/mail.php';
             
             // Récupérer les infos utilisateur
-            $userModel = new \App\Models\User();
-            $user = $userModel->findById($userId);
+            $user = $this->userRepository->findById($userId);
             
             if ($user) {
                 // Email à l'utilisateur
@@ -504,8 +513,7 @@ class CommandeController extends Controller
             return;
         }
 
-        $commandeModel = new Commande();
-        $commande = $commandeModel->findByNumero($numeroCommande);
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
 
         if (!$commande || $commande['utilisateur_id'] != $userId) {
             Session::set('error', 'Commande introuvable');
@@ -514,25 +522,20 @@ class CommandeController extends Controller
         }
 
         // Enrichir avec les lignes de menus, matériel et boissons
-        $commandeMenuModel = new CommandeMenu();
-        $materielModel = new \App\Models\Materiel();
-        $boissonModel = new \App\Models\Boisson();
-        $commande['lignesMenus'] = $commandeMenuModel->findByCommande($numeroCommande);
-        $commande['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($numeroCommande);
+        $commande['lignesMenus'] = $this->commandeMenuRepository->findByCommande($numeroCommande);
+        $commande['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($numeroCommande);
         $commande['reductionTotale'] = $this->calculateTotalReduction($commande['lignesMenus']);
         $commande['sousTotal'] = $this->calculateSousTotal($commande['lignesMenus']);
-        $commande['lignesMateriels'] = $materielModel->getByCommande($numeroCommande);
-        $commande['totalCaution'] = $materielModel->getTotalCautionByCommande($numeroCommande);
-        $commande['lignesBoissons'] = $boissonModel->getByCommande($numeroCommande);
-        $commande['totalBoissons'] = $boissonModel->getTotalByCommande($numeroCommande);
+        $commande['lignesMateriels'] = $this->materielRepository->getByCommande($numeroCommande);
+        $commande['totalCaution'] = $this->materielRepository->getTotalCautionByCommande($numeroCommande);
+        $commande['lignesBoissons'] = $this->boissonRepository->getByCommande($numeroCommande);
+        $commande['totalBoissons'] = $this->boissonRepository->getTotalByCommande($numeroCommande);
 
         // Récupérer l'historique de suivi
-        $suiviModel = new \App\Models\SuiviCommande();
-        $historique = $suiviModel->getHistorique($numeroCommande);
+        $historique = $this->suiviCommandeRepository->getHistorique($numeroCommande);
 
         // Vérifier si un avis a déjà été donné
-        $avisModel = new \App\Models\Avis();
-        $avisExistant = $avisModel->findByCommandeAndUser($numeroCommande, $userId);
+        $avisExistant = $this->avisRepository->findByCommandeAndUser($numeroCommande, $userId);
 
         $this->render('utilisateur/commandes/show', [
             'title' => 'Détail de la commande #' . $numeroCommande,

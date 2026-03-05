@@ -4,10 +4,11 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Request;
-use App\Models\User;
-use App\Models\Commande;
-use App\Models\CommandeMenu;
-use App\Models\Menu;
+use App\Repository\UserRepositoryInterface;
+use App\Repository\CommandeRepositoryInterface;
+use App\Repository\MenuRepositoryInterface;
+use App\Repository\CommandeMenuRepositoryInterface;
+use App\Factory\RepositoryFactory;
 use App\Core\Session;
 use App\MongoDB\MongoStats;
 
@@ -24,28 +25,29 @@ class DashboardController extends Controller
             return;
         }
 
-        // Récupérer les statistiques
-        $userModel = new User();
-        $commandeModel = new Commande();
-        $menuModel = new Menu();
-        $allUsers = $userModel->findAllWithRole();
+        // Utilisation de la Factory pour créer les repositories
+        $factory = RepositoryFactory::getInstance();
+        $userRepository = $factory->createUserRepository();
+        $commandeRepository = $factory->createCommandeRepository();
+        $menuRepository = $factory->createMenuRepository();
+        $commandeMenuRepository = $factory->createCommandeMenuRepository();
+        $allUsers = $userRepository->findAllWithRole();
         $totalEmployes = count(array_filter($allUsers, function($user) {
             return in_array($user['role_nom'], ['employé', 'administrateur']);
         }));
         
-        $totalCommandes = count($commandeModel->findAll());
-        $totalMenus = count($menuModel->findAll());
+        $totalCommandes = count($commandeRepository->findAll());
+        $totalMenus = count($menuRepository->findAll());
 
         // Récupérer les dernières commandes
-        $dernieresCommandes = $commandeModel->findAll();
+        $dernieresCommandes = $commandeRepository->findAll();
         // Limiter aux 10 dernières
         $dernieresCommandes = array_slice($dernieresCommandes, 0, 10);
         
         // Enrichir avec lignesMenus
-        $commandeMenuModel = new CommandeMenu();
         foreach ($dernieresCommandes as &$cmd) {
-            $cmd['lignesMenus'] = $commandeMenuModel->findByCommande($cmd['numero_commande']);
-            $cmd['totalPersonnes'] = $commandeMenuModel->getTotalPersonnes($cmd['numero_commande']);
+            $cmd['lignesMenus'] = $commandeMenuRepository->findByCommande($cmd['numero_commande']);
+            $cmd['totalPersonnes'] = $commandeMenuRepository->getTotalPersonnes($cmd['numero_commande']);
             // Afficher le premier menu comme menu_nom
             if (!empty($cmd['lignesMenus'])) {
                 $cmd['menu_nom'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
@@ -71,8 +73,9 @@ class DashboardController extends Controller
             return;
         }
 
-        $userModel = new User();
-        $allUsers = $userModel->findAllWithRole();
+        $factory = RepositoryFactory::getInstance();
+        $userRepository = $factory->createUserRepository();
+        $allUsers = $userRepository->findAllWithRole();
         
         // Filtrer pour n'afficher que les employés et administrateurs
         $users = array_filter($allUsers, function($user) {
@@ -123,8 +126,9 @@ class DashboardController extends Controller
         }
 
         // Vérifier que l'email n'existe pas
-        $userModel = new User();
-        if ($userModel->findByEmail($email)) {
+        $factory = RepositoryFactory::getInstance();
+        $userRepository = $factory->createUserRepository();
+        if ($userRepository->findByEmail($email)) {
             $errors[] = "Cet email est déjà utilisé";
         }
 
@@ -135,7 +139,7 @@ class DashboardController extends Controller
         }
 
         // Créer le compte employé (role_id = 2)
-        $userId = $userModel->createEmployeWithPassword($email, $prenom, $nom, $password);
+        $userId = $userRepository->createEmployeWithPassword($email, $prenom, $nom, $password);
 
         if ($userId) {
             // Envoyer l'email de notification (SANS le mot de passe)
@@ -180,8 +184,9 @@ class DashboardController extends Controller
             return;
         }
 
-        $userModel = new User();
-        $success = $userModel->deactivate($utilisateurId);
+        $factory = RepositoryFactory::getInstance();
+        $userRepository = $factory->createUserRepository();
+        $success = $userRepository->deactivate($utilisateurId);
 
         if ($success) {
             Session::set('flash_success', "Compte employé désactivé avec succès");
@@ -221,8 +226,9 @@ class DashboardController extends Controller
             return;
         }
 
-        $userModel = new User();
-        $success = $userModel->activate($utilisateurId);
+        $factory = RepositoryFactory::getInstance();
+        $userRepository = $factory->createUserRepository();
+        $success = $userRepository->activate($utilisateurId);
 
         if ($success) {
             Session::set('flash_success', "Compte employé réactivé avec succès");
@@ -249,12 +255,13 @@ class DashboardController extends Controller
             return;
         }
 
-        $commandeModel = new Commande();
-        $commandes = $commandeModel->findAll();
+        $factory = RepositoryFactory::getInstance();
+        $commandeRepository = $factory->createCommandeRepository();
+        $commandes = $commandeRepository->findAll();
 
         $this->render('admin/commandes', [
             'commandes' => $commandes,
-            'statuts' => Commande::STATUTS
+            'statuts' => \App\Repository\CommandeRepository::STATUTS
         ]);
     }
 }

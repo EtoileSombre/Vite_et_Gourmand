@@ -5,10 +5,20 @@ namespace App\Controllers\Admin;
 use App\Core\Controller;
 use App\Core\Session;
 use App\MongoDB\MongoStats;
-use App\Models\Menu;
+use App\Repository\MenuRepositoryInterface;
+use App\Factory\RepositoryFactory;
 
 class StatsController extends Controller
 {
+    private MenuRepositoryInterface $menuRepository;
+
+    public function __construct()
+    {
+        // Utilisation de la Factory pour créer le repository
+        $factory = RepositoryFactory::getInstance();
+        $this->menuRepository = $factory->createMenuRepository();
+    }
+
     public function index()
     {
         // Vérification accès administrateur
@@ -33,8 +43,7 @@ class StatsController extends Controller
         $caParMenu = $mongoStats->getCAParMenu($filtreMenuId, $filtreDateDebut, $filtreDateFin);
 
         // Récupérer tous les menus pour le dropdown de filtres
-        $menuModel = new Menu();
-        $allMenus = $menuModel->findAll();
+        $allMenus = $this->menuRepository->findAll();
 
         // Préparer les données pour Chart.js
         $chartData = $this->prepareChartData($commandesParMenu, $caParMenu, $allMenus);

@@ -5,14 +5,15 @@ namespace App\Controllers\Admin;
 use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
-use App\Models\Contact;
+use App\Repository\ContactRepositoryInterface;
+use App\Factory\RepositoryFactory;
 
 /**
  * Contrôleur pour la gestion des messages de contact par les admins
  */
 class ContactController extends Controller
 {
-    private Contact $contactModel;
+    private ContactRepositoryInterface $contactRepository;
 
     public function __construct()
     {
@@ -24,7 +25,8 @@ class ContactController extends Controller
             exit;
         }
 
-        $this->contactModel = new Contact();
+        $factory = RepositoryFactory::getInstance();
+        $this->contactRepository = $factory->createContactRepository();
     }
 
     /**
@@ -36,13 +38,13 @@ class ContactController extends Controller
         
         // Récupérer les messages selon le filtre
         if ($statutFiltre === 'tous') {
-            $messages = $this->contactModel->findAllContacts();
+            $messages = $this->contactRepository->findAllContacts();
         } else {
-            $messages = $this->contactModel->findAllContacts($statutFiltre);
+            $messages = $this->contactRepository->findAllContacts($statutFiltre);
         }
-        $countNouveau = $this->contactModel->countByStatut('nouveau');
-        $countEnCours = $this->contactModel->countByStatut('en cours');
-        $countTraite = $this->contactModel->countByStatut('traité');
+        $countNouveau = $this->contactRepository->countByStatut('nouveau');
+        $countEnCours = $this->contactRepository->countByStatut('en cours');
+        $countTraite = $this->contactRepository->countByStatut('traité');
 
         $this->render('admin/contacts', [
             'title' => 'Gestion des Messages de Contact',
@@ -68,7 +70,7 @@ class ContactController extends Controller
             exit;
         }
 
-        $success = $this->contactModel->updateStatut($contactId, $nouveauStatut);
+        $success = $this->contactRepository->updateStatut($contactId, $nouveauStatut);
 
         if ($success) {
             Session::set('success', 'Statut mis à jour avec succès.');
@@ -87,7 +89,7 @@ class ContactController extends Controller
     {
         $contactId = (int) $request->post('contact_id');
 
-        $success = $this->contactModel->delete($contactId);
+        $success = $this->contactRepository->delete($contactId);
 
         if ($success) {
             Session::set('success', 'Message supprimé avec succès.');

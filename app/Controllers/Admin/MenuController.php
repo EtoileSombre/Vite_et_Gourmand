@@ -5,7 +5,9 @@ namespace App\Controllers\Admin;
 use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
-use App\Models\Menu;
+use App\Repository\MenuRepositoryInterface;
+use App\Repository\PlatRepositoryInterface;
+use App\Factory\RepositoryFactory;
 
 /**
  * Contrôleur Admin Menu
@@ -13,7 +15,8 @@ use App\Models\Menu;
  */
 class MenuController extends Controller
 {
-    private Menu $menuModel;
+    private MenuRepositoryInterface $menuRepository;
+    private PlatRepositoryInterface $platRepository;
 
     public function __construct()
     {
@@ -29,7 +32,10 @@ class MenuController extends Controller
             exit;
         }
 
-        $this->menuModel = new Menu();
+        // Utilisation de la Factory pour créer le repository
+        $factory = RepositoryFactory::getInstance();
+        $this->menuRepository = $factory->createMenuRepository();
+        $this->platRepository = $factory->createPlatRepository();
     }
 
     /**
@@ -37,11 +43,11 @@ class MenuController extends Controller
      */
     public function index(): void
     {
-        $menus = $this->menuModel->findAll(); // Tous les menus, pas seulement actifs
+        $menus = $this->menuRepository->findAll(); // Tous les menus, pas seulement actifs
 
         // Charger les plats pour chaque menu
         foreach ($menus as &$menu) {
-            $menu['plats'] = $this->menuModel->getPlatsForMenu($menu['menu_id']);
+            $menu['plats'] = $this->menuRepository->getPlatsForMenu($menu['menu_id']);
         }
 
         $this->render('admin/menus/index', [
@@ -56,8 +62,21 @@ class MenuController extends Controller
     public function create(): void
     {
         // Charger tous les plats disponibles
-        $platModel = new \App\Models\Plat();
-        $plats = $platModel->findAllPlats();
+        $plats = $this->platRepository->findAllPlats();
+        
+        // Enrichir chaque plat avec ses allergènes
+        $allAllergenes = $this->platRepository->getAllAllergenes();
+        foreach ($plats as &$plat) {
+            $platAllergeneIds = $this->platRepository->getAllergenesForPlat($plat['plat_id']);
+            $plat['allergenes'] = [];
+            foreach ($platAllergeneIds as $allergeneId) {
+                $allergene = array_filter($allAllergenes, fn($a) => $a['allergene_id'] == $allergeneId);
+                if (!empty($allergene)) {
+                    $plat['allergenes'][] = reset($allergene)['libelle'];
+                }
+            }
+        }
+        unset($plat);
 
         $this->render('admin/menus/create', [
             'plats' => $plats,
@@ -110,13 +129,13 @@ class MenuController extends Controller
             'quantite_restante' => $_POST['quantite_restante'] ?? 100 // Stock disponible
         ];
 
-        $menuId = $this->menuModel->create($data);
+        $menuId = $this->menuRepository->create($data);
 
         if ($menuId) {
             // Ajouter les plats au menu
             $platsSelectionnes = $_POST['plats'] ?? [];
             if (!empty($platsSelectionnes)) {
-                $this->menuModel->syncPlats($menuId, $platsSelectionnes);
+                $this->menuRepository->syncPlats($menuId, $platsSelectionnes);
             }
 
             Session::set('flash_success', "Menu créé avec succès !");
@@ -139,7 +158,7 @@ class MenuController extends Controller
             return;
         }
 
-        $menu = $this->menuModel->findById((int)$id);
+        $menu = $this->menuRepository->findById((int)$id);
 
         if (!$menu) {
             Session::set('flash_error', "Menu introuvable");
@@ -148,11 +167,24 @@ class MenuController extends Controller
         }
 
         // Charger tous les plats disponibles
-        $platModel = new \App\Models\Plat();
-        $plats = $platModel->findAllPlats();
+        $plats = $this->platRepository->findAllPlats();
+        
+        // Enrichir chaque plat avec ses allergènes
+        $allAllergenes = $this->platRepository->getAllAllergenes();
+        foreach ($plats as &$plat) {
+            $platAllergeneIds = $this->platRepository->getAllergenesForPlat($plat['plat_id']);
+            $plat['allergenes'] = [];
+            foreach ($platAllergeneIds as $allergeneId) {
+                $allergene = array_filter($allAllergenes, fn($a) => $a['allergene_id'] == $allergeneId);
+                if (!empty($allergene)) {
+                    $plat['allergenes'][] = reset($allergene)['libelle'];
+                }
+            }
+        }
+        unset($plat);
 
         // Charger les plats actuellement associés à ce menu
-        $platIds = $this->menuModel->getPlatIdsForMenu((int)$id);
+        $platIds = $this->menuRepository->getPlatIdsForMenu((int)$id);
 
         $this->render('admin/menus/edit', [
             'menu' => $menu,
@@ -179,7 +211,7 @@ class MenuController extends Controller
             return;
         }
 
-        $menu = $this->menuModel->findById((int)$id);
+        $menu = $this->menuRepository->findById((int)$id);
 
         if (!$menu) {
             Session::set('flash_error', "Menu introuvable");
@@ -220,11 +252,11 @@ class MenuController extends Controller
             'quantite_restante' => $quantiteRestante
         ];
 
-        $success = $this->menuModel->update((int)$id, $data);
+        $success = $this->menuRepository->update((int)$id, $data);
 
         if ($success) {
             $platsSelectionnes = $_POST['plats'] ?? [];
-            $this->menuModel->syncPlats((int)$id, $platsSelectionnes);
+            $this->menuRepository->syncPlats((int)$id, $platsSelectionnes);
 
             Session::set('flash_success', "Menu mis à jour avec succès !");
             $this->redirect('/admin/menus');
@@ -251,7 +283,7 @@ class MenuController extends Controller
             return;
         }
 
-        $menu = $this->menuModel->findById((int)$id);
+        $menu = $this->menuRepository->findById((int)$id);
 
         if (!$menu) {
             Session::set('flash_error', "Menu introuvable");
@@ -260,7 +292,7 @@ class MenuController extends Controller
         }
 
         // Suppression définitive du menu
-        $success = $this->menuModel->delete((int)$id);
+        $success = $this->menuRepository->delete((int)$id);
 
         if ($success) {
             Session::set('flash_success', "Menu supprimé avec succès !");
@@ -288,7 +320,7 @@ class MenuController extends Controller
             return;
         }
 
-        $success = $this->menuModel->update((int)$id, ['quantite_restante' => 100]); // Réactiver avec stock de 100
+        $success = $this->menuRepository->update((int)$id, ['quantite_restante' => 100]); // Réactiver avec stock de 100
 
         if ($success) {
             Session::set('flash_success', "Menu réactivé avec succès !");

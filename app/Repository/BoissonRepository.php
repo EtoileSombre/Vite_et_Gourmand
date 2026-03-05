@@ -82,8 +82,6 @@ class BoissonRepository implements BoissonRepositoryInterface
         $stmt->execute([$type]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-     * {@inheritDoc}
-     */
     public function getTypes(): array
     {
         $stmt = $this->db->query("

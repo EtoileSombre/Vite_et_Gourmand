@@ -9,8 +9,6 @@ interface ContactRepositoryInterface
 
     //Compte les messages par statut
     public function countByStatut(string $statut): int;
-
-    public function countByStatut(string $statut): int;
     public function updateStatut(int $id, string $statut): bool;
     public function delete(int $id): bool;
 }

@@ -162,8 +162,6 @@ class CommandeRepository implements CommandeRepositoryInterface
         
         return $stmt->execute($data);
     }
-     * {@inheritDoc}
-     */
     public function updateStatut(string $numeroCommande, string $statut): bool
     {
         $stmt = $this->db->prepare("

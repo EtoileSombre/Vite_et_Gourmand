@@ -103,20 +103,8 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     <strong class="d-block mb-2"><?= htmlspecialchars($label) ?></strong>
                                     <div class="d-flex flex-wrap gap-2">
                                         <?php foreach ($platsType as $plat): 
-                                            // Récupérer les allergènes du plat
-                                            $platModel = new \App\Models\Plat();
-                                            $platAllergenes = $platModel->getAllergenesForPlat($plat['plat_id']);
-                                            $allergenesLabels = [];
-                                            if (!empty($platAllergenes)) {
-                                                $allAllergenes = $platModel->getAllAllergenes();
-                                                foreach ($platAllergenes as $allergeneId) {
-                                                    $allergene = array_filter($allAllergenes, fn($a) => $a['allergene_id'] == $allergeneId);
-                                                    if (!empty($allergene)) {
-                                                        $allergenesLabels[] = reset($allergene)['libelle'];
-                                                    }
-                                                }
-                                            }
-                                            $allergenesText = !empty($allergenesLabels) ? 'Allergènes: ' . implode(', ', $allergenesLabels) : '';
+                                            // Les allergènes sont déjà chargés par le contrôleur
+                                            $allergenesText = !empty($plat['allergenes']) ? 'Allergènes: ' . implode(', ', $plat['allergenes']) : '';
                                         ?>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" 

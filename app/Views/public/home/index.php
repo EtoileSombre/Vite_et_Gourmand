@@ -1,5 +1,5 @@
 <?php include __DIR__ . '/../../layouts/header.php'; ?>
-<link rel="stylesheet" href="/assets/css/pages/home.css">
+<link rel="stylesheet" href="/assets/css/pages/home.css?v=<?= time() ?>">
 <link rel="stylesheet" href="/assets/css/pages/avis.css">
 
 <!-- Hero Section -->
@@ -77,7 +77,7 @@
                     </div>
                     <h5 class="card-title">Équipe qualifiée</h5>
                     <p class="card-text text-muted">
-                        Nos chefs et notre équipe de service possèdent plusieurs années d'expérience 
+                        Nous possédons plusieurs années d'expérience 
                         dans l'événementiel haut de gamme.
                     </p>
                 </div>

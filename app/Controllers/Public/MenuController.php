@@ -5,26 +5,33 @@ namespace App\Controllers\Public;
 use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
-use App\Models\Menu;
-use App\Models\Boisson;
-use App\Models\Materiel;
+use App\Repository\MenuRepositoryInterface;
+use App\Repository\BoissonRepositoryInterface;
+use App\Repository\MaterielRepositoryInterface;
+use App\Factory\RepositoryFactory;
 use App\MongoDB\MongoStats;
 
 class MenuController extends Controller
 {
-    private Menu $menuModel;
+    private MenuRepositoryInterface $menuRepository;
+    private BoissonRepositoryInterface $boissonRepository;
+    private MaterielRepositoryInterface $materielRepository;
 
     public function __construct()
     {
-        $this->menuModel = new Menu();
+        // Utilisation de la Factory pour créer le repository
+        $factory = RepositoryFactory::getInstance();
+        $this->menuRepository = $factory->createMenuRepository();
+        $this->boissonRepository = $factory->createBoissonRepository();
+        $this->materielRepository = $factory->createMaterielRepository();
     }
 
     // Liste des menus disponibles
     public function index(Request $request): void
     {
-        $menus = $this->menuModel->findActiveWithPhotos();
-        $themes = $this->menuModel->getAllThemes();
-        $regimes = $this->menuModel->getAllRegimes();
+        $menus = $this->menuRepository->findActiveWithPhotos();
+        $themes = $this->menuRepository->getAllThemes();
+        $regimes = $this->menuRepository->getAllRegimes();
 
         // Log MongoDB
         $mongoStats = new MongoStats();
@@ -51,7 +58,7 @@ class MenuController extends Controller
             return;
         }
 
-        $menu = $this->menuModel->findActiveById((int)$id);
+        $menu = $this->menuRepository->findActiveById((int)$id);
 
         if (!$menu) {
             Session::set('error', 'Menu introuvable ou indisponible');
@@ -59,11 +66,9 @@ class MenuController extends Controller
             return;
         }
 
-        $boissonModel = new Boisson();
-        $materielModel = new Materiel();
-        $boissons = $boissonModel->findAllAvailable();
-        $materiels = $materielModel->findAllAvailable();
-        $photos = $this->menuModel->getPhotosMenu((int)$id);
+        $boissons = $this->boissonRepository->findAllAvailable();
+        $materiels = $this->materielRepository->findAllAvailable();
+        $photos = $this->menuRepository->getPhotosMenu((int)$id);
 
         // Log MongoDB
         $mongoStats = new MongoStats();
@@ -112,7 +117,7 @@ class MenuController extends Controller
                 $filters['prixMax'] = (float)$prixMax;
             }
 
-            $menus = $this->menuModel->findFiltered($filters);
+            $menus = $this->menuRepository->findFiltered($filters);
 
             $this->json([
                 'success' => true,

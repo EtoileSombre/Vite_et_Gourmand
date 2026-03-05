@@ -153,9 +153,9 @@
 }
 
 .menu-btn-commande {
-    background: linear-gradient(135deg, var(--vg-gold) 0%, var(--vg-gold-light) 100%);
-    color: #fff;
-    border: none;
+    background: linear-gradient(135deg, var(--vg-gold) 0%, var(--vg-gold-light) 100%) !important;
+    color: #fff !important;
+    border: none !important;
     font-weight: 500;
     transition: var(--vg-transition);
     border-radius: 6px;
@@ -164,6 +164,8 @@
 }
 
 .menu-btn-commande:hover {
+    background: linear-gradient(135deg, var(--vg-gold-light) 0%, var(--vg-gold) 100%) !important;
+    color: #fff !important;
     transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(196,155,99,0.3);
 }

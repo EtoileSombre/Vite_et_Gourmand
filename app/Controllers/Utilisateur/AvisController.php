@@ -5,15 +5,22 @@ namespace App\Controllers\Utilisateur;
 use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
-use App\Models\Avis;
+use App\Repository\AvisRepositoryInterface;
+use App\Repository\CommandeRepositoryInterface;
+use App\Factory\RepositoryFactory;
 
 class AvisController extends Controller
 {
-    private Avis $avisModel;
+    private AvisRepositoryInterface $avisRepository;
+    private CommandeRepositoryInterface $commandeRepository;
 
     public function __construct()
     {
-        $this->avisModel = new Avis();
+        parent::__construct();
+        // Utilisation de la Factory pour créer les repositories
+        $factory = RepositoryFactory::getInstance();
+        $this->avisRepository = $factory->createAvisRepository();
+        $this->commandeRepository = $factory->createCommandeRepository();
     }
 
     public function store()
@@ -56,7 +63,7 @@ class AvisController extends Controller
                 $avisData['numero_commande'] = $numeroCommande;
             }
             
-            $avisId = $this->avisModel->createAvis($avisData);
+            $avisId = $this->avisRepository->createAvis($avisData);
             
             Session::set('avis_envoye', true);
             $this->redirect('/avis/create');
@@ -80,8 +87,7 @@ class AvisController extends Controller
 
         // Si un numéro de commande est fourni, vérifier qu'il appartient à l'utilisateur
         if ($numeroCommande) {
-            $commandeModel = new \App\Models\Commande();
-            $commande = $commandeModel->findByNumero($numeroCommande);
+            $commande = $this->commandeRepository->findByNumero($numeroCommande);
             
             if (!$commande || $commande['utilisateur_id'] != $userId) {
                 Session::set('flash_error', 'Commande introuvable.');
@@ -97,7 +103,7 @@ class AvisController extends Controller
             }
             
             // Vérifier qu'un avis n'a pas déjà été donné
-            $avisExistant = $this->avisModel->findByCommandeAndUser($numeroCommande, $userId);
+            $avisExistant = $this->avisRepository->findByCommandeAndUser($numeroCommande, $userId);
             if ($avisExistant) {
                 Session::set('flash_error', 'Vous avez déjà donné votre avis pour cette commande.');
                 $this->redirect('/mes-commandes');

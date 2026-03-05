@@ -4,7 +4,8 @@ namespace App\Controllers\Public;
 
 use App\Core\Controller;
 use App\Core\Request;
-use App\Models\Avis;
+use App\Repository\AvisRepositoryInterface;
+use App\Factory\RepositoryFactory;
 
 /**
  * Contrôleur Home
@@ -12,11 +13,13 @@ use App\Models\Avis;
  */
 class HomeController extends Controller
 {
-    private Avis $avisModel;
+    private AvisRepositoryInterface $avisRepository;
 
     public function __construct()
     {
-        $this->avisModel = new Avis();
+        // Utilisation de la Factory pour créer le repository
+        $factory = RepositoryFactory::getInstance();
+        $this->avisRepository = $factory->createAvisRepository();
     }
 
     /**
@@ -26,9 +29,9 @@ class HomeController extends Controller
      */
     public function index(Request $request): void
     {
-        // Récupérer les avis validés (note >= 4) via le modèle
+        // Récupérer les avis validés (note >= 4) via le repository
         try {
-            $avis = $this->avisModel->findValidatedWithGoodRating(4, 6);
+            $avis = $this->avisRepository->findValidatedWithGoodRating(4, 6);
         } catch (\PDOException $e) {
             error_log("Erreur récupération avis : " . $e->getMessage());
             $avis = [];

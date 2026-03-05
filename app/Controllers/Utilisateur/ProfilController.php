@@ -3,12 +3,22 @@
 namespace App\Controllers\Utilisateur;
 
 use App\Core\Controller;
-use App\Models\User;
+use App\Repository\UserRepositoryInterface;
+use App\Factory\RepositoryFactory;
 use App\Core\Request;
 use App\Core\Session;
 
 class ProfilController extends Controller
 {
+    private UserRepositoryInterface $userRepository;
+
+    public function __construct()
+    {
+        // Utilisation de la Factory pour créer le repository
+        $factory = RepositoryFactory::getInstance();
+        $this->userRepository = $factory->createUserRepository();
+    }
+
     // Profil utilisateur
     public function index()
     {
@@ -45,8 +55,7 @@ class ProfilController extends Controller
                 $errors[] = "L'email n'est pas valide.";
             }
 
-            $userModel = new User();
-            $existingUser = $userModel->findByEmail($email);
+            $existingUser = $this->userRepository->findByEmail($email);
             
             if ($existingUser && $existingUser['utilisateur_id'] != $userId) {
                 $errors[] = "Cet email est déjà utilisé.";
@@ -79,7 +88,6 @@ class ProfilController extends Controller
 
             // Mise à jour
             if (empty($errors)) {
-                $userModel = new User();
                 $updateData = [
                     'nom' => $nom,
                     'prenom' => $prenom,
@@ -94,7 +102,7 @@ class ProfilController extends Controller
                     $updateData['password'] = password_hash($password, PASSWORD_DEFAULT);
                 }
 
-                $userModel->update($userId, $updateData);
+                $this->userRepository->update($userId, $updateData);
 
                 Session::set('user_email', $email);
                 Session::set('user_prenom', $prenom);
@@ -103,8 +111,7 @@ class ProfilController extends Controller
             }
         }
 
-        $userModel = new User();
-        $userData = $userModel->findById($userId);
+        $userData = $this->userRepository->findById($userId);
 
         $this->render('utilisateur/profil/index', [
             'user' => $userData,

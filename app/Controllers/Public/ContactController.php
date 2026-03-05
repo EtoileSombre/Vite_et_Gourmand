@@ -5,15 +5,17 @@ namespace App\Controllers\Public;
 use App\Core\Controller;
 use App\Core\Request;
 use App\Core\Session;
-use App\Models\Contact;
+use App\Repository\ContactRepositoryInterface;
+use App\Factory\RepositoryFactory;
 
 class ContactController extends Controller
 {
-    private Contact $contactModel;
+    private ContactRepositoryInterface $contactRepository;
 
     public function __construct()
     {
-        $this->contactModel = new Contact();
+        $factory = RepositoryFactory::getInstance();
+        $this->contactRepository = $factory->createContactRepository();
     }
 
     /**
@@ -51,7 +53,7 @@ class ContactController extends Controller
             if (empty($errors)) {
                 try {
                     // Sauvegarder en base de données
-                    $contactId = $this->contactModel->createContact([
+                    $contactId = $this->contactRepository->createContact([
                         'nom' => '', // Optionnel, pas dans l'énoncé ECF
                         'email' => $email,
                         'sujet' => htmlspecialchars($titre),

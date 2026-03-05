@@ -4,7 +4,8 @@ namespace App\Controllers\Employe;
 
 use App\Core\Controller;
 use App\Core\Session;
-use App\Models\Avis;
+use App\Repository\AvisRepositoryInterface;
+use App\Factory\RepositoryFactory;
 
 /**
  * Contrôleur pour la modération des avis par les employés
@@ -12,7 +13,7 @@ use App\Models\Avis;
  */
 class AvisController extends Controller
 {
-    private Avis $avisModel;
+    private AvisRepositoryInterface $avisRepository;
 
     public function __construct()
     {
@@ -24,7 +25,9 @@ class AvisController extends Controller
             return;
         }
 
-        $this->avisModel = new Avis();
+        // Utilisation de la Factory pour créer le repository
+        $factory = RepositoryFactory::getInstance();
+        $this->avisRepository = $factory->createAvisRepository();
     }
 
     /**
@@ -35,13 +38,13 @@ class AvisController extends Controller
         // Récupérer les filtres
         $statut = $_GET['statut'] ?? 'en_attente';
         
-        // Récupérer les avis selon le statut via le modèle
+        // Récupérer les avis selon le statut via le repository
         if ($statut === 'tous') {
-            $avis = $this->avisModel->findAllWithDetails();
+            $avis = $this->avisRepository->findAllWithDetails();
         } else {
-            $avis = $this->avisModel->findByStatutWithDetails($statut);
+            $avis = $this->avisRepository->findByStatutWithDetails($statut);
         }
-        $countEnAttente = $this->avisModel->countByStatut('en_attente');
+        $countEnAttente = $this->avisRepository->countByStatut('en_attente');
 
         $this->render('employe/avis/index', [
             'title' => 'Modération des Avis',
@@ -63,7 +66,7 @@ class AvisController extends Controller
             $this->redirect('/employe/avis');
             return;
         }
-        $success = $this->avisModel->updateStatus((int)$avisId, 'publie');
+        $success = $this->avisRepository->updateStatus((int)$avisId, 'publie');
 
         if ($success) {
             Session::set('success', 'Avis approuvé et publié avec succès.');
@@ -87,7 +90,7 @@ class AvisController extends Controller
             $this->redirect('/employe/avis');
             return;
         }
-        $success = $this->avisModel->updateStatus((int)$avisId, 'rejete');
+        $success = $this->avisRepository->updateStatus((int)$avisId, 'rejete');
 
         if ($success) {
             Session::set('success', 'Avis rejeté.');

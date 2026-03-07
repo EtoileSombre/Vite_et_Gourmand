@@ -1,7 +1,7 @@
     </main>
 
     <!-- Footer -->
-    <footer class="site-footer text-center py-4 mt-5">
+    <footer class="site-footer text-center py-4 mt-5" role="contentinfo">
         <p class="mb-1"><strong>Horaires :</strong> <?php
             use App\Models\Horaire;
             echo htmlspecialchars(Horaire::getHorairesFormatted());

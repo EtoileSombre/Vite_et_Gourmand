@@ -7,7 +7,7 @@ include __DIR__ . '/../layouts/header.php'; ?>
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header text-white bg-vg-bordeaux">
-                    <h3 class="mb-0"><i class="bi bi-person-plus"></i> Inscription</h3>
+                    <h1 class="mb-0 h3"><i class="bi bi-person-plus"></i> Inscription</h1>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($errors)): ?>

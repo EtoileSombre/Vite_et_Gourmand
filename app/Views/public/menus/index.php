@@ -4,7 +4,7 @@
 <div class="container mt-5">
     <div class="card mb-4 shadow-sm">
         <div class="card-header text-white bg-vg-bordeaux">
-            <h3 class="mb-0"><i class="bi bi-journal-text"></i> Nos Menus</h3>
+            <h1 class="mb-0 h3"><i class="bi bi-journal-text"></i> Nos Menus</h1>
         </div>
         <div class="card-body">
             <div class="row g-3">

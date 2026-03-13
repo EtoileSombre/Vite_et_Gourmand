@@ -15,6 +15,7 @@ use App\Factory\RepositoryFactory;
 use App\Core\Request;
 use App\Core\Session;
 use App\MongoDB\MongoStats;
+use App\Models\Commande;
 
 class CommandeController extends Controller
 {

@@ -29,6 +29,13 @@ class AuthController extends Controller
         $request = new Request();
         
         if ($request->isPost()) {
+            // Vérification CSRF
+            if (!csrf_verify()) {
+                $errors[] = "Erreur de sécurité. Veuillez réessayer.";
+                $this->render('auth/login', ['errors' => $errors]);
+                return;
+            }
+            
             $email = $request->post('email');
             $password = $request->post('password');
             $redirect = $request->post('redirect') ?: $request->get('redirect');
@@ -76,6 +83,13 @@ class AuthController extends Controller
         $request = new Request();
         
         if ($request->isPost()) {
+            // Vérification CSRF
+            if (!csrf_verify()) {
+                $errors[] = "Erreur de sécurité. Veuillez réessayer.";
+                $this->render('auth/register', ['errors' => $errors]);
+                return;
+            }
+            
             $nom = trim($request->post('nom'));
             $prenom = trim($request->post('prenom'));
             $email = trim($request->post('email'));
@@ -209,6 +223,13 @@ class AuthController extends Controller
         $request = new Request();
         
         if ($request->isPost()) {
+            // Vérification CSRF
+            if (!csrf_verify()) {
+                $errors[] = "Erreur de sécurité. Veuillez réessayer.";
+                $this->render('auth/forgot-password', ['errors' => $errors]);
+                return;
+            }
+            
             $email = $request->post('email');
             
             // Validation
@@ -276,6 +297,17 @@ class AuthController extends Controller
         
         // Si formulaire soumis
         if ($request->isPost()) {
+            // Vérification CSRF
+            if (!csrf_verify()) {
+                $errors[] = "Erreur de sécurité. Veuillez réessayer.";
+                $this->render('auth/reset-password', [
+                    'errors' => $errors,
+                    'token' => $token,
+                    'tokenValid' => true
+                ]);
+                return;
+            }
+            
             $password = $request->post('password');
             $passwordConfirm = $request->post('password_confirm');
             

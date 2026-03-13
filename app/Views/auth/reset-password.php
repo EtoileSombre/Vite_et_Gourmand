@@ -47,6 +47,7 @@ include __DIR__ . '/../layouts/header.php'; ?>
                         </div>
 
                         <form method="POST" action="/reset-password?token=<?= htmlspecialchars($token ?? '') ?>" id="resetPasswordForm">
+                            <?= csrf_field() ?>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Nouveau mot de passe</label>
                                 <input 

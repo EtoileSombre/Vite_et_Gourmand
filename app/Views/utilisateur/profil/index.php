@@ -22,6 +22,7 @@ include __DIR__ . '/../../layouts/header.php';
                     <?php endif; ?>
                     
                     <form method="post" action="/profil">
+                        <?= csrf_field() ?>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="nom" class="form-label">Nom *</label>

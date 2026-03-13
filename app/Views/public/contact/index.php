@@ -12,7 +12,7 @@ if ($contactEnvoye) {
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-header text-white bg-vg-bordeaux">
-                    <h3 class="mb-0"><i class="bi bi-envelope-fill"></i> Contactez-nous</h3>
+                    <h1 class="mb-0 h3"><i class="bi bi-envelope-fill"></i> Contactez-nous</h1>
                 </div>
                 <div class="card-body">
                     <?php if (isset($_SESSION['flash_error'])): ?>
@@ -33,6 +33,7 @@ if ($contactEnvoye) {
                     <?php endif; ?>
 
                     <form id="contactForm" method="POST" action="/contact" data-validate>
+                        <?= csrf_field() ?>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email *</label>
                             <input type="email" 

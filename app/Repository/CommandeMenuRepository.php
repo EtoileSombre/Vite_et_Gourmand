@@ -15,22 +15,6 @@ class CommandeMenuRepository implements CommandeMenuRepositoryInterface
     {
         $this->db = Database::getInstance();
     }
-     public function findByCommande(string $numeroCommande): array
-     {
-         $stmt = $this->db->prepare("
-             SELECT 
-                 cm.*,
-                 m.titre as menu_nom,
-                 m.description as menu_description,
-                 m.image_principale
-             FROM {$this->table} cm
-             JOIN menu m ON cm.menu_id = m.menu_id
-             WHERE cm.numero_commande = ?
-             ORDER BY cm.commande_menu_id ASC
-         ");
-         $stmt->execute([$numeroCommande]);
-         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-     }
     public function findByCommande(string $numeroCommande): array
     {
         $stmt = $this->db->prepare("

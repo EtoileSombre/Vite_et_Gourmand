@@ -35,11 +35,14 @@
     <?php endif; ?>
 </head>
 <body class="d-flex flex-column min-vh-100">
-    <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+
+    <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+    
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm" aria-label="Navigation principale">
         <div class="container">
             <a class="navbar-brand fw-bold text-danger" href="/">Vite & Gourmand</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Ouvrir le menu de navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navMenu">
@@ -102,6 +105,7 @@
             </div>
         </div>
     </nav>
+    </header>
 
     <!-- Messages flash -->
     <?php if (isset($_SESSION['flash_success'])): ?>
@@ -128,6 +132,5 @@
         unset($_SESSION['flash_error']);
     endif;
     ?>
-
-    <!-- Contenu principal -->
-    <main class="flex-grow-1">
+    
+    <main id="main-content" class="flex-grow-1" role="main">

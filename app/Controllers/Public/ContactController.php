@@ -28,6 +28,13 @@ class ContactController extends Controller
         $request = new Request();
 
         if ($request->isPost()) {
+            // Vérification CSRF
+            if (!csrf_verify()) {
+                $errors[] = "Erreur de sécurité. Veuillez réessayer.";
+                $this->render('public/contact/index', ['errors' => $errors]);
+                return;
+            }
+            
             $email = trim($request->post('email'));
             $titre = trim($request->post('titre'));
             $description = trim($request->post('description'));

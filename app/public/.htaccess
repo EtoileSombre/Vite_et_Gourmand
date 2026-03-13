@@ -21,10 +21,12 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^(.*)$ index.php [QSA,L]
 
 # Empêche l'accès aux fichiers sensibles
-<FilesMatch "\.(env|sql|log|md|git|gitignore)$">
-    Order allow,deny
-    Deny from all
+<FilesMatch "\.(env|sql|log|md|git|gitignore|xml|yml|yaml|json|lock|txt|sh)$">
+    Require all denied
 </FilesMatch>
+
+# Protection des dossiers sensibles via RewriteRule (compatible .htaccess)
+RewriteRule "(^|/)\." - [F,L]
 
 # Headers de sécurité avancés
 <IfModule mod_headers.c>
@@ -72,10 +74,19 @@ RewriteRule ^(.*)$ index.php [QSA,L]
 # Désactive l'indexation des répertoires
 Options -Indexes
 
-# Protection contre les injections de fichiers
+# Protection contre les injections de fichiers et attaques courantes
 <IfModule mod_rewrite.c>
+    # Blocage des tentatives XSS dans les paramètres
     RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+    # Blocage manipulation des variables globales PHP
     RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
-    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
-    RewriteRule ^(.*)$ index.php [F,L]
+    RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2}) [OR]
+    # Blocage tentatives d'inclusion de fichiers
+    RewriteCond %{QUERY_STRING} (\.\.\/|\.\.\\) [OR]
+    # Blocage tentatives SQL injection basiques
+    RewriteCond %{QUERY_STRING} (union.*select|insert.*into|drop.*table) [NC,OR]
+    # Blocage tentatives de commandes système
+    RewriteCond %{QUERY_STRING} (wget|curl|exec|system|shell_exec) [NC]
+    # Si une condition correspond, bloquer (403 Forbidden)
+    RewriteRule .* - [F,L]
 </IfModule>

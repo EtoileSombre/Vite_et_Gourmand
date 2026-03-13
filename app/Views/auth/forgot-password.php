@@ -28,6 +28,7 @@ include __DIR__ . '/../layouts/header.php'; ?>
                             </div>
                         <?php endif; ?>
                         <form method="POST" action="/forgot-password">
+                            <?= csrf_field() ?>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Adresse email</label>
                                 <input 

@@ -27,19 +27,6 @@ class CommandeRepository implements CommandeRepositoryInterface
     {
         $this->db = Database::getInstance();
     }
-     public function findAll(): array
-     {
-         $stmt = $this->db->prepare('
-             SELECT c.*,
-                    u.prenom as utilisateur_prenom,
-                    u.nom as utilisateur_nom
-             FROM commande c
-             LEFT JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
-             ORDER BY c.date_prestation DESC
-         ');
-         $stmt->execute();
-         return $stmt->fetchAll();
-     }
     public function findAll(): array
     {
         $stmt = $this->db->prepare('

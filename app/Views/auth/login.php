@@ -6,7 +6,7 @@ include __DIR__ . '/../layouts/header.php'; ?>
         <div class="col-md-6">
             <div class="card shadow-sm">
                 <div class="card-header text-white bg-vg-bordeaux">
-                    <h3 class="mb-0"><i class="bi bi-box-arrow-in-right"></i> Connexion</h3>
+                    <h1 class="mb-0 h3"><i class="bi bi-box-arrow-in-right"></i> Connexion</h1>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($errors)): ?>
@@ -26,6 +26,7 @@ include __DIR__ . '/../layouts/header.php'; ?>
                     <?php endif; ?>
                     
                     <form id="loginForm" method="post" action="/login" data-validate>
+                        <?= csrf_field() ?>
                         <?php if (!empty($redirect)): ?>
                             <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
                         <?php endif; ?>

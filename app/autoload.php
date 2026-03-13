@@ -16,3 +16,6 @@ spl_autoload_register(function ($class) {
         require $file;
     }
 });
+
+// Charger les fonctions helper globales
+require_once __DIR__ . '/helpers.php';

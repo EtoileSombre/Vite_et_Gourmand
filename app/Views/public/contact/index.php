@@ -33,6 +33,7 @@ if ($contactEnvoye) {
                     <?php endif; ?>
 
                     <form id="contactForm" method="POST" action="/contact" data-validate>
+                        <?= csrf_field() ?>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email *</label>
                             <input type="email" 

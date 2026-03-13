@@ -104,6 +104,6 @@ class DashboardController extends Controller
      */
     private function getAvisEnAttente(): array
     {
-        return $this->avisRepository->findByStatut('en_attente');
+        return $this->avisRepository->findPending();
     }
 }

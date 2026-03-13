@@ -17,6 +17,5 @@ interface SuiviCommandeRepositoryInterface
 
     //Récupérer le dernier changement de statut d'une commande
     public function getDernierChangement(string $numeroCommande): ?array;
-    public function getDernierChangement(string $numeroCommande): ?array;
     public function countChangements(string $numeroCommande): int;
 }

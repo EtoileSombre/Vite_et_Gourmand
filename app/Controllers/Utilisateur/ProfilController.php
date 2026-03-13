@@ -32,6 +32,17 @@ class ProfilController extends Controller
         $request = new Request();
 
         if ($request->isPost()) {
+            // Vérification CSRF
+            if (!csrf_verify()) {
+                $errors[] = "Erreur de sécurité. Veuillez réessayer.";
+                $user = $this->userRepository->findById($userId);
+                $this->render('utilisateur/profil/index', [
+                    'errors' => $errors,
+                    'user' => $user
+                ]);
+                return;
+            }
+            
             $nom = trim($request->post('nom'));
             $prenom = trim($request->post('prenom'));
             $email = trim($request->post('email'));

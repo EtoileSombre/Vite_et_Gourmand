@@ -6,7 +6,6 @@ interface PlatRepositoryInterface
 {
     public function findAllPlats(?string $typePlat = null): array;
     public function findPlatById(int $id): ?array;
-    public function findPlatById(int $id): ?array;
 
     //Compte le nombre de plats par type
     public function countByType(): array;
@@ -15,7 +14,6 @@ interface PlatRepositoryInterface
     public function updatePlat(int $id, array $data): bool;
     public function deletePlat(int $id): bool;
     public function getAllAllergenes(): array;
-    public function getAllergenesForPlat(int $platId): array;
     public function getAllergenesForPlat(int $platId): array;
 
     //Associe des allergènes à un plat

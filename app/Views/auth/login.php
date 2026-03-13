@@ -26,6 +26,7 @@ include __DIR__ . '/../layouts/header.php'; ?>
                     <?php endif; ?>
                     
                     <form id="loginForm" method="post" action="/login" data-validate>
+                        <?= csrf_field() ?>
                         <?php if (!empty($redirect)): ?>
                             <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
                         <?php endif; ?>

@@ -1,0 +1,12 @@
+viteetgourmand.com {
+    reverse_proxy app:80
+    encode gzip
+    
+    log {
+        output file /data/access.log
+    }
+}
+
+www.viteetgourmand.com {
+    redir https://viteetgourmand.com{uri} permanent
+}

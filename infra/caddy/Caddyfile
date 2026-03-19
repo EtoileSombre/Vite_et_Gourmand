@@ -6,3 +6,7 @@ viteetgourmand.com {
         output file /data/access.log
     }
 }
+
+www.viteetgourmand.com {
+    redir https://viteetgourmand.com{uri} permanent
+}

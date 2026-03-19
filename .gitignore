@@ -86,8 +86,9 @@ volumes/
 *.env
 infra/.env
 
-# ✅ Garder le modèle versionné
+# ✅ Garder le modèle et la config dev versionnés
 !infra/.env.example
+!infra/.env.dev
 
 # -----------------------------
 # 🗃️ Base de données locales
@@ -130,5 +131,4 @@ coverage/
 # -----------------------------
 docs/
 
-# Local dev files (server)
-infra/docker-compose.dev.yml
+

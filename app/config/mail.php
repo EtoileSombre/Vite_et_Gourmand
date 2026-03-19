@@ -786,9 +786,27 @@ function sendContactEmail($nom, $email, $telephone, $titre, $message) {
     $mail = getMailer();
     
     try {
+        require_once __DIR__ . '/../Core/EmailSecurity.php';
+        
+        $cleanEmail = \App\Core\EmailSecurity::sanitizeEmail($email);
+        if ($cleanEmail === false) {
+            error_log("Tentative d'injection d'email détectée dans sendContactEmail : " . substr($email, 0, 50));
+            \App\Core\EmailSecurity::logSecurityEvent('email_injection_blocked', [
+                'function' => 'sendContactEmail',
+                'original_email' => substr($email, 0, 50)
+            ]);
+            return false; // Bloquer l'envoi
+        }
+        $email = $cleanEmail;
+        
+        $nom = \App\Core\EmailSecurity::sanitizeName($nom);
+        
+        $titre = \App\Core\EmailSecurity::sanitizeSubject($titre);
+        
         $mail->addAddress('contact@viteetgourmand.fr', 'Service Client');
-        $mail->addReplyTo($email, $nom);
-        $mail->Subject = "Contact - " . htmlspecialchars($titre);
+        
+        
+        $mail->Subject = "Contact - " . $titre;
         
         $content = "
             <h1>Nouveau message de contact</h1>
@@ -816,14 +834,17 @@ function sendContactEmail($nom, $email, $telephone, $titre, $message) {
                 <p style='margin: 0; white-space: pre-wrap;'>" . nl2br(htmlspecialchars($message)) . "</p>
             </div>
             
-            <div class='text-center'>
-                <a href='mailto:" . htmlspecialchars($email) . "' class='btn btn-primary'>Répondre</a>
+            <div style='background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; margin-top: 20px;'>
+                <p style='margin: 0;'><strong>Pour répondre :</strong></p>
+                <p style='margin: 5px 0 0 0;'>
+                    Copiez l'email du visiteur : <strong>" . htmlspecialchars($email) . "</strong>
+                </p>
             </div>
         ";
         
         $mail->Body = getEmailTemplate('Nouveau contact', $content);
         
-        $mail->AltBody = "Nouveau message de contact\n\nNom : $nom\nEmail : $email\nTéléphone : $telephone\n\nSujet : $titre\n\nMessage :\n$message";
+        $mail->AltBody = "Nouveau message de contact\n\nNom : $nom\nEmail : $email\nTéléphone : $telephone\n\nSujet : $titre\n\nMessage :\n$message\n\nPour répondre : $email";
         
         $mail->send();
         return true;

@@ -166,7 +166,7 @@ class CommandeController extends Controller
             $updateData['restitution_materiel'] = 1;
         }
 
-        $success = $this->commandeModel->updateByNumero($numeroCommande, $updateData);
+        $success = $this->commandeRepository->updateByNumero($numeroCommande, $updateData);
 
         if ($success) {
             // Enregistrer dans l'historique de suivi
@@ -251,7 +251,7 @@ class CommandeController extends Controller
             return;
         }
 
-        $commande = $this->commandeModel->findByNumero($numeroCommande);
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
 
         if (!$commande) {
             Session::set('flash_error', "Commande introuvable");
@@ -283,7 +283,7 @@ class CommandeController extends Controller
             'title' => 'Détails de la Commande',
             'commande' => $commande,
             'suivis' => $suivis,
-            'statuts' => Commande::STATUTS,
+            'statuts' => \App\Repository\CommandeRepository::STATUTS,
             'lignesMateriels' => $lignesMateriels,
             'totalCaution' => $totalCaution,
             'lignesBoissons' => $lignesBoissons,
@@ -312,7 +312,7 @@ class CommandeController extends Controller
         $numeroCommande = $_POST['numero_commande'] ?? '';
 
         // Vérifier que la commande existe
-        $commande = $this->commandeModel->findByNumero($numeroCommande);
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
         if (!$commande) {
             Session::set('flash_error', 'Commande introuvable');
             $this->redirect('/employe/commandes');
@@ -365,7 +365,7 @@ class CommandeController extends Controller
                 'motif_annulation' => "[Contact: $modeContact - ANNULATION] $motifModification"
             ];
 
-            $success = $this->commandeModel->updateByNumero($numeroCommande, $updateData);
+            $success = $this->commandeRepository->updateByNumero($numeroCommande, $updateData);
 
             if ($success) {
                 // Enregistrer dans l'historique
@@ -426,7 +426,7 @@ class CommandeController extends Controller
             'motif_annulation' => "[Contact: $modeContact - MODIFICATION] $motifModification"
         ];
 
-        $success = $this->commandeModel->updateByNumero($numeroCommande, $updateData);
+        $success = $this->commandeRepository->updateByNumero($numeroCommande, $updateData);
 
         if ($success) {
             foreach ($quantitesMenus as $menuId => $quantite) {

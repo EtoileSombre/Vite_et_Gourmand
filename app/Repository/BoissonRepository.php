@@ -116,4 +116,19 @@ class BoissonRepository implements BoissonRepositoryInterface
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return (float)($result['total'] ?? 0);
     }
+
+    //Ajoute une boisson à une commande
+    public function addBoissonToCommande(string $numeroCommande, int $boissonId, int $quantite, float $prixUnitaire): bool
+    {
+        $stmt = $this->db->prepare("
+            INSERT INTO commande_boisson (numero_commande, boisson_id, quantite, prix_unitaire)
+            VALUES (:numero_commande, :boisson_id, :quantite, :prix_unitaire)
+        ");
+        return $stmt->execute([
+            'numero_commande' => $numeroCommande,
+            'boisson_id' => $boissonId,
+            'quantite' => $quantite,
+            'prix_unitaire' => $prixUnitaire
+        ]);
+    }
 }

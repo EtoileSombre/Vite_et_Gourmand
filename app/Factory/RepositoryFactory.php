@@ -13,6 +13,7 @@ use App\Repository\MaterielRepository;
 use App\Repository\ContactRepository;
 use App\Repository\PlatRepository;
 use App\Repository\PasswordResetRepository;
+use App\Repository\HoraireRepository;
 use App\Repository\UserRepositoryInterface;
 use App\Repository\CommandeRepositoryInterface;
 use App\Repository\MenuRepositoryInterface;
@@ -24,6 +25,7 @@ use App\Repository\MaterielRepositoryInterface;
 use App\Repository\ContactRepositoryInterface;
 use App\Repository\PlatRepositoryInterface;
 use App\Repository\PasswordResetRepositoryInterface;
+use App\Repository\HoraireRepositoryInterface;
 
 /**
  * Factory pour la création des Repositories
@@ -193,6 +195,19 @@ class RepositoryFactory
     }
 
     /**
+     * Crée ou récupère un HoraireRepository
+     * 
+     * @return HoraireRepositoryInterface
+     */
+    public function createHoraireRepository(): HoraireRepositoryInterface
+    {
+        if (!isset($this->repositories['horaire'])) {
+            $this->repositories['horaire'] = new HoraireRepository();
+        }
+        return $this->repositories['horaire'];
+    }
+
+    /**
      * Crée un repository par nom (méthode générique)
      * 
      * @return mixed
@@ -211,6 +226,7 @@ class RepositoryFactory
             'contact' => $this->createContactRepository(),
             'plat', 'dish' => $this->createPlatRepository(),
             'passwordreset', 'password_reset' => $this->createPasswordResetRepository(),
+            'horaire' => $this->createHoraireRepository(),
             default => throw new \InvalidArgumentException("Repository '$name' non supporté")
         };
     }

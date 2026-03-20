@@ -14,6 +14,7 @@ class StatsController extends Controller
 
     public function __construct()
     {
+        parent::__construct();
         // Utilisation de la Factory pour créer le repository
         $factory = RepositoryFactory::getInstance();
         $this->menuRepository = $factory->createMenuRepository();

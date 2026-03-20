@@ -15,4 +15,7 @@ interface BoissonRepositoryInterface
 
     // Calcule le total des boissons pour une commande
     public function getTotalByCommande(string $numeroCommande): float;
+
+    //Ajoute une boisson à une commande
+    public function addBoissonToCommande(string $numeroCommande, int $boissonId, int $quantite, float $prixUnitaire): bool;
 }

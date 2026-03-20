@@ -129,4 +129,34 @@ class MaterielRepository implements MaterielRepositoryInterface
         ");
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    //Ajoute un matériel à une commande
+    public function addMaterielToCommande(string $numeroCommande, int $materielId, int $quantite, float $prixCautionUnitaire, string $dateRetourPrevue): bool
+    {
+        $stmt = $this->db->prepare("
+            INSERT INTO commande_materiel (numero_commande, materiel_id, quantite, prix_caution_unitaire, date_retour_prevue)
+            VALUES (:numero_commande, :materiel_id, :quantite, :prix_caution_unitaire, :date_retour_prevue)
+        ");
+        return $stmt->execute([
+            'numero_commande' => $numeroCommande,
+            'materiel_id' => $materielId,
+            'quantite' => $quantite,
+            'prix_caution_unitaire' => $prixCautionUnitaire,
+            'date_retour_prevue' => $dateRetourPrevue
+        ]);
+    }
+
+    //Décrémente la quantité disponible d'un matériel
+    public function decrementQuantite(int $materielId, int $quantite): bool
+    {
+        $stmt = $this->db->prepare("
+            UPDATE {$this->table}
+            SET quantite_disponible = quantite_disponible - :quantite
+            WHERE {$this->primaryKey} = :materiel_id
+        ");
+        return $stmt->execute([
+            'quantite' => $quantite,
+            'materiel_id' => $materielId
+        ]);
+    }
 }

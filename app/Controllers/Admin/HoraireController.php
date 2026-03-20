@@ -4,7 +4,8 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Core\Session;
-use App\Models\Horaire;
+use App\Factory\RepositoryFactory;
+use App\Repository\HoraireRepositoryInterface;
 
 /**
  * Contrôleur Horaire
@@ -12,8 +13,12 @@ use App\Models\Horaire;
  */
 class HoraireController extends Controller
 {
+    private HoraireRepositoryInterface $horaireRepository;
+
     public function __construct()
     {
+        parent::__construct();
+
         // Vérifier que l'utilisateur est connecté et a le rôle employé ou admin
         if (!Session::has('user_id')) {
             header('Location: /login');
@@ -25,6 +30,9 @@ class HoraireController extends Controller
             header('Location: /');
             exit;
         }
+
+        $factory = RepositoryFactory::getInstance();
+        $this->horaireRepository = $factory->createHoraireRepository();
     }
 
     /**
@@ -33,10 +41,10 @@ class HoraireController extends Controller
     public function index()
     {
         // Initialiser les horaires par défaut si la table est vide
-        Horaire::initializeDefaultHoraires();
+        $this->horaireRepository->initializeDefaultHoraires();
 
         // Récupérer tous les horaires
-        $horaires = Horaire::findAllHoraires();
+        $horaires = $this->horaireRepository->findAll();
 
         $this->render('admin/horaires/index', [
             'title' => 'Gestion des horaires',
@@ -90,8 +98,8 @@ class HoraireController extends Controller
                 $this->redirect('/admin/horaires');
                 return;
             }
-            $result = Horaire::updateHoraire($jour, $heureOuverture, $heureFermeture, $ferme);
-            
+            $result = $this->horaireRepository->updateHoraire($jour, $heureOuverture, $heureFermeture, $ferme);
+
             if (!$result) {
                 $success = false;
             }

@@ -15,7 +15,6 @@ use App\Factory\RepositoryFactory;
 use App\Core\Request;
 use App\Core\Session;
 use App\MongoDB\MongoStats;
-use App\Models\Commande;
 
 class CommandeController extends Controller
 {
@@ -214,18 +213,13 @@ class CommandeController extends Controller
         $boissonsData = $request->post('boissons');
         if (!empty($boissonsData) && is_array($boissonsData)) {
             try {
-                $stmt = $this->db->prepare("
-                    INSERT INTO commande_boisson (numero_commande, boisson_id, quantite, prix_unitaire)
-                    VALUES (:numero_commande, :boisson_id, :quantite, :prix_unitaire)
-                ");
-                
                 foreach ($boissonsData as $boisson) {
-                    $stmt->execute([
-                        'numero_commande' => $numeroCommande,
-                        'boisson_id' => $boisson['id'],
-                        'quantite' => $boisson['quantite'],
-                        'prix_unitaire' => $boisson['prix_unitaire']
-                    ]);
+                    $this->boissonRepository->addBoissonToCommande(
+                        $numeroCommande,
+                        (int)$boisson['id'],
+                        (int)$boisson['quantite'],
+                        (float)$boisson['prix_unitaire']
+                    );
                 }
             } catch (\Exception $e) {
                 error_log("Erreur ajout boissons: " . $e->getMessage());
@@ -236,31 +230,21 @@ class CommandeController extends Controller
         $materielsData = $request->post('materiels');
         if (!empty($materielsData) && is_array($materielsData)) {
             try {
-                $stmt = $this->db->prepare("
-                    INSERT INTO commande_materiel (numero_commande, materiel_id, quantite, prix_caution_unitaire, date_retour_prevue)
-                    VALUES (:numero_commande, :materiel_id, :quantite, :prix_caution_unitaire, :date_retour_prevue)
-                ");
-                
                 // Date de retour prévue = date prestation + 10 jours
                 $dateRetourPrevue = date('Y-m-d H:i:s', strtotime($dateLivraison . ' +10 days'));
                 
                 foreach ($materielsData as $materiel) {
-                    $stmt->execute([
-                        'numero_commande' => $numeroCommande,
-                        'materiel_id' => $materiel['id'],
-                        'quantite' => $materiel['quantite'],
-                        'prix_caution_unitaire' => $materiel['caution_unitaire'],
-                        'date_retour_prevue' => $dateRetourPrevue
-                    ]);
-                    $stmtUpdate = $this->db->prepare("
-                        UPDATE materiel 
-                        SET quantite_disponible = quantite_disponible - :quantite
-                        WHERE materiel_id = :materiel_id
-                    ");
-                    $stmtUpdate->execute([
-                        'quantite' => $materiel['quantite'],
-                        'materiel_id' => $materiel['id']
-                    ]);
+                    $this->materielRepository->addMaterielToCommande(
+                        $numeroCommande,
+                        (int)$materiel['id'],
+                        (int)$materiel['quantite'],
+                        (float)$materiel['caution_unitaire'],
+                        $dateRetourPrevue
+                    );
+                    $this->materielRepository->decrementQuantite(
+                        (int)$materiel['id'],
+                        (int)$materiel['quantite']
+                    );
                 }
             } catch (\Exception $e) {
                 error_log("Erreur ajout matériel: " . $e->getMessage());
@@ -384,7 +368,7 @@ class CommandeController extends Controller
 
         // Récupérer les lignes de menus
         $lignesMenus = $this->commandeMenuRepository->findByCommande($numeroCommande);
-        $commandeModel->updateByNumero($numeroCommande, [
+        $this->commandeRepository->updateByNumero($numeroCommande, [
             'date_prestation' => $dateLivraison
         ]);
 
@@ -398,10 +382,10 @@ class CommandeController extends Controller
             );
             
             // Recalculer le total de la commande
-            $totalMenus = $commandeMenuModel->getTotalMenus($numeroCommande);
+            $totalMenus = $this->commandeMenuRepository->getTotalMenus($numeroCommande);
             $nouveauTotal = $totalMenus + $commande['prix_livraison'];
             
-            $commandeModel->updateByNumero($numeroCommande, [
+            $this->commandeRepository->updateByNumero($numeroCommande, [
                 'total_final' => $nouveauTotal
             ]);
         }
@@ -413,7 +397,7 @@ class CommandeController extends Controller
         if ($userEmail && $userPrenom) {
             require_once __DIR__ . '/../../config/mail.php';
             
-            $lignesMenus = $commandeMenuModel->findByCommande($numeroCommande);
+            $lignesMenus = $this->commandeMenuRepository->findByCommande($numeroCommande);
             
             $detailsCommande = [
                 'lignesMenus' => $lignesMenus,
@@ -455,7 +439,7 @@ class CommandeController extends Controller
             $this->redirect('/mes-commandes');
             return;
         }
-        $commandeModel->updateByNumero($numeroCommande, ['statut' => 'annulee']);
+        $this->commandeRepository->updateByNumero($numeroCommande, ['statut' => 'annulee']);
         
         // Enregistrer dans l'historique de suivi
         $this->suiviCommandeRepository->enregistrerChangement(
@@ -543,7 +527,7 @@ class CommandeController extends Controller
             'commande' => $commande,
             'historique' => $historique,
             'avisExistant' => $avisExistant,
-            'statuts' => Commande::STATUTS
+            'statuts' => \App\Repository\CommandeRepository::STATUTS
         ]);
     }
 }

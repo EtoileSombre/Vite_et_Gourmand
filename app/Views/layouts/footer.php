@@ -2,10 +2,7 @@
 
     <!-- Footer -->
     <footer class="site-footer text-center py-4 mt-5" role="contentinfo">
-        <p class="mb-1"><strong>Horaires :</strong> <?php
-            use App\Models\Horaire;
-            echo htmlspecialchars(Horaire::getHorairesFormatted());
-        ?></p>
+        <p class="mb-1"><strong>Horaires :</strong> <?= htmlspecialchars($horairesFormatted ?? 'Lun–Dim 10h–22h') ?></p>
         <p class="mb-2">
             <a href="/contact">Contact</a> · 
             <a href="/">Accueil</a> · 

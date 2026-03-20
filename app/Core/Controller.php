@@ -13,6 +13,17 @@ abstract class Controller
     protected function render($view, $data = [])
     {
         header('Content-Type: text/html; charset=UTF-8');
+
+        // Injecter les horaires formatés pour le footer
+        if (!isset($data['horairesFormatted'])) {
+            try {
+                $horaireRepo = \App\Factory\RepositoryFactory::getInstance()->createHoraireRepository();
+                $data['horairesFormatted'] = $horaireRepo->getHorairesFormatted();
+            } catch (\Exception $e) {
+                $data['horairesFormatted'] = 'Lun–Dim 10h–22h';
+            }
+        }
+
         extract($data);
         
         $viewPath = __DIR__ . "/../Views/$view.php";

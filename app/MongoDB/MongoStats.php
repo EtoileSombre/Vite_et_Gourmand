@@ -61,8 +61,16 @@ class MongoStats
      */
     private function getMongoConfig(): array
     {
+        // Construire l'URI à partir des variables d'environnement disponibles
+        $uri = getenv('MONGO_URI');
+        if (!$uri) {
+            $host = getenv('MONGO_HOST') ?: 'mongo';
+            $port = getenv('MONGO_PORT') ?: '27017';
+            $uri = "mongodb://{$host}:{$port}";
+        }
+
         return [
-            'uri' => getenv('MONGO_URI') ?: throw new \RuntimeException('Variable d\'environnement MONGO_URI non définie'),
+            'uri' => $uri,
             'database' => getenv('MONGO_DATABASE') ?: 'vg'
         ];
     }

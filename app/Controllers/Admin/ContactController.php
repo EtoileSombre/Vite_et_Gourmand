@@ -61,6 +61,12 @@ class ContactController extends Controller
      */
     public function changeStatus(Request $request): void
     {
+        if (!csrf_verify()) {
+            Session::set('error', 'Erreur de sécurité.');
+            header('Location: /admin/contacts');
+            exit;
+        }
+
         $contactId = (int) $request->post('contact_id');
         $nouveauStatut = $request->post('statut');
 
@@ -87,6 +93,12 @@ class ContactController extends Controller
      */
     public function delete(Request $request): void
     {
+        if (!csrf_verify()) {
+            Session::set('error', 'Erreur de sécurité.');
+            header('Location: /admin/contacts');
+            exit;
+        }
+
         $contactId = (int) $request->post('contact_id');
 
         $success = $this->contactRepository->delete($contactId);

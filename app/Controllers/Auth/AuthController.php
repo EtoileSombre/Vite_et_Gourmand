@@ -8,6 +8,7 @@ use App\Repository\PasswordResetRepositoryInterface;
 use App\Factory\RepositoryFactory;
 use App\Core\Request;
 use App\Core\Session;
+use App\Core\EmailSecurity;
 
 class AuthController extends Controller
 {
@@ -35,6 +36,15 @@ class AuthController extends Controller
                 $this->render('auth/login', ['errors' => $errors]);
                 return;
             }
+
+            // Rate limiting anti brute-force : 5 tentatives par IP / 15 min
+            $clientIp = EmailSecurity::getClientIp();
+            if (!EmailSecurity::checkRateLimit($clientIp, 5, 900, 'login')) {
+                $errors[] = "Trop de tentatives de connexion. Veuillez réessayer dans 15 minutes.";
+                EmailSecurity::logSecurityEvent('login_rate_limit', ['ip' => $clientIp]);
+                $this->render('auth/login', ['errors' => $errors]);
+                return;
+            }
             
             $email = $request->post('email');
             $password = $request->post('password');
@@ -47,14 +57,16 @@ class AuthController extends Controller
                 $user = $this->userRepository->findByEmail($email);
                 
                 if ($user && password_verify($password, $user['password'])) {
+                    // Régénérer l'ID de session pour éviter la fixation de session
+                    session_regenerate_id(true);
+
                     Session::set('user_id', $user['utilisateur_id']);
                     Session::set('user_prenom', $user['prenom']);
                     Session::set('user_email', $user['email']);
                     Session::set('user_role', $user['role']);
                     
-                    // Gestion de la redirection
-                    if (!empty($redirect) && strpos($redirect, '/') === 0) {
-                        // Redirection vers la page demandée (sécurisé : doit commencer par /)
+                    // Gestion de la redirection (protection open redirect : doit commencer par / mais pas //)
+                    if (!empty($redirect) && strpos($redirect, '/') === 0 && strpos($redirect, '//') !== 0) {
                         $this->redirect($redirect);
                     } elseif ($user['role'] === 'administrateur') {
                         $this->redirect('/admin');

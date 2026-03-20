@@ -15,7 +15,10 @@ try {
     $mysqlHost = getenv('MYSQL_HOST') ?: 'mysql';
     $mysqlDb = getenv('MYSQL_DATABASE') ?: 'vite_et_gourmand';
     $mysqlUser = getenv('MYSQL_USER') ?: 'root';
-    $mysqlPass = getenv('MYSQL_PASSWORD') ?: 'rootpass';
+    $mysqlPass = getenv('MYSQL_PASSWORD');
+    if (!$mysqlPass) {
+        throw new RuntimeException('Variable d\'environnement MYSQL_PASSWORD non définie');
+    }
     
     $pdo = new PDO(
         "mysql:host=$mysqlHost;dbname=$mysqlDb;charset=utf8mb4",
@@ -27,7 +30,10 @@ try {
     
     // === CONNEXION MONGODB ===
     echo "📦 Connexion à MongoDB...\n";
-    $mongoUri = getenv('MONGO_URI') ?: 'mongodb://vgroot:vgrootpass@mongo:27017';
+    $mongoUri = getenv('MONGO_URI');
+    if (!$mongoUri) {
+        throw new RuntimeException('Variable d\'environnement MONGO_URI non définie');
+    }
     $mongoDbName = getenv('MONGO_DATABASE') ?: 'vg';
     
     $mongoClient = new MongoDB\Client($mongoUri);

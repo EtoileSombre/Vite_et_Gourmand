@@ -22,6 +22,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                     <?php endif; ?>
 
                     <form method="POST" action="/admin/menus/store">
+                        <?= csrf_field() ?>
                         <!-- Titre -->
                         <div class="mb-3">
                             <label for="titre" class="form-label">Titre du menu <span class="text-danger">*</span></label>

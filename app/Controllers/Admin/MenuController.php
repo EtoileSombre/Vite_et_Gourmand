@@ -94,6 +94,12 @@ class MenuController extends Controller
             return;
         }
 
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité.');
+            $this->redirect('/admin/menus/create');
+            return;
+        }
+
         $errors = [];
 
         // Validation
@@ -204,6 +210,12 @@ class MenuController extends Controller
             return;
         }
 
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité.');
+            $this->redirect('/admin/menus');
+            return;
+        }
+
         $id = $_POST['menu_id'] ?? null;
 
         if (!$id) {
@@ -272,6 +284,12 @@ class MenuController extends Controller
     public function delete(Request $request): void
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/admin/menus');
+            return;
+        }
+
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité.');
             $this->redirect('/admin/menus');
             return;
         }

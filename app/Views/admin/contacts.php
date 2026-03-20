@@ -87,6 +87,7 @@
                                     <div class="row align-items-center">
                                         <div class="col-md-6">
                                             <form method="POST" action="/admin/contacts/change-status" class="d-inline">
+                                                <?= csrf_field() ?>
                                                 <input type="hidden" name="contact_id" value="<?= $msg['contact_id'] ?>">
                                                 <div class="input-group input-group-sm">
                                                     <label class="input-group-text" for="statut<?= $msg['contact_id'] ?>">Statut</label>
@@ -108,6 +109,7 @@
                                             </a>
                                             <form method="POST" action="/admin/contacts/delete" class="d-inline" 
                                                   data-confirm="Êtes-vous sûr de vouloir supprimer ce message ?">
+                                                <?= csrf_field() ?>
                                                 <input type="hidden" name="contact_id" value="<?= $msg['contact_id'] ?>">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
                                                     <i class="bi bi-trash-fill"></i> Supprimer

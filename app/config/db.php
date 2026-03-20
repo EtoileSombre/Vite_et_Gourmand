@@ -4,8 +4,12 @@
 $host = getenv('MYSQL_HOST') ?: 'mysql';
 $dbname = getenv('MYSQL_DATABASE') ?: 'vite_et_gourmand';
 $username = getenv('MYSQL_USER') ?: 'root';
-$password = getenv('MYSQL_PASSWORD') ?: 'rootpass';
+$password = getenv('MYSQL_PASSWORD');
 $port = getenv('MYSQL_PORT') ?: 3306;
+
+if (!$password) {
+    throw new RuntimeException('Variable d\'environnement MYSQL_PASSWORD non définie');
+}
 
 $options = [
     PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,      // Lance des exceptions en cas d'erreur

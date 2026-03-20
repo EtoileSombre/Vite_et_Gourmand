@@ -34,6 +34,10 @@ if ($contactEnvoye) {
 
                     <form id="contactForm" method="POST" action="/contact" data-validate>
                         <?= csrf_field() ?>
+                        <!-- Honeypot anti-spam : champ invisible pour les humains -->
+                        <div style="position:absolute;left:-9999px;" aria-hidden="true">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off" value="">
+                        </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email *</label>
                             <input type="email" 

@@ -15,7 +15,7 @@ session_set_cookie_params([
     'lifetime' => 0,
     'path' => '/',
     'domain' => '',
-    'secure' => false,         // true en production HTTPS
+    'secure' => (getenv('APP_ENV') === 'production' || getenv('APP_ENV') === 'prod'),
     'httponly' => true,
     'samesite' => 'Lax'
 ]);

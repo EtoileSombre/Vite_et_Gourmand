@@ -59,6 +59,12 @@ class AvisController extends Controller
      */
     public function approve(): void
     {
+        if (!csrf_verify()) {
+            Session::set('error', 'Erreur de sécurité.');
+            $this->redirect('/employe/avis');
+            return;
+        }
+
         $avisId = $_POST['avis_id'] ?? null;
 
         if (!$avisId) {
@@ -82,6 +88,12 @@ class AvisController extends Controller
      */
     public function reject(): void
     {
+        if (!csrf_verify()) {
+            Session::set('error', 'Erreur de sécurité.');
+            $this->redirect('/employe/avis');
+            return;
+        }
+
         $avisId = $_POST['avis_id'] ?? null;
         $motif = $_POST['motif'] ?? '';
 

@@ -120,6 +120,11 @@ class CommandeController extends Controller
 
         // Si POST : traiter le changement de statut
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if (!csrf_verify()) {
+                Session::set('flash_error', 'Erreur de sécurité.');
+                $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
+                return;
+            }
             $this->processStatusChange($numeroCommande, $commande);
             return;
         }
@@ -293,6 +298,12 @@ class CommandeController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             Session::set('flash_error', 'Méthode non autorisée');
+            $this->redirect('/employe/commandes');
+            return;
+        }
+
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité.');
             $this->redirect('/employe/commandes');
             return;
         }

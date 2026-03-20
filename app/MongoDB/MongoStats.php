@@ -62,7 +62,7 @@ class MongoStats
     private function getMongoConfig(): array
     {
         return [
-            'uri' => getenv('MONGO_URI') ?: 'mongodb://vgroot:vgrootpass@mongo:27017',
+            'uri' => getenv('MONGO_URI') ?: throw new \RuntimeException('Variable d\'environnement MONGO_URI non définie'),
             'database' => getenv('MONGO_DATABASE') ?: 'vg'
         ];
     }

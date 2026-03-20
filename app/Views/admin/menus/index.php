@@ -103,6 +103,7 @@ require_once __DIR__ . '/../../layouts/header.php';
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annuler</button>
                 <form method="POST" action="/admin/menus/delete" id="deleteMenuForm">
+                    <?= csrf_field() ?>
                     <input type="hidden" name="menu_id" id="menuIdToDelete">
                     <button type="submit" class="btn btn-danger rounded-pill">
                         <i class="bi bi-trash"></i> Supprimer

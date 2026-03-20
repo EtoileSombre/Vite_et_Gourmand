@@ -36,6 +36,17 @@ class ContactController extends Controller
                 $this->render('public/contact/index', ['errors' => $errors]);
                 return;
             }
+
+            // Honeypot anti-spam : si ce champ caché est rempli, c'est un bot
+            if (!empty($request->post('website'))) {
+                EmailSecurity::logSecurityEvent('honeypot_triggered', [
+                    'ip' => EmailSecurity::getClientIp()
+                ]);
+                // On simule un succès pour ne pas alerter le bot
+                Session::set('contact_envoye', true);
+                $this->redirect('/contact');
+                return;
+            }
             
             $clientIp = EmailSecurity::getClientIp();
             if (!EmailSecurity::checkRateLimit($clientIp, 5, 3600)) {
@@ -82,12 +93,12 @@ class ContactController extends Controller
             // Si pas d'erreurs, sauvegarder et envoyer email
             if (empty($errors)) {
                 try {
-                    // Sauvegarder en base de données
+                    // Sauvegarder en base de données (pas d'échappement HTML ici, c'est à l'affichage)
                     $contactId = $this->contactRepository->createContact([
-                        'nom' => '', // Optionnel, pas dans l'énoncé ECF
+                        'nom' => '',
                         'email' => $email,
-                        'sujet' => htmlspecialchars($titre),
-                        'message' => htmlspecialchars($description)
+                        'sujet' => $titre,
+                        'message' => $description
                     ]);
 
                     $this->sendEmailToEntreprise($email, $titre, $description, $contactId);

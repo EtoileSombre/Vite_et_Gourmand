@@ -21,6 +21,7 @@
                     </div>
                     <div class="card-body">
                         <form method="POST" action="/admin/plats/store">
+                            <?= csrf_field() ?>
                             
                             <!-- Titre du plat -->
                             <div class="mb-3">

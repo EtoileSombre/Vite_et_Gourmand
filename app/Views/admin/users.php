@@ -75,6 +75,7 @@
                                 <?php if ($user['actif']): ?>
                                     <form method="POST" action="/admin/utilisateurs/desactiver" class="d-inline" 
                                           data-confirm="Désactiver ce compte employé ?">
+                                        <?= csrf_field() ?>
                                         <input type="hidden" name="utilisateur_id" value="<?= $user['utilisateur_id'] ?>">
                                         <button type="submit" class="btn btn-sm btn-warning rounded-pill" title="Désactiver">
                                             <i class="bi bi-lock"></i>
@@ -83,6 +84,7 @@
                                 <?php else: ?>
                                     <form method="POST" action="/admin/utilisateurs/activer" class="d-inline"
                                           data-confirm="Réactiver ce compte employé ?">
+                                        <?= csrf_field() ?>
                                         <input type="hidden" name="utilisateur_id" value="<?= $user['utilisateur_id'] ?>">
                                         <button type="submit" class="btn btn-sm btn-success rounded-pill" title="Activer">
                                             <i class="bi bi-unlock"></i>
@@ -107,6 +109,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="POST" action="/admin/utilisateurs/creer-employe">
+                <?= csrf_field() ?>
                 <div class="modal-header bg-vg-bordeaux text-white">
                     <h5 class="modal-title"><i class="bi bi-person-plus"></i> Créer un compte employé</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>

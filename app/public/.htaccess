@@ -1,17 +1,6 @@
 # Configuration UTF-8
 AddDefaultCharset UTF-8
 
-# Variables d'environnement (à configurer selon votre environnement)
-# En production, décommentez et configurez ces valeurs :
-# SetEnv APP_ENV production
-# SetEnv MAIL_HOST smtp.hostinger.com
-# SetEnv MAIL_PORT 587
-# SetEnv MAIL_ENCRYPTION tls
-# SetEnv MAIL_USERNAME contact@viteetgourmand.com
-# SetEnv MAIL_PASSWORD votre_mot_de_passe_email
-# SetEnv MAIL_FROM_ADDRESS contact@viteetgourmand.com
-# SetEnv MAIL_FROM_NAME "Vite & Gourmand"
-
 # Active la réécriture d'URL
 RewriteEngine On
 

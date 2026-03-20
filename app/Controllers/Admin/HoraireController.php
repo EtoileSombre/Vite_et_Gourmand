@@ -54,6 +54,12 @@ class HoraireController extends Controller
             return;
         }
 
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité.');
+            $this->redirect('/admin/horaires');
+            return;
+        }
+
         $jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
         $success = true;
 

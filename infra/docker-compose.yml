@@ -54,7 +54,7 @@ services:
     container_name: ${APP_NAME}-mysql
     restart: always
     ports:
-      - "${MYSQL_PORT}:3306"
+      - "127.0.0.1:${MYSQL_PORT}:3306"
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -71,7 +71,7 @@ services:
     container_name: ${APP_NAME}-pma
     restart: always
     ports:
-      - "${PMA_PORT}:80"
+      - "127.0.0.1:${PMA_PORT}:80"
     environment:
       PMA_HOST: ${MYSQL_HOST}
       PMA_USER: ${MYSQL_USER}
@@ -86,7 +86,7 @@ services:
     container_name: ${APP_NAME}-mongo
     restart: always
     ports:
-      - "${MONGO_PORT}:27017"
+      - "127.0.0.1:${MONGO_PORT}:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
@@ -100,7 +100,7 @@ services:
     container_name: ${APP_NAME}-mongo-express
     restart: always
     ports:
-      - "${MONGO_EXPRESS_PORT}:8081"
+      - "127.0.0.1:${MONGO_EXPRESS_PORT}:8081"
     environment:
       ME_CONFIG_MONGODB_SERVER: ${MONGO_HOST}
       ME_CONFIG_MONGODB_ADMINUSERNAME: ${MONGO_INITDB_ROOT_USERNAME}
@@ -115,8 +115,8 @@ services:
     container_name: ${APP_NAME}-mailhog
     restart: always
     ports:
-      - "${MAILHOG_UI_PORT}:8025"
-      - "${MAILHOG_SMTP_PORT}:1025"
+      - "127.0.0.1:${MAILHOG_UI_PORT}:8025"
+      - "127.0.0.1:${MAILHOG_SMTP_PORT}:1025"
     networks:
       - app-network
 

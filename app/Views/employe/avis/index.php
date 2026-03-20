@@ -117,6 +117,7 @@
                                         <div class="row g-2">
                                             <div class="col-6">
                                                 <form method="POST" action="/employe/avis/approve">
+                                                    <?= csrf_field() ?>
                                                     <input type="hidden" name="avis_id" value="<?= $item['avis_id'] ?>">
                                                     <button type="submit" class="btn btn-vg-gold btn-sm w-100 rounded-pill">
                                                         <i class="bi bi-check-circle me-1"></i>
@@ -147,6 +148,7 @@
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <form method="POST" action="/employe/avis/reject">
+                                        <?= csrf_field() ?>
                                         <div class="modal-header">
                                             <h5 class="modal-title" id="rejectModalLabel<?= $item['avis_id'] ?>">Rejeter l'avis</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>

@@ -98,11 +98,11 @@ class EmailSecurity
      * 
      * @return bool True si autorisé, false si rate limit dépassé
      */
-    public static function checkRateLimit(string $ip, int $maxEmails = 5, int $timeWindow = 3600): bool
+    public static function checkRateLimit(string $ip, int $maxEmails = 5, int $timeWindow = 3600, string $prefix = 'email'): bool
     {
         Session::start();
         
-        $rateLimitKey = 'email_rate_limit_' . $ip;
+        $rateLimitKey = $prefix . '_rate_limit_' . $ip;
         $attempts = Session::get($rateLimitKey, []);
         
         // Nettoyer les anciennes tentatives (hors de la fenêtre de temps)

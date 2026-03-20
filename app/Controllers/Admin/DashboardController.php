@@ -99,6 +99,12 @@ class DashboardController extends Controller
             return;
         }
 
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité.');
+            $this->redirect('/admin/utilisateurs');
+            return;
+        }
+
         $errors = [];
 
         // Récupération des données
@@ -176,6 +182,12 @@ class DashboardController extends Controller
             return;
         }
 
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité.');
+            $this->redirect('/admin/utilisateurs');
+            return;
+        }
+
         $utilisateurId = $_POST['utilisateur_id'] ?? null;
 
         if (!$utilisateurId) {
@@ -214,6 +226,12 @@ class DashboardController extends Controller
         }
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/admin/utilisateurs');
+            return;
+        }
+
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité.');
             $this->redirect('/admin/utilisateurs');
             return;
         }

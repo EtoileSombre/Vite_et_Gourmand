@@ -21,6 +21,7 @@
                     </div>
                     <div class="card-body">
                         <form method="POST" action="/admin/plats/update">
+                            <?= csrf_field() ?>
                             <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
                             
                             <!-- Titre du plat -->

@@ -8,7 +8,10 @@ echo str_repeat("=", 60) . "\n\n";
 
 try {
     // Récupération de l'URI depuis les variables d'environnement
-    $mongoUri = getenv('MONGO_URI') ?: 'mongodb://vgroot:vgrootpass@mongo:27017';
+    $mongoUri = getenv('MONGO_URI');
+    if (!$mongoUri) {
+        throw new RuntimeException('Variable d\'environnement MONGO_URI non définie');
+    }
     $mongoDbName = getenv('MONGO_DATABASE') ?: 'vg';
     
     $client = new MongoDB\Client($mongoUri);

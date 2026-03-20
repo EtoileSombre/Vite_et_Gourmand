@@ -79,6 +79,12 @@ class PlatController extends Controller
             return;
         }
 
+        if (!csrf_verify()) {
+            Session::set('error', 'Erreur de sécurité.');
+            $this->redirect('/admin/plats/create');
+            return;
+        }
+
         // Validation
         $errors = [];
         $titrePlat = trim($_POST['titre_plat'] ?? '');
@@ -156,6 +162,12 @@ class PlatController extends Controller
             return;
         }
 
+        if (!csrf_verify()) {
+            Session::set('error', 'Erreur de sécurité.');
+            $this->redirect('/admin/plats');
+            return;
+        }
+
         $platId = (int)($_POST['plat_id'] ?? 0);
         $plat = $this->platRepository->findPlatById($platId);
 
@@ -210,6 +222,12 @@ class PlatController extends Controller
     public function delete()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $this->redirect('/admin/plats');
+            return;
+        }
+
+        if (!csrf_verify()) {
+            Session::set('error', 'Erreur de sécurité.');
             $this->redirect('/admin/plats');
             return;
         }

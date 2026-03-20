@@ -1,104 +1,123 @@
-# 🍽️ Vite & Gourmand
+# Vite & Gourmand
 
-**Projet ECF – Titre Professionnel Développeur Web & Web Mobile (DWWM)**
+**Projet ECF – Titre Professionnel DWWM**
 
-Application web de gestion de commandes destinée au restaurant Vite et Gourmand de Julie et José, permettant d’optimiser leur organisation interne, de faciliter la prise de commandes en ligne et d’améliorer la visibilité de leur établissement.
-
----
-
-## 🎯 Fonctionnalités principales
-
-- Consultation des menus et plats
-- Commande en ligne avec suivi du statut
-- Gestion des utilisateurs (administrateur / employé / utilisateur)
-- Tableau de bord statistiques
-- Formulaire de contact avec envoi d’email
-- Gestion sécurisée des avis clients
+Application web de commande en ligne pour le restaurant Vite et Gourmand.
 
 ---
 
-## ⚙️ Stack technique
+## Stack technique
 
-**Frontend** : HTML5, CSS3, Bootstrap 5, JavaScript, Chart.js  
-**Backend** : PHP 8.3 (MVC), Apache 2.4  
-**BDD** : MySQL 8.3, MongoDB 6.0
-**Architecture MVC PHP 8.3** avec séparation données métier (MySQL) et analytics (MongoDB). 
-**DevOps** : Docker Compose, Git/GitHub
+- **Frontend** : HTML5, CSS3, Bootstrap 5, JavaScript, Chart.js
+- **Backend** : PHP 8.3 (architecture MVC), Apache
+- **BDD** : MySQL 8.3 (données métier), MongoDB 6.0 (analytics)
+- **DevOps** : Docker Compose, Caddy (HTTPS), Git/GitHub
 
 ---
 
-## 🚀 Installation locale
+## Installation en local
 
-### Prérequis
-- Docker Desktop
-- Git
+L'application se lance entièrement en local via Docker. Aucune configuration manuelle n'est nécessaire.
 
-### Commandes
+**Prérequis** :
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (inclut Docker Compose)
+- [Git](https://git-scm.com/downloads)
+- Make (inclus sur macOS/Linux, sur Windows utiliser [Git Bash](https://gitforwindows.org/) ou WSL)
+
 ```bash
 git clone https://github.com/EtoileSombre/Vite_et_Gourmand.git
 cd Vite_et_Gourmand
-
-cp infra/.env.example infra/.env
-
-cd infra
-docker compose up -d
+make dev
+make dev-init
 ```
 
-### Initialisation des bases de données
+L'application est ensuite accessible sur :
 
-**MySQL** (structure + jeu de données)
+| Service | URL |
+|---|---|
+| Application | http://localhost:8080 |
+| PHPMyAdmin | http://localhost:8081 |
+| Mongo Express | http://localhost:8084 |
+| MailHog (emails) | http://localhost:8025 |
+
+> Les emails (contact, notifications) sont interceptés par MailHog et consultables sur http://localhost:8025
+
+Le site est également déployé en production sur https://viteetgourmand.com avec un serveur SMTP Hostinger pour l'envoi réel des emails.
+
+---
+
+## Déploiement et hébergement
+
+Le projet tourne sur un **VPS unique** (Hostinger) où **dev et prod coexistent** dans des stacks Docker isolées (containers, volumes et ports séparés).
+
+**Stack production** :
+- **Caddy** en reverse proxy avec HTTPS automatique (Let's Encrypt)
+- Les services (PHP, MySQL, MongoDB) ne sont pas exposés directement — seuls les ports 80/443 sont ouverts
+- Les variables sensibles (BDD, SMTP) sont dans un fichier `.env` gitignored
+
+**Workflow de déploiement** :
+
 ```bash
-docker compose exec -T mysql mysql -uroot -pchangeme vite_et_gourmand < ../app/sql/structure.sql
-docker compose exec -T mysql mysql -uroot -pchangeme vite_et_gourmand < ../app/sql/donnees.sql
+make deploy
 ```
 
-**MongoDB** (index)
-```bash
-docker compose exec app php /var/www/html/scripts/create-mongo-indexes.php
+Cette commande (depuis la branche `develop`) :
+1. Merge `develop` → `main`
+2. Rebuild les containers de production
+3. Push `main` sur GitHub
+4. Retour automatique sur `develop`
+
+---
+
+## Architecture du projet
+
+```
+├── app/                          # Code applicatif
+│   ├── Controllers/              # Contrôleurs MVC
+│   │   ├── Admin/                #   Back-office administrateur
+│   │   ├── Auth/                 #   Authentification
+│   │   ├── Employe/              #   Espace employé
+│   │   ├── Public/               #   Pages publiques
+│   │   └── Utilisateur/          #   Espace client
+│   ├── Core/                     # Framework maison (Router, Database, Session, CSRF...)
+│   ├── Factory/                  # Factory Pattern (injection de dépendances)
+│   ├── Models/                   # Modèles de données
+│   ├── MongoDB/                  # Statistiques MongoDB
+│   ├── Repository/               # Couche d'accès aux données (interfaces + implémentations)
+│   ├── Views/                    # Vues PHP (layouts, admin, public, utilisateur...)
+│   ├── config/                   # Configuration (BDD, mail)
+│   ├── public/                   # Point d'entrée web (index.php, .htaccess, assets/)
+│   ├── scripts/                  # Scripts utilitaires (init Mongo, sync données)
+│   ├── sql/                      # Structure et données MySQL
+│   └── routes.php                # Définition des routes
+├── infra/                        # Infrastructure Docker
+│   ├── docker-compose.yml        # Stack production (Caddy + HTTPS)
+│   ├── docker-compose.dev.yml    # Stack développement
+│   ├── caddy/Caddyfile           # Configuration reverse proxy
+│   ├── php/Dockerfile            # Image PHP personnalisée
+│   ├── .env.dev                  # Variables dev
+│   └── .env.example              # Template variables prod
+├── Makefile                      # Commandes projet
+└── README.md
 ```
 
-### Accès
-**Application** : http://localhost:8080  
-**phpMyAdmin** : http://localhost:8090  
-**Mongo Express** : http://localhost:8081  
-**MailHog** : http://localhost:8025
+---
 
-> 💌 **Test des emails** : En local MailHog intercepte les emails (formulaire de contact, notifications). Consultez http://localhost:8025 pour les visualiser.  
-> Pour tester l'envoi réel, utilisez le site en production : https://viteetgourmand.com
+## Commandes disponibles
+
+| Commande | Description |
+|---|---|
+| `make dev` | Démarrer l'application |
+| `make dev-init` | Initialiser les bases de données (premier lancement) |
+| `make dev-stop` | Arrêter l'application |
+| `make dev-logs` | Voir les logs |
 
 ---
 
-## 🌐 Déploiement VPS chez Hostinger
+## Sécurité
 
-**URL publique** : https://viteetgourmand.com  
-**Environnement** : VPS avec Docker Compose + Caddy (HTTPS)  
-**SMTP** : Serveur SMTP Hostinger réel configuré 
-**Séparation** : Environnement DEV (`/opt/Vite_et_Gourmand_dev`) distinct de la PROD (`/opt/Vite_et_Gourmand`)
-
-Le projet est **déployé et accessible en ligne** pour démontrer la mise en production professionnelle avec **gestion complète des emails** (contact, notifications).
-
----
-
-## 🔑 Comptes de test
-
-| Rôle | Email | Mot de passe |
-|------|-------|--------------|
-| 👑 Admin | `admin@viteetgourmand.fr` | `Admin123!` |
-| 👷 Employé | `employe@viteetgourmand.fr` | `Employe123!` |
-| 👤 Client | `utilisateur@test.fr` | `Utilisateur123!` |
-
----
-
-## 🔒 Sécurité
-
-- Mots de passe hashés avec bcrypt
+- Mots de passe hashés (bcrypt)
 - Requêtes préparées (PDO)
-- Protection XSS
+- Protection XSS, CSRF
 - Gestion des rôles (RBAC)
-- Variables sensibles isolées dans `.env`
-
----
-
-## 📚 Documentation
-
-A faire
+- Variables sensibles isolées dans `.env` (gitignored)

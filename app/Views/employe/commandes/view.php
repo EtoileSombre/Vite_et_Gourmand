@@ -58,6 +58,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                     </div>
                     <div class="card-body">
                         <form method="POST" action="/employe/commandes/change-status?id=<?= htmlspecialchars($commande['numero_commande']) ?>">
+                            <?= csrf_field() ?>
                             
                             <!-- Nouveau statut -->
                             <div class="mb-3">
@@ -109,6 +110,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                         </div>
 
                         <form method="POST" action="/employe/commandes/edit" id="formEditCommande">
+                            <?= csrf_field() ?>
                             <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($commande['numero_commande']) ?>">
 
                             <div class="row">

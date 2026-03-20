@@ -1,46 +1,39 @@
 # Makefile pour Vite & Gourmand
 
-.PHONY: dev dev-stop dev-logs dev-ps prod prod-stop prod-logs prod-ps deploy
+.PHONY: dev dev-init dev-stop dev-logs prod-stop prod-logs deploy
 
-# ===== DÉVELOPPEMENT (branche develop) =====
+# ===== DÉVELOPPEMENT =====
 
-## dev: Démarrer l'environnement de développement
 dev:
 	@cd infra && docker compose -f docker-compose.dev.yml --env-file .env.dev up -d --build
 
-## dev-stop: Arrêter l'environnement de développement
+dev-init:
+	@echo "⏳ Importation MySQL..."
+	@cd infra && docker compose -f docker-compose.dev.yml --env-file .env.dev exec -T mysql \
+		sh -c 'mysql --force -uroot -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE < /docker-entrypoint-initdb.d/structure.sql'
+	@cd infra && docker compose -f docker-compose.dev.yml --env-file .env.dev exec -T mysql \
+		sh -c 'mysql --force -uroot -p$$MYSQL_ROOT_PASSWORD $$MYSQL_DATABASE < /docker-entrypoint-initdb.d/donnees.sql'
+	@echo "⏳ Création des index MongoDB..."
+	@cd infra && docker compose -f docker-compose.dev.yml --env-file .env.dev exec -T app \
+		php /var/www/html/scripts/create-mongo-indexes.php
+	@echo "Bases de données initialisées."
+
 dev-stop:
 	@cd infra && docker compose -f docker-compose.dev.yml --env-file .env.dev down
 
-## dev-logs: Voir les logs de développement
 dev-logs:
 	@cd infra && docker compose -f docker-compose.dev.yml --env-file .env.dev logs -f
 
-## dev-ps: État des containers de développement
-dev-ps:
-	@cd infra && docker compose -f docker-compose.dev.yml --env-file .env.dev ps
+# ===== PRODUCTION =====
 
-# ===== PRODUCTION (branche main) =====
-
-## prod: Démarrer l'environnement de production
-prod:
-	@cd infra && docker compose up -d --build
-
-## prod-stop: Arrêter l'environnement de production
 prod-stop:
 	@cd infra && docker compose down
 
-## prod-logs: Voir les logs de production
 prod-logs:
 	@cd infra && docker compose logs -f
 
-## prod-ps: État des containers de production
-prod-ps:
-	@cd infra && docker compose ps
+# ===== DÉPLOIEMENT =====
 
-# ===== DÉPLOIEMENT (develop → main → prod) =====
-
-## deploy: Déployer develop en production (merge + rebuild)
 deploy:
 	@CURRENT_BRANCH=$$(git rev-parse --abbrev-ref HEAD); \
 	if [ "$$CURRENT_BRANCH" != "develop" ]; then \
@@ -52,6 +45,8 @@ deploy:
 	git merge develop && \
 	echo "🚀 Rebuild des containers de production..." && \
 	cd infra && docker compose up -d --build && cd .. && \
+	echo "📤 Push sur GitHub..." && \
+	git push origin main && \
 	echo "↩️  Retour sur develop..." && \
 	git checkout develop && \
 	echo "Déploiement terminé !"

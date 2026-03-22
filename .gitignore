@@ -126,6 +126,11 @@ _ReSharper*/
 TestResult.xml
 coverage/
 
+# PHPUnit — Tests unitaires (développement local uniquement)
+app/tests/
+app/phpunit.xml
+app/.phpunit.cache/
+
 # -----------------------------
 # 📝 Documentation (temporaire)
 # -----------------------------

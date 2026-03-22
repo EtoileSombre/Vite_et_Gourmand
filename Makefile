@@ -1,6 +1,6 @@
 # Makefile pour Vite & Gourmand
 
-.PHONY: dev dev-init dev-stop dev-logs prod-stop prod-logs deploy
+.PHONY: dev dev-init dev-stop dev-logs prod-stop prod-logs deploy test test-verbose
 
 # ===== DÉVELOPPEMENT =====
 
@@ -31,6 +31,14 @@ prod-stop:
 
 prod-logs:
 	@cd infra && docker compose logs -f
+
+# ===== TESTS =====
+
+test:
+	@cd app && vendor/bin/phpunit
+
+test-verbose:
+	@cd app && vendor/bin/phpunit --testdox
 
 # ===== DÉPLOIEMENT =====
 

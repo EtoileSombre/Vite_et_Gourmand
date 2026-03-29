@@ -43,7 +43,7 @@ services:
       MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME}
     volumes:
-      - ../app:/var/www/html
+      - /opt/Vite_et_Gourmand/app:/var/www/html
     depends_on:
       - mysql
       - mongo

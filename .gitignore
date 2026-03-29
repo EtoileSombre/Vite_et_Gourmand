@@ -136,4 +136,8 @@ app/.phpunit.cache/
 # -----------------------------
 docs/
 
+# Script de maintenance git
+rewrite-history-v2.py
+__pycache__/
+
 

@@ -4,7 +4,8 @@ namespace App\Core;
 
 /**
  * Classe Model de base
- * Tous les modèles héritent de cette classe
+ * Définit la structure de l'entité (table, clé primaire)
+ * L'accès aux données se fait exclusivement via les Repositories
  */
 abstract class Model
 {
@@ -16,55 +17,17 @@ abstract class Model
     {
         $this->db = Database::getInstance();
     }
-    public function findAll()
-    {
-        $stmt = $this->db->query("SELECT * FROM {$this->table}");
-        return $stmt->fetchAll();
-    }
-    public function findById($id)
-    {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$this->primaryKey} = :id");
-        $stmt->execute(['id' => $id]);
-        $result = $stmt->fetch();
-        return $result ?: null;
-    }
-    public function create($data)
-    {
-        $fields = array_keys($data);
-        $placeholders = array_map(function($field) {
-            return ":$field";
-        }, $fields);
-        
-        $sql = "INSERT INTO {$this->table} (" . implode(', ', $fields) . ") 
-                VALUES (" . implode(', ', $placeholders) . ")";
 
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute($data);
-        
-        return $this->db->lastInsertId();
-    }
-    public function update($id, $data)
+    public function getTable(): string
     {
-        $fields = [];
-        foreach (array_keys($data) as $field) {
-            $fields[] = "$field = :$field";
-        }
-        
-        $sql = "UPDATE {$this->table} SET " . implode(', ', $fields) . " WHERE {$this->primaryKey} = :pk_id";
-
-        $data['pk_id'] = $id;
-        $stmt = $this->db->prepare($sql);
-        
-        return $stmt->execute($data);
+        return $this->table;
     }
 
-    public function delete($id)
+    public function getPrimaryKey(): string
     {
-        $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE {$this->primaryKey} = :id");
-        return $stmt->execute(['id' => $id]);
+        return $this->primaryKey;
     }
 
-    // Retourne l'instance de la base de données
     public function getDb()
     {
         return $this->db;

@@ -327,4 +327,68 @@ class MenuRepository implements MenuRepositoryInterface
 
         return $menus;
     }
+
+    //Importe les photos depuis le dossier du menu
+    public function importPhotosFromDirectory(int $menuId, string $menuTitre, string $imgBaseDir): int
+    {
+        $menuDir = $imgBaseDir . $menuTitre;
+        
+        if (!is_dir($menuDir)) {
+            return 0;
+        }
+        
+        // Exclure les photos de boissons
+        $boissonsExclues = ['bordeaux', 'rouge', 'blanc', 'vin', 'café', 'cafe', 'eau', 'minérale', 'minerale', 'sauvignon'];
+        
+        $files = scandir($menuDir);
+        $photosMenu = [];
+        $ordre = 1;
+        
+        foreach ($files as $file) {
+            $extension = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+            $fileName = strtolower(pathinfo($file, PATHINFO_FILENAME));
+            
+            if (in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'])) {
+                $estBoisson = false;
+                foreach ($boissonsExclues as $motExclu) {
+                    if (strpos($fileName, $motExclu) !== false) {
+                        $estBoisson = true;
+                        break;
+                    }
+                }
+                
+                if (!$estBoisson) {
+                    $photosMenu[] = [
+                        'url' => '/assets/img/' . $menuTitre . '/' . $file,
+                        'ordre' => $ordre++
+                    ];
+                }
+            }
+        }
+        
+        if (empty($photosMenu)) {
+            return 0;
+        }
+        
+        // Supprimer les anciennes photos
+        $stmt = $this->db->prepare("DELETE FROM galerie_menu WHERE menu_id = :menu_id");
+        $stmt->execute(['menu_id' => $menuId]);
+        
+        // Insérer les nouvelles photos
+        $stmt = $this->db->prepare("
+            INSERT INTO galerie_menu (menu_id, image_url, legende, ordre) 
+            VALUES (:menu_id, :image_url, :legende, :ordre)
+        ");
+        
+        foreach ($photosMenu as $photo) {
+            $stmt->execute([
+                'menu_id' => $menuId,
+                'image_url' => $photo['url'],
+                'legende' => null,
+                'ordre' => $photo['ordre']
+            ]);
+        }
+        
+        return count($photosMenu);
+    }
 }

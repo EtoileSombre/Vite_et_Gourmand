@@ -40,7 +40,6 @@ class CommandeController extends Controller
         $this->suiviCommandeRepository = $factory->createSuiviCommandeRepository();
         $this->boissonRepository = $factory->createBoissonRepository();
         $this->materielRepository = $factory->createMaterielRepository();
-        $this->suiviCommandeRepository = $factory->createSuiviCommandeRepository();
     }
 
     /**

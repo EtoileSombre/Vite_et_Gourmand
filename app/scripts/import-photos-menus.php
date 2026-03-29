@@ -2,12 +2,13 @@
 
 require_once __DIR__ . '/../autoload.php';
 
-use App\Models\Menu;
+use App\Factory\RepositoryFactory;
 
 echo "=== IMPORTATION DES PHOTOS DE MENUS ===\n\n";
 
 try {
-    $menuModel = new Menu();
+    $factory = RepositoryFactory::getInstance();
+    $menuRepository = $factory->createMenuRepository();
 } catch (Exception $e) {
     die("Erreur : " . $e->getMessage() . "\n");
 }
@@ -16,7 +17,7 @@ try {
 $imgBaseDir = __DIR__ . '/../public/assets/img/';
 
 // Récupérer tous les menus actifs
-$menus = $menuModel->findAll();
+$menus = $menuRepository->findAll();
 
 $totalPhotosImportees = 0;
 $totalMenusTraites = 0;
@@ -27,7 +28,7 @@ foreach ($menus as $menu) {
     
     echo "Traitement du menu : {$menuTitre}\n";
     
-    $nbPhotos = $menuModel->importPhotosFromDirectory($menuId, $menuTitre, $imgBaseDir);
+    $nbPhotos = $menuRepository->importPhotosFromDirectory($menuId, $menuTitre, $imgBaseDir);
     
     if ($nbPhotos === 0) {
         echo "   Aucune photo trouvée ou dossier inexistant\n\n";

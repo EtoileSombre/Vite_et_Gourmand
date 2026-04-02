@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\SuiviCommande;
 use PDO;
 
 class SuiviCommandeRepository implements SuiviCommandeRepositoryInterface
@@ -66,9 +67,9 @@ class SuiviCommandeRepository implements SuiviCommandeRepositoryInterface
         
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$numeroCommande]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => SuiviCommande::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
-    public function getDernierChangement(string $numeroCommande): ?array
+    public function getDernierChangement(string $numeroCommande): ?SuiviCommande
     {
         $sql = "SELECT 
                     s.*,
@@ -83,7 +84,7 @@ class SuiviCommandeRepository implements SuiviCommandeRepositoryInterface
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$numeroCommande]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ?: null;
+        return $result ? SuiviCommande::fromArray($result) : null;
     }
 
     // Compte le nombre de changements de statut pour une commande

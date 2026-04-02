@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\Contact;
 use PDO;
 
 class ContactRepository implements ContactRepositoryInterface
@@ -51,7 +52,7 @@ class ContactRepository implements ContactRepositoryInterface
             $stmt->execute();
         }
         
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => Contact::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     public function countByStatut(string $statut): int

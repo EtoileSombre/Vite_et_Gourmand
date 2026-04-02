@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\Commande;
 use PDO;
 class CommandeRepository implements CommandeRepositoryInterface
 {
@@ -38,14 +39,14 @@ class CommandeRepository implements CommandeRepositoryInterface
             ORDER BY c.date_prestation DESC
         ');
         $stmt->execute();
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Commande::fromArray($row), $stmt->fetchAll());
     }
-    public function findById(int $id): ?array
+    public function findById(int $id): mixed
     {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE commande_id = ?");
         $stmt->execute([$id]);
         $result = $stmt->fetch();
-        return $result ?: null;
+        return $result ? Commande::fromArray($result) : null;
     }
     public function findByUser(int $userId): array
     {
@@ -56,9 +57,9 @@ class CommandeRepository implements CommandeRepositoryInterface
             ORDER BY c.date_prestation DESC
         ');
         $stmt->execute([$userId]);
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Commande::fromArray($row), $stmt->fetchAll());
     }
-    public function findByNumero(string $numeroCommande): ?array
+    public function findByNumero(string $numeroCommande): ?Commande
     {
         $stmt = $this->db->prepare('
             SELECT c.*, 
@@ -75,9 +76,9 @@ class CommandeRepository implements CommandeRepositoryInterface
         ');
         $stmt->execute([$numeroCommande]);
         $result = $stmt->fetch();
-        return $result ?: null;
+        return $result ? Commande::fromArray($result) : null;
     }
-    public function findWithDetails(string $numeroCommande): ?array
+    public function findWithDetails(string $numeroCommande): ?Commande
     {
         $stmt = $this->db->prepare('
             SELECT c.*, 
@@ -91,7 +92,7 @@ class CommandeRepository implements CommandeRepositoryInterface
         ');
         $stmt->execute([$numeroCommande]);
         $result = $stmt->fetch();
-        return $result ?: null;
+        return $result ? Commande::fromArray($result) : null;
     }
     public function findAllWithDetails(): array
     {
@@ -106,7 +107,7 @@ class CommandeRepository implements CommandeRepositoryInterface
             ORDER BY c.date_prestation DESC
         ");
         $stmt->execute();
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Commande::fromArray($row), $stmt->fetchAll());
     }
     public function create(array $data): int
     {
@@ -178,7 +179,7 @@ class CommandeRepository implements CommandeRepositoryInterface
             ORDER BY c.date_prestation DESC
         ");
         $stmt->execute($statuts);
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Commande::fromArray($row), $stmt->fetchAll());
     }
     public function findByDate(string $date): array
     {
@@ -194,6 +195,6 @@ class CommandeRepository implements CommandeRepositoryInterface
             ORDER BY c.heure_livraison ASC
         ");
         $stmt->execute([$date]);
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Commande::fromArray($row), $stmt->fetchAll());
     }
 }

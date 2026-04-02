@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Models\CommandeMenu;
+
 /**
  * Interface pour le repository des lignes de commande (CommandeMenu)
  */
@@ -30,6 +32,6 @@ interface CommandeMenuRepositoryInterface
     public function getTotalPersonnes(string $numeroCommande): int;
 
     //Récupérer une ligne de commande par son ID
-    public function findById(int $commandeMenuId): ?array;
+    public function findById(int $commandeMenuId): ?CommandeMenu;
     public function updateQuantite(string $numeroCommande, int $menuId, int $nombrePersonne): bool;
 }

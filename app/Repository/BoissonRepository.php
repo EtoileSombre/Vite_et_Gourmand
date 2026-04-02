@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\Boisson;
 use PDO;
 class BoissonRepository implements BoissonRepositoryInterface
 {
@@ -22,12 +23,12 @@ class BoissonRepository implements BoissonRepositoryInterface
             WHERE disponible = 1
             ORDER BY type_boisson, nom
         ");
-        $boissons = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $boissons = array_map(fn($row) => Boisson::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
         
         // Grouper par type
         $grouped = [];
         foreach ($boissons as $boisson) {
-            $type = $boisson['type_boisson'];
+            $type = $boisson->getTypeBoisson();
             if (!isset($grouped[$type])) {
                 $grouped[$type] = [];
             }
@@ -36,7 +37,7 @@ class BoissonRepository implements BoissonRepositoryInterface
         
         return $grouped;
     }
-    public function findById(int $id): ?array
+    public function findById(int $id): ?Boisson
     {
         $stmt = $this->db->prepare("
             SELECT *
@@ -45,7 +46,7 @@ class BoissonRepository implements BoissonRepositoryInterface
         ");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ?: null;
+        return $result ? Boisson::fromArray($result) : null;
     }
     public function findByIds(array $ids): array
     {
@@ -60,7 +61,7 @@ class BoissonRepository implements BoissonRepositoryInterface
             WHERE {$this->primaryKey} IN ($placeholders)
         ");
         $stmt->execute($ids);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => Boisson::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
     public function findAll(): array
     {
@@ -69,7 +70,7 @@ class BoissonRepository implements BoissonRepositoryInterface
             FROM {$this->table}
             ORDER BY type_boisson, nom
         ");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => Boisson::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
     public function findByType(string $type): array
     {
@@ -80,7 +81,7 @@ class BoissonRepository implements BoissonRepositoryInterface
             ORDER BY nom
         ");
         $stmt->execute([$type]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => Boisson::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
     public function getTypes(): array
     {

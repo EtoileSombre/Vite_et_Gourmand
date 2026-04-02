@@ -2,11 +2,13 @@
 
 namespace App\Repository;
 
+use App\Models\Menu;
+
 interface MenuRepositoryInterface extends RepositoryInterface
 {
     public function findActive(): array;
     public function findActiveWithPhotos(): array;
-    public function findActiveById(int $id): ?array;
+    public function findActiveById(int $id): ?Menu;
     public function getPlatsForMenu(int $menuId): array;
     public function getPlatIdsForMenu(int $menuId): array;
 

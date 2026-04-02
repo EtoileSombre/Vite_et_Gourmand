@@ -2,10 +2,12 @@
 
 namespace App\Repository;
 
+use App\Models\Boisson;
+
 interface BoissonRepositoryInterface
 {
     public function findAllAvailable(): array;
-    public function findById(int $id): ?array;
+    public function findById(int $id): ?Boisson;
 
     public function findByIds(array $ids): array;
     public function findAll(): array;

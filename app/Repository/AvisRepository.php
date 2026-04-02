@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\Avis;
 use PDO;
 class AvisRepository implements AvisRepositoryInterface
 {
@@ -18,15 +19,15 @@ class AvisRepository implements AvisRepositoryInterface
     public function findAll(): array
     {
         $stmt = $this->db->query("SELECT * FROM {$this->table}");
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Avis::fromArray($row), $stmt->fetchAll());
     }
 
-    public function findById(int $id): ?array
+    public function findById(int $id): ?Avis
     {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$this->primaryKey} = ?");
         $stmt->execute([$id]);
         $result = $stmt->fetch();
-        return $result ?: null;
+        return $result ? Avis::fromArray($result) : null;
     }
 
     public function findValidatedWithGoodRating(int $minNote = 4, int $limit = 6): array
@@ -46,7 +47,7 @@ class AvisRepository implements AvisRepositoryInterface
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Avis::fromArray($row), $stmt->fetchAll());
     }
 
     public function findByUser(int $userId): array
@@ -57,7 +58,7 @@ class AvisRepository implements AvisRepositoryInterface
             ORDER BY created_at DESC
         ");
         $stmt->execute(['user_id' => $userId]);
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Avis::fromArray($row), $stmt->fetchAll());
     }
 
     public function findPending(): array
@@ -70,7 +71,7 @@ class AvisRepository implements AvisRepositoryInterface
             ORDER BY a.created_at DESC
         ");
         $stmt->execute();
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Avis::fromArray($row), $stmt->fetchAll());
     }
 
     public function createAvis(array $data): int
@@ -106,7 +107,7 @@ class AvisRepository implements AvisRepositoryInterface
         return (int) $this->db->lastInsertId();
     }
 
-    public function findByCommandeAndUser(string $numeroCommande, int $userId): ?array
+    public function findByCommandeAndUser(string $numeroCommande, int $userId): ?Avis
     {
         $stmt = $this->db->prepare("
             SELECT * FROM {$this->table}
@@ -119,7 +120,7 @@ class AvisRepository implements AvisRepositoryInterface
             'user_id' => $userId
         ]);
         $result = $stmt->fetch();
-        return $result ?: null;
+        return $result ? Avis::fromArray($result) : null;
     }
 
     public function create(array $data): int
@@ -175,7 +176,7 @@ class AvisRepository implements AvisRepositoryInterface
             ORDER BY a.created_at DESC
         ");
         $stmt->execute();
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Avis::fromArray($row), $stmt->fetchAll());
     }
     public function findByStatutWithDetails(string $statut): array
     {
@@ -192,7 +193,7 @@ class AvisRepository implements AvisRepositoryInterface
             ORDER BY a.created_at DESC
         ");
         $stmt->execute(['statut' => $statut]);
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Avis::fromArray($row), $stmt->fetchAll());
     }
 
     //Compte les avis par statut

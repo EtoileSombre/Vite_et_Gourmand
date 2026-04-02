@@ -85,10 +85,7 @@ volumes/
 .env
 *.env
 infra/.env
-
-# ✅ Garder le modèle et la config dev versionnés
-!infra/.env.example
-!infra/.env.dev
+infra/.env.*
 
 # -----------------------------
 # 🗃️ Base de données locales

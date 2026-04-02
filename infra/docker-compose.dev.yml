@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: ./php
+      context: ..
       dockerfile: Dockerfile
     container_name: ${APP_NAME}-app
     ports:

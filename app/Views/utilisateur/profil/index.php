@@ -27,33 +27,33 @@ include __DIR__ . '/../../layouts/header.php';
                             <div class="col-md-6 mb-3">
                                 <label for="nom" class="form-label">Nom *</label>
                                 <input type="text" class="form-control" id="nom" name="nom" 
-                                       value="<?= htmlspecialchars($user['nom'] ?? '') ?>" required>
+                                       value="<?= htmlspecialchars($user->getNom() ?? '') ?>" required>
                             </div>
                             
                             <div class="col-md-6 mb-3">
                                 <label for="prenom" class="form-label">Prénom *</label>
                                 <input type="text" class="form-control" id="prenom" name="prenom" 
-                                       value="<?= htmlspecialchars($user['prenom'] ?? '') ?>" required>
+                                       value="<?= htmlspecialchars($user->getPrenom() ?? '') ?>" required>
                             </div>
                         </div>
                         
                         <div class="mb-3">
                             <label for="email" class="form-label">Email *</label>
                             <input type="email" class="form-control" id="email" name="email" 
-                                   value="<?= htmlspecialchars($user['email'] ?? '') ?>" required>
+                                   value="<?= htmlspecialchars($user->getEmail() ?? '') ?>" required>
                         </div>
                         
                         <div class="mb-3">
                             <label for="telephone" class="form-label">Téléphone *</label>
                             <input type="tel" class="form-control" id="telephone" name="telephone" 
-                                   value="<?= htmlspecialchars($user['telephone'] ?? '') ?>" 
+                                   value="<?= htmlspecialchars($user->getTelephone() ?? '') ?>" 
                                    placeholder="06 12 34 56 78" required>
                         </div>
                         
                         <div class="mb-3">
                             <label for="adresse_postale" class="form-label">Adresse postale *</label>
                             <input type="text" class="form-control" id="adresse_postale" name="adresse_postale" 
-                                   value="<?= htmlspecialchars($user['adresse_postale'] ?? '') ?>" 
+                                   value="<?= htmlspecialchars($user->getAdressePostale() ?? '') ?>" 
                                    placeholder="Numéro et nom de rue" required>
                         </div>
                         
@@ -61,14 +61,14 @@ include __DIR__ . '/../../layouts/header.php';
                             <div class="col-md-4 mb-3">
                                 <label for="code_postal" class="form-label">Code postal *</label>
                                 <input type="text" class="form-control" id="code_postal" name="code_postal" 
-                                       value="<?= htmlspecialchars($user['code_postal'] ?? '') ?>" 
+                                       value="<?= htmlspecialchars($user->getCodePostal() ?? '') ?>" 
                                        pattern="[0-9]{5}" placeholder="33000" required>
                             </div>
                             
                             <div class="col-md-8 mb-3">
                                 <label for="ville" class="form-label">Ville *</label>
                                 <input type="text" class="form-control" id="ville" name="ville" 
-                                       value="<?= htmlspecialchars($user['ville'] ?? '') ?>" required>
+                                       value="<?= htmlspecialchars($user->getVille() ?? '') ?>" required>
                             </div>
                         </div>
                         
@@ -144,7 +144,7 @@ include __DIR__ . '/../../layouts/header.php';
             <div class="card mt-3">
                 <div class="card-body">
                     <p class="mb-0"><strong>Date d'inscription :</strong> 
-                        <?= date('d/m/Y', strtotime($user['created_at'])) ?>
+                        <?= date('d/m/Y', strtotime($user->getCreatedAt())) ?>
                     </p>
                 </div>
             </div>

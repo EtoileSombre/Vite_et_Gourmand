@@ -75,7 +75,7 @@ class StatsController extends Controller
         // Créer un mapping menu_id => titre
         $menuTitres = [];
         foreach ($allMenus as $menu) {
-            $menuTitres[$menu['menu_id']] = $menu['titre'];
+            $menuTitres[$menu->getMenuId()] = $menu->getTitre();
         }
 
         // Préparer données commandes par menu
@@ -139,7 +139,7 @@ class StatsController extends Controller
     {
         $menuTitres = [];
         foreach ($allMenus as $menu) {
-            $menuTitres[$menu['menu_id']] = $menu['titre'];
+            $menuTitres[$menu->getMenuId()] = $menu->getTitre();
         }
 
         // Total commandes et personnes

@@ -134,9 +134,9 @@ class MongoStats
         try {
             $this->collections['commande_stats']->insertOne([
                 'numero_commande' => $numeroCommande,
-                'menu_id' => $commandeData['menu_id'] ?? null,
-                'prix_total' => $commandeData['prix_total'] ?? 0,
-                'nombre_personne' => $commandeData['nombre_personne'] ?? 0,
+                'menu_id' => (int)($commandeData['menu_id'] ?? 0),
+                'prix_total' => (float)($commandeData['prix_total'] ?? 0),
+                'nombre_personne' => (int)($commandeData['nombre_personne'] ?? 0),
                 'statut' => $commandeData['statut'] ?? 'en attente',
                 'timestamp' => new \MongoDB\BSON\UTCDateTime(),
                 'date' => date('Y-m-d')

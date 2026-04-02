@@ -52,17 +52,17 @@
                                     <div>
                                         <h5 class="mb-1">
                                             <i class="bi bi-person-circle text-vg-bordeaux"></i>
-                                            <?= htmlspecialchars($msg['nom']) ?>
+                                            <?= htmlspecialchars($msg->getNom()) ?>
                                         </h5>
                                         <small class="text-muted">
-                                            <i class="bi bi-envelope"></i> <?= htmlspecialchars($msg['email']) ?>
+                                            <i class="bi bi-envelope"></i> <?= htmlspecialchars($msg->getEmail()) ?>
                                             <span class="mx-2">|</span>
-                                            <i class="bi bi-calendar"></i> <?= date('d/m/Y à H:i', strtotime($msg['created_at'])) ?>
+                                            <i class="bi bi-calendar"></i> <?= date('d/m/Y à H:i', strtotime($msg->getCreatedAt())) ?>
                                         </small>
                                     </div>
                                     <div>
                                         <?php
-                                        $badgeClass = match($msg['statut']) {
+                                        $badgeClass = match($msg->getStatut()) {
                                             'nouveau' => 'badge-status-nouveau',
                                             'en cours' => 'badge-status-en-cours',
                                             'traité' => 'badge-status-traite',
@@ -70,17 +70,17 @@
                                         };
                                         ?>
                                         <span class="badge <?= $badgeClass ?>">
-                                            <?= htmlspecialchars($msg['statut']) ?>
+                                            <?= htmlspecialchars($msg->getStatut()) ?>
                                         </span>
                                     </div>
                                 </div>
 
                                 <div class="card-body">
                                     <h6 class="card-subtitle mb-2 text-vg-bordeaux">
-                                        <i class="bi bi-chat-left-text"></i> <?= htmlspecialchars($msg['sujet']) ?>
-                                        <span class="badge bg-light text-dark border">#<?= $msg['contact_id'] ?></span>
+                                        <i class="bi bi-chat-left-text"></i> <?= htmlspecialchars($msg->getSujet()) ?>
+                                        <span class="badge bg-light text-dark border">#<?= $msg->getContactId() ?></span>
                                     </h6>
-                                    <p class="card-text"><?= nl2br(htmlspecialchars($msg['message'])) ?></p>
+                                    <p class="card-text"><?= nl2br(htmlspecialchars($msg->getMessage())) ?></p>
                                 </div>
 
                                 <div class="card-footer bg-light">
@@ -88,13 +88,13 @@
                                         <div class="col-md-6">
                                             <form method="POST" action="/admin/contacts/change-status" class="d-inline">
                                                 <?= csrf_field() ?>
-                                                <input type="hidden" name="contact_id" value="<?= $msg['contact_id'] ?>">
+                                                <input type="hidden" name="contact_id" value="<?= $msg->getContactId() ?>">
                                                 <div class="input-group input-group-sm">
-                                                    <label class="input-group-text" for="statut<?= $msg['contact_id'] ?>">Statut</label>
-                                                    <select name="statut" id="statut<?= $msg['contact_id'] ?>" class="form-select form-select-sm">
-                                                        <option value="nouveau" <?= $msg['statut'] === 'nouveau' ? 'selected' : '' ?>>Nouveau</option>
-                                                        <option value="en cours" <?= $msg['statut'] === 'en cours' ? 'selected' : '' ?>>En cours</option>
-                                                        <option value="traité" <?= $msg['statut'] === 'traité' ? 'selected' : '' ?>>Traité</option>
+                                                    <label class="input-group-text" for="statut<?= $msg->getContactId() ?>">
+                                                    <select name="statut" id="statut<?= $msg->getContactId() ?>" class="form-select form-select-sm">
+                                                        <option value="nouveau" <?= $msg->getStatut() === 'nouveau' ? 'selected' : '' ?>>Nouveau</option>
+                                                        <option value="en cours" <?= $msg->getStatut() === 'en cours' ? 'selected' : '' ?>>En cours</option>
+                                                        <option value="traité" <?= $msg->getStatut() === 'traité' ? 'selected' : '' ?>>Traité</option>
                                                     </select>
                                                     <button type="submit" class="btn btn-sm btn-vg-bordeaux rounded-pill">
                                                         <i class="bi bi-check-lg"></i> Modifier
@@ -103,14 +103,14 @@
                                             </form>
                                         </div>
                                         <div class="col-md-6 text-end mt-2 mt-md-0">
-                                            <a href="mailto:<?= htmlspecialchars($msg['email']) ?>?subject=Re: <?= urlencode($msg['sujet']) ?>" 
+                                            <a href="mailto:<?= htmlspecialchars($msg->getEmail()) ?>?subject=Re: <?= urlencode($msg->getSujet()) ?>" 
                                                class="btn btn-sm btn-outline-secondary rounded-pill">
                                                 <i class="bi bi-reply-fill"></i> Répondre
                                             </a>
                                             <form method="POST" action="/admin/contacts/delete" class="d-inline" 
                                                   data-confirm="Êtes-vous sûr de vouloir supprimer ce message ?">
                                                 <?= csrf_field() ?>
-                                                <input type="hidden" name="contact_id" value="<?= $msg['contact_id'] ?>">
+                                                <input type="hidden" name="contact_id" value="<?= $msg->getContactId() ?>">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill">
                                                     <i class="bi bi-trash-fill"></i> Supprimer
                                                 </button>

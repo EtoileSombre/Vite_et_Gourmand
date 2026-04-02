@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\Plat;
 use PDO;
 
 class PlatRepository implements PlatRepositoryInterface
@@ -34,9 +35,9 @@ class PlatRepository implements PlatRepositoryInterface
             $stmt->execute();
         }
         
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => Plat::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
-    public function findPlatById(int $id): ?array
+    public function findPlatById(int $id): ?Plat
     {
         $stmt = $this->db->prepare("
             SELECT * FROM {$this->table}
@@ -44,7 +45,7 @@ class PlatRepository implements PlatRepositoryInterface
         ");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ?: null;
+        return $result ? Plat::fromArray($result) : null;
     }
 
     //Compte le nombre de plats par type

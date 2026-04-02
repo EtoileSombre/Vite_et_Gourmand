@@ -98,7 +98,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <?php 
                             $types = ['Entree' => 'Entrées', 'Plat' => 'Plats', 'Dessert' => 'Desserts', 'Accompagnement' => 'Accompagnements'];
                             foreach ($types as $type => $label): 
-                                $platsType = array_filter($plats, fn($p) => $p['type_plat'] === $type);
+                                $platsType = array_filter($plats, fn($p) => $p->getTypePlat() === $type);
                                 if (empty($platsType)) continue;
                             ?>
                                 <div class="mb-3">
@@ -106,16 +106,16 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     <div class="d-flex flex-wrap gap-2">
                                         <?php foreach ($platsType as $plat): 
                                             // Les allergènes sont déjà chargés par le contrôleur
-                                            $allergenesText = !empty($plat['allergenes']) ? 'Allergènes: ' . implode(', ', $plat['allergenes']) : '';
+                                            $allergenesText = !empty($plat->getAllergenes()) ? 'Allergènes: ' . implode(', ', $plat->getAllergenes()) : '';
                                         ?>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" 
                                                        type="checkbox" 
                                                        name="plats[]" 
-                                                       value="<?= $plat['plat_id'] ?>"
-                                                       id="plat_<?= $plat['plat_id'] ?>">
-                                                <label class="form-check-label" for="plat_<?= $plat['plat_id'] ?>" title="<?= htmlspecialchars(($plat['description'] ?? '') . ($allergenesText ? ' | ' . $allergenesText : '')) ?>">
-                                                    <?= htmlspecialchars($plat['titre_plat']) ?>
+                                                       value="<?= $plat->getPlatId() ?>"
+                                                       id="plat_<?= $plat->getPlatId() ?>">
+                                                <label class="form-check-label" for="plat_<?= $plat->getPlatId() ?>" title="<?= htmlspecialchars(($plat->getDescription() ?? '') . ($allergenesText ? ' | ' . $allergenesText : '')) ?>">
+                                                    <?= htmlspecialchars($plat->getTitrePlat()) ?>
                                                     <?php if (!empty($allergenesLabels)): ?>
                                                         <span class="text-danger small">⚠️</span>
                                                     <?php endif; ?>

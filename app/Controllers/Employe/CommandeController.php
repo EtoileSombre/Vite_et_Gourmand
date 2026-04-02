@@ -11,6 +11,7 @@ use App\Repository\SuiviCommandeRepositoryInterface;
 use App\Repository\BoissonRepositoryInterface;
 use App\Repository\MaterielRepositoryInterface;
 use App\Factory\RepositoryFactory;
+use App\Models\Commande;
 use App\MongoDB\MongoStats;
 
 /**
@@ -64,22 +65,22 @@ class CommandeController extends Controller
         // Filtrer par utilisateur si nécessaire
         if (!empty($filterUtilisateur)) {
             $commandes = array_filter($commandes, function($cmd) use ($filterUtilisateur) {
-                return stripos($cmd['utilisateur_prenom'] ?? '', $filterUtilisateur) !== false ||
-                       stripos($cmd['utilisateur_email'] ?? '', $filterUtilisateur) !== false;
+                return stripos($cmd->getUtilisateurPrenom() ?? '', $filterUtilisateur) !== false ||
+                       stripos($cmd->getUtilisateurEmail() ?? '', $filterUtilisateur) !== false;
             });
         }
 
         // Enrichir chaque commande avec ses lignes de menus, matériel et boissons
-        foreach ($commandes as &$cmd) {
-            $cmd['lignesMenus'] = $this->commandeMenuRepository->findByCommande($cmd['numero_commande']);
-            $cmd['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($cmd['numero_commande']);
-            $cmd['lignesMateriels'] = $this->materielRepository->getByCommande($cmd['numero_commande']);
-            $cmd['totalCaution'] = $this->materielRepository->getTotalCautionByCommande($cmd['numero_commande']);
-            $cmd['lignesBoissons'] = $this->boissonRepository->getByCommande($cmd['numero_commande']);
-            $cmd['totalBoissons'] = $this->boissonRepository->getTotalByCommande($cmd['numero_commande']);
+        foreach ($commandes as $cmd) {
+            $cmd->setLignesMenus($this->commandeMenuRepository->findByCommande($cmd->getNumeroCommande()));
+            $cmd->setTotalPersonnes($this->commandeMenuRepository->getTotalPersonnes($cmd->getNumeroCommande()));
+            $cmd->setLignesMateriels($this->materielRepository->getByCommande($cmd->getNumeroCommande()));
+            $cmd->setTotalCaution($this->materielRepository->getTotalCautionByCommande($cmd->getNumeroCommande()));
+            $cmd->setLignesBoissons($this->boissonRepository->getByCommande($cmd->getNumeroCommande()));
+            $cmd->setTotalBoissons($this->boissonRepository->getTotalByCommande($cmd->getNumeroCommande()));
             // Afficher le premier menu comme info principale
-            if (!empty($cmd['lignesMenus'])) {
-                $cmd['menu_titre'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
+            if (!empty($cmd->getLignesMenus())) {
+                $cmd->setMenuTitre($cmd->getLignesMenus()[0]->getMenuNom() ?? 'Menu');
             }
         }
 
@@ -115,8 +116,8 @@ class CommandeController extends Controller
         }
 
         // Enrichir avec lignesMenus
-        $commande['lignesMenus'] = $this->commandeMenuRepository->findByCommande($numeroCommande);
-        $commande['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($numeroCommande);
+        $commande->setLignesMenus($this->commandeMenuRepository->findByCommande($numeroCommande));
+        $commande->setTotalPersonnes($this->commandeMenuRepository->getTotalPersonnes($numeroCommande));
 
         // Si POST : traiter le changement de statut
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -135,7 +136,7 @@ class CommandeController extends Controller
     /**
      * Traiter le changement de statut avec validation du contact utilisateur
      */
-    private function processStatusChange(string $numeroCommande, array $commande): void
+    private function processStatusChange(string $numeroCommande, Commande $commande): void
     {
         $errors = [];
 
@@ -172,7 +173,7 @@ class CommandeController extends Controller
             // Enregistrer dans l'historique de suivi
             $this->suiviCommandeRepository->enregistrerChangement(
                 $numeroCommande,
-                $commande['statut'],
+                $commande->getStatut(),
                 $nouveauStatut,
                 Session::get('user_id'),
                 null
@@ -182,7 +183,7 @@ class CommandeController extends Controller
             $mongoStats = new MongoStats();
             $mongoStats->logUserActivity('change_order_status', Session::get('user_id'), [
                 'numero_commande' => $numeroCommande,
-                'ancien_statut' => $commande['statut'],
+                'ancien_statut' => $commande->getStatut(),
                 'nouveau_statut' => $nouveauStatut
             ]);
 
@@ -192,39 +193,42 @@ class CommandeController extends Controller
             // Email #1 : Commande acceptée
             if ($nouveauStatut === 'acceptee') {
                 $emailSent = sendOrderAcceptedEmail(
-                    $commande['utilisateur_email'],
-                    $commande['utilisateur_prenom'],
+                    $commande->getUtilisateurEmail(),
+                    $commande->getUtilisateurPrenom(),
                     $numeroCommande,
-                    $commande['date_prestation']
+                    $commande->getDatePrestation()
                 );
                 if (!$emailSent) {
-                    error_log("Échec envoi email acceptation commande #$numeroCommande à " . $commande['utilisateur_email']);
+                    error_log("Échec envoi email acceptation commande #$numeroCommande à " . $commande->getUtilisateurEmail());
                 }
             }
             
             // Email #2 : Commande terminée (avec invitation avis)
             if ($nouveauStatut === 'terminee') {
                 $emailSent = sendOrderCompletedEmail(
-                    $commande['utilisateur_email'],
-                    $commande['utilisateur_prenom'],
+                    $commande->getUtilisateurEmail(),
+                    $commande->getUtilisateurPrenom(),
                     $numeroCommande,
-                    $commande['menu_titre'] ?? 'Menu'
+                    $commande->getMenuTitre() ?? 'Menu'
                 );
                 if (!$emailSent) {
-                    error_log("Échec envoi email terminaison commande #$numeroCommande à " . $commande['utilisateur_email']);
+                    error_log("Échec envoi email terminaison commande #$numeroCommande à " . $commande->getUtilisateurEmail());
                 }
             }
             
             // Email #3 : Attente retour matériel (rappel 10 jours, pénalité 600€)
             if ($nouveauStatut === 'attente_retour_materiel') {
+                $materiels = $this->materielRepository->getByCommande($numeroCommande);
+                $dateRetour = $commande->getDateRestitutionMateriel() ?? $commande->getDatePrestation();
                 $emailSent = sendMaterialReturnReminderEmail(
-                    $commande['utilisateur_email'],
-                    $commande['utilisateur_prenom'],
+                    $commande->getUtilisateurEmail(),
+                    $commande->getUtilisateurPrenom(),
                     $numeroCommande,
-                    $commande['date_prestation']
+                    $materiels,
+                    $dateRetour
                 );
                 if (!$emailSent) {
-                    error_log("Échec envoi email rappel matériel commande #$numeroCommande à " . $commande['utilisateur_email']);
+                    error_log("Échec envoi email rappel matériel commande #$numeroCommande à " . $commande->getUtilisateurEmail());
                 }
             }
 
@@ -268,13 +272,13 @@ class CommandeController extends Controller
         $totalBoissons = $this->boissonRepository->getTotalByCommande($numeroCommande);
         $totalMenus = 0;
         foreach ($lignesMenus as $ligne) {
-            $totalMenus += $ligne['total_ligne'] ?? 0;
+            $totalMenus += $ligne->getTotalLigne();
         }
         
         // Ajouter le total des menus à la commande
-        $commande['total_menus'] = $totalMenus;
-        $commande['lignesMenus'] = $lignesMenus;
-        $commande['totalPersonnes'] = $totalPersonnes;
+        $commande->setTotalMenus($totalMenus);
+        $commande->setLignesMenus($lignesMenus);
+        $commande->setTotalPersonnes($totalPersonnes);
 
         // Récupérer l'historique de suivi
         $suivis = $this->suiviCommandeRepository->getHistorique($numeroCommande);
@@ -320,7 +324,7 @@ class CommandeController extends Controller
         }
 
         // Vérifier que la commande n'est pas terminée/annulée
-        if (in_array($commande['statut'], ['terminee', 'annulee', 'refusee'])) {
+        if (in_array($commande->getStatut(), ['terminee', 'annulee', 'refusee'])) {
             Session::set('flash_error', 'Cette commande ne peut plus être modifiée');
             $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
             return;
@@ -371,7 +375,7 @@ class CommandeController extends Controller
                 // Enregistrer dans l'historique
                 $this->suiviCommandeRepository->enregistrerChangement(
                     $numeroCommande,
-                    $commande['statut'],
+                    $commande->getStatut(),
                     'annulee',
                     Session::get('user_id'),
                     "[ANNULATION] $motifModification"
@@ -436,8 +440,8 @@ class CommandeController extends Controller
             // Enregistrer dans l'historique
             $this->suiviCommandeRepository->enregistrerChangement(
                 $numeroCommande,
-                $commande['statut'],
-                $commande['statut'], // Même statut
+                $commande->getStatut(),
+                $commande->getStatut(), // Même statut
                 Session::get('user_id'),
                 "[MODIFICATION] $motifModification"
             );

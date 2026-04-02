@@ -11,11 +11,9 @@ include __DIR__ . '/../layouts/header.php';
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <th>N° Commande</th>
                     <th>Utilisateur</th>
-                    <th>Menu</th>
-                    <th>Quantité</th>
-                    <th>Date de livraison</th>
+                    <th>Date de prestation</th>
                     <th>Statut</th>
                     <th>Total TTC</th>
                     <th>Date de commande</th>
@@ -24,21 +22,19 @@ include __DIR__ . '/../layouts/header.php';
             <tbody>
                 <?php foreach ($commandes as $commande): ?>
                     <tr>
-                        <td>#<?= htmlspecialchars($commande['id']) ?></td>
-                        <td><?= htmlspecialchars($commande['utilisateur_id']) ?></td>
-                        <td><?= htmlspecialchars($commande['menu_id']) ?></td>
-                        <td><?= htmlspecialchars($commande['quantite']) ?></td>
-                        <td><?= date('d/m/Y', strtotime($commande['date_livraison'])) ?></td>
+                        <td>#<?= htmlspecialchars($commande->getNumeroCommande()) ?></td>
+                        <td><?= htmlspecialchars($commande->getUtilisateurPrenom() . ' ' . $commande->getUtilisateurNom()) ?></td>
+                        <td><?= date('d/m/Y', strtotime($commande->getDatePrestation())) ?></td>
                         <td>
                             <?php
-                            $statut = $commande['statut'];
+                            $statut = $commande->getStatut();
                             $statutLabel = $statuts[$statut] ?? ucfirst(str_replace('_', ' ', $statut));
                             $badgeClass = 'badge-statut-' . str_replace('_', '-', $statut);
                             ?>
                             <span class="badge <?= $badgeClass ?>"><?= $statutLabel ?></span>
                         </td>
-                        <td><?= number_format($commande['total_final'] ?? 0, 2, ',', ' ') ?> €</td>
-                        <td><?= date('d/m/Y H:i', strtotime($commande['date_commande'])) ?></td>
+                        <td><?= number_format($commande->getTotalFinal(), 2, ',', ' ') ?> €</td>
+                        <td><?= date('d/m/Y H:i', strtotime($commande->getDateCommande())) ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>

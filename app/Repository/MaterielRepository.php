@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\Materiel;
 use PDO;
 class MaterielRepository implements MaterielRepositoryInterface
 {
@@ -27,8 +28,9 @@ class MaterielRepository implements MaterielRepositoryInterface
         
         // Grouper par catégorie
         $grouped = [];
-        foreach ($materiels as $materiel) {
-            $categorie = $materiel['categorie'];
+        foreach ($materiels as $row) {
+            $materiel = Materiel::fromArray($row);
+            $categorie = $materiel->getCategorie();
             if (!isset($grouped[$categorie])) {
                 $grouped[$categorie] = [];
             }
@@ -37,7 +39,7 @@ class MaterielRepository implements MaterielRepositoryInterface
         
         return $grouped;
     }
-    public function findById(int $id): ?array
+    public function findById(int $id): ?Materiel
     {
         $stmt = $this->db->prepare("
             SELECT *
@@ -46,7 +48,7 @@ class MaterielRepository implements MaterielRepositoryInterface
         ");
         $stmt->execute([$id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ?: null;
+        return $result ? Materiel::fromArray($result) : null;
     }
     public function findByIds(array $ids): array
     {
@@ -61,7 +63,7 @@ class MaterielRepository implements MaterielRepositoryInterface
             WHERE {$this->primaryKey} IN ($placeholders)
         ");
         $stmt->execute($ids);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => Materiel::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
     public function findAll(): array
     {
@@ -70,7 +72,7 @@ class MaterielRepository implements MaterielRepositoryInterface
             FROM {$this->table}
             ORDER BY categorie, nom
         ");
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => Materiel::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
     public function findByCategorie(string $categorie): array
     {
@@ -81,7 +83,7 @@ class MaterielRepository implements MaterielRepositoryInterface
             ORDER BY nom
         ");
         $stmt->execute([$categorie]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => Materiel::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
     public function getCategories(): array
     {

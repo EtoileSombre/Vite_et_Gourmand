@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\CommandeMenu;
 use PDO;
 
 class CommandeMenuRepository implements CommandeMenuRepositoryInterface
@@ -29,7 +30,7 @@ class CommandeMenuRepository implements CommandeMenuRepositoryInterface
             ORDER BY cm.commande_menu_id ASC
         ");
         $stmt->execute([$numeroCommande]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => CommandeMenu::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
 
     //Ajoute une ligne de menu à une commande
@@ -116,7 +117,7 @@ class CommandeMenuRepository implements CommandeMenuRepositoryInterface
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? (int)$result['total'] : 0;
     }
-    public function findById(int $commandeMenuId): ?array
+    public function findById(int $commandeMenuId): ?CommandeMenu
     {
         $stmt = $this->db->prepare("
             SELECT 
@@ -129,7 +130,7 @@ class CommandeMenuRepository implements CommandeMenuRepositoryInterface
         ");
         $stmt->execute([$commandeMenuId]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ?: null;
+        return $result ? CommandeMenu::fromArray($result) : null;
     }
     public function updateQuantite(string $numeroCommande, int $menuId, int $nombrePersonne): bool
     {

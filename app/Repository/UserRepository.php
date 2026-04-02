@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\User;
 use PDO;
 class UserRepository implements UserRepositoryInterface
 {
@@ -17,16 +18,16 @@ class UserRepository implements UserRepositoryInterface
     public function findAll(): array
     {
         $stmt = $this->db->query("SELECT * FROM {$this->table}");
-        return $stmt->fetchAll();
+        return array_map(fn($row) => User::fromArray($row), $stmt->fetchAll());
     }
-    public function findById(int $id): ?array
+    public function findById(int $id): ?User
     {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$this->primaryKey} = ?");
         $stmt->execute([$id]);
         $result = $stmt->fetch();
-        return $result ?: null;
+        return $result ? User::fromArray($result) : null;
     }
-    public function findByEmail(string $email): ?array
+    public function findByEmail(string $email): ?User
     {
         $stmt = $this->db->prepare('
             SELECT u.*, r.libelle as role
@@ -37,7 +38,7 @@ class UserRepository implements UserRepositoryInterface
         ');
         $stmt->execute(['email' => $email]);
         $user = $stmt->fetch();
-        return $user ?: null;
+        return $user ? User::fromArray($user) : null;
     }
     public function findAllWithRole(): array
     {
@@ -48,7 +49,7 @@ class UserRepository implements UserRepositoryInterface
             ORDER BY u.created_at DESC
         ');
         $stmt->execute();
-        return $stmt->fetchAll();
+        return array_map(fn($row) => User::fromArray($row), $stmt->fetchAll());
     }
     public function create(array $data): int
     {

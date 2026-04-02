@@ -2,10 +2,12 @@
 
 namespace App\Repository;
 
+use App\Models\Materiel;
+
 interface MaterielRepositoryInterface
 {
     public function findAllAvailable(): array;
-    public function findById(int $id): ?array;
+    public function findById(int $id): ?Materiel;
     public function findByIds(array $ids): array;
     public function findAll(): array;
     public function findByCategorie(string $categorie): array;

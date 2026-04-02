@@ -38,49 +38,49 @@ if ($commandeNumero) {
                 <tbody>
                     <?php foreach ($commandes as $commande): ?>
                         <tr>
-                            <td>#<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></td>
+                            <td>#<?= htmlspecialchars($commande->getNumeroCommande() ?? 'N/A') ?></td>
                             <td>
-                                <?php if (isset($commande['lignesMenus']) && count($commande['lignesMenus']) > 0): ?>
-                                    <?php foreach ($commande['lignesMenus'] as $ligne): ?>
-                                        <?= htmlspecialchars($ligne['menu_nom']) ?> (<?= $ligne['nombre_personne'] ?> pers.)<br>
+                                <?php if ($commande->getLignesMenus() && count($commande->getLignesMenus()) > 0): ?>
+                                    <?php foreach ($commande->getLignesMenus() as $ligne): ?>
+                                        <?= htmlspecialchars($ligne->getMenuNom()) ?> (<?= $ligne->getNombrePersonne() ?> pers.)<br>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     -
                                 <?php endif; ?>
                             </td>
-                            <td><?= htmlspecialchars($commande['totalPersonnes'] ?? 0) ?> pers.</td>
-                            <td><?= $commande['date_prestation'] ? date('d/m/Y', strtotime($commande['date_prestation'])) : 'Non définie' ?></td>
+                            <td><?= htmlspecialchars($commande->getTotalPersonnes() ?? 0) ?> pers.</td>
+                            <td><?= $commande->getDatePrestation() ? date('d/m/Y', strtotime($commande->getDatePrestation())) : 'Non définie' ?></td>
                             <td>
                                 <?php
-                                $statut = $commande['statut'] ?? 'en_attente';
+                                $statut = $commande->getStatut() ?? 'en_attente';
                                 $statutLabel = $statuts[$statut] ?? ucfirst(str_replace('_', ' ', $statut));
                                 $badgeClass = 'badge-statut-' . str_replace('_', '-', $statut);
                                 ?>
                                 <span class="badge <?= $badgeClass ?>"><?= $statutLabel ?></span>
                             </td>
                             <td>
-                                <?= number_format($commande['total_final'] ?? 0, 2, ',', ' ') ?> €
+                                <?= number_format($commande->getTotalFinal() ?? 0, 2, ',', ' ') ?> €
                             </td>
                             <td>
                                 <div class="d-flex gap-1 align-items-center justify-content-center">
-                                    <a href="/commande/details?numero=<?= urlencode($commande['numero_commande']) ?>" 
+                                    <a href="/commande/details?numero=<?= urlencode($commande->getNumeroCommande()) ?>" 
                                        class="btn btn-sm btn-outline-vg-bordeaux rounded-circle btn-action-circle" 
                                        title="Voir les détails et le suivi">
                                         <i class="bi bi-eye"></i>
                                     </a>
                                     <?php if ($statut === 'en_attente'): ?>
-                                        <a href="/commande/modifier?numero=<?= urlencode($commande['numero_commande']) ?>" 
+                                        <a href="/commande/modifier?numero=<?= urlencode($commande->getNumeroCommande()) ?>" 
                                            class="btn btn-sm btn-outline-vg-bordeaux rounded-circle btn-action-circle" 
                                            title="Modifier">
                                             <i class="bi bi-pencil"></i>
                                         </a>
-                                        <a href="/commande/annuler?numero=<?= urlencode($commande['numero_commande']) ?>" 
+                                        <a href="/commande/annuler?numero=<?= urlencode($commande->getNumeroCommande()) ?>" 
                                            class="btn btn-sm btn-outline-vg-bordeaux btn-annuler-commande rounded-circle btn-action-circle" 
                                            title="Annuler">
                                             <i class="bi bi-x-circle"></i>
                                         </a>
                                     <?php elseif ($statut === 'terminee'): ?>
-                                        <a href="/avis/create?commande=<?= urlencode($commande['numero_commande']) ?>" 
+                                        <a href="/avis/create?commande=<?= urlencode($commande->getNumeroCommande()) ?>" 
                                            class="btn btn-sm btn-outline-vg-bordeaux rounded-circle btn-action-circle" 
                                            title="Donner votre avis">
                                             <i class="bi bi-star-fill"></i>

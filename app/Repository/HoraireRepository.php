@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\Horaire;
 use PDO;
 class HoraireRepository implements HoraireRepositoryInterface
 {
@@ -21,9 +22,9 @@ class HoraireRepository implements HoraireRepositoryInterface
             ORDER BY FIELD(jour, 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche')
         ");
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(fn($row) => Horaire::fromArray($row), $stmt->fetchAll(PDO::FETCH_ASSOC));
     }
-    public function findByJour(string $jour): ?array
+    public function findByJour(string $jour): ?Horaire
     {
         $stmt = $this->db->prepare("
             SELECT jour, heure_ouverture, heure_fermeture, ferme, updated_at
@@ -34,7 +35,7 @@ class HoraireRepository implements HoraireRepositoryInterface
         $stmt->execute(['jour' => $jour]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $result ?: null;
+        return $result ? Horaire::fromArray($result) : null;
     }
     public function updateHoraire(string $jour, ?string $heureOuverture, ?string $heureFermeture, bool $ferme): bool
     {
@@ -86,15 +87,15 @@ class HoraireRepository implements HoraireRepositoryInterface
         // Regrouper les jours avec les mêmes horaires
         $groupes = [];
         foreach ($horaires as $h) {
-            if ($h['ferme']) {
+            if ($h->isFerme()) {
                 $cle = 'fermé';
             } else {
-                $ouverture = substr($h['heure_ouverture'], 0, 5);
-                $fermeture = substr($h['heure_fermeture'], 0, 5);
+                $ouverture = substr($h->getHeureOuverture(), 0, 5);
+                $fermeture = substr($h->getHeureFermeture(), 0, 5);
                 $cle = $ouverture . '-' . $fermeture;
             }
 
-            $groupes[$cle][] = $h['jour'];
+            $groupes[$cle][] = $h->getJour();
         }
 
         // Formater l'affichage

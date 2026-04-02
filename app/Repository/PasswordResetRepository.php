@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\PasswordReset;
 use PDO;
 
 class PasswordResetRepository implements PasswordResetRepositoryInterface
@@ -28,7 +29,7 @@ class PasswordResetRepository implements PasswordResetRepositoryInterface
             'expires_at' => $expiresAt
         ]);
     }
-    public function findValidToken(string $token): ?array
+    public function findValidToken(string $token): ?PasswordReset
     {
         $stmt = $this->db->prepare("
             SELECT * FROM {$this->table}
@@ -40,7 +41,7 @@ class PasswordResetRepository implements PasswordResetRepositoryInterface
         $stmt->execute(['token' => $token]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        return $result ?: null;
+        return $result ? PasswordReset::fromArray($result) : null;
     }
     public function markTokenAsUsed(string $token): bool
     {

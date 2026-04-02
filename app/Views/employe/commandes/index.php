@@ -72,25 +72,25 @@ require_once __DIR__ . '/../../layouts/header.php';
                         <tbody>
                             <?php 
                             foreach ($commandes as $cmd): 
-                                $statut = $cmd['statut'];
+                                $statut = $cmd->getStatut();
                                 $statutLabel = $statuts[$statut] ?? ucfirst(str_replace('_', ' ', $statut));
                                 $badgeClass = 'badge-statut-' . str_replace('_', '-', $statut);
                             ?>
                                 <tr>
-                                    <td class="text-center"><strong>#<?= htmlspecialchars($cmd['numero_commande']) ?></strong></td>
+                                    <td class="text-center"><strong>#<?= htmlspecialchars($cmd->getNumeroCommande()) ?></strong></td>
                                     <td class="text-center">
-                                        <?= htmlspecialchars($cmd['utilisateur_prenom'] ?? 'N/A') ?> 
-                                        <?= htmlspecialchars($cmd['utilisateur_nom'] ?? '') ?><br>
-                                        <small class="text-muted"><?= htmlspecialchars($cmd['utilisateur_email'] ?? '') ?></small>
+                                        <?= htmlspecialchars($cmd->getUtilisateurPrenom() ?? 'N/A') ?> 
+                                        <?= htmlspecialchars($cmd->getUtilisateurNom() ?? '') ?><br>
+                                        <small class="text-muted"><?= htmlspecialchars($cmd->getUtilisateurEmail() ?? '') ?></small>
                                     </td>
-                                    <td class="text-center"><?= htmlspecialchars($cmd['totalPersonnes'] ?? 0) ?></td>
-                                    <td class="text-center"><?= htmlspecialchars($cmd['menu_titre'] ?? 'N/A') ?></td>
+                                    <td class="text-center"><?= htmlspecialchars($cmd->getTotalPersonnes() ?? 0) ?></td>
+                                    <td class="text-center"><?= htmlspecialchars($cmd->getMenuTitre() ?? 'N/A') ?></td>
                                     <td class="text-center">
-                                        <?= date('d/m/Y', strtotime($cmd['date_prestation'])) ?>
-                                        <br><small class="text-muted"><?= htmlspecialchars($cmd['heure_livraison'] ?? '') ?></small>
+                                        <?= date('d/m/Y', strtotime($cmd->getDatePrestation())) ?>
+                                        <br><small class="text-muted"><?= htmlspecialchars($cmd->getHeureLivraison() ?? '') ?></small>
                                     </td>
                                     <td class="text-center">
-                                        <strong><?= number_format($cmd['total_final'] ?? 0, 2, ',', ' ') ?> €</strong>
+                                        <strong><?= number_format($cmd->getTotalFinal() ?? 0, 2, ',', ' ') ?> €</strong>
                                     </td>
                                     <td class="text-center">
                                         <span class="badge <?= $badgeClass ?>">
@@ -98,7 +98,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                         </span>
                                     </td>
                                     <td class="text-center">
-                                        <a href="/employe/commandes/view?id=<?= $cmd['numero_commande'] ?>" 
+                                        <a href="/employe/commandes/view?id=<?= $cmd->getNumeroCommande() ?>" 
                                            class="btn btn-sm btn-outline-vg-bordeaux rounded-circle btn-action-circle" 
                                            title="Gérer la commande">
                                             <i class="bi bi-gear"></i>

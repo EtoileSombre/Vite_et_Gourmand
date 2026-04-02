@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Core\Database;
+use App\Models\Menu;
 use PDO;
 class MenuRepository implements MenuRepositoryInterface
 {
@@ -17,14 +18,14 @@ class MenuRepository implements MenuRepositoryInterface
     public function findAll(): array
     {
         $stmt = $this->db->query("SELECT * FROM {$this->table}");
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Menu::fromArray($row), $stmt->fetchAll());
     }
-    public function findById(int $id): ?array
+    public function findById(int $id): ?Menu
     {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE {$this->primaryKey} = ?");
         $stmt->execute([$id]);
         $result = $stmt->fetch();
-        return $result ?: null;
+        return $result ? Menu::fromArray($result) : null;
     }
     public function findActive(): array
     {
@@ -41,7 +42,7 @@ class MenuRepository implements MenuRepositoryInterface
             GROUP BY m.menu_id
             ORDER BY m.{$this->primaryKey} DESC
         ");
-        return $stmt->fetchAll();
+        return array_map(fn($row) => Menu::fromArray($row), $stmt->fetchAll());
     }
     public function findActiveWithPhotos(): array
     {
@@ -52,7 +53,7 @@ class MenuRepository implements MenuRepositoryInterface
         }
         
         // Charger toutes les photos en une fois
-        $menuIds = array_column($menus, 'menu_id');
+        $menuIds = array_map(fn($m) => $m->getMenuId(), $menus);
         $placeholders = str_repeat('?,', count($menuIds) - 1) . '?';
         
         $stmt = $this->db->prepare("
@@ -71,13 +72,13 @@ class MenuRepository implements MenuRepositoryInterface
         }
         
         // Associer les photos aux menus
-        foreach ($menus as &$menu) {
-            $menu['photos'] = $photosParMenu[$menu['menu_id']] ?? [];
+        foreach ($menus as $menu) {
+            $menu->setGalerie($photosParMenu[$menu->getMenuId()] ?? []);
         }
         
         return $menus;
     }
-    public function findActiveById(int $id): ?array
+    public function findActiveById(int $id): ?Menu
     {
         // Récupérer les informations du menu avec thèmes et régimes
         $stmt = $this->db->prepare("
@@ -94,11 +95,13 @@ class MenuRepository implements MenuRepositoryInterface
             GROUP BY m.menu_id
         ");
         $stmt->execute(['id' => $id]);
-        $menu = $stmt->fetch();
+        $result = $stmt->fetch();
         
-        if (!$menu) {
+        if (!$result) {
             return null;
         }
+
+        $menu = Menu::fromArray($result);
 
         // Récupérer les plats du menu avec leurs allergènes
         $stmt = $this->db->prepare("
@@ -113,7 +116,7 @@ class MenuRepository implements MenuRepositoryInterface
             ORDER BY pr.ordre, p.plat_id
         ");
         $stmt->execute(['menu_id' => $id]);
-        $menu['plats'] = $stmt->fetchAll();
+        $menu->setPlats($stmt->fetchAll());
 
         // Récupérer les photos du menu
         $stmt = $this->db->prepare("
@@ -123,7 +126,7 @@ class MenuRepository implements MenuRepositoryInterface
             ORDER BY ordre ASC, galerie_id ASC
         ");
         $stmt->execute(['menu_id' => $id]);
-        $menu['photos'] = $stmt->fetchAll();
+        $menu->setGalerie($stmt->fetchAll());
 
         return $menu;
     }
@@ -295,14 +298,14 @@ class MenuRepository implements MenuRepositoryInterface
 
         $stmt = $this->db->prepare($sql);
         $stmt->execute($params);
-        $menus = $stmt->fetchAll();
+        $menus = array_map(fn($row) => Menu::fromArray($row), $stmt->fetchAll());
 
         if (empty($menus)) {
             return [];
         }
 
         // Charger les photos pour tous les menus filtrés
-        $menuIds = array_column($menus, 'menu_id');
+        $menuIds = array_map(fn($m) => $m->getMenuId(), $menus);
         $placeholders = str_repeat('?,', count($menuIds) - 1) . '?';
         
         $stmt = $this->db->prepare("
@@ -321,8 +324,8 @@ class MenuRepository implements MenuRepositoryInterface
         }
         
         // Associer les photos aux menus
-        foreach ($menus as &$menu) {
-            $menu['photos'] = $photosParMenu[$menu['menu_id']] ?? [];
+        foreach ($menus as $menu) {
+            $menu->setGalerie($photosParMenu[$menu->getMenuId()] ?? []);
         }
 
         return $menus;

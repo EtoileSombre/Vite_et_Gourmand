@@ -7,7 +7,7 @@
         <ol class="breadcrumb breadcrumb-vg">
             <li class="breadcrumb-item"><a href="/">Accueil</a></li>
             <li class="breadcrumb-item"><a href="/menus">Menus</a></li>
-            <li class="breadcrumb-item active"><?= htmlspecialchars($menu['titre']) ?></li>
+            <li class="breadcrumb-item active"><?= htmlspecialchars($menu->getTitre()) ?></li>
         </ol>
     </nav>
 
@@ -27,7 +27,7 @@
                             <div class="carousel-item <?= $index === 0 ? 'active' : '' ?> carousel-item-clickable">
                                 <img src="<?= htmlspecialchars($photo['image_url']) ?>" 
                                      class="d-block w-100 carousel-img-menu" 
-                                     alt="<?= htmlspecialchars($photo['legende'] ?? $menu['titre']) ?>">
+                                     alt="<?= htmlspecialchars($photo['legende'] ?? $menu->getTitre()) ?>">
                                 <?php if (!empty($photo['legende'])): ?>
                                     <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-2">
                                         <p class="mb-0 fw-bold"><?= htmlspecialchars($photo['legende']) ?></p>
@@ -48,43 +48,43 @@
                 <p class="text-center mt-3 text-muted">
                     <i class="bi bi-zoom-in fs-5"></i> <strong>Cliquez sur l'image pour l'agrandir</strong>
                 </p>
-            <?php elseif (!empty($menu['image_url'])): ?>
-                <img src="<?= htmlspecialchars($menu['image_url']) ?>" 
+            <?php elseif (!empty($menu->getImagePrincipale())): ?>
+                <img src="<?= htmlspecialchars($menu->getImagePrincipale()) ?>" 
                      class="img-fluid rounded-3 shadow-lg menu-img-fallback" 
-                     alt="<?= htmlspecialchars($menu['titre']) ?>"
+                     alt="<?= htmlspecialchars($menu->getTitre()) ?>"
                      onerror="this.src='https://via.placeholder.com/800x600?text=Menu'">
             <?php else: ?>
                 <img src="https://via.placeholder.com/800x600?text=Menu" 
                      class="img-fluid rounded-3 shadow-lg menu-img-fallback" 
-                     alt="<?= htmlspecialchars($menu['titre']) ?>">
+                     alt="<?= htmlspecialchars($menu->getTitre()) ?>">
             <?php endif; ?>
         </div>
 
         <div class="col-md-6 offset-md-1">
             <!-- En-tête avec titre et prix -->
             <div class="menu-header-flex">
-                <h1 class="menu-title"><?= htmlspecialchars($menu['titre']) ?></h1>
-                <span class="menu-price"><?= number_format($menu['prix_par_personne'], 2) ?> € <small>/ personne</small></span>
+                <h1 class="menu-title"><?= htmlspecialchars($menu->getTitre()) ?></h1>
+                <span class="menu-price"><?= number_format($menu->getPrixParPersonne(), 2) ?> € <small>/ personne</small></span>
             </div>
             
             <!-- Conditions de commande -->
             <div class="menu-conditions-box mb-3">
                 <small class="text-muted">
                     <i class="bi bi-calendar-event me-1"></i>
-                    <?php if (!empty($menu['conditions'])): ?>
-                        <?= htmlspecialchars($menu['conditions']) ?>
+                    <?php if (!empty($menu->getConditions())): ?>
+                        <?= htmlspecialchars($menu->getConditions()) ?>
                     <?php else: ?>
                         Commande à prévoir 48h avant
                     <?php endif; ?>
-                    <?php if (isset($menu['nombre_personne_minimum']) && $menu['nombre_personne_minimum'] > 1): ?>
+                    <?php if ($menu->getNombrePersonneMinimum() > 1): ?>
                         <span class="mx-2">•</span>
-                        <i class="bi bi-people me-1"></i> Minimum <?= $menu['nombre_personne_minimum'] ?> personnes
+                        <i class="bi bi-people me-1"></i> Minimum <?= $menu->getNombrePersonneMinimum() ?> personnes
                     <?php endif; ?>
                 </small>
             </div>
             
             <!-- COMPOSITION DU MENU - Liste des plats -->
-            <?php if (!empty($menu['plats'])): ?>
+            <?php if (!empty($menu->getPlats())): ?>
                 <div class="card mb-4 shadow-sm border-0">
                     <div class="card-header text-white menu-header-bordeaux">
                         <h5 class="mb-0">
@@ -95,7 +95,7 @@
                     <div class="card-body pt-0">
                         <?php 
                         $platsByType = [];
-                        foreach ($menu['plats'] as $plat) {
+                        foreach ($menu->getPlats() as $plat) {
                             $platsByType[$plat['type_plat']][] = $plat;
                         }
                         
@@ -131,10 +131,10 @@
                 </div>
             <?php endif; ?>
 
-            <?php if (!empty($menu['allergenes'])): ?>
+            <?php if (!empty($menu->getAllergenes())): ?>
                 <div class="alert shadow-sm border-0 menu-allergenes mb-1">
                     <strong class="menu-allergenes-titre text-secondary"><i class="bi bi-exclamation-triangle-fill"></i> Allergènes :</strong><br>
-                    <span class="menu-allergenes-contenu text-secondary"><?= nl2br(htmlspecialchars($menu['allergenes'])) ?></span>
+                    <span class="menu-allergenes-contenu text-secondary"><?= nl2br(htmlspecialchars($menu->getAllergenes())) ?></span>
                 </div>
             <?php endif; ?>
 
@@ -146,7 +146,7 @@
                 ?>
                 
                 <?php if ($isAuthenticated): ?>
-                    <a href="/commande/nouvelle?menu_id=<?= $menu['menu_id'] ?>" 
+                    <a href="/commande/nouvelle?menu_id=<?= $menu->getMenuId() ?>" 
                        id="btnCommander" 
                        class="btn btn-lg shadow menu-btn-commande rounded-pill btn-commande-custom text-center">
                         <i class="bi bi-basket"></i> Commander
@@ -220,10 +220,10 @@
                     Connectez-vous ou créez un compte pour passer commande.
                 </p>
                 <div class="d-grid gap-2">
-                    <a href="/login?redirect=/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-vg-bordeaux btn-lg rounded-pill">
+                    <a href="/login?redirect=/menu?id=<?= $menu->getMenuId() ?>" class="btn btn-vg-bordeaux btn-lg rounded-pill">
                         <i class="bi bi-box-arrow-in-right"></i> Se connecter
                     </a>
-                    <a href="/register?redirect=/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-vg-bordeaux btn-lg rounded-pill">
+                    <a href="/register?redirect=/menu?id=<?= $menu->getMenuId() ?>" class="btn btn-vg-bordeaux btn-lg rounded-pill">
                         <i class="bi bi-person-plus"></i> Créer un compte
                     </a>
                 </div>
@@ -252,7 +252,7 @@
                                 <div class="carousel-item <?= $index === 0 ? 'active' : '' ?>">
                                     <img src="<?= htmlspecialchars($photo['image_url']) ?>" 
                                          class="d-block w-100 lightbox-img"
-                                         alt="<?= htmlspecialchars($photo['legende'] ?? $menu['titre']) ?>">
+                                         alt="<?= htmlspecialchars($photo['legende'] ?? $menu->getTitre()) ?>">
                                     <?php if (!empty($photo['legende'])): ?>
                                         <div class="carousel-caption">
                                             <p class="bg-dark bg-opacity-75 d-inline-block px-3 py-2 rounded"><?= htmlspecialchars($photo['legende']) ?></p>

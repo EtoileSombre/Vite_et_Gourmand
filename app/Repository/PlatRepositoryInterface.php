@@ -2,10 +2,12 @@
 
 namespace App\Repository;
 
+use App\Models\Plat;
+
 interface PlatRepositoryInterface
 {
     public function findAllPlats(?string $typePlat = null): array;
-    public function findPlatById(int $id): ?array;
+    public function findPlatById(int $id): ?Plat;
 
     //Compte le nombre de plats par type
     public function countByType(): array;

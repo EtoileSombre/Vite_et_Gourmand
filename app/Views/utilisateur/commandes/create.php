@@ -24,6 +24,7 @@ include __DIR__ . '/../../layouts/header.php';
                 </div>
                 <div class="card-body p-4">
                     <form method="post" action="/commande/nouvelle" id="formCommande">
+                        <?= csrf_field() ?>
                         
                         <!-- INFORMATIONS CLIENT (auto-remplies) -->
                         <div class="mb-4">
@@ -35,19 +36,19 @@ include __DIR__ . '/../../layouts/header.php';
                                 <div class="col-md-4 mb-3">
                                     <label for="nom" class="form-label">Nom <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control bg-readonly" id="nom" name="nom" 
-                                           value="<?= htmlspecialchars($user['nom'] ?? '') ?>" 
+                                           value="<?= htmlspecialchars($user->getNom() ?? '') ?>" 
                                            readonly>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="prenom" class="form-label">Prénom <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control bg-readonly" id="prenom" name="prenom" 
-                                           value="<?= htmlspecialchars($user['prenom'] ?? '') ?>" 
+                                           value="<?= htmlspecialchars($user->getPrenom() ?? '') ?>" 
                                            readonly>
                                 </div>
                                 <div class="col-md-4 mb-3">
                                     <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                                     <input type="email" class="form-control bg-readonly" id="email" name="email" 
-                                           value="<?= htmlspecialchars($user['email'] ?? '') ?>" 
+                                           value="<?= htmlspecialchars($user->getEmail() ?? '') ?>" 
                                            readonly>
                                 </div>
                             </div>
@@ -56,7 +57,7 @@ include __DIR__ . '/../../layouts/header.php';
                                 <div class="col-md-4 mb-3">
                                     <label for="telephone" class="form-label">Numéro de GSM <span class="text-danger">*</span></label>
                                     <input type="tel" class="form-control bg-readonly" id="telephone" name="telephone" 
-                                           value="<?= htmlspecialchars($user['telephone'] ?? '') ?>" 
+                                           value="<?= htmlspecialchars($user->getTelephone() ?? '') ?>" 
                                            readonly>
                                 </div>
                             </div>
@@ -92,23 +93,23 @@ include __DIR__ . '/../../layouts/header.php';
                             <div class="mb-3">
                                 <label for="adresse_livraison" class="form-label">Adresse complète de livraison <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" id="adresse_livraison" name="adresse_livraison" 
-                                       value="<?= htmlspecialchars($user['adresse_postale'] ?? '') ?>"
+                                       value="<?= htmlspecialchars($user->getAdressePostale() ?? '') ?>"
                                        placeholder="Numéro et rue" required>
-                                <!-- DEBUG: Adresse = <?= htmlspecialchars($user['adresse_postale'] ?? 'VIDE') ?> -->
+                                <!-- DEBUG: Adresse = <?= htmlspecialchars($user->getAdressePostale() ?? 'VIDE') ?> -->
                             </div>
                             
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="ville_livraison" class="form-label">Ville <span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" id="ville_livraison" name="ville_livraison" 
-                                           value="<?= htmlspecialchars($user['ville'] ?? 'Bordeaux') ?>" required>
-                                    <!-- DEBUG: Ville = <?= htmlspecialchars($user['ville'] ?? 'VIDE') ?> -->
+                                           value="<?= htmlspecialchars($user->getVille() ?? 'Bordeaux') ?>" required>
+                                    <!-- DEBUG: Ville = <?= htmlspecialchars($user->getVille() ?? 'VIDE') ?> -->
                                 </div>
                                 
                                 <div class="col-md-6 mb-3">
                                     <label for="code_postal_livraison" class="form-label">Code postal</label>
                                     <input type="text" class="form-control" id="code_postal_livraison" name="code_postal_livraison" 
-                                           value="<?= htmlspecialchars($user['code_postal'] ?? '') ?>"
+                                           value="<?= htmlspecialchars($user->getCodePostal() ?? '') ?>"
                                            placeholder="33000">
                                 </div>
                             </div>
@@ -132,7 +133,7 @@ include __DIR__ . '/../../layouts/header.php';
                             <?php if ($menuPreselectionne): ?>
                                 <div class="alert alert-success alert-dismissible">
                                     <i class="bi bi-check-circle-fill"></i> 
-                                    Menu pré-sélectionné : <strong><?= htmlspecialchars($menuPreselectionne['titre']) ?></strong>
+                                    Menu pré-sélectionné : <strong><?= htmlspecialchars($menuPreselectionne->getTitre()) ?></strong>
                                 </div>
                             <?php endif; ?>
                             
@@ -141,13 +142,13 @@ include __DIR__ . '/../../layouts/header.php';
                                 <select class="form-select" id="menu_id" name="menu_id" required>
                                     <option value="">Sélectionnez un menu...</option>
                                     <?php foreach ($menus as $menu): ?>
-                                        <option value="<?= $menu['menu_id'] ?>" 
-                                                data-prix="<?= $menu['prix_par_personne'] ?>"
-                                                data-min="<?= $menu['nombre_personne_minimum'] ?? 2 ?>"
-                                                <?= ($menuIdFromUrl == $menu['menu_id']) ? 'selected' : '' ?>>
-                                            <?= htmlspecialchars($menu['titre']) ?> - 
-                                            <?= number_format($menu['prix_par_personne'], 2) ?> € /pers 
-                                            (Min. <?= $menu['nombre_personne_minimum'] ?? 2 ?> pers.)
+                                        <option value="<?= $menu->getMenuId() ?>" 
+                                                data-prix="<?= $menu->getPrixParPersonne() ?>"
+                                                data-min="<?= $menu->getNombrePersonneMinimum() ?? 2 ?>"
+                                                <?= ($menuIdFromUrl == $menu->getMenuId()) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($menu->getTitre()) ?> - 
+                                            <?= number_format($menu->getPrixParPersonne(), 2) ?> € /pers 
+                                            (Min. <?= $menu->getNombrePersonneMinimum() ?? 2 ?> pers.)
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -182,13 +183,13 @@ include __DIR__ . '/../../layouts/header.php';
                                             <?php foreach ($boissons as $type => $listBoissons): ?>
                                                 <optgroup label="<?= htmlspecialchars($type) ?>">
                                                     <?php foreach ($listBoissons as $boisson): ?>
-                                                        <option value="<?= $boisson['boisson_id'] ?>" 
-                                                                data-nom="<?= htmlspecialchars($boisson['nom']) ?>"
-                                                                data-prix="<?= $boisson['prix_unitaire'] ?>"
-                                                                data-contenance="<?= htmlspecialchars($boisson['contenance'] ?? '') ?>">
-                                                            <?= htmlspecialchars($boisson['nom']) ?> 
-                                                            (<?= htmlspecialchars($boisson['contenance'] ?? 'N/A') ?>) - 
-                                                            <?= number_format($boisson['prix_unitaire'], 2) ?> €
+                                                        <option value="<?= $boisson->getBoissonId() ?>" 
+                                                                data-nom="<?= htmlspecialchars($boisson->getNom()) ?>"
+                                                                data-prix="<?= $boisson->getPrixUnitaire() ?>"
+                                                                data-contenance="<?= htmlspecialchars($boisson->getContenance() ?? '') ?>">
+                                                            <?= htmlspecialchars($boisson->getNom()) ?> 
+                                                            (<?= htmlspecialchars($boisson->getContenance() ?? 'N/A') ?>) - 
+                                                            <?= number_format($boisson->getPrixUnitaire(), 2) ?> €
                                                         </option>
                                                     <?php endforeach; ?>
                                                 </optgroup>
@@ -230,14 +231,14 @@ include __DIR__ . '/../../layouts/header.php';
                                             <?php foreach ($materiels as $categorie => $listMateriels): ?>
                                                 <optgroup label="<?= htmlspecialchars($categorie) ?>">
                                                     <?php foreach ($listMateriels as $materiel): ?>
-                                                        <option value="<?= $materiel['materiel_id'] ?>" 
-                                                                data-nom="<?= htmlspecialchars($materiel['nom']) ?>"
-                                                                data-caution="<?= $materiel['prix_caution'] ?>"
-                                                                data-quantite-dispo="<?= $materiel['quantite_disponible'] ?>"
-                                                                data-description="<?= htmlspecialchars($materiel['description'] ?? '') ?>">
-                                                            <?= htmlspecialchars($materiel['nom']) ?> - 
-                                                            Caution: <?= number_format($materiel['prix_caution'], 2) ?> € 
-                                                            (<?= $materiel['quantite_disponible'] ?> dispo)
+                                                        <option value="<?= $materiel->getMaterielId() ?>" 
+                                                                data-nom="<?= htmlspecialchars($materiel->getNom()) ?>"
+                                                                data-caution="<?= $materiel->getPrixCaution() ?>"
+                                                                data-quantite-dispo="<?= $materiel->getQuantiteDisponible() ?>"
+                                                                data-description="<?= htmlspecialchars($materiel->getDescription() ?? '') ?>">
+                                                            <?= htmlspecialchars($materiel->getNom()) ?> - 
+                                                            Caution: <?= number_format($materiel->getPrixCaution(), 2) ?> € 
+                                                            (<?= $materiel->getQuantiteDisponible() ?> dispo)
                                                         </option>
                                                     <?php endforeach; ?>
                                                 </optgroup>

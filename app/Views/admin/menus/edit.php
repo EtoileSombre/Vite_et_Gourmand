@@ -23,7 +23,7 @@ require_once __DIR__ . '/../../layouts/header.php';
 
                     <form method="POST" action="/admin/menus/update">
                         <?= csrf_field() ?>
-                        <input type="hidden" name="menu_id" value="<?= htmlspecialchars($menu['menu_id']) ?>">
+                        <input type="hidden" name="menu_id" value="<?= htmlspecialchars($menu->getMenuId()) ?>">
 
                         <!-- Titre -->
                         <div class="mb-3">
@@ -34,7 +34,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                    name="titre" 
                                    required 
                                    maxlength="50"
-                                   value="<?= htmlspecialchars($menu['titre']) ?>">
+                                   value="<?= htmlspecialchars($menu->getTitre()) ?>">
                         </div>
 
                         <!-- Description -->
@@ -44,7 +44,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                       id="description" 
                                       name="description" 
                                       rows="3"
-                                      maxlength="255"><?= htmlspecialchars($menu['description'] ?? '') ?></textarea>
+                                      maxlength="255"><?= htmlspecialchars($menu->getDescription() ?? '') ?></textarea>
                             <div class="form-text">Maximum 255 caractères</div>
                         </div>
 
@@ -59,7 +59,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                        required 
                                        min="1" 
                                        step="0.01"
-                                       value="<?= htmlspecialchars($menu['prix_par_personne']) ?>">
+                                       value="<?= htmlspecialchars($menu->getPrixParPersonne()) ?>">
                             </div>
 
                             <!-- Nombre de personnes minimum -->
@@ -71,7 +71,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                        name="nombre_personne_minimum" 
                                        required 
                                        min="1" 
-                                       value="<?= htmlspecialchars($menu['nombre_personne_minimum'] ?? 10) ?>">
+                                       value="<?= htmlspecialchars($menu->getNombrePersonneMinimum() ?? 10) ?>">
                             </div>
                         </div>
 
@@ -84,7 +84,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                        id="quantite_restante" 
                                        name="quantite_restante" 
                                        min="0" 
-                                       value="<?= htmlspecialchars($menu['quantite_restante'] ?? 0) ?>">
+                                       value="<?= htmlspecialchars($menu->getQuantiteRestante() ?? 0) ?>">
                                 <div class="form-text">Si 0, le menu sera inactif</div>
                             </div>
                         </div>
@@ -97,7 +97,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <?php 
                             $types = ['Entree' => 'Entrées', 'Plat' => 'Plats', 'Dessert' => 'Desserts', 'Accompagnement' => 'Accompagnements'];
                             foreach ($types as $type => $label): 
-                                $platsType = array_filter($plats, fn($p) => $p['type_plat'] === $type);
+                                $platsType = array_filter($plats, fn($p) => $p->getTypePlat() === $type);
                                 if (empty($platsType)) continue;
                             ?>
                                 <div class="mb-3">
@@ -105,17 +105,17 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     <div class="d-flex flex-wrap gap-2">
                                         <?php foreach ($platsType as $plat): 
                                             // Les allergènes sont déjà chargés par le contrôleur
-                                            $allergenesText = !empty($plat['allergenes']) ? 'Allergènes: ' . implode(', ', $plat['allergenes']) : '';
+                                            $allergenesText = !empty($plat->getAllergenes()) ? 'Allergènes: ' . implode(', ', $plat->getAllergenes()) : '';
                                         ?>
                                             <div class="form-check form-check-inline">
                                                 <input class="form-check-input" 
                                                        type="checkbox" 
                                                        name="plats[]" 
-                                                       value="<?= $plat['plat_id'] ?>"
-                                                       id="plat_<?= $plat['plat_id'] ?>"
-                                                       <?= in_array($plat['plat_id'], $platIds) ? 'checked' : '' ?>>
-                                                <label class="form-check-label" for="plat_<?= $plat['plat_id'] ?>" title="<?= htmlspecialchars(($plat['description'] ?? '') . ($allergenesText ? ' | ' . $allergenesText : '')) ?>">
-                                                    <?= htmlspecialchars($plat['titre_plat']) ?>
+                                                       value="<?= $plat->getPlatId() ?>"
+                                                       id="plat_<?= $plat->getPlatId() ?>"
+                                                       <?= in_array($plat->getPlatId(), $platIds) ? 'checked' : '' ?>>
+                                                <label class="form-check-label" for="plat_<?= $plat->getPlatId() ?>" title="<?= htmlspecialchars(($plat->getDescription() ?? '') . ($allergenesText ? ' | ' . $allergenesText : '')) ?>">
+                                                    <?= htmlspecialchars($plat->getTitrePlat()) ?>
                                                     <?php if (!empty($allergenesLabels)): ?>
                                                         <span class="text-danger small">⚠️</span>
                                                     <?php endif; ?>

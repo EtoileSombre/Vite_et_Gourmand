@@ -176,19 +176,19 @@
                             <div class="stars mb-2">
                                 <?php 
                                     // Afficher les étoiles pleines et vides
-                                    $noteEntiere = (int)$unAvis['note'];
+                                    $noteEntiere = (int)$unAvis->getNote();
                                     echo str_repeat('★', $noteEntiere);
                                     echo str_repeat('☆', 5 - $noteEntiere);
                                 ?>
                             </div>
                             <p class="quote-text mb-2">
                                 <span class="quote-mark">❝ </span>
-                                <?= htmlspecialchars($unAvis['description']) ?>
+                                <?= htmlspecialchars($unAvis->getDescription()) ?>
                                 <span class="quote-mark"> ❞</span>
                             </p>
                             <div class="who">
-                                <span class="fw-semibold"><?= htmlspecialchars($unAvis['prenom']) ?></span> · 
-                                <?= date('d/m/Y', strtotime($unAvis['created_at'])) ?>
+                                <span class="fw-semibold"><?= htmlspecialchars($unAvis->getPrenom()) ?></span> · 
+                                <?= date('d/m/Y', strtotime($unAvis->getCreatedAt())) ?>
                             </div>
                         </div>
                     </div>

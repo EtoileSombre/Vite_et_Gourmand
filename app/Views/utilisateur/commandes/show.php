@@ -5,7 +5,7 @@ include __DIR__ . '/../../layouts/header.php';
 
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
+        <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande->getNumeroCommande()) ?></h1>
         <a href="/mes-commandes" class="btn btn-outline-secondary rounded-pill">
             <i class="bi bi-arrow-left"></i> Retour
         </a>
@@ -21,25 +21,25 @@ include __DIR__ . '/../../layouts/header.php';
                 </div>
                 <div class="card-body">
                     <!-- Menus -->
-                    <?php if (!empty($commande['lignesMenus'])): ?>
+                    <?php if (!empty($commande->getLignesMenus())): ?>
                         <h6 class="text-vg-bordeaux mb-3">Menus</h6>
-                        <?php foreach ($commande['lignesMenus'] as $ligne): ?>
+                        <?php foreach ($commande->getLignesMenus() as $ligne): ?>
                             <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
                                 <div>
-                                    <strong><?= htmlspecialchars($ligne['menu_nom']) ?></strong><br>
-                                    <small class="text-muted"><?= $ligne['nombre_personne'] ?> personne(s)</small>
+                                    <strong><?= htmlspecialchars($ligne->getMenuNom()) ?></strong><br>
+                                    <small class="text-muted"><?= $ligne->getNombrePersonne() ?> personne(s)</small>
                                 </div>
                                 <div class="text-end">
-                                    <strong><?= number_format($ligne['total_ligne'] ?? 0, 2) ?> €</strong>
+                                    <strong><?= number_format($ligne->getTotalLigne(), 2) ?> €</strong>
                                 </div>
                             </div>
                         <?php endforeach; ?>
                     <?php endif; ?>
 
                     <!-- Matériel -->
-                    <?php if (!empty($commande['lignesMateriels'])): ?>
+                    <?php if (!empty($commande->getLignesMateriels())): ?>
                         <h6 class="text-vg-bordeaux mb-3 mt-4">Matériel emprunté</h6>
-                        <?php foreach ($commande['lignesMateriels'] as $mat): ?>
+                        <?php foreach ($commande->getLignesMateriels() as $mat): ?>
                             <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
                                 <div>
                                     <strong><?= htmlspecialchars($mat['nom']) ?></strong>
@@ -56,9 +56,9 @@ include __DIR__ . '/../../layouts/header.php';
                     <?php endif; ?>
 
                     <!-- Boissons -->
-                    <?php if (!empty($commande['lignesBoissons'])): ?>
+                    <?php if (!empty($commande->getLignesBoissons())): ?>
                         <h6 class="text-vg-bordeaux mb-3 mt-4">Boissons</h6>
-                        <?php foreach ($commande['lignesBoissons'] as $boisson): ?>
+                        <?php foreach ($commande->getLignesBoissons() as $boisson): ?>
                             <div class="d-flex justify-content-between align-items-center mb-3 pb-2 border-bottom">
                                 <div>
                                     <strong><?= htmlspecialchars($boisson['nom']) ?></strong><br>
@@ -75,40 +75,40 @@ include __DIR__ . '/../../layouts/header.php';
                     <hr class="my-3">
                     <div class="d-flex justify-content-between mb-2">
                         <span>Total menus :</span>
-                        <strong><?= number_format($commande['sousTotal'] ?? 0, 2) ?> €</strong>
+                        <strong><?= number_format($commande->getSousTotal() ?? 0, 2) ?> €</strong>
                     </div>
-                    <?php if (!empty($commande['totalBoissons'])): ?>
+                    <?php if (!empty($commande->getTotalBoissons())): ?>
                         <div class="d-flex justify-content-between mb-2">
                             <span>Total boissons :</span>
-                            <strong><?= number_format($commande['totalBoissons'], 2) ?> €</strong>
+                            <strong><?= number_format($commande->getTotalBoissons(), 2) ?> €</strong>
                         </div>
                     <?php endif; ?>
-                    <?php if (isset($commande['prix_livraison']) && $commande['prix_livraison'] > 0): ?>
+                    <?php if ($commande->getPrixLivraison() && $commande->getPrixLivraison() > 0): ?>
                         <div class="d-flex justify-content-between mb-2">
-                            <span>Frais de livraison<?php if (isset($commande['distance_km']) && $commande['distance_km'] > 0): ?> (<?= number_format($commande['distance_km'], 1) ?> km)<?php endif; ?> :</span>
-                            <strong><?= number_format($commande['prix_livraison'], 2) ?> €</strong>
+                            <span>Frais de livraison<?php if ($commande->getDistanceKm() && $commande->getDistanceKm() > 0): ?> (<?= number_format($commande->getDistanceKm(), 1) ?> km)<?php endif; ?> :</span>
+                            <strong><?= number_format($commande->getPrixLivraison(), 2) ?> €</strong>
                         </div>
                     <?php endif; ?>
                     
                     <hr class="my-3">
                     <div class="d-flex justify-content-between mb-2">
                         <span class="small text-muted">Total HT :</span>
-                        <span class="small text-muted"><?= number_format(($commande['total_final'] ?? 0) / 1.1, 2) ?> €</span>
+                        <span class="small text-muted"><?= number_format(($commande->getTotalFinal() ?? 0) / 1.1, 2) ?> €</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
                         <span class="small text-muted">TVA (10%) :</span>
-                        <span class="small text-muted"><?= number_format(($commande['total_final'] ?? 0) - (($commande['total_final'] ?? 0) / 1.1), 2) ?> €</span>
+                        <span class="small text-muted"><?= number_format(($commande->getTotalFinal() ?? 0) - (($commande->getTotalFinal() ?? 0) / 1.1), 2) ?> €</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
                         <h5 class="mb-0">TOTAL TTC :</h5>
-                        <h5 class="mb-0 text-vg-bordeaux"><?= number_format($commande['total_final'] ?? 0, 2) ?> €</h5>
+                        <h5 class="mb-0 text-vg-bordeaux"><?= number_format($commande->getTotalFinal() ?? 0, 2) ?> €</h5>
                     </div>
 
-                    <?php if (!empty($commande['totalCaution'])): ?>
+                    <?php if (!empty($commande->getTotalCaution())): ?>
                         <div class="alert alert-warning mb-0 py-2">
                             <div class="d-flex justify-content-between align-items-center">
                                 <span><strong>Cautions matériel</strong> <small class="text-muted">(restituable)</small></span>
-                                <strong class="text-warning"><?= number_format($commande['totalCaution'], 2) ?> €</strong>
+                                <strong class="text-warning"><?= number_format($commande->getTotalCaution(), 2) ?> €</strong>
                             </div>
                         </div>
                     <?php endif; ?>
@@ -123,24 +123,24 @@ include __DIR__ . '/../../layouts/header.php';
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-4">Date de commande :</dt>
-                        <dd class="col-sm-8"><?= date('d/m/Y à H:i', strtotime($commande['date_commande'])) ?></dd>
+                        <dd class="col-sm-8"><?= date('d/m/Y à H:i', strtotime($commande->getDateCommande())) ?></dd>
 
                         <dt class="col-sm-4">Date de prestation :</dt>
                         <dd class="col-sm-8">
-                            <strong><?= date('d/m/Y', strtotime($commande['date_prestation'])) ?></strong>
-                            <?php if (!empty($commande['heure_livraison'])): ?>
-                                à <?= htmlspecialchars($commande['heure_livraison']) ?>
+                            <strong><?= date('d/m/Y', strtotime($commande->getDatePrestation())) ?></strong>
+                            <?php if (!empty($commande->getHeureLivraison())): ?>
+                                à <?= htmlspecialchars($commande->getHeureLivraison()) ?>
                             <?php endif; ?>
                         </dd>
 
                         <dt class="col-sm-4">Lieu de livraison :</dt>
                         <dd class="col-sm-8">
-                            <?= htmlspecialchars($commande['lieu_livraison'] ?? 'Non renseigné') ?>
-                            <?php if (!empty($commande['ville_livraison'])): ?>
+                            <?= htmlspecialchars($commande->getLieuLivraison() ?? 'Non renseigné') ?>
+                            <?php if (!empty($commande->getVilleLivraison())): ?>
                                 <br><small class="text-muted">
-                                    <?= htmlspecialchars($commande['ville_livraison']) ?>
-                                    <?php if (!empty($commande['code_postal_livraison'])): ?>
-                                        <?= htmlspecialchars($commande['code_postal_livraison']) ?>
+                                    <?= htmlspecialchars($commande->getVilleLivraison()) ?>
+                                    <?php if (!empty($commande->getCodePostalLivraison())): ?>
+                                        <?= htmlspecialchars($commande->getCodePostalLivraison()) ?>
                                     <?php endif; ?>
                                 </small>
                             <?php endif; ?>
@@ -148,16 +148,16 @@ include __DIR__ . '/../../layouts/header.php';
                     </dl>
 
                     <!-- Carte OpenStreetMap -->
-                    <?php if (!empty($commande['lieu_livraison']) && !empty($commande['ville_livraison'])): ?>
+                    <?php if (!empty($commande->getLieuLivraison()) && !empty($commande->getVilleLivraison())): ?>
                         <hr class="my-3">
-                        <div id="map-<?= htmlspecialchars($commande['numero_commande']) ?>" class="map-container-small rounded"></div>
+                        <div id="map-<?= htmlspecialchars($commande->getNumeroCommande()) ?>" class="map-container-small rounded"></div>
                         
                         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
                         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
                         <script>
                             (function() {
-                                const address = <?= json_encode($commande['lieu_livraison'] . ', ' . $commande['ville_livraison'] . ' ' . ($commande['code_postal_livraison'] ?? '')) ?>;
-                                const mapId = 'map-<?= htmlspecialchars($commande['numero_commande']) ?>';
+                                const address = <?= json_encode($commande->getLieuLivraison() . ', ' . $commande->getVilleLivraison() . ' ' . ($commande->getCodePostalLivraison() ?? '')) ?>;
+                                const mapId = 'map-<?= htmlspecialchars($commande->getNumeroCommande()) ?>';
                                 
                                 // Attendre le chargement complet de la page et de Leaflet
                                 function initMap() {
@@ -188,7 +188,7 @@ include __DIR__ . '/../../layouts/header.php';
                                         } else {
                                             // Fallback : essayer juste avec la ville
                                             console.log('Adresse précise non trouvée, recherche de la ville...');
-                                            const ville = '<?= addslashes($commande['ville_livraison']) ?>';
+                                            const ville = '<?= addslashes($commande->getVilleLivraison()) ?>';
                                             fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(ville + ', France'))
                                                 .then(response => response.json())
                                                 .then(villeData => {
@@ -251,11 +251,11 @@ include __DIR__ . '/../../layouts/header.php';
                                     <div class="d-flex align-items-start">
                                         <div class="flex-shrink-0 me-3">
                                             <?php
-                                            $timelineStatut = $suivi['nouveau_statut'];
+                                            $timelineStatut = $suivi->getNouveauStatut();
                                             $timelineBadgeClass = 'badge-statut-' . str_replace('_', '-', $timelineStatut);
                                             ?>
                                             <div class="rounded-circle p-2 timeline-badge <?= $timelineBadgeClass ?>">
-                                                <i class="bi bi-<?= match($suivi['nouveau_statut']) {
+                                                <i class="bi bi-<?= match($suivi->getNouveauStatut()) {
                                                     'en_attente' => 'hourglass-split',
                                                     'acceptee' => 'check-circle',
                                                     'en_preparation' => 'gear',
@@ -269,19 +269,19 @@ include __DIR__ . '/../../layouts/header.php';
                                             </div>
                                         </div>
                                         <div class="flex-grow-1">
-                                            <h6 class="mb-1"><?= $statuts[$suivi['nouveau_statut']] ?? ucfirst(str_replace('_', ' ', $suivi['nouveau_statut'])) ?></h6>
+                                            <h6 class="mb-1"><?= $statuts[$suivi->getNouveauStatut()] ?? ucfirst(str_replace('_', ' ', $suivi->getNouveauStatut())) ?></h6>
                                             <small class="text-muted">
-                                                <?= date('d/m/Y à H:i', strtotime($suivi['date_changement'])) ?>
+                                                <?= date('d/m/Y à H:i', strtotime($suivi->getDateChangement())) ?>
                                             </small>
-                                            <?php if (!empty($suivi['employe_prenom'])): ?>
+                                            <?php if (!empty($suivi->getEmployePrenom())): ?>
                                                 <br><small class="text-muted">
-                                                    Par <?= htmlspecialchars($suivi['employe_prenom']) ?> 
-                                                    <?= htmlspecialchars($suivi['employe_nom']) ?>
+                                                    Par <?= htmlspecialchars($suivi->getEmployePrenom()) ?> 
+                                                    <?= htmlspecialchars($suivi->getEmployeNom()) ?>
                                                 </small>
                                             <?php endif; ?>
-                                            <?php if (!empty($suivi['commentaire'])): ?>
+                                            <?php if (!empty($suivi->getCommentaire())): ?>
                                                 <div class="mt-1">
-                                                    <small><em><?= htmlspecialchars($suivi['commentaire']) ?></em></small>
+                                                    <small><em><?= htmlspecialchars($suivi->getCommentaire()) ?></em></small>
                                                 </div>
                                             <?php endif; ?>
                                         </div>

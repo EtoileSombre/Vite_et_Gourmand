@@ -83,17 +83,17 @@
                                 <?php foreach ($plats as $plat): ?>
                                 <tr>
                                     <td>
-                                        <strong><?= htmlspecialchars($plat['titre_plat']) ?></strong>
+                                        <strong><?= htmlspecialchars($plat->getTitrePlat()) ?></strong>
                                     </td>
                                     <td>
                                         <small class="text-muted">
-                                            <?= htmlspecialchars(substr($plat['description'] ?? '', 0, 100)) ?>
-                                            <?= strlen($plat['description'] ?? '') > 100 ? '...' : '' ?>
+                                            <?= htmlspecialchars(substr($plat->getDescription() ?? '', 0, 100)) ?>
+                                            <?= strlen($plat->getDescription() ?? '') > 100 ? '...' : '' ?>
                                         </small>
                                     </td>
                                     <td>
                                         <?php
-                                        $badgeClass = match($plat['type_plat']) {
+                                        $badgeClass = match($plat->getTypePlat()) {
                                             'Entrée' => 'bg-success',
                                             'Plat' => 'bg-primary',
                                             'Dessert' => 'bg-warning',
@@ -102,16 +102,16 @@
                                         };
                                         ?>
                                         <span class="badge <?= $badgeClass ?>">
-                                            <?= htmlspecialchars($plat['type_plat']) ?>
+                                            <?= htmlspecialchars($plat->getTypePlat()) ?>
                                         </span>
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a href="/admin/plats/edit?id=<?= $plat['plat_id'] ?>" 
+                                            <a href="/admin/plats/edit?id=<?= $plat->getPlatId() ?>" 
                                                class="btn btn-action-circle btn-outline-vg-bordeaux" 
                                                title="Modifier">
                                                 <i class="bi bi-pencil"></i>
-                                                <span class="visually-hidden">Modifier <?= htmlspecialchars($plat['titre_plat']) ?></span>
+                                                <span class="visually-hidden">Modifier <?= htmlspecialchars($plat->getTitrePlat()) ?></span>
                                             </a>
                                             
                                             <button type="button" 
@@ -119,10 +119,10 @@
                                                     title="Supprimer"
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#deletePlatModal"
-                                                    data-plat-id="<?= $plat['plat_id'] ?>"
-                                                    data-plat-titre="<?= htmlspecialchars($plat['titre_plat']) ?>">
+                                                    data-plat-id="<?= $plat->getPlatId() ?>"
+                                                    data-plat-titre="<?= htmlspecialchars($plat->getTitrePlat()) ?>">
                                                 <i class="bi bi-trash"></i>
-                                                <span class="visually-hidden">Supprimer <?= htmlspecialchars($plat['titre_plat']) ?></span>
+                                                <span class="visually-hidden">Supprimer <?= htmlspecialchars($plat->getTitrePlat()) ?></span>
                                             </button>
                                         </div>
                                     </td>
@@ -152,6 +152,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Annuler</button>
                 <form method="POST" action="/admin/plats/delete" id="deletePlatForm">
+                    <?= csrf_field() ?>
                     <input type="hidden" name="plat_id" id="platIdToDelete">
                     <button type="submit" class="btn btn-danger rounded-pill">
                         <i class="bi bi-trash"></i> Supprimer

@@ -244,7 +244,7 @@ class PlatController extends Controller
         $success = $this->platRepository->deletePlat($platId);
 
         if ($success) {
-            Session::set('success', "Le plat  {$plat['titre_plat']}  a été supprimé.");
+            Session::set('success', "Le plat  {$plat->getTitrePlat()}  a été supprimé.");
         } else {
             Session::set('error', "Une erreur est survenue lors de la suppression.");
         }

@@ -36,7 +36,7 @@ try {
         INNER JOIN utilisateur u ON c.utilisateur_id = u.utilisateur_id
         WHERE c.pret_materiel = 1
         AND c.restitution_materiel = 0
-        AND c.statut = 'terminée'
+        AND c.statut = 'attente_retour_materiel'
         AND DATE_ADD(c.date_prestation, INTERVAL 10 DAY) = CURDATE()
     ";
     
@@ -49,11 +49,24 @@ try {
     foreach ($commandesARappeler as $commande) {
         echo "Envoi rappel pour commande {$commande['numero_commande']} à {$commande['email']}...\n";
         
+        // Récupérer les matériels de la commande
+        $stmtMat = $db->prepare("
+            SELECT m.nom, cm.quantite
+            FROM commande_materiel cm
+            INNER JOIN materiel m ON cm.materiel_id = m.materiel_id
+            WHERE cm.numero_commande = ?
+        ");
+        $stmtMat->execute([$commande['numero_commande']]);
+        $materiels = $stmtMat->fetchAll(PDO::FETCH_ASSOC);
+        
+        $dateRetour = $commande['date_prestation'];
+        
         $success = sendMaterialReturnReminderEmail(
             $commande['email'],
             $commande['prenom'],
             $commande['numero_commande'],
-            $commande['date_prestation']
+            $materiels,
+            $dateRetour
         );
         
         if ($success) {

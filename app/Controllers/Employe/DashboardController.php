@@ -53,12 +53,12 @@ class DashboardController extends Controller
         $commandesEnAttente = $this->getCommandesEnAttente();
         
         // Enrichir avec lignesMenus
-        foreach ($commandesEnAttente as &$cmd) {
-            $cmd['lignesMenus'] = $this->commandeMenuRepository->findByCommande($cmd['numero_commande']);
-            $cmd['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($cmd['numero_commande']);
+        foreach ($commandesEnAttente as $cmd) {
+            $cmd->setLignesMenus($this->commandeMenuRepository->findByCommande($cmd->getNumeroCommande()));
+            $cmd->setTotalPersonnes($this->commandeMenuRepository->getTotalPersonnes($cmd->getNumeroCommande()));
             // Afficher le premier menu comme menu_nom
-            if (!empty($cmd['lignesMenus'])) {
-                $cmd['menu_nom'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
+            if (!empty($cmd->getLignesMenus())) {
+                $cmd->setMenuNom($cmd->getLignesMenus()[0]->getMenuNom() ?? 'Menu');
             }
         }
         

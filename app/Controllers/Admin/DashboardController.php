@@ -33,7 +33,7 @@ class DashboardController extends Controller
         $commandeMenuRepository = $factory->createCommandeMenuRepository();
         $allUsers = $userRepository->findAllWithRole();
         $totalEmployes = count(array_filter($allUsers, function($user) {
-            return in_array($user['role_nom'], ['employé', 'administrateur']);
+            return in_array($user->getRoleLibelle(), ['employé', 'administrateur']);
         }));
         
         $totalCommandes = count($commandeRepository->findAll());
@@ -45,12 +45,12 @@ class DashboardController extends Controller
         $dernieresCommandes = array_slice($dernieresCommandes, 0, 10);
         
         // Enrichir avec lignesMenus
-        foreach ($dernieresCommandes as &$cmd) {
-            $cmd['lignesMenus'] = $commandeMenuRepository->findByCommande($cmd['numero_commande']);
-            $cmd['totalPersonnes'] = $commandeMenuRepository->getTotalPersonnes($cmd['numero_commande']);
+        foreach ($dernieresCommandes as $cmd) {
+            $cmd->setLignesMenus($commandeMenuRepository->findByCommande($cmd->getNumeroCommande()));
+            $cmd->setTotalPersonnes($commandeMenuRepository->getTotalPersonnes($cmd->getNumeroCommande()));
             // Afficher le premier menu comme menu_nom
-            if (!empty($cmd['lignesMenus'])) {
-                $cmd['menu_nom'] = $cmd['lignesMenus'][0]['menu_nom'] ?? 'Menu';
+            if (!empty($cmd->getLignesMenus())) {
+                $cmd->setMenuNom($cmd->getLignesMenus()[0]->getMenuNom() ?? 'Menu');
             }
         }
 
@@ -79,7 +79,7 @@ class DashboardController extends Controller
         
         // Filtrer pour n'afficher que les employés et administrateurs
         $users = array_filter($allUsers, function($user) {
-            return in_array($user['role_nom'], ['employé', 'administrateur']);
+            return in_array($user->getRoleLibelle(), ['employé', 'administrateur']);
         });
 
         $this->render('admin/users', ['users' => $users]);

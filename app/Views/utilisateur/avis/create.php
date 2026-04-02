@@ -10,6 +10,7 @@
                 </div>
                 <div class="card-body">
                     <form method="post" action="/avis">
+                        <?= csrf_field() ?>
                         <?php if (isset($numeroCommande)): ?>
                             <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($numeroCommande) ?>">
                         <?php endif; ?>

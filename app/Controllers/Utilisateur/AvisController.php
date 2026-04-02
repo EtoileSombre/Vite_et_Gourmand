@@ -31,6 +31,12 @@ class AvisController extends Controller
             return;
         }
 
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité. Veuillez réessayer.');
+            $this->redirect('/donner-avis');
+            return;
+        }
+
         $request = new Request();
         $note = $request->post('note');
         $commentaire = $request->post('commentaire');
@@ -89,14 +95,14 @@ class AvisController extends Controller
         if ($numeroCommande) {
             $commande = $this->commandeRepository->findByNumero($numeroCommande);
             
-            if (!$commande || $commande['utilisateur_id'] != $userId) {
+            if (!$commande || $commande->getUtilisateurId() != $userId) {
                 Session::set('flash_error', 'Commande introuvable.');
                 $this->redirect('/mes-commandes');
                 return;
             }
             
             // Vérifier que la commande est terminée
-            if ($commande['statut'] !== 'terminee') {
+            if ($commande->getStatut() !== 'terminee') {
                 Session::set('flash_error', 'Vous ne pouvez donner un avis que pour une commande terminée.');
                 $this->redirect('/mes-commandes');
                 return;

@@ -49,7 +49,7 @@ class CommandeController extends Controller
     {
         $reductionTotale = 0;
         foreach ($lignesMenus as $ligne) {
-            $reductionTotale += floatval($ligne['reduction'] ?? 0);
+            $reductionTotale += floatval($ligne->getReduction());
         }
         return $reductionTotale;
     }
@@ -61,7 +61,7 @@ class CommandeController extends Controller
     {
         $sousTotal = 0;
         foreach ($lignesMenus as $ligne) {
-            $sousTotal += floatval($ligne['total_ligne'] ?? 0);
+            $sousTotal += floatval($ligne->getTotalLigne());
         }
         return $sousTotal;
     }
@@ -76,10 +76,10 @@ class CommandeController extends Controller
         $commandes = $this->commandeRepository->findByUser($userId);
         
         // Enrichir chaque commande avec ses lignes de menus
-        foreach ($commandes as &$commande) {
-            $commande['lignesMenus'] = $this->commandeMenuRepository->findByCommande($commande['numero_commande']);
-            $commande['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($commande['numero_commande']);
-            $commande['reductionTotale'] = $this->calculateTotalReduction($commande['lignesMenus']);
+        foreach ($commandes as $commande) {
+            $commande->setLignesMenus($this->commandeMenuRepository->findByCommande($commande->getNumeroCommande()));
+            $commande->setTotalPersonnes($this->commandeMenuRepository->getTotalPersonnes($commande->getNumeroCommande()));
+            $commande->setReductionTotale($this->calculateTotalReduction($commande->getLignesMenus()));
         }
         
         $this->render('utilisateur/commandes/index', [
@@ -136,6 +136,12 @@ class CommandeController extends Controller
             $this->redirect('/login');
         }
 
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité. Veuillez réessayer.');
+            $this->redirect('/commander');
+            return;
+        }
+
         $request = new Request();
         $menuId = $request->post('menu_id');
         $nombrePersonnes = $request->post('nombre_personnes');
@@ -164,11 +170,11 @@ class CommandeController extends Controller
         // CALCULS AUTOMATIQUES
 
         // 1. Prix de base du menu
-        $prixMenu = $menu['prix_par_personne'] * $nombrePersonnes;
+        $prixMenu = $menu->getPrixParPersonne() * $nombrePersonnes;
 
         // 2. Calcul de la réduction de 10% si +5 personnes par rapport au minimum
         $reductionAppliquee = 0;
-        $nombrePersonneMinimum = $menu['nombre_personne_minimum'];
+        $nombrePersonneMinimum = $menu->getNombrePersonneMinimum();
         if ($nombrePersonnes >= ($nombrePersonneMinimum + 5)) {
             $reductionAppliquee = $prixMenu * 0.10; // 10% de réduction
         }
@@ -204,7 +210,7 @@ class CommandeController extends Controller
             $numeroCommande,
             $menuId,
             $nombrePersonnes,
-            $menu['prix_par_personne'],
+            $menu->getPrixParPersonne(),
             $reductionAppliquee
         );
 
@@ -260,9 +266,9 @@ class CommandeController extends Controller
             
             // Préparer les lignes de menus pour l'email
             $lignesMenus = [[
-                'menu_nom' => $menu['titre'],
+                'menu_nom' => $menu->getTitre(),
                 'nombre_personne' => $nombrePersonnes,
-                'prix_par_personne' => $menu['prix_par_personne'],
+                'prix_par_personne' => $menu->getPrixParPersonne(),
                 'total_ligne' => $totalMenus
             ]];
             
@@ -309,22 +315,22 @@ class CommandeController extends Controller
         $commande = $this->commandeRepository->findByNumero($numeroCommande);
 
         // Vérifier que la commande appartient à l'utilisateur
-        if (!$commande || $commande['utilisateur_id'] != $userId) {
+        if (!$commande || $commande->getUtilisateurId() != $userId) {
             Session::set('error', 'Commande introuvable.');
             $this->redirect('/mes-commandes');
             return;
         }
 
         // Vérifier que la commande peut être modifiée (uniquement si en_attente)
-        if ($commande['statut'] !== 'en_attente') {
+        if ($commande->getStatut() !== 'en_attente') {
             Session::set('error', 'Cette commande ne peut plus être modifiée car elle a été acceptée par notre équipe.');
             $this->redirect('/mes-commandes');
             return;
         }
 
         // Enrichir avec lignesMenus
-        $commande['lignesMenus'] = $this->commandeMenuRepository->findByCommande($numeroCommande);
-        $commande['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($numeroCommande);
+        $commande->setLignesMenus($this->commandeMenuRepository->findByCommande($numeroCommande));
+        $commande->setTotalPersonnes($this->commandeMenuRepository->getTotalPersonnes($numeroCommande));
 
         $menus = $this->menuRepository->findAll();
 
@@ -344,6 +350,12 @@ class CommandeController extends Controller
             $this->redirect('/login');
         }
 
+        if (!csrf_verify()) {
+            Session::set('flash_error', 'Erreur de sécurité. Veuillez réessayer.');
+            $this->redirect('/mes-commandes');
+            return;
+        }
+
         $request = new Request();
         $numeroCommande = $request->post('numero_commande');
         $nombrePersonnes = $request->post('nombre_personnes');
@@ -352,14 +364,14 @@ class CommandeController extends Controller
         $commande = $this->commandeRepository->findByNumero($numeroCommande);
 
         // Vérifier que la commande appartient à l'utilisateur
-        if (!$commande || $commande['utilisateur_id'] != $userId) {
+        if (!$commande || $commande->getUtilisateurId() != $userId) {
             Session::set('error', 'Commande introuvable.');
             $this->redirect('/mes-commandes');
             return;
         }
 
         // Vérifier que la commande peut être modifiée (uniquement si en_attente)
-        if ($commande['statut'] !== 'en_attente') {
+        if ($commande->getStatut() !== 'en_attente') {
             Session::set('error', 'Cette commande ne peut plus être modifiée car elle a été acceptée.');
             $this->redirect('/mes-commandes');
             return;
@@ -372,17 +384,17 @@ class CommandeController extends Controller
         ]);
 
         // Si nombre de personnes changé, mettre à jour la première ligne de menu
-        if (!empty($lignesMenus) && $nombrePersonnes != $lignesMenus[0]['nombre_personne']) {
+        if (!empty($lignesMenus) && $nombrePersonnes != $lignesMenus[0]->getNombrePersonne()) {
             $this->commandeMenuRepository->updateLigne(
-                $lignesMenus[0]['commande_menu_id'],
+                $lignesMenus[0]->getCommandeMenuId(),
                 $nombrePersonnes,
-                $lignesMenus[0]['prix_par_personne'],
-                $lignesMenus[0]['reduction']
+                $lignesMenus[0]->getPrixParPersonne(),
+                $lignesMenus[0]->getReduction()
             );
             
             // Recalculer le total de la commande
             $totalMenus = $this->commandeMenuRepository->getTotalMenus($numeroCommande);
-            $nouveauTotal = $totalMenus + $commande['prix_livraison'];
+            $nouveauTotal = $totalMenus + $commande->getPrixLivraison();
             
             $this->commandeRepository->updateByNumero($numeroCommande, [
                 'total_final' => $nouveauTotal
@@ -399,7 +411,12 @@ class CommandeController extends Controller
             $lignesMenus = $this->commandeMenuRepository->findByCommande($numeroCommande);
             
             $detailsCommande = [
-                'lignesMenus' => $lignesMenus,
+                'lignesMenus' => array_map(fn($l) => [
+                    'menu_nom' => $l->getMenuNom(),
+                    'nombre_personne' => $l->getNombrePersonne(),
+                    'prix_par_personne' => $l->getPrixParPersonne(),
+                    'total_ligne' => $l->getTotalLigne(),
+                ], $lignesMenus),
                 'date_prestation' => $dateLivraison
             ];
             
@@ -426,14 +443,14 @@ class CommandeController extends Controller
         $commande = $this->commandeRepository->findByNumero($numeroCommande);
 
         // Vérifier que la commande appartient à l'utilisateur
-        if (!$commande || $commande['utilisateur_id'] != $userId) {
+        if (!$commande || $commande->getUtilisateurId() != $userId) {
             Session::set('error', 'Commande introuvable.');
             $this->redirect('/mes-commandes');
             return;
         }
 
         // Vérifier que la commande peut être annulée (uniquement si en_attente)
-        if ($commande['statut'] !== 'en_attente') {
+        if ($commande->getStatut() !== 'en_attente') {
             Session::set('error', 'Cette commande ne peut plus être annulée car elle a déjà été acceptée par notre équipe. Veuillez nous contacter.');
             $this->redirect('/mes-commandes');
             return;
@@ -443,7 +460,7 @@ class CommandeController extends Controller
         // Enregistrer dans l'historique de suivi
         $this->suiviCommandeRepository->enregistrerChangement(
             $numeroCommande,
-            $commande['statut'],
+            $commande->getStatut(),
             'annulee',
             $userId,
             'Annulation par l\'utilisateur'
@@ -459,16 +476,16 @@ class CommandeController extends Controller
             if ($user) {
                 // Email à l'utilisateur
                 sendCancellationEmailToUser(
-                    $user['email'],
-                    $user['prenom'],
+                    $user->getEmail(),
+                    $user->getPrenom(),
                     $numeroCommande
                 );
                 
                 // Email au restaurant
                 sendCancellationEmailToRestaurant(
                     $numeroCommande,
-                    $user['nom'] . ' ' . $user['prenom'],
-                    $user['email']
+                    $user->getNom() . ' ' . $user->getPrenom(),
+                    $user->getEmail()
                 );
             }
         } catch (\Exception $e) {
@@ -499,21 +516,21 @@ class CommandeController extends Controller
 
         $commande = $this->commandeRepository->findByNumero($numeroCommande);
 
-        if (!$commande || $commande['utilisateur_id'] != $userId) {
+        if (!$commande || $commande->getUtilisateurId() != $userId) {
             Session::set('error', 'Commande introuvable');
             $this->redirect('/mes-commandes');
             return;
         }
 
         // Enrichir avec les lignes de menus, matériel et boissons
-        $commande['lignesMenus'] = $this->commandeMenuRepository->findByCommande($numeroCommande);
-        $commande['totalPersonnes'] = $this->commandeMenuRepository->getTotalPersonnes($numeroCommande);
-        $commande['reductionTotale'] = $this->calculateTotalReduction($commande['lignesMenus']);
-        $commande['sousTotal'] = $this->calculateSousTotal($commande['lignesMenus']);
-        $commande['lignesMateriels'] = $this->materielRepository->getByCommande($numeroCommande);
-        $commande['totalCaution'] = $this->materielRepository->getTotalCautionByCommande($numeroCommande);
-        $commande['lignesBoissons'] = $this->boissonRepository->getByCommande($numeroCommande);
-        $commande['totalBoissons'] = $this->boissonRepository->getTotalByCommande($numeroCommande);
+        $commande->setLignesMenus($this->commandeMenuRepository->findByCommande($numeroCommande));
+        $commande->setTotalPersonnes($this->commandeMenuRepository->getTotalPersonnes($numeroCommande));
+        $commande->setReductionTotale($this->calculateTotalReduction($commande->getLignesMenus()));
+        $commande->setSousTotal($this->calculateSousTotal($commande->getLignesMenus()));
+        $commande->setLignesMateriels($this->materielRepository->getByCommande($numeroCommande));
+        $commande->setTotalCaution($this->materielRepository->getTotalCautionByCommande($numeroCommande));
+        $commande->setLignesBoissons($this->boissonRepository->getByCommande($numeroCommande));
+        $commande->setTotalBoissons($this->boissonRepository->getTotalByCommande($numeroCommande));
 
         // Récupérer l'historique de suivi
         $historique = $this->suiviCommandeRepository->getHistorique($numeroCommande);

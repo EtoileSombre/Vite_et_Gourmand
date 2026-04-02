@@ -8,15 +8,16 @@ include __DIR__ . '/../../layouts/header.php';
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-header text-white bg-vg-bordeaux">
-                    <h3 class="mb-0"><i class="bi bi-pencil-square"></i> Modifier la commande #<?= htmlspecialchars($commande['numero_commande'] ?? 'N/A') ?></h3>
+                    <h3 class="mb-0"><i class="bi bi-pencil-square"></i> Modifier la commande #<?= htmlspecialchars($commande->getNumeroCommande() ?? 'N/A') ?></h3>
                 </div>
                 <div class="card-body">
                     <form method="post" action="/commande/modifier">
-                        <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($commande['numero_commande']) ?>">
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($commande->getNumeroCommande()) ?>">
                         
                         <div class="mb-3">
                             <label class="form-label">Menus commandés</label>
-                            <?php if (!empty($commande['lignesMenus'])): ?>
+                            <?php if (!empty($commande->getLignesMenus())): ?>
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
@@ -27,12 +28,12 @@ include __DIR__ . '/../../layouts/header.php';
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($commande['lignesMenus'] as $ligne): ?>
+                                        <?php foreach ($commande->getLignesMenus() as $ligne): ?>
                                             <tr>
-                                                <td><?= htmlspecialchars($ligne['menu_nom']) ?></td>
-                                                <td><?= htmlspecialchars($ligne['nombre_personne']) ?></td>
-                                                <td><?= number_format($ligne['prix_par_personne'], 2) ?> €</td>
-                                                <td><?= number_format($ligne['total_ligne'], 2) ?> €</td>
+                                                <td><?= htmlspecialchars($ligne->getMenuNom()) ?></td>
+                                                <td><?= htmlspecialchars($ligne->getNombrePersonne()) ?></td>
+                                                <td><?= number_format($ligne->getPrixParPersonne(), 2) ?> €</td>
+                                                <td><?= number_format($ligne->getTotalLigne(), 2) ?> €</td>
                                             </tr>
                                         <?php endforeach; ?>
                                     </tbody>
@@ -46,7 +47,7 @@ include __DIR__ . '/../../layouts/header.php';
                         <div class="mb-3">
                             <label for="nombre_personnes" class="form-label">Modifier le nombre de personnes</label>
                             <input type="number" class="form-control" id="nombre_personnes" name="nombre_personnes" 
-                                   min="1" value="<?= htmlspecialchars(!empty($commande['lignesMenus']) ? $commande['lignesMenus'][0]['nombre_personne'] : 2) ?>" required>
+                                   min="1" value="<?= htmlspecialchars(!empty($commande->getLignesMenus()) ? $commande->getLignesMenus()[0]->getNombrePersonne() : 2) ?>" required>
                             <small class="text-muted">Pour une modification plus complexe, contactez-nous.</small>
                         </div>
                         
@@ -54,7 +55,7 @@ include __DIR__ . '/../../layouts/header.php';
                             <label for="date_livraison" class="form-label">Date de prestation souhaitée</label>
                             <input type="date" class="form-control" id="date_livraison" name="date_livraison" 
                                    min="<?= date('Y-m-d', strtotime('+1 day')) ?>" 
-                                   value="<?= htmlspecialchars($commande['date_prestation'] ?? '') ?>" required>
+                                   value="<?= htmlspecialchars($commande->getDatePrestation() ?? '') ?>" required>
                         </div>
                         
                         <div class="d-flex justify-content-between">

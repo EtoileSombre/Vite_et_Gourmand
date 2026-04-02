@@ -2,14 +2,14 @@
 $additionalStyles = ['/assets/css/pages/commandes.css'];
 require_once __DIR__ . '/../../layouts/header.php';
 
-$currentStatut = $commande['statut'];
+$currentStatut = $commande->getStatut();
 $currentLabel = $statuts[$currentStatut] ?? ucfirst(str_replace('_', ' ', $currentStatut));
 $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
 ?>
 
 <div class="container my-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande['numero_commande']) ?></h1>
+        <h1><i class="bi bi-receipt"></i> Commande #<?= htmlspecialchars($commande->getNumeroCommande()) ?></h1>
         <a href="<?= ($_SESSION['user_role'] === 'administrateur') ? '/admin' : '/employe' ?>" class="btn btn-outline-secondary rounded-pill d-inline-flex align-items-center">
             <i class="bi bi-arrow-left me-2"></i>Retour
         </a>
@@ -25,20 +25,20 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-4">Nom :</dt>
-                        <dd class="col-sm-8"><?= htmlspecialchars(($commande['utilisateur_nom'] ?? '') . ' ' . ($commande['utilisateur_prenom'] ?? 'N/A')) ?></dd>
+                        <dd class="col-sm-8"><?= htmlspecialchars(($commande->getUtilisateurNom() ?? '') . ' ' . ($commande->getUtilisateurPrenom() ?? 'N/A')) ?></dd>
 
                         <dt class="col-sm-4">Email :</dt>
                         <dd class="col-sm-8 text-break">
-                            <a href="mailto:<?= htmlspecialchars($commande['utilisateur_email']) ?>">
-                                <?= htmlspecialchars($commande['utilisateur_email']) ?>
+                            <a href="mailto:<?= htmlspecialchars($commande->getUtilisateurEmail()) ?>">
+                                <?= htmlspecialchars($commande->getUtilisateurEmail()) ?>
                             </a>
                         </dd>
 
                         <dt class="col-sm-4">Téléphone :</dt>
                         <dd class="col-sm-8">
-                            <?php if (!empty($commande['utilisateur_telephone'])): ?>
-                                <a href="tel:<?= htmlspecialchars($commande['utilisateur_telephone']) ?>">
-                                    <?= htmlspecialchars($commande['utilisateur_telephone']) ?>
+                            <?php if (!empty($commande->getUtilisateurTelephone())): ?>
+                                <a href="tel:<?= htmlspecialchars($commande->getUtilisateurTelephone()) ?>">
+                                    <?= htmlspecialchars($commande->getUtilisateurTelephone()) ?>
                                 </a>
                             <?php else: ?>
                                 <span class="text-muted">Non renseigné</span>
@@ -50,14 +50,14 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
         </div>
 
         <!-- FORMULAIRE DE CHANGEMENT DE STATUT -->
-        <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
+        <?php if (!in_array($commande->getStatut(), ['terminee', 'refusee', 'annulee'])): ?>
             <div class="col-md-6 mb-4">
                 <div class="card h-100 shadow-sm border-0">
                     <div class="card-header bg-vg-gold text-white border-0">
                         <h5 class="mb-0"><i class="bi bi-arrow-repeat"></i> Changement de Statut</h5>
                     </div>
                     <div class="card-body">
-                        <form method="POST" action="/employe/commandes/change-status?id=<?= htmlspecialchars($commande['numero_commande']) ?>">
+                        <form method="POST" action="/employe/commandes/change-status?id=<?= htmlspecialchars($commande->getNumeroCommande()) ?>">
                             <?= csrf_field() ?>
                             
                             <!-- Nouveau statut -->
@@ -65,17 +65,17 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                 <label for="nouveau_statut" class="form-label fw-bold">
                                     <i class="bi bi-clipboard-check"></i> Nouveau Statut <span class="text-danger">*</span>
                                 </label>
-                                <select name="nouveau_statut" id="nouveau_statut" class="form-select" data-statut-actuel="<?= htmlspecialchars($commande['statut']) ?>" required>
+                                <select name="nouveau_statut" id="nouveau_statut" class="form-select" data-statut-actuel="<?= htmlspecialchars($commande->getStatut()) ?>" required>
                                     <option value="">-- Sélectionner le nouveau statut --</option>
-                                    <option value="acceptee" <?= $commande['statut'] === 'acceptee' ? 'selected' : '' ?>>Acceptée</option>
-                                    <option value="en_preparation" <?= $commande['statut'] === 'en_preparation' ? 'selected' : '' ?>>En préparation</option>
-                                    <option value="en_cours_livraison" <?= $commande['statut'] === 'en_cours_livraison' ? 'selected' : '' ?>>En cours de livraison</option>
-                                    <option value="livree" <?= $commande['statut'] === 'livree' ? 'selected' : '' ?>>Livrée</option>
-                                    <?php if ($commande['pret_materiel']): ?>
-                                        <option value="attente_retour_materiel" <?= $commande['statut'] === 'attente_retour_materiel' ? 'selected' : '' ?>>Attente retour matériel (email auto 10j)</option>
+                                    <option value="acceptee" <?= $commande->getStatut() === 'acceptee' ? 'selected' : '' ?>>Acceptée</option>
+                                    <option value="en_preparation" <?= $commande->getStatut() === 'en_preparation' ? 'selected' : '' ?>>En préparation</option>
+                                    <option value="en_cours_livraison" <?= $commande->getStatut() === 'en_cours_livraison' ? 'selected' : '' ?>>En cours de livraison</option>
+                                    <option value="livree" <?= $commande->getStatut() === 'livree' ? 'selected' : '' ?>>Livrée</option>
+                                    <?php if ($commande->isPretMateriel()): ?>
+                                        <option value="attente_retour_materiel" <?= $commande->getStatut() === 'attente_retour_materiel' ? 'selected' : '' ?>>Attente retour matériel (email auto 10j)</option>
                                     <?php endif; ?>
-                                    <option value="terminee" <?= $commande['statut'] === 'terminee' ? 'selected' : '' ?>>Terminée</option>
-                                    <option value="annulee" <?= $commande['statut'] === 'annulee' ? 'selected' : '' ?>>Annulée</option>
+                                    <option value="terminee" <?= $commande->getStatut() === 'terminee' ? 'selected' : '' ?>>Terminée</option>
+                                    <option value="annulee" <?= $commande->getStatut() === 'annulee' ? 'selected' : '' ?>>Annulée</option>
                                 </select>
                             </div>
 
@@ -92,7 +92,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
         <?php endif; ?>
 
         <!-- FORMULAIRE DE MODIFICATION DE COMMANDE -->
-        <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
+        <?php if (!in_array($commande->getStatut(), ['terminee', 'refusee', 'annulee'])): ?>
             <div class="col-md-12 mb-4 d-none" id="formEditCommandeSection">
                 <div class="card border-0 shadow-sm overflow-hidden">
                     <div class="card-header bg-white text-vg-bordeaux d-flex justify-content-between align-items-center border-0 border-bottom-bordeaux">
@@ -111,7 +111,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
 
                         <form method="POST" action="/employe/commandes/edit" id="formEditCommande">
                             <?= csrf_field() ?>
-                            <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($commande['numero_commande']) ?>">
+                            <input type="hidden" name="numero_commande" value="<?= htmlspecialchars($commande->getNumeroCommande()) ?>">
 
                             <div class="row">
                                 <!-- Date et Heure -->
@@ -120,7 +120,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                         <i class="bi bi-calendar"></i> Date de Prestation <span class="text-danger">*</span>
                                     </label>
                                     <input type="date" name="date_prestation" id="date_prestation" class="form-control" 
-                                           value="<?= htmlspecialchars($commande['date_prestation']) ?>" required>
+                                           value="<?= htmlspecialchars($commande->getDatePrestation()) ?>" required>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -128,7 +128,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                         <i class="bi bi-clock"></i> Heure de Livraison <span class="text-danger">*</span>
                                     </label>
                                     <input type="time" name="heure_livraison" id="heure_livraison" class="form-control" 
-                                           value="<?= htmlspecialchars($commande['heure_livraison']) ?>" required>
+                                           value="<?= htmlspecialchars($commande->getHeureLivraison()) ?>" required>
                                 </div>
 
                                 <!-- Lieu de livraison -->
@@ -137,7 +137,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                         <i class="bi bi-geo-alt"></i> Lieu de Livraison <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" name="lieu_livraison" id="lieu_livraison" class="form-control" 
-                                           value="<?= htmlspecialchars($commande['lieu_livraison']) ?>" required>
+                                           value="<?= htmlspecialchars($commande->getLieuLivraison()) ?>" required>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -145,7 +145,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                         <i class="bi bi-building"></i> Ville <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" name="ville_livraison" id="ville_livraison" class="form-control" 
-                                           value="<?= htmlspecialchars($commande['ville_livraison']) ?>" required>
+                                           value="<?= htmlspecialchars($commande->getVilleLivraison()) ?>" required>
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -153,7 +153,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                         <i class="bi bi-mailbox"></i> Code Postal <span class="text-danger">*</span>
                                     </label>
                                     <input type="text" name="code_postal_livraison" id="code_postal_livraison" class="form-control" 
-                                           value="<?= htmlspecialchars($commande['code_postal_livraison'] ?? '') ?>" required>
+                                           value="<?= htmlspecialchars($commande->getCodePostalLivraison() ?? '') ?>" required>
                                 </div>
 
                                 <!-- Quantités des menus -->
@@ -161,12 +161,12 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                     <label class="form-label fw-bold">
                                         <i class="bi bi-people"></i> Quantités (Nombre de Personnes)
                                     </label>
-                                    <?php foreach ($commande['lignesMenus'] as $ligne): ?>
+                                    <?php foreach ($commande->getLignesMenus() as $ligne): ?>
                                         <div class="mb-2">
-                                            <label class="form-label"><?= htmlspecialchars($ligne['menu_nom']) ?></label>
-                                            <input type="number" name="quantite_menu[<?= $ligne['menu_id'] ?>]" 
+                                            <label class="form-label"><?= htmlspecialchars($ligne->getMenuNom()) ?></label>
+                                            <input type="number" name="quantite_menu[<?= $ligne->getMenuId() ?>]" 
                                                    class="form-control" min="1" 
-                                                   value="<?= htmlspecialchars($ligne['nombre_personne']) ?>" required>
+                                                   value="<?= htmlspecialchars($ligne->getNombrePersonne()) ?>" required>
                                         </div>
                                     <?php endforeach; ?>
                                 </div>
@@ -256,16 +256,16 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                     <h5 class="mb-0"><i class="bi bi-card-list"></i> Récapitulatif de la Commande</h5>
                 </div>
                 <div class="card-body">
-                    <?php if (!empty($commande['lignesMenus']) || !empty($lignesMateriels) || !empty($lignesBoissons)): ?>
+                    <?php if (!empty($commande->getLignesMenus()) || !empty($lignesMateriels) || !empty($lignesBoissons)): ?>
                         <table class="table table-bordered">
                             <tbody>
                                 <!-- Menus -->
-                                <?php if (!empty($commande['lignesMenus'])): ?>
-                                    <?php foreach ($commande['lignesMenus'] as $ligne): ?>
+                                <?php if (!empty($commande->getLignesMenus())): ?>
+                                    <?php foreach ($commande->getLignesMenus() as $ligne): ?>
                                         <tr>
                                             <td>Menu</td>
-                                            <td><strong><?= htmlspecialchars($ligne['menu_nom']) ?></strong></td>
-                                            <td><?= htmlspecialchars($ligne['nombre_personne']) ?> personnes</td>
+                                            <td><strong><?= htmlspecialchars($ligne->getMenuNom()) ?></strong></td>
+                                            <td><?= htmlspecialchars($ligne->getNombrePersonne()) ?> personnes</td>
                                         </tr>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
@@ -303,7 +303,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                             <tfoot>
                                 <tr>
                                     <td colspan="3" class="text-center">
-                                        <?php if (!in_array($commande['statut'], ['terminee', 'refusee', 'annulee'])): ?>
+                                        <?php if (!in_array($commande->getStatut(), ['terminee', 'refusee', 'annulee'])): ?>
                                             <button type="button" class="btn btn-vg-gold rounded-pill" 
                                                     data-action="show-edit-form">
                                                 <i class="bi bi-pencil-square me-1"></i> Modifier Commande
@@ -329,39 +329,39 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-5 mb-4">Date commande :</dt>
-                        <dd class="col-sm-7 mb-4"><?= date('d/m/Y à H:i', strtotime($commande['date_commande'])) ?></dd>
+                        <dd class="col-sm-7 mb-4"><?= date('d/m/Y à H:i', strtotime($commande->getDateCommande())) ?></dd>
 
                         <dt class="col-sm-5 mb-4">Date prestation :</dt>
                         <dd class="col-sm-7 mb-4">
-                            <strong><?= date('d/m/Y', strtotime($commande['date_prestation'])) ?></strong>
+                            <strong><?= date('d/m/Y', strtotime($commande->getDatePrestation())) ?></strong>
                         </dd>
 
                         <dt class="col-sm-5 mb-4">Heure livraison :</dt>
-                        <dd class="col-sm-7 mb-4"><strong><?= htmlspecialchars($commande['heure_livraison']) ?></strong></dd>
+                        <dd class="col-sm-7 mb-4"><strong><?= htmlspecialchars($commande->getHeureLivraison()) ?></strong></dd>
 
                         <dt class="col-sm-5 mb-4">Lieu :</dt>
                         <dd class="col-sm-7 mb-4">
-                            <?= htmlspecialchars($commande['lieu_livraison']) ?><br>
-                            <?= htmlspecialchars($commande['ville_livraison']) ?> <?= htmlspecialchars($commande['code_postal_livraison'] ?? '') ?>
+                            <?= htmlspecialchars($commande->getLieuLivraison()) ?><br>
+                            <?= htmlspecialchars($commande->getVilleLivraison()) ?> <?= htmlspecialchars($commande->getCodePostalLivraison() ?? '') ?>
                         </dd>
 
-                        <?php if (!empty($commande['distance_km'])): ?>
+                        <?php if (!empty($commande->getDistanceKm())): ?>
                             <dt class="col-sm-5">Distance :</dt>
-                            <dd class="col-sm-7"><?= htmlspecialchars($commande['distance_km']) ?> km</dd>
+                            <dd class="col-sm-7"><?= htmlspecialchars($commande->getDistanceKm()) ?> km</dd>
                         <?php endif; ?>
                     </dl>
 
                     <!-- Carte OpenStreetMap -->
-                    <?php if (!empty($commande['lieu_livraison']) && !empty($commande['ville_livraison'])): ?>
+                    <?php if (!empty($commande->getLieuLivraison()) && !empty($commande->getVilleLivraison())): ?>
                         <hr class="my-3">
-                        <div id="map-<?= htmlspecialchars($commande['numero_commande']) ?>" class="map-container rounded"></div>
+                        <div id="map-<?= htmlspecialchars($commande->getNumeroCommande()) ?>" class="map-container rounded"></div>
                         
                         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
                         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
                         <script>
                             (function() {
-                                const address = <?= json_encode($commande['lieu_livraison'] . ', ' . $commande['ville_livraison'] . ' ' . ($commande['code_postal_livraison'] ?? '')) ?>;
-                                const mapId = 'map-<?= htmlspecialchars($commande['numero_commande']) ?>';
+                                const address = <?= json_encode($commande->getLieuLivraison() . ', ' . $commande->getVilleLivraison() . ' ' . ($commande->getCodePostalLivraison() ?? '')) ?>;
+                                const mapId = 'map-<?= htmlspecialchars($commande->getNumeroCommande()) ?>';
                                 
                                 // Attendre le chargement complet de la page et de Leaflet
                                 function initMap() {
@@ -393,7 +393,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                                         } else {
                                             // Fallback : essayer juste avec la ville
                                             console.log('Adresse précise non trouvée, recherche de la ville...');
-                                            const ville = '<?= addslashes($commande['ville_livraison']) ?>';
+                                            const ville = '<?= addslashes($commande->getVilleLivraison()) ?>';
                                             fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(ville + ', France'))
                                                 .then(response => response.json())
                                                 .then(villeData => {
@@ -460,17 +460,17 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
 
                         <dt class="col-sm-5">Prêt matériel :</dt>
                         <dd class="col-sm-7 mb-3">
-                            <?php if ($commande['pret_materiel']): ?>
+                            <?php if ($commande->isPretMateriel()): ?>
                                 <span class="badge bg-success">Oui</span>
                             <?php else: ?>
                                 <span class="badge bg-secondary">Non</span>
                             <?php endif; ?>
                         </dd>
 
-                        <?php if ($commande['pret_materiel']): ?>
+                        <?php if ($commande->isPretMateriel()): ?>
                             <dt class="col-sm-5">Restitution :</dt>
                             <dd class="col-sm-7 mb-0">
-                                <?php if ($commande['restitution_materiel'] || $commande['statut'] === 'terminee'): ?>
+                                <?php if ($commande->isRestitutionMateriel() || $commande->getStatut() === 'terminee'): ?>
                                     <span class="badge bg-success"><i class="bi bi-check-circle"></i> Restitué</span>
                                 <?php else: ?>
                                     <span class="badge bg-danger"><i class="bi bi-exclamation-triangle"></i> En attente</span>
@@ -488,24 +488,24 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                 <div class="card-body">
                     <dl class="row mb-0">
                         <dt class="col-sm-5"><i class="bi bi-card-list text-vg-bordeaux"></i> Total menus :</dt>
-                        <dd class="col-sm-7 mb-2"><strong><?= number_format($commande['total_menus'] ?? 0, 2) ?> €</strong></dd>
+                        <dd class="col-sm-7 mb-2"><strong><?= number_format($commande->getTotalMenus() ?? 0, 2) ?> €</strong></dd>
 
                         <?php if (!empty($totalBoissons)): ?>
                             <dt class="col-sm-5"><i class="bi bi-cup-straw text-vg-bordeaux"></i> Total boissons :</dt>
                             <dd class="col-sm-7 mb-2"><strong><?= number_format($totalBoissons, 2) ?> €</strong></dd>
                         <?php endif; ?>
 
-                        <?php if (!empty($commande['prix_livraison']) && $commande['prix_livraison'] > 0): ?>
+                        <?php if (!empty($commande->getPrixLivraison()) && $commande->getPrixLivraison() > 0): ?>
                             <hr class="my-2">
                             <dt class="col-sm-5"><i class="bi bi-truck text-secondary"></i> Frais livraison :</dt>
-                            <dd class="col-sm-7 mb-2"><?= number_format($commande['prix_livraison'], 2) ?> €</dd>
+                            <dd class="col-sm-7 mb-2"><?= number_format($commande->getPrixLivraison(), 2) ?> €</dd>
                         <?php endif; ?>
 
                         <hr class="my-2">
 
                         <?php
                         // Calcul HT et TVA
-                        $totalTTC = $commande['total_final'] ?? 0;
+                        $totalTTC = $commande->getTotalFinal() ?? 0;
                         $totalHT = $totalTTC / 1.10;
                         $montantTVA = $totalTTC - $totalHT;
                         ?>
@@ -542,7 +542,7 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
         </div>
 
         <!-- Historique de contact (si existe) -->
-        <?php if (!empty($commande['motif_modification']) || !empty($commande['mode_contact_utilisateur'])): ?>
+        <?php if (!empty($commande->getMotifModification()) || !empty($commande->getModeContactUtilisateur())): ?>
             <div class="col-12">
                 <div class="card border-warning">
                     <div class="card-header bg-warning">
@@ -550,21 +550,21 @@ $badgeClass = 'badge-statut-' . str_replace('_', '-', $currentStatut);
                     </div>
                     <div class="card-body">
                         <dl class="row mb-0">
-                            <?php if (!empty($commande['mode_contact_utilisateur'])): ?>
+                            <?php if (!empty($commande->getModeContactUtilisateur())): ?>
                                 <dt class="col-sm-2">Mode contact :</dt>
                                 <dd class="col-sm-10">
-                                    <span class="badge bg-info"><?= htmlspecialchars($commande['mode_contact_utilisateur']) ?></span>
+                                    <span class="badge bg-info"><?= htmlspecialchars($commande->getModeContactUtilisateur()) ?></span>
                                 </dd>
                             <?php endif; ?>
 
-                            <?php if (!empty($commande['motif_modification'])): ?>
+                            <?php if (!empty($commande->getMotifModification())): ?>
                                 <dt class="col-sm-2">Motif :</dt>
-                                <dd class="col-sm-10"><?= nl2br(htmlspecialchars($commande['motif_modification'])) ?></dd>
+                                <dd class="col-sm-10"><?= nl2br(htmlspecialchars($commande->getMotifModification())) ?></dd>
                             <?php endif; ?>
 
-                            <?php if (!empty($commande['date_dernier_contact'])): ?>
+                            <?php if (!empty($commande->getDateDernierContact())): ?>
                                 <dt class="col-sm-2">Date contact :</dt>
-                                <dd class="col-sm-10"><?= date('d/m/Y à H:i', strtotime($commande['date_dernier_contact'])) ?></dd>
+                                <dd class="col-sm-10"><?= date('d/m/Y à H:i', strtotime($commande->getDateDernierContact())) ?></dd>
                             <?php endif; ?>
                         </dl>
                     </div>

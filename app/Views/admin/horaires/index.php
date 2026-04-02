@@ -60,14 +60,14 @@
                                 // Créer un tableau indexé par jour pour un accès facile
                                 $horairesIndexed = [];
                                 foreach ($horaires as $h) {
-                                    $horairesIndexed[$h['jour']] = $h;
+                                    $horairesIndexed[$h->getJour()] = $h;
                                 }
                                 
                                 foreach ($jours as $jour):
                                     $h = $horairesIndexed[$jour] ?? null;
-                                    $ferme = $h ? (bool)$h['ferme'] : false;
-                                    $ouverture = $h && !$ferme ? substr($h['heure_ouverture'], 0, 5) : '10:00';
-                                    $fermeture = $h && !$ferme ? substr($h['heure_fermeture'], 0, 5) : '22:00';
+                                    $ferme = $h ? $h->isFerme() : false;
+                                    $ouverture = $h && !$ferme ? substr($h->getHeureOuverture(), 0, 5) : '10:00';
+                                    $fermeture = $h && !$ferme ? substr($h->getHeureFermeture(), 0, 5) : '22:00';
                                 ?>
                                 <tr id="row-<?= $jour ?>">
                                     <td class="fw-bold">

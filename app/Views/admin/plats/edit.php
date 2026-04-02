@@ -22,7 +22,7 @@
                     <div class="card-body">
                         <form method="POST" action="/admin/plats/update">
                             <?= csrf_field() ?>
-                            <input type="hidden" name="plat_id" value="<?= $plat['plat_id'] ?>">
+                            <input type="hidden" name="plat_id" value="<?= $plat->getPlatId() ?>">
                             
                             <!-- Titre du plat -->
                             <div class="mb-3">
@@ -35,7 +35,7 @@
                                        name="titre_plat" 
                                        required 
                                        maxlength="100"
-                                       value="<?= htmlspecialchars($plat['titre_plat']) ?>">
+                                       value="<?= htmlspecialchars($plat->getTitrePlat()) ?>">
                             </div>
 
                             <!-- Type de plat -->
@@ -46,7 +46,7 @@
                                 <select class="form-select" id="type_plat" name="type_plat" required>
                                     <?php foreach ($typesPlat as $type): ?>
                                         <option value="<?= htmlspecialchars($type) ?>" 
-                                                <?= $plat['type_plat'] === $type ? 'selected' : '' ?>>
+                                                <?= $plat->getTypePlat() === $type ? 'selected' : '' ?>>
                                             <?= htmlspecialchars($type) ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -59,7 +59,7 @@
                                 <textarea class="form-control" 
                                           id="description" 
                                           name="description" 
-                                          rows="4"><?= htmlspecialchars($plat['description'] ?? '') ?></textarea>
+                                          rows="4"><?= htmlspecialchars($plat->getDescription() ?? '') ?></textarea>
                             </div>
 
                             <!-- Photo -->
@@ -69,12 +69,12 @@
                                        class="form-control" 
                                        id="photo" 
                                        name="photo" 
-                                       value="<?= htmlspecialchars($plat['photo'] ?? '') ?>">
+                                       value="<?= htmlspecialchars($plat->getPhoto() ?? '') ?>">
                                 
                                 <!-- Aperçu de l'image si elle existe -->
-                                <?php if (!empty($plat['photo'])): ?>
+                                <?php if (!empty($plat->getPhoto())): ?>
                                     <div class="mt-2">
-                                        <img src="<?= htmlspecialchars($plat['photo']) ?>" 
+                                        <img src="<?= htmlspecialchars($plat->getPhoto()) ?>" 
                                              alt="Aperçu" 
                                              class="img-thumbnail" 
                                              class="mw-200">
@@ -121,8 +121,8 @@
                     <div class="card-body">
                         <h5 class="card-title"><i class="bi bi-info-circle"></i> Informations</h5>
                         <ul class="mb-0 small text-muted">
-                            <li>Créé le : <?= date('d/m/Y à H:i', strtotime($plat['created_at'])) ?></li>
-                            <li>Dernière modification : <?= date('d/m/Y à H:i', strtotime($plat['updated_at'])) ?></li>
+                            <li>Créé le : <?= date('d/m/Y à H:i', strtotime($plat->getCreatedAt())) ?></li>
+                            <li>Dernière modification : <?= date('d/m/Y à H:i', strtotime($plat->getUpdatedAt())) ?></li>
                         </ul>
                     </div>
                 </div>

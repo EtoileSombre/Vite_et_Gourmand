@@ -72,7 +72,7 @@ class MenuController extends Controller
 
         // Log MongoDB
         $mongoStats = new MongoStats();
-        $mongoStats->logMenuView((int)$id, ['titre' => $menu['titre']]);
+        $mongoStats->logMenuView((int)$id, ['titre' => $menu->getTitre()]);
 
         // Afficher la vue
         $this->render('public/menus/show', [
@@ -80,7 +80,7 @@ class MenuController extends Controller
             'boissons' => $boissons,
             'materiels' => $materiels,
             'photos' => $photos,
-            'title' => $menu['titre']
+            'title' => $menu->getTitre()
         ]);
     }
 

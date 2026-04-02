@@ -56,21 +56,21 @@ class AuthController extends Controller
             } else {
                 $user = $this->userRepository->findByEmail($email);
                 
-                if ($user && password_verify($password, $user['password'])) {
+                if ($user && password_verify($password, $user->getPassword())) {
                     // Régénérer l'ID de session pour éviter la fixation de session
                     session_regenerate_id(true);
 
-                    Session::set('user_id', $user['utilisateur_id']);
-                    Session::set('user_prenom', $user['prenom']);
-                    Session::set('user_email', $user['email']);
-                    Session::set('user_role', $user['role']);
+                    Session::set('user_id', $user->getUtilisateurId());
+                    Session::set('user_prenom', $user->getPrenom());
+                    Session::set('user_email', $user->getEmail());
+                    Session::set('user_role', $user->getRoleLibelle());
                     
                     // Gestion de la redirection (protection open redirect : doit commencer par / mais pas //)
                     if (!empty($redirect) && strpos($redirect, '/') === 0 && strpos($redirect, '//') !== 0) {
                         $this->redirect($redirect);
-                    } elseif ($user['role'] === 'administrateur') {
+                    } elseif ($user->getRoleLibelle() === 'administrateur') {
                         $this->redirect('/admin');
-                    } elseif ($user['role'] === 'employé') {
+                    } elseif ($user->getRoleLibelle() === 'employé') {
                         $this->redirect('/employe');
                     } else {
                         $this->redirect('/');
@@ -264,7 +264,7 @@ class AuthController extends Controller
                     $baseUrl = getenv('APP_URL') ?: 'http://localhost:8082';
                     $resetLink = $baseUrl . "/reset-password?token=" . $token;
                     
-                    if (sendPasswordResetEmail($email, $user['prenom'], $resetLink)) {
+                    if (sendPasswordResetEmail($email, $user->getPrenom(), $resetLink)) {
                         $success = "Un email contenant les instructions de réinitialisation a été envoyé à votre adresse.";
                     } else {
                         $errors[] = "Erreur lors de l'envoi de l'email. Veuillez réessayer.";
@@ -348,10 +348,10 @@ class AuthController extends Controller
             
             if (empty($errors)) {
                 $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-                $user = $this->userRepository->findByEmail($resetRequest['email']);
+                $user = $this->userRepository->findByEmail($resetRequest->getEmail());
                 
                 if ($user) {
-                    $this->userRepository->update($user['utilisateur_id'], ['password' => $hashedPassword]);
+                    $this->userRepository->update($user->getUtilisateurId(), ['password' => $hashedPassword]);
                 }
                 
                 // Marquer le token comme utilisé

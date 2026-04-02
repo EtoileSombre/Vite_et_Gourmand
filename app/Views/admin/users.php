@@ -44,39 +44,39 @@
             <tbody>
                 <?php foreach ($users as $user): ?>
                     <tr>
-                        <td><?= htmlspecialchars($user['utilisateur_id']) ?></td>
+                        <td><?= htmlspecialchars($user->getUtilisateurId()) ?></td>
                         <td>
                             <?php
-                            $roleClass = match($user['role_nom']) {
+                            $roleClass = match($user->getRoleLibelle()) {
                                 'administrateur' => 'badge-role-admin',
                                 'employé' => 'badge-role-employe',
                                 default => 'bg-secondary'
                             };
                             ?>
                             <span class="badge <?= $roleClass ?>">
-                                <?= htmlspecialchars($user['role_nom']) ?>
+                                <?= htmlspecialchars($user->getRoleLibelle()) ?>
                             </span>
                         </td>
                         <td>
-                            <strong><?= htmlspecialchars($user['prenom'] ?? '') ?> <?= htmlspecialchars($user['nom'] ?? '') ?></strong>
+                            <strong><?= htmlspecialchars($user->getPrenom() ?? '') ?> <?= htmlspecialchars($user->getNom() ?? '') ?></strong>
                         </td>
-                        <td><?= htmlspecialchars($user['email']) ?></td>
-                        <td><?= htmlspecialchars($user['telephone'] ?? 'N/A') ?></td>
+                        <td><?= htmlspecialchars($user->getEmail()) ?></td>
+                        <td><?= htmlspecialchars($user->getTelephone() ?? 'N/A') ?></td>
                         <td>
-                            <?php if ($user['actif']): ?>
+                            <?php if ($user->isActif()): ?>
                                 <span class="badge badge-status-actif">Actif</span>
                             <?php else: ?>
                                 <span class="badge badge-status-inactif">Inactif</span>
                             <?php endif; ?>
                         </td>
-                        <td><?= date('d/m/Y', strtotime($user['created_at'])) ?></td>
+                        <td><?= date('d/m/Y', strtotime($user->getCreatedAt())) ?></td>
                         <td>
-                            <?php if ($user['role_nom'] === 'employé'): ?>
-                                <?php if ($user['actif']): ?>
+                            <?php if ($user->getRoleLibelle() === 'employé'): ?>
+                                <?php if ($user->isActif()): ?>
                                     <form method="POST" action="/admin/utilisateurs/desactiver" class="d-inline" 
                                           data-confirm="Désactiver ce compte employé ?">
                                         <?= csrf_field() ?>
-                                        <input type="hidden" name="utilisateur_id" value="<?= $user['utilisateur_id'] ?>">
+                                        <input type="hidden" name="utilisateur_id" value="<?= $user->getUtilisateurId() ?>">
                                         <button type="submit" class="btn btn-sm btn-warning rounded-pill" title="Désactiver">
                                             <i class="bi bi-lock"></i>
                                         </button>
@@ -85,7 +85,7 @@
                                     <form method="POST" action="/admin/utilisateurs/activer" class="d-inline"
                                           data-confirm="Réactiver ce compte employé ?">
                                         <?= csrf_field() ?>
-                                        <input type="hidden" name="utilisateur_id" value="<?= $user['utilisateur_id'] ?>">
+                                        <input type="hidden" name="utilisateur_id" value="<?= $user->getUtilisateurId() ?>">
                                         <button type="submit" class="btn btn-sm btn-success rounded-pill" title="Activer">
                                             <i class="bi bi-unlock"></i>
                                         </button>

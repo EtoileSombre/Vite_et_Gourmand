@@ -135,24 +135,24 @@ require_once __DIR__ . '/../layouts/header.php';
                             <div class="card h-100 border-vg-bordeaux-2">
                                 <div class="card-body">
                                     <div class="d-flex justify-content-between align-items-start mb-2">
-                                        <strong><?= htmlspecialchars($avis['utilisateur_prenom'] ?? 'Utilisateur') ?></strong>
+                                        <strong><?= htmlspecialchars($avis->getPrenom() ?? 'Utilisateur') ?></strong>
                                         <div>
                                             <?php for ($i = 1; $i <= 5; $i++): ?>
-                                                <i class="bi bi-star-fill <?= $i <= ($avis['note'] ?? 0) ? 'text-warning' : 'text-muted' ?>"></i>
+                                                <i class="bi bi-star-fill <?= $i <= ($avis->getNote() ?? 0) ? 'text-warning' : 'text-muted' ?>"></i>
                                             <?php endfor; ?>
                                         </div>
                                     </div>
                                     <p class="small text-muted mb-2">
-                                        <i class="bi bi-envelope"></i> <?= htmlspecialchars($avis['utilisateur_email'] ?? '') ?>
+                                        <i class="bi bi-envelope"></i> <?= htmlspecialchars($avis->getEmail() ?? '') ?>
                                     </p>
-                                    <p class="card-text"><?= htmlspecialchars($avis['description'] ?? 'Aucun commentaire') ?></p>
+                                    <p class="card-text"><?= htmlspecialchars($avis->getDescription() ?? 'Aucun commentaire') ?></p>
                                     <small class="text-muted">
                                         <i class="bi bi-calendar"></i> 
-                                        <?= $avis['created_at'] ? date('d/m/Y H:i', strtotime($avis['created_at'])) : 'N/A' ?>
+                                        <?= $avis->getCreatedAt() ? date('d/m/Y H:i', strtotime($avis->getCreatedAt())) : 'N/A' ?>
                                     </small>
                                 </div>
                                 <div class="card-footer bg-transparent">
-                                    <a href="/employe/avis?id=<?= $avis['avis_id'] ?>" class="btn btn-sm btn-vg-gold w-100 rounded-pill">
+                                    <a href="/employe/avis?id=<?= $avis->getAvisId() ?>" class="btn btn-sm btn-vg-gold w-100 rounded-pill">
                                         <i class="bi bi-check-circle"></i> Modérer
                                     </a>
                                 </div>

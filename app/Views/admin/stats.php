@@ -54,8 +54,8 @@
                     <select name="menu_id" class="form-select" style="border-radius: 12px;">
                         <option value="">Tous les menus</option>
                         <?php foreach ($allMenus as $menu): ?>
-                            <option value="<?= $menu['menu_id'] ?>" <?= $filtreMenuId == $menu['menu_id'] ? 'selected' : '' ?>>
-                                <?= htmlspecialchars($menu['titre']) ?>
+                            <option value="<?= $menu->getMenuId() ?>" <?= $filtreMenuId == $menu->getMenuId() ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($menu->getTitre()) ?>
                             </option>
                         <?php endforeach; ?>
                     </select>
@@ -135,8 +135,8 @@
                                 $menuId = $data['_id'];
                                 $menuTitre = 'Menu #' . $menuId;
                                 foreach ($allMenus as $menu) {
-                                    if ($menu['menu_id'] == $menuId) {
-                                        $menuTitre = $menu['titre'];
+                                    if ($menu->getMenuId() == $menuId) {
+                                        $menuTitre = $menu->getTitre();
                                         break;
                                     }
                                 }
@@ -203,8 +203,8 @@
                                 $menuId = $data['_id'];
                                 $menuTitre = 'Menu #' . $menuId;
                                 foreach ($allMenus as $menu) {
-                                    if ($menu['menu_id'] == $menuId) {
-                                        $menuTitre = $menu['titre'];
+                                    if ($menu->getMenuId() == $menuId) {
+                                        $menuTitre = $menu->getTitre();
                                         break;
                                     }
                                 }

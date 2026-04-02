@@ -41,16 +41,16 @@ require_once __DIR__ . '/../../layouts/header.php';
                             <?php foreach ($menus as $menu): ?>
                                 <tr>
                                     <td>
-                                        <strong><?= htmlspecialchars($menu['titre']) ?></strong>
-                                        <?php if (!empty($menu['description'])): ?>
-                                            <br><small class="text-muted"><?= htmlspecialchars(substr($menu['description'], 0, 50)) ?>...</small>
+                                        <strong><?= htmlspecialchars($menu->getTitre()) ?></strong>
+                                        <?php if (!empty($menu->getDescription())): ?>
+                                            <br><small class="text-muted"><?= htmlspecialchars(substr($menu->getDescription(), 0, 50)) ?>...</small>
                                         <?php endif; ?>
                                     </td>
-                                    <td><strong><?= number_format($menu['prix_par_personne'], 2) ?> €</strong></td>
-                                    <td><?= htmlspecialchars($menu['nombre_personne_minimum'] ?? 1) ?> pers.</td>
+                                    <td><strong><?= number_format($menu->getPrixParPersonne(), 2) ?> €</strong></td>
+                                    <td><?= htmlspecialchars($menu->getNombrePersonneMinimum() ?? 1) ?> pers.</td>
                                     <td>
                                         <?php
-                                        $stock = (int)$menu['quantite_restante'];
+                                        $stock = (int)$menu->getQuantiteRestante();
                                         if ($stock > 20) {
                                             echo "<span class='badge bg-success'>$stock</span>";
                                         } elseif ($stock > 0) {
@@ -62,7 +62,7 @@ require_once __DIR__ . '/../../layouts/header.php';
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
-                                            <a href="/admin/menus/edit?id=<?= $menu['menu_id'] ?>" 
+                                            <a href="/admin/menus/edit?id=<?= $menu->getMenuId() ?>" 
                                                class="btn btn-action-circle btn-outline-vg-bordeaux" 
                                                title="Modifier">
                                                 <i class="bi bi-pencil"></i>
@@ -73,8 +73,8 @@ require_once __DIR__ . '/../../layouts/header.php';
                                                     title="Supprimer"
                                                     data-bs-toggle="modal" 
                                                     data-bs-target="#deleteMenuModal"
-                                                    data-menu-id="<?= $menu['menu_id'] ?>"
-                                                    data-menu-titre="<?= htmlspecialchars($menu['titre']) ?>">
+                                                    data-menu-id="<?= $menu->getMenuId() ?>"
+                                                    data-menu-titre="<?= htmlspecialchars($menu->getTitre()) ?>">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </div>

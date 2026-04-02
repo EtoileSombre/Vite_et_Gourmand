@@ -46,8 +46,8 @@ class MenuController extends Controller
         $menus = $this->menuRepository->findAll(); // Tous les menus, pas seulement actifs
 
         // Charger les plats pour chaque menu
-        foreach ($menus as &$menu) {
-            $menu['plats'] = $this->menuRepository->getPlatsForMenu($menu['menu_id']);
+        foreach ($menus as $menu) {
+            $menu->setPlats($this->menuRepository->getPlatsForMenu($menu->getMenuId()));
         }
 
         $this->render('admin/menus/index', [
@@ -66,17 +66,17 @@ class MenuController extends Controller
         
         // Enrichir chaque plat avec ses allergènes
         $allAllergenes = $this->platRepository->getAllAllergenes();
-        foreach ($plats as &$plat) {
-            $platAllergeneIds = $this->platRepository->getAllergenesForPlat($plat['plat_id']);
-            $plat['allergenes'] = [];
+        foreach ($plats as $plat) {
+            $platAllergeneIds = $this->platRepository->getAllergenesForPlat($plat->getPlatId());
+            $allergenesList = [];
             foreach ($platAllergeneIds as $allergeneId) {
                 $allergene = array_filter($allAllergenes, fn($a) => $a['allergene_id'] == $allergeneId);
                 if (!empty($allergene)) {
-                    $plat['allergenes'][] = reset($allergene)['libelle'];
+                    $allergenesList[] = reset($allergene)['libelle'];
                 }
             }
+            $plat->setAllergenes($allergenesList);
         }
-        unset($plat);
 
         $this->render('admin/menus/create', [
             'plats' => $plats,
@@ -177,17 +177,17 @@ class MenuController extends Controller
         
         // Enrichir chaque plat avec ses allergènes
         $allAllergenes = $this->platRepository->getAllAllergenes();
-        foreach ($plats as &$plat) {
-            $platAllergeneIds = $this->platRepository->getAllergenesForPlat($plat['plat_id']);
-            $plat['allergenes'] = [];
+        foreach ($plats as $plat) {
+            $platAllergeneIds = $this->platRepository->getAllergenesForPlat($plat->getPlatId());
+            $allergenesList = [];
             foreach ($platAllergeneIds as $allergeneId) {
                 $allergene = array_filter($allAllergenes, fn($a) => $a['allergene_id'] == $allergeneId);
                 if (!empty($allergene)) {
-                    $plat['allergenes'][] = reset($allergene)['libelle'];
+                    $allergenesList[] = reset($allergene)['libelle'];
                 }
             }
+            $plat->setAllergenes($allergenesList);
         }
-        unset($plat);
 
         // Charger les plats actuellement associés à ce menu
         $platIds = $this->menuRepository->getPlatIdsForMenu((int)$id);

@@ -46,16 +46,16 @@
                             <div class="card h-100 shadow-sm">
                                 <div class="card-header d-flex justify-content-between align-items-center">
                                     <div>
-                                        <strong><?= htmlspecialchars($item['utilisateur_prenom'] ?? 'Utilisateur') ?> 
-                                                <?= htmlspecialchars(strtoupper(substr($item['utilisateur_nom'] ?? '', 0, 1))) ?>.</strong>
+                                        <strong><?= htmlspecialchars($item->getPrenom() ?? 'Utilisateur') ?> 
+                                                <?= htmlspecialchars(strtoupper(substr($item->getNom() ?? '', 0, 1))) ?>.</strong>
                                         <br>
                                         <small class="text-muted">
-                                            <?= htmlspecialchars($item['utilisateur_email'] ?? '') ?>
+                                            <?= htmlspecialchars($item->getEmail() ?? '') ?>
                                         </small>
                                     </div>
                                     <div>
                                         <?php
-                                        $badgeClass = match($item['statut']) {
+                                        $badgeClass = match($item->getStatut()) {
                                             'en_attente' => 'bg-warning text-dark',
                                             'publie' => 'bg-success',
                                             'rejete' => 'bg-danger',
@@ -63,7 +63,7 @@
                                         };
                                         ?>
                                         <span class="badge <?= $badgeClass ?>">
-                                            <?= htmlspecialchars($item['statut']) ?>
+                                            <?= htmlspecialchars($item->getStatut()) ?>
                                         </span>
                                     </div>
                                 </div>
@@ -73,52 +73,52 @@
                                     <div class="mb-3">
                                         <strong>Note :</strong>
                                         <?php for ($i = 1; $i <= 5; $i++): ?>
-                                            <?php if ($i <= ($item['note'] ?? 0)): ?>
+                                            <?php if ($i <= ($item->getNote() ?? 0)): ?>
                                                 <i class="bi bi-star-fill text-warning"></i>
                                             <?php else: ?>
                                                 <i class="bi bi-star text-muted"></i>
                                             <?php endif; ?>
                                         <?php endfor; ?>
-                                        <span class="ms-2 text-muted">(<?= $item['note'] ?>/5)</span>
+                                        <span class="ms-2 text-muted">(<?= $item->getNote() ?>/5)</span>
                                     </div>
 
                                     <!-- Description -->
                                     <div class="mb-3">
                                         <strong>Commentaire :</strong>
                                         <p class="mt-2">
-                                            <?= htmlspecialchars($item['description'] ?? 'Pas de commentaire') ?>
+                                            <?= htmlspecialchars($item->getDescription() ?? 'Pas de commentaire') ?>
                                         </p>
                                     </div>
 
                                     <!-- Informations supplémentaires -->
                                     <div class="small text-muted">
-                                        <?php if (!empty($item['menu_titre'])): ?>
+                                        <?php if (!empty($item->getMenuTitre())): ?>
                                             <div>
                                                 <i class="bi bi-basket me-1"></i>
-                                                Menu : <?= htmlspecialchars($item['menu_titre']) ?>
+                                                Menu : <?= htmlspecialchars($item->getMenuTitre()) ?>
                                             </div>
                                         <?php endif; ?>
-                                        <?php if (!empty($item['numero_commande'])): ?>
+                                        <?php if (!empty($item->getNumeroCommande())): ?>
                                             <div>
                                                 <i class="bi bi-receipt me-1"></i>
-                                                Commande : <?= htmlspecialchars($item['numero_commande']) ?>
+                                                Commande : <?= htmlspecialchars($item->getNumeroCommande()) ?>
                                             </div>
                                         <?php endif; ?>
                                         <div>
                                             <i class="bi bi-calendar me-1"></i>
-                                            Posté le <?= date('d/m/Y à H:i', strtotime($item['created_at'])) ?>
+                                            Posté le <?= date('d/m/Y à H:i', strtotime($item->getCreatedAt())) ?>
                                         </div>
                                     </div>
                                 </div>
 
                                 <!-- Actions -->
-                                <?php if ($item['statut'] === 'en_attente'): ?>
+                                <?php if ($item->getStatut() === 'en_attente'): ?>
                                     <div class="card-footer bg-light">
                                         <div class="row g-2">
                                             <div class="col-6">
                                                 <form method="POST" action="/employe/avis/approve">
                                                     <?= csrf_field() ?>
-                                                    <input type="hidden" name="avis_id" value="<?= $item['avis_id'] ?>">
+                                                    <input type="hidden" name="avis_id" value="<?= $item->getAvisId() ?>">
                                                     <button type="submit" class="btn btn-vg-gold btn-sm w-100 rounded-pill">
                                                         <i class="bi bi-check-circle me-1"></i>
                                                         Approuver
@@ -128,7 +128,7 @@
                                             <div class="col-6">
                                                 <button type="button" class="btn btn-danger btn-sm w-100 rounded-pill" 
                                                         data-bs-toggle="modal" 
-                                                        data-bs-target="#rejectModal<?= $item['avis_id'] ?>">
+                                                        data-bs-target="#rejectModal<?= $item->getAvisId() ?>">
                                                     <i class="bi bi-x-circle me-1"></i>
                                                     Rejeter
                                                 </button>
@@ -143,20 +143,20 @@
 
                 <!-- Modals de rejet -->
                 <?php foreach ($avis as $item): ?>
-                    <?php if ($item['statut'] === 'en_attente'): ?>
-                        <div class="modal fade" id="rejectModal<?= $item['avis_id'] ?>" tabindex="-1" aria-labelledby="rejectModalLabel<?= $item['avis_id'] ?>" aria-hidden="true">
+                    <?php if ($item->getStatut() === 'en_attente'): ?>
+                        <div class="modal fade" id="rejectModal<?= $item->getAvisId() ?>" tabindex="-1" aria-labelledby="rejectModalLabel<?= $item->getAvisId() ?>" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <form method="POST" action="/employe/avis/reject">
                                         <?= csrf_field() ?>
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="rejectModalLabel<?= $item['avis_id'] ?>">Rejeter l'avis</h5>
+                                            <h5 class="modal-title" id="rejectModalLabel<?= $item->getAvisId() ?>">Rejeter l'avis</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                                         </div>
                                         <div class="modal-body">
-                                            <input type="hidden" name="avis_id" value="<?= $item['avis_id'] ?>">
+                                            <input type="hidden" name="avis_id" value="<?= $item->getAvisId() ?>">
                                             <div class="mb-3">
-                                                <label for="motif<?= $item['avis_id'] ?>" class="form-label">
+                                                <label for="motif<?= $item->getAvisId() ?>" class="form-label">
                                                     Motif du rejet (optionnel)
                                                 </label>
                                                 <textarea 

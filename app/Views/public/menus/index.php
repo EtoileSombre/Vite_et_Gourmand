@@ -100,22 +100,22 @@
             foreach ($menus as $menu): 
                 $gradientClass = $gradientClasses[$index % count($gradientClasses)];
                 $icon = $icons[$index % count($icons)];
-                $menuPhotos = $menu['photos'] ?? [];
+                $menuPhotos = $menu->getGalerie() ?? [];
                 $index++;
             ?>
                 <div class="col-md-6 col-lg-4 mb-4 menu-item" 
-                     data-regime="<?= htmlspecialchars($menu['regime'] ?? '') ?>"
-                     data-theme="<?= htmlspecialchars($menu['theme'] ?? '') ?>"
-                     data-titre="<?= htmlspecialchars($menu['titre'] ?? '') ?>"
-                     data-description="<?= htmlspecialchars($menu['description'] ?? '') ?>"
-                     data-prix="<?= $menu['prix_par_personne'] ?? 0 ?>"
-                     data-min-personnes="<?= $menu['nombre_personne_minimum'] ?? 1 ?>">
+                     data-regime="<?= htmlspecialchars($menu->getRegime() ?? '') ?>"
+                     data-theme="<?= htmlspecialchars($menu->getTheme() ?? '') ?>"
+                     data-titre="<?= htmlspecialchars($menu->getTitre() ?? '') ?>"
+                     data-description="<?= htmlspecialchars($menu->getDescription() ?? '') ?>"
+                     data-prix="<?= $menu->getPrixParPersonne() ?? 0 ?>"
+                     data-min-personnes="<?= $menu->getNombrePersonneMinimum() ?? 1 ?>">
                     <div class="card h-100 shadow-sm">
                         <?php if (!empty($menuPhotos)): ?>
                             <!-- Photo du menu -->
                             <img src="<?= htmlspecialchars($menuPhotos[0]['image_url']) ?>" 
                                  class="card-img-top menu-card-single-img" 
-                                 alt="<?= htmlspecialchars($menuPhotos[0]['legende'] ?? $menu['titre']) ?>">
+                                 alt="<?= htmlspecialchars($menuPhotos[0]['legende'] ?? $menu->getTitre()) ?>">
                         <?php else: ?>
                             <!-- Fallback : gradient si pas de photos -->
                             <div class="card-img-top menu-card-img <?= $gradientClass ?>">
@@ -128,13 +128,13 @@
                         <?php endif; ?>
                         
                         <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($menu['titre']) ?></h5>
-                            <p class="card-text"><?= htmlspecialchars($menu['description'] ?? '') ?></p>
+                            <h5 class="card-title"><?= htmlspecialchars($menu->getTitre()) ?></h5>
+                            <p class="card-text"><?= htmlspecialchars($menu->getDescription() ?? '') ?></p>
                             
-                            <?php if (!empty($menu['regime'])): ?>
+                            <?php if (!empty($menu->getRegime())): ?>
                                 <div class="mb-2">
                                     <?php 
-                                    $regimes = explode(',', $menu['regime']);
+                                    $regimes = explode(',', $menu->getRegime());
                                     foreach ($regimes as $regime): 
                                     ?>
                                         <span class="badge bg-secondary me-1">
@@ -144,17 +144,17 @@
                                 </div>
                             <?php endif; ?>
                             
-                            <?php if (isset($menu['nombre_personne_minimum']) && $menu['nombre_personne_minimum'] > 1): ?>
+                            <?php if ($menu->getNombrePersonneMinimum() !== null && $menu->getNombrePersonneMinimum() > 1): ?>
                                 <p class="text-muted small mb-2">
-                                    <i class="bi bi-people"></i> Minimum <?= $menu['nombre_personne_minimum'] ?> personnes
+                                    <i class="bi bi-people"></i> Minimum <?= $menu->getNombrePersonneMinimum() ?> personnes
                                 </p>
                             <?php endif; ?>
                             
                             <div class="d-flex justify-content-between align-items-center">
                                 <span class="h4 mb-0 fw-bold text-bordeaux">
-                                    <?= number_format($menu['prix_par_personne'], 2, ',', ' ') ?> €
+                                    <?= number_format($menu->getPrixParPersonne(), 2, ',', ' ') ?> €
                                 </span>
-                                <a href="/menu?id=<?= $menu['menu_id'] ?>" class="btn btn-bordeaux btn-sm rounded-pill">
+                                <a href="/menu?id=<?= $menu->getMenuId() ?>" class="btn btn-bordeaux btn-sm rounded-pill">
                                     <i class="bi bi-eye"></i> Détails
                                 </a>
                             </div>

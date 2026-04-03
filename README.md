@@ -94,9 +94,11 @@ Cette commande (depuis la branche `develop`) :
 │   ├── docker-compose.yml        # Stack production (Caddy + HTTPS)
 │   ├── docker-compose.dev.yml    # Stack développement
 │   ├── caddy/Caddyfile           # Configuration reverse proxy
-│   ├── php/Dockerfile            # Image PHP personnalisée
 │   ├── .env.dev                  # Variables dev
 │   └── .env.example              # Template variables prod
+├── docs/                         # Documentation projet
+├── Dockerfile                    # Image PHP personnalisée
+├── php.ini                       # Configuration PHP
 ├── Makefile                      # Commandes projet
 └── README.md
 ```
@@ -111,6 +113,11 @@ Cette commande (depuis la branche `develop`) :
 | `make dev-init` | Initialiser les bases de données (premier lancement) |
 | `make dev-stop` | Arrêter l'application |
 | `make dev-logs` | Voir les logs |
+| `make test` | Lancer les tests PHPUnit |
+| `make test-verbose` | Lancer les tests avec détails |
+| `make deploy` | Déployer develop → production |
+| `make prod-stop` | Arrêter la production |
+| `make prod-logs` | Voir les logs production |
 
 ---
 

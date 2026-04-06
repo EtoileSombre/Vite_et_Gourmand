@@ -24,7 +24,7 @@
                     </div>
                     <div class="carousel-inner">
                         <?php foreach ($photos as $index => $photo): ?>
-                            <div class="carousel-item <?= $index === 0 ? 'active' : '' ?> carousel-item-clickable">
+                            <div class="carousel-item <?= $index === 0 ? 'active' : '' ?> carousel-item-clickable" role="button" tabindex="0" aria-label="Agrandir la photo <?= $index + 1 ?>">
                                 <img src="<?= htmlspecialchars($photo['image_url']) ?>" 
                                      class="d-block w-100 carousel-img-menu" 
                                      alt="<?= htmlspecialchars($photo['legende'] ?? $menu->getTitre()) ?>">

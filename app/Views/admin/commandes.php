@@ -4,19 +4,19 @@ include __DIR__ . '/../layouts/header.php';
 ?>
 
 <div class="container mt-5">
-    <h2>Gestion des commandes</h2>
+    <h1 class="h2">Gestion des commandes</h1>
     <a href="/admin" class="btn btn-secondary mb-3">← Retour au dashboard</a>
     
     <div class="table-responsive">
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th>N° Commande</th>
-                    <th>Utilisateur</th>
-                    <th>Date de prestation</th>
-                    <th>Statut</th>
-                    <th>Total TTC</th>
-                    <th>Date de commande</th>
+                    <th scope="col">N° Commande</th>
+                    <th scope="col">Utilisateur</th>
+                    <th scope="col">Date de prestation</th>
+                    <th scope="col">Statut</th>
+                    <th scope="col">Total TTC</th>
+                    <th scope="col">Date de commande</th>
                 </tr>
             </thead>
             <tbody>

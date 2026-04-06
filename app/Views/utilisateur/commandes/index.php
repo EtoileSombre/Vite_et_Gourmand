@@ -11,7 +11,7 @@ if ($commandeNumero) {
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="mb-0">Mes commandes</h2>
+        <h1 class="mb-0 h2">Mes commandes</h1>
         <a href="/commande/nouvelle" class="btn btn-vg-gold rounded-pill">
             <i class="bi bi-plus-circle"></i> Nouvelle commande
         </a>
@@ -26,13 +26,13 @@ if ($commandeNumero) {
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>N° Commande</th>
-                        <th>Menu</th>
-                        <th>Quantité</th>
-                        <th>Date de livraison</th>
-                        <th>Statut</th>
-                        <th>Total TTC</th>
-                        <th>Actions</th>
+                        <th scope="col">N° Commande</th>
+                        <th scope="col">Menu</th>
+                        <th scope="col">Quantité</th>
+                        <th scope="col">Date de livraison</th>
+                        <th scope="col">Statut</th>
+                        <th scope="col">Total TTC</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
                 <tbody>

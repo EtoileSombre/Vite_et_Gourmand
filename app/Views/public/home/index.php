@@ -62,9 +62,9 @@
     </div>
 
     <div class="text-center mb-4" data-aos="fade-up">
-        <h3 class="h4 text-bordeaux">
+        <h2 class="h4 text-bordeaux">
             <i class="bi bi-award"></i> Notre professionnalisme
-        </h3>
+        </h2>
         <p class="text-muted">Ce qui fait notre différence</p>
     </div>
 

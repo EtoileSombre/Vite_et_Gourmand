@@ -2,7 +2,7 @@
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2><i class="bi bi-people-fill"></i> Gestion des Employés</h2>
+        <h1 class="h2"><i class="bi bi-people-fill"></i> Gestion des Employés</h1>
         <div>
             <button type="button" class="btn btn-vg-gold rounded-pill" data-bs-toggle="modal" data-bs-target="#createEmployeModal">
                 <i class="bi bi-person-plus"></i> Créer un Employé
@@ -31,14 +31,14 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Rôle</th>
-                    <th>Nom Complet</th>
-                    <th>Email</th>
-                    <th>Téléphone</th>
-                    <th>Statut</th>
-                    <th>Date d'inscription</th>
-                    <th>Actions</th>
+                    <th scope="col">ID</th>
+                    <th scope="col">Rôle</th>
+                    <th scope="col">Nom Complet</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Téléphone</th>
+                    <th scope="col">Statut</th>
+                    <th scope="col">Date d'inscription</th>
+                    <th scope="col">Actions</th>
                 </tr>
             </thead>
             <tbody>

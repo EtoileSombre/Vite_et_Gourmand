@@ -6,7 +6,7 @@ include __DIR__ . '/../layouts/header.php'; ?>
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header text-white bg-vg-bordeaux">
-                    <h4 class="mb-0">🔑 Nouveau mot de passe</h4>
+                    <h1 class="mb-0 h4">🔑 Nouveau mot de passe</h1>
                 </div>
                 <div class="card-body">
                     <?php if (!empty($success)): ?>

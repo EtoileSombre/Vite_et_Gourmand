@@ -18,5 +18,12 @@ document.addEventListener('DOMContentLoaded', function() {
             // Ouvrir la lightbox
             lightbox.show();
         });
+
+        item.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                item.click();
+            }
+        });
     });
 });

@@ -22,11 +22,11 @@ require_once __DIR__ . '/../../layouts/header.php';
                 <table class="table table-hover align-middle">
                     <thead class="table-light">
                         <tr>
-                            <th>Titre</th>
-                            <th>Prix/personne</th>
-                            <th>Nb pers. min</th>
-                            <th>Stock</th>
-                            <th class="text-end">Actions</th>
+                            <th scope="col">Titre</th>
+                            <th scope="col">Prix/personne</th>
+                            <th scope="col">Nb pers. min</th>
+                            <th scope="col">Stock</th>
+                            <th scope="col" class="text-end">Actions</th>
                         </tr>
                     </thead>
                     <tbody>

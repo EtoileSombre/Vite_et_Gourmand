@@ -10,7 +10,7 @@
             </div>
             <div class="card shadow-sm mb-4">
                 <div class="card-header text-white bg-vg-bordeaux">
-                    <h3 class="mb-0"><i class="bi bi-envelope-fill"></i> Gestion des Messages de Contact</h3>
+                    <h1 class="mb-0 h3"><i class="bi bi-envelope-fill"></i> Gestion des Messages de Contact</h1>
                 </div>
                 <div class="card-body">
 

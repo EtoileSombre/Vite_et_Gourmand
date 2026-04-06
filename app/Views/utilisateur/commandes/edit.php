@@ -21,10 +21,10 @@ include __DIR__ . '/../../layouts/header.php';
                                 <table class="table table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Menu</th>
-                                            <th>Nb Personnes</th>
-                                            <th>Prix/pers.</th>
-                                            <th>Total</th>
+                                            <th scope="col">Menu</th>
+                                            <th scope="col">Nb Personnes</th>
+                                            <th scope="col">Prix/pers.</th>
+                                            <th scope="col">Total</th>
                                         </tr>
                                     </thead>
                                     <tbody>

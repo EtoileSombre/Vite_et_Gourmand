@@ -119,9 +119,9 @@
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>Menu</th>
-                                <th class="text-center">Nombre de Commandes</th>
-                                <th class="text-center">Part (%)</th>
+                                <th scope="col">Menu</th>
+                                <th scope="col" class="text-center">Nombre de Commandes</th>
+                                <th scope="col" class="text-center">Part (%)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -184,10 +184,10 @@
                     <table class="table table-hover">
                         <thead class="table-light">
                             <tr>
-                                <th>Menu</th>
-                                <th class="text-center">Commandes</th>
-                                <th class="text-center">CA TTC</th>
-                                <th class="text-center">Part (%)</th>
+                                <th scope="col">Menu</th>
+                                <th scope="col" class="text-center">Commandes</th>
+                                <th scope="col" class="text-center">CA TTC</th>
+                                <th scope="col" class="text-center">Part (%)</th>
                             </tr>
                         </thead>
                         <tbody>

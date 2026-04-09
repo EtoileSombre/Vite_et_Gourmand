@@ -64,6 +64,8 @@ class AuthController extends Controller
                     Session::set('user_prenom', $user->getPrenom());
                     Session::set('user_email', $user->getEmail());
                     Session::set('user_role', $user->getRoleLibelle());
+
+                    error_log("[AUTH] Connexion réussie : user_id={$user->getUtilisateurId()}, email={$email}, role={$user->getRoleLibelle()}");
                     
                     // Gestion de la redirection (protection open redirect : doit commencer par / mais pas //)
                     if (!empty($redirect) && strpos($redirect, '/') === 0 && strpos($redirect, '//') !== 0) {
@@ -76,6 +78,7 @@ class AuthController extends Controller
                         $this->redirect('/');
                     }
                 } else {
+                    error_log("[AUTH] Échec connexion : email={$email}, IP={$clientIp}");
                     $errors[] = "Identifiants invalides.";
                 }
             }
@@ -195,6 +198,8 @@ class AuthController extends Controller
                     }
                 }
                 
+                error_log("[AUTH] Inscription réussie : user_id={$userId}, email={$email}");
+
                 // Connecter automatiquement l'utilisateur après inscription
                 Session::set('user_id', $userId);
                 Session::set('user_prenom', $prenom);
@@ -224,6 +229,9 @@ class AuthController extends Controller
     // Déconnexion
     public function logout()
     {
+        $userId = Session::get('user_id');
+        $email = Session::get('user_email');
+        error_log("[AUTH] Déconnexion : user_id={$userId}, email={$email}");
         Session::destroy();
         $this->redirect('/');
     }

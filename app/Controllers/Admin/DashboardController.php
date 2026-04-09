@@ -152,6 +152,7 @@ class DashboardController extends Controller
             require_once __DIR__ . '/../config/mail.php';
             $emailSent = sendEmployeeAccountCreatedEmail($email, $prenom, $nom);
 
+            error_log("[ADMIN] Création employé : id={$userId}, email={$email}, par=" . Session::get('user_email'));
             Session::set('flash_success', "Compte employé créé avec succès ! Email de notification envoyé.");
             
             // Logger dans MongoDB
@@ -201,6 +202,7 @@ class DashboardController extends Controller
         $success = $userRepository->deactivate($utilisateurId);
 
         if ($success) {
+            error_log("[ADMIN] Désactivation employé : id={$utilisateurId}, par=" . Session::get('user_email'));
             Session::set('flash_success', "Compte employé désactivé avec succès");
             
             // Logger dans MongoDB
@@ -249,6 +251,7 @@ class DashboardController extends Controller
         $success = $userRepository->activate($utilisateurId);
 
         if ($success) {
+            error_log("[ADMIN] Réactivation employé : id={$utilisateurId}, par=" . Session::get('user_email'));
             Session::set('flash_success', "Compte employé réactivé avec succès");
             
             // Logger dans MongoDB

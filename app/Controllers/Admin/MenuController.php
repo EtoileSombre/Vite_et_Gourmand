@@ -144,6 +144,7 @@ class MenuController extends Controller
                 $this->menuRepository->syncPlats($menuId, $platsSelectionnes);
             }
 
+            error_log("[ADMIN] Création menu : id={$menuId}, titre={$titre}, prix={$prixParPersonne}€/pers, par=" . Session::get('user_email'));
             Session::set('flash_success', "Menu créé avec succès !");
             $this->redirect('/admin/menus');
         } else {
@@ -270,6 +271,7 @@ class MenuController extends Controller
             $platsSelectionnes = $_POST['plats'] ?? [];
             $this->menuRepository->syncPlats((int)$id, $platsSelectionnes);
 
+            error_log("[ADMIN] Modification menu : id={$id}, titre={$titre}, prix={$prixParPersonne}€/pers, par=" . Session::get('user_email'));
             Session::set('flash_success', "Menu mis à jour avec succès !");
             $this->redirect('/admin/menus');
         } else {
@@ -313,6 +315,7 @@ class MenuController extends Controller
         $success = $this->menuRepository->delete((int)$id);
 
         if ($success) {
+            error_log("[ADMIN] Suppression menu : id={$id}, titre=" . $menu->getTitre() . ", par=" . Session::get('user_email'));
             Session::set('flash_success', "Menu supprimé avec succès !");
         } else {
             Session::set('flash_error', "Erreur lors de la suppression du menu");

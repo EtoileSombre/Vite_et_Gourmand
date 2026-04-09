@@ -75,8 +75,10 @@ class AvisController extends Controller
         $success = $this->avisRepository->updateStatus((int)$avisId, 'publie');
 
         if ($success) {
+            error_log("[AVIS] Approbation : avis_id={$avisId}, par=" . Session::get('user_email'));
             Session::set('success', 'Avis approuvé et publié avec succès.');
         } else {
+            error_log("[AVIS] Échec approbation : avis_id={$avisId}");
             Session::set('error', 'Erreur lors de l\'approbation de l\'avis.');
         }
 
@@ -105,8 +107,10 @@ class AvisController extends Controller
         $success = $this->avisRepository->updateStatus((int)$avisId, 'rejete');
 
         if ($success) {
+            error_log("[AVIS] Rejet : avis_id={$avisId}, motif={$motif}, par=" . Session::get('user_email'));
             Session::set('success', 'Avis rejeté.');
         } else {
+            error_log("[AVIS] Échec rejet : avis_id={$avisId}");
             Session::set('error', 'Erreur lors du rejet de l\'avis.');
         }
 

@@ -37,6 +37,8 @@ class Database
                 $password,
                 $options
             );
+
+            error_log("[DATABASE] Connexion MySQL établie : host={$host}, db={$dbname}");
         }
 
         return self::$instance;

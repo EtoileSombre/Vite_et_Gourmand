@@ -115,6 +115,8 @@ class ProfilController extends Controller
 
                 $this->userRepository->update($userId, $updateData);
 
+                error_log("[PROFIL] Mise à jour : user_id={$userId}, email={$email}" . (!empty($password) ? ", mot de passe modifié" : ""));
+
                 Session::set('user_email', $email);
                 Session::set('user_prenom', $prenom);
 

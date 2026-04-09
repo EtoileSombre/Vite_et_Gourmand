@@ -294,6 +294,8 @@ class CommandeController extends Controller
             'nombre_personne' => $nombrePersonnes,
             'statut' => 'en_attente'
         ]);
+
+        error_log("[COMMANDE] Création : numero={$numeroCommande}, user_id={$userId}, menu_id={$menuId}, personnes={$nombrePersonnes}, total={$prixTotal}€");
         
         Session::set('commande_numero', $numeroCommande);
         $this->redirect('/mes-commandes');
@@ -423,6 +425,8 @@ class CommandeController extends Controller
             sendOrderUpdateEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
         }
 
+        error_log("[COMMANDE] Modification : numero={$numeroCommande}, user_id={$userId}, date={$dateLivraison}, personnes={$nombrePersonnes}");
+
         Session::set('commande_modifiee', true);
         $this->redirect('/commande/modifier?numero=' . urlencode($numeroCommande));
     }
@@ -456,6 +460,8 @@ class CommandeController extends Controller
             return;
         }
         $this->commandeRepository->updateByNumero($numeroCommande, ['statut' => 'annulee']);
+
+        error_log("[COMMANDE] Annulation : numero={$numeroCommande}, user_id={$userId}");
         
         // Enregistrer dans l'historique de suivi
         $this->suiviCommandeRepository->enregistrerChangement(

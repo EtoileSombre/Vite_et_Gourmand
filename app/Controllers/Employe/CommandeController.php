@@ -233,6 +233,8 @@ class CommandeController extends Controller
             }
 
             Session::set('flash_success', "Statut de la commande mis à jour avec succès !");
+
+            error_log("[EMPLOYE] Changement statut commande : numero={$numeroCommande}, ancien={$commande->getStatut()}, nouveau={$nouveauStatut}, par=" . Session::get('user_email'));
             
             // Rediriger vers la page de détail de la commande
             $this->redirect('/employe/commandes/view?id=' . $numeroCommande);

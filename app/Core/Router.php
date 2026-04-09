@@ -48,6 +48,7 @@ class Router
     }
 
     http_response_code(404);
+    error_log("[ROUTER] 404 : {$requestMethod} {$requestUri}");
     echo "<h1>404 - Page non trouvée</h1>";
     echo "<p><a href='/'>Retour à l'accueil</a></p>";
     }

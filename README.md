@@ -97,7 +97,7 @@ Cette commande (depuis la branche `develop`) :
 │   ├── docker-compose.dev.yml    # Stack développement
 │   ├── caddy/Caddyfile           # Configuration reverse proxy
 │   ├── .env.dev                  # Variables dev
-│   └── .env.example              # Template variables prod
+│   └── .env                      # Variables prod (gitignored, à créer manuellement)
 ├── docs/                         # Documentation projet
 ├── Dockerfile                    # Image PHP personnalisée
 ├── php.ini                       # Configuration PHP

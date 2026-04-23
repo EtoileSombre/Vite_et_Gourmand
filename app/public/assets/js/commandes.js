@@ -252,41 +252,108 @@ const CommandeModule = {
         renderBoissons() {
             const container = document.getElementById('liste_boissons');
             const recap = document.getElementById('recap_boissons');
-            
+
             if (!container) return;
-            
+
+            container.replaceChildren();
+
             if (this.boissons.length === 0) {
-                container.innerHTML = '';
                 if (recap) recap.style.display = 'none';
                 return;
             }
-            
-            container.innerHTML = this.boissons.map((b, index) => `
-                <div class="boisson-item" data-index="${index}">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="flex-grow-1">
-                            <strong>${b.nom}</strong>
-                            <small class="text-muted ms-2">${b.contenance}</small>
-                            <div class="price-badge">${b.prix.toFixed(2)} € / unité</div>
-                        </div>
-                        <div class="qty-control">
-                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" data-action="decrease-boisson">
-                                <i class="bi bi-dash"></i>
-                            </button>
-                            <input type="number" class="qty-input" value="${b.quantite}" min="1" readonly>
-                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" data-action="increase-boisson">
-                                <i class="bi bi-plus"></i>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-danger btn-remove rounded-pill" data-action="remove-boisson">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <input type="hidden" name="boissons[${index}][id]" value="${b.id}">
-                    <input type="hidden" name="boissons[${index}][quantite]" value="${b.quantite}">
-                    <input type="hidden" name="boissons[${index}][prix_unitaire]" value="${b.prix}">
-                </div>
-            `).join('');
+
+            const fragment = document.createDocumentFragment();
+            this.boissons.forEach((b, index) => {
+                const item = document.createElement('div');
+                item.className = 'boisson-item';
+                item.dataset.index = index;
+
+                const row = document.createElement('div');
+                row.className = 'd-flex justify-content-between align-items-center';
+
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'flex-grow-1';
+
+                const strong = document.createElement('strong');
+                strong.textContent = b.nom;
+                infoDiv.appendChild(strong);
+
+                const small = document.createElement('small');
+                small.className = 'text-muted ms-2';
+                small.textContent = b.contenance;
+                infoDiv.appendChild(small);
+
+                const priceBadge = document.createElement('div');
+                priceBadge.className = 'price-badge';
+                priceBadge.textContent = b.prix.toFixed(2) + ' € / unité';
+                infoDiv.appendChild(priceBadge);
+
+                const qtyControl = document.createElement('div');
+                qtyControl.className = 'qty-control';
+
+                const decreaseBtn = document.createElement('button');
+                decreaseBtn.type = 'button';
+                decreaseBtn.className = 'btn btn-sm btn-outline-secondary qty-btn rounded-pill';
+                decreaseBtn.dataset.action = 'decrease-boisson';
+                const dashIcon = document.createElement('i');
+                dashIcon.className = 'bi bi-dash';
+                decreaseBtn.appendChild(dashIcon);
+
+                const qtyInput = document.createElement('input');
+                qtyInput.type = 'number';
+                qtyInput.className = 'qty-input';
+                qtyInput.value = b.quantite;
+                qtyInput.min = '1';
+                qtyInput.readOnly = true;
+
+                const increaseBtn = document.createElement('button');
+                increaseBtn.type = 'button';
+                increaseBtn.className = 'btn btn-sm btn-outline-secondary qty-btn rounded-pill';
+                increaseBtn.dataset.action = 'increase-boisson';
+                const plusIcon = document.createElement('i');
+                plusIcon.className = 'bi bi-plus';
+                increaseBtn.appendChild(plusIcon);
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-sm btn-danger btn-remove rounded-pill';
+                removeBtn.dataset.action = 'remove-boisson';
+                const trashIcon = document.createElement('i');
+                trashIcon.className = 'bi bi-trash';
+                removeBtn.appendChild(trashIcon);
+
+                qtyControl.appendChild(decreaseBtn);
+                qtyControl.appendChild(qtyInput);
+                qtyControl.appendChild(increaseBtn);
+                qtyControl.appendChild(removeBtn);
+
+                row.appendChild(infoDiv);
+                row.appendChild(qtyControl);
+                item.appendChild(row);
+
+                const hiddenId = document.createElement('input');
+                hiddenId.type = 'hidden';
+                hiddenId.name = 'boissons[' + index + '][id]';
+                hiddenId.value = b.id;
+
+                const hiddenQty = document.createElement('input');
+                hiddenQty.type = 'hidden';
+                hiddenQty.name = 'boissons[' + index + '][quantite]';
+                hiddenQty.value = b.quantite;
+
+                const hiddenPrix = document.createElement('input');
+                hiddenPrix.type = 'hidden';
+                hiddenPrix.name = 'boissons[' + index + '][prix_unitaire]';
+                hiddenPrix.value = b.prix;
+
+                item.appendChild(hiddenId);
+                item.appendChild(hiddenQty);
+                item.appendChild(hiddenPrix);
+
+                fragment.appendChild(item);
+            });
+
+            container.appendChild(fragment);
             
             const total = this.boissons.reduce((sum, b) => sum + (b.prix * b.quantite), 0);
             const totalDisplay = document.getElementById('total_boissons_display');
@@ -297,41 +364,109 @@ const CommandeModule = {
         renderMateriels() {
             const container = document.getElementById('liste_materiel');
             const recap = document.getElementById('recap_materiel');
-            
+
             if (!container) return;
-            
+
+            container.replaceChildren();
+
             if (this.materiels.length === 0) {
-                container.innerHTML = '';
                 if (recap) recap.style.display = 'none';
                 return;
             }
-            
-            container.innerHTML = this.materiels.map((m, index) => `
-                <div class="materiel-item" data-index="${index}">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="flex-grow-1">
-                            <strong>${m.nom}</strong>
-                            <div class="caution-badge">Caution: ${m.caution.toFixed(2)} € / unité</div>
-                            <small class="text-muted">Max disponible: ${m.quantiteDispo}</small>
-                        </div>
-                        <div class="qty-control">
-                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" data-action="decrease-materiel">
-                                <i class="bi bi-dash"></i>
-                            </button>
-                            <input type="number" class="qty-input" value="${m.quantite}" min="1" max="${m.quantiteDispo}" readonly>
-                            <button type="button" class="btn btn-sm btn-outline-secondary qty-btn rounded-pill" data-action="increase-materiel">
-                                <i class="bi bi-plus"></i>
-                            </button>
-                            <button type="button" class="btn btn-sm btn-danger btn-remove rounded-pill" data-action="remove-materiel">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <input type="hidden" name="materiels[${index}][id]" value="${m.id}">
-                    <input type="hidden" name="materiels[${index}][quantite]" value="${m.quantite}">
-                    <input type="hidden" name="materiels[${index}][caution_unitaire]" value="${m.caution}">
-                </div>
-            `).join('');
+
+            const fragment = document.createDocumentFragment();
+            this.materiels.forEach((m, index) => {
+                const item = document.createElement('div');
+                item.className = 'materiel-item';
+                item.dataset.index = index;
+
+                const row = document.createElement('div');
+                row.className = 'd-flex justify-content-between align-items-center';
+
+                const infoDiv = document.createElement('div');
+                infoDiv.className = 'flex-grow-1';
+
+                const strong = document.createElement('strong');
+                strong.textContent = m.nom;
+                infoDiv.appendChild(strong);
+
+                const cautionBadge = document.createElement('div');
+                cautionBadge.className = 'caution-badge';
+                cautionBadge.textContent = 'Caution: ' + m.caution.toFixed(2) + ' € / unité';
+                infoDiv.appendChild(cautionBadge);
+
+                const small = document.createElement('small');
+                small.className = 'text-muted';
+                small.textContent = 'Max disponible: ' + m.quantiteDispo;
+                infoDiv.appendChild(small);
+
+                const qtyControl = document.createElement('div');
+                qtyControl.className = 'qty-control';
+
+                const decreaseBtn = document.createElement('button');
+                decreaseBtn.type = 'button';
+                decreaseBtn.className = 'btn btn-sm btn-outline-secondary qty-btn rounded-pill';
+                decreaseBtn.dataset.action = 'decrease-materiel';
+                const dashIcon = document.createElement('i');
+                dashIcon.className = 'bi bi-dash';
+                decreaseBtn.appendChild(dashIcon);
+
+                const qtyInput = document.createElement('input');
+                qtyInput.type = 'number';
+                qtyInput.className = 'qty-input';
+                qtyInput.value = m.quantite;
+                qtyInput.min = '1';
+                qtyInput.max = m.quantiteDispo;
+                qtyInput.readOnly = true;
+
+                const increaseBtn = document.createElement('button');
+                increaseBtn.type = 'button';
+                increaseBtn.className = 'btn btn-sm btn-outline-secondary qty-btn rounded-pill';
+                increaseBtn.dataset.action = 'increase-materiel';
+                const plusIcon = document.createElement('i');
+                plusIcon.className = 'bi bi-plus';
+                increaseBtn.appendChild(plusIcon);
+
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.className = 'btn btn-sm btn-danger btn-remove rounded-pill';
+                removeBtn.dataset.action = 'remove-materiel';
+                const trashIcon = document.createElement('i');
+                trashIcon.className = 'bi bi-trash';
+                removeBtn.appendChild(trashIcon);
+
+                qtyControl.appendChild(decreaseBtn);
+                qtyControl.appendChild(qtyInput);
+                qtyControl.appendChild(increaseBtn);
+                qtyControl.appendChild(removeBtn);
+
+                row.appendChild(infoDiv);
+                row.appendChild(qtyControl);
+                item.appendChild(row);
+
+                const hiddenId = document.createElement('input');
+                hiddenId.type = 'hidden';
+                hiddenId.name = 'materiels[' + index + '][id]';
+                hiddenId.value = m.id;
+
+                const hiddenQty = document.createElement('input');
+                hiddenQty.type = 'hidden';
+                hiddenQty.name = 'materiels[' + index + '][quantite]';
+                hiddenQty.value = m.quantite;
+
+                const hiddenCaution = document.createElement('input');
+                hiddenCaution.type = 'hidden';
+                hiddenCaution.name = 'materiels[' + index + '][caution_unitaire]';
+                hiddenCaution.value = m.caution;
+
+                item.appendChild(hiddenId);
+                item.appendChild(hiddenQty);
+                item.appendChild(hiddenCaution);
+
+                fragment.appendChild(item);
+            });
+
+            container.appendChild(fragment);
             
             const totalCaution = this.materiels.reduce((sum, m) => sum + (m.caution * m.quantite), 0);
             const totalDisplay = document.getElementById('total_caution_display');

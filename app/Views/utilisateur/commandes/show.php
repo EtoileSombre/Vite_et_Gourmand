@@ -156,6 +156,22 @@ include __DIR__ . '/../../layouts/header.php';
                         <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
                         <script>
                             (function() {
+                                function setMapAlert(id, type, iconClass, message) {
+                                    const el = document.getElementById(id);
+                                    if (!el) return;
+                                    el.replaceChildren();
+                                    const alertDiv = document.createElement('div');
+                                    alertDiv.className = 'alert alert-' + type + ' mb-0';
+                                    if (iconClass) {
+                                        const icon = document.createElement('i');
+                                        icon.className = 'bi ' + iconClass;
+                                        alertDiv.appendChild(icon);
+                                        alertDiv.appendChild(document.createTextNode(' '));
+                                    }
+                                    alertDiv.appendChild(document.createTextNode(message));
+                                    el.appendChild(alertDiv);
+                                }
+
                                 const address = <?= json_encode($commande->getLieuLivraison() . ', ' . $commande->getVilleLivraison() . ' ' . ($commande->getCodePostalLivraison() ?? '')) ?>;
                                 const mapId = 'map-<?= htmlspecialchars($commande->getNumeroCommande()) ?>';
                                 
@@ -208,17 +224,17 @@ include __DIR__ . '/../../layouts/header.php';
                                                         
                                                         document.getElementById(mapId).style.opacity = '0.8';
                                                     } else {
-                                                        document.getElementById(mapId).innerHTML = '<div class="alert alert-warning mb-0"><i class="bi bi-geo-alt-fill"></i> Adresse non géolocalisable</div>';
+                                                        setMapAlert(mapId, 'warning', 'bi-geo-alt-fill', 'Adresse non géolocalisable');
                                                     }
                                                 })
                                                 .catch(() => {
-                                                    document.getElementById(mapId).innerHTML = '<div class="alert alert-warning mb-0"><i class="bi bi-geo-alt-fill"></i> Adresse non géolocalisable</div>';
+                                                    setMapAlert(mapId, 'warning', 'bi-geo-alt-fill', 'Adresse non géolocalisable');
                                                 });
                                         }
                                     })
                                     .catch(error => {
                                         console.error('Erreur carte:', error);
-                                        document.getElementById(mapId).innerHTML = '<div class="alert alert-danger mb-0">Erreur de chargement</div>';
+                                        setMapAlert(mapId, 'danger', null, 'Erreur de chargement');
                                     });
                                 }
                                 

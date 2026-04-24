@@ -5,15 +5,12 @@ namespace App\Factory;
 use App\Services\AdminService;
 use App\Services\AuthService;
 use App\Services\CommandeService;
+use App\Services\ContactService;
 use App\Services\MenuService;
 use App\MongoDB\MongoStats;
 
 /**
- * Factory pour la création des Services métier.
- *
- * Suit le même pattern que RepositoryFactory : singleton + cache
- * des instances. Les services sont construits avec leurs dépendances
- * (repositories, MongoStats...) via RepositoryFactory.
+ * Singleton + cache d'instances, miroir de RepositoryFactory.
  */
 class ServiceFactory
 {
@@ -34,9 +31,7 @@ class ServiceFactory
         return self::$instance;
     }
 
-    /**
-     * Réinitialise l'instance (utile pour les tests).
-     */
+    /** Utile pour les tests. */
     public static function reset(): void
     {
         self::$instance = null;
@@ -96,5 +91,16 @@ class ServiceFactory
             );
         }
         return $this->services['admin'];
+    }
+
+    public function createContactService(): ContactService
+    {
+        if (!isset($this->services['contact'])) {
+            $repoFactory = RepositoryFactory::getInstance();
+            $this->services['contact'] = new ContactService(
+                $repoFactory->createContactRepository(),
+            );
+        }
+        return $this->services['contact'];
     }
 }

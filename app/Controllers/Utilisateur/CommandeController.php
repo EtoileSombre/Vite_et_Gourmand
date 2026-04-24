@@ -12,9 +12,11 @@ use App\Repository\SuiviCommandeRepositoryInterface;
 use App\Repository\BoissonRepositoryInterface;
 use App\Repository\MaterielRepositoryInterface;
 use App\Factory\RepositoryFactory;
+use App\Factory\ServiceFactory;
+use App\Services\CommandeService;
+use App\Services\Exceptions\CommandeException;
 use App\Core\Request;
 use App\Core\Session;
-use App\MongoDB\MongoStats;
 
 class CommandeController extends Controller
 {
@@ -26,6 +28,7 @@ class CommandeController extends Controller
     private SuiviCommandeRepositoryInterface $suiviCommandeRepository;
     private BoissonRepositoryInterface $boissonRepository;
     private MaterielRepositoryInterface $materielRepository;
+    private CommandeService $commandeService;
 
     public function __construct()
     {
@@ -40,6 +43,7 @@ class CommandeController extends Controller
         $this->suiviCommandeRepository = $factory->createSuiviCommandeRepository();
         $this->boissonRepository = $factory->createBoissonRepository();
         $this->materielRepository = $factory->createMaterielRepository();
+        $this->commandeService = ServiceFactory::getInstance()->createCommandeService();
     }
 
     /**
@@ -143,161 +147,64 @@ class CommandeController extends Controller
         }
 
         $request = new Request();
-        $menuId = $request->post('menu_id');
-        $nombrePersonnes = $request->post('nombre_personnes');
-        $dateLivraison = $request->post('date_prestation'); // Correction: c'est date_prestation dans le formulaire
-        $heureLivraison = $request->post('heure_livraison');
-        $adresseLivraison = $request->post('adresse_livraison');
-        $lieuLivraison = $adresseLivraison; 
 
-        $villeLivraison = $request->post('ville_livraison') ?: 'Bordeaux'; 
+        // Préparation du payload pour le service (pas de logique métier ici,
+        // seulement extraction depuis la requête HTTP).
+        $data = [
+            'menu_id' => $request->post('menu_id'),
+            'nombre_personnes' => $request->post('nombre_personnes'),
+            'date_prestation' => $request->post('date_prestation'),
+            'heure_livraison' => $request->post('heure_livraison'),
+            'adresse_livraison' => $request->post('adresse_livraison'),
+            'ville_livraison' => $request->post('ville_livraison'),
+            'code_postal_livraison' => $request->post('code_postal_livraison'),
+            'distance_km' => $request->post('distance_km'),
+            'pret_materiel' => $request->post('pret_materiel'),
+            'boissons' => $request->post('boissons'),
+            'materiels' => $request->post('materiels'),
+        ];
 
-        $codePostalLivraison = $request->post('code_postal_livraison') ?: '';
-        $distanceKm = floatval($request->post('distance_km') ?: 0);
-        $pretMateriel = $request->post('pret_materiel') ? 1 : 0;
-
-        // Générer un numéro de commande unique 
-        $numeroCommande = 'C-' . date('ymd') . '-' . strtoupper(substr(uniqid(), -4));
-
-        // Récupérer les infos du menu pour les calculs
-        $menu = $this->menuRepository->findById($menuId);
-        
-        if (!$menu) {
-            Session::set('error', 'Menu introuvable.');
+        try {
+            $result = $this->commandeService->createCommande((int) $userId, $data);
+        } catch (CommandeException $e) {
+            Session::set('error', $e->getMessage());
             $this->redirect('/commande/nouvelle');
+            return;
         }
 
-        // CALCULS AUTOMATIQUES
-
-        // 1. Prix de base du menu
-        $prixMenu = $menu->getPrixParPersonne() * $nombrePersonnes;
-
-        // 2. Calcul de la réduction de 10% si +5 personnes par rapport au minimum
-        $reductionAppliquee = 0;
-        $nombrePersonneMinimum = $menu->getNombrePersonneMinimum();
-        if ($nombrePersonnes >= ($nombrePersonneMinimum + 5)) {
-            $reductionAppliquee = $prixMenu * 0.10; // 10% de réduction
-        }
-
-        // 3. Calcul des frais de livraison
-        // 5€ forfait + 0,59€/km
-        $fraisLivraison = 5.00 + ($distanceKm * 0.59);
-
-        // 4. Prix total = Prix menu - Réduction + Frais de livraison
-        $totalMenus = $prixMenu - $reductionAppliquee;
-        $prixTotal = $totalMenus + $fraisLivraison;
-
-        // CRÉATION DE LA COMMANDE (EN-TÊTE)
-        
-        $this->commandeRepository->create([
-            'numero_commande' => $numeroCommande,
-            'utilisateur_id' => $userId,
-            'date_prestation' => $dateLivraison,
-            'heure_livraison' => $heureLivraison,
-            'lieu_livraison' => $lieuLivraison,
-            'ville_livraison' => $villeLivraison,
-            'code_postal_livraison' => $codePostalLivraison,
-            'distance_km' => $distanceKm,
-            'prix_livraison' => $fraisLivraison,
-            'total_final' => $prixTotal,
-            'pret_materiel' => $pretMateriel,
-            'statut' => 'en_attente'
-        ]);
-
-        // AJOUT DES LIGNES DE MENU
-        
-        $this->commandeMenuRepository->addMenuToCommande(
-            $numeroCommande,
-            $menuId,
-            $nombrePersonnes,
-            $menu->getPrixParPersonne(),
-            $reductionAppliquee
-        );
-
-        // AJOUT DES BOISSONS
-        $boissonsData = $request->post('boissons');
-        if (!empty($boissonsData) && is_array($boissonsData)) {
-            try {
-                foreach ($boissonsData as $boisson) {
-                    $this->boissonRepository->addBoissonToCommande(
-                        $numeroCommande,
-                        (int)$boisson['id'],
-                        (int)$boisson['quantite'],
-                        (float)$boisson['prix_unitaire']
-                    );
-                }
-            } catch (\Exception $e) {
-                error_log("Erreur ajout boissons: " . $e->getMessage());
-            }
-        }
-
-        // AJOUT DU MATÉRIEL
-        $materielsData = $request->post('materiels');
-        if (!empty($materielsData) && is_array($materielsData)) {
-            try {
-                // Date de retour prévue = date prestation + 10 jours
-                $dateRetourPrevue = date('Y-m-d H:i:s', strtotime($dateLivraison . ' +10 days'));
-                
-                foreach ($materielsData as $materiel) {
-                    $this->materielRepository->addMaterielToCommande(
-                        $numeroCommande,
-                        (int)$materiel['id'],
-                        (int)$materiel['quantite'],
-                        (float)$materiel['caution_unitaire'],
-                        $dateRetourPrevue
-                    );
-                    $this->materielRepository->decrementQuantite(
-                        (int)$materiel['id'],
-                        (int)$materiel['quantite']
-                    );
-                }
-            } catch (\Exception $e) {
-                error_log("Erreur ajout matériel: " . $e->getMessage());
-            }
-        }
-
-        // ENVOI EMAIL DE CONFIRMATION
-        
+        // Envoi de l'email de confirmation (côté controller : préoccupation HTTP/SMTP)
         $userEmail = Session::get('user_email');
         $userPrenom = Session::get('user_prenom');
-        
-        if ($userEmail && $userPrenom && $menu) {
+        if ($userEmail && $userPrenom) {
             require_once __DIR__ . '/../../config/mail.php';
-            
-            // Préparer les lignes de menus pour l'email
-            $lignesMenus = [[
-                'menu_nom' => $menu->getTitre(),
-                'nombre_personne' => $nombrePersonnes,
-                'prix_par_personne' => $menu->getPrixParPersonne(),
-                'total_ligne' => $totalMenus
-            ]];
-            
+
+            $menu = $result['menu'];
+            $pricing = $result['pricing'];
             $detailsCommande = [
-                'lignesMenus' => $lignesMenus,
-                'date_prestation' => $dateLivraison,
-                'heure_livraison' => $heureLivraison,
-                'adresse_livraison' => $adresseLivraison,
-                'reduction' => $reductionAppliquee,
-                'frais_livraison' => $fraisLivraison,
-                'prix_total' => $prixTotal,
-                'pret_materiel' => $pretMateriel
+                'lignesMenus' => [[
+                    'menu_nom' => $menu->getTitre(),
+                    'nombre_personne' => $result['nombre_personnes'],
+                    'prix_par_personne' => $menu->getPrixParPersonne(),
+                    'total_ligne' => $pricing['total_menus'],
+                ]],
+                'date_prestation' => $result['date_prestation'],
+                'heure_livraison' => $result['heure_livraison'],
+                'adresse_livraison' => $result['adresse_livraison'],
+                'reduction' => $pricing['reduction'],
+                'frais_livraison' => $pricing['frais_livraison'],
+                'prix_total' => $pricing['prix_total'],
+                'pret_materiel' => $result['pret_materiel'],
             ];
-            
-            sendOrderConfirmationEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
+
+            sendOrderConfirmationEmail(
+                $userEmail,
+                $userPrenom,
+                $result['numero_commande'],
+                $detailsCommande
+            );
         }
 
-        // LOGGING MONGODB
-        $mongoStats = new MongoStats();
-        $mongoStats->logCommande($numeroCommande, [
-            'menu_id' => $menuId,
-            'prix_total' => $prixTotal,
-            'nombre_personne' => $nombrePersonnes,
-            'statut' => 'en_attente'
-        ]);
-
-        error_log("[COMMANDE] Création : numero={$numeroCommande}, user_id={$userId}, menu_id={$menuId}, personnes={$nombrePersonnes}, total={$prixTotal}€");
-        
-        Session::set('commande_numero', $numeroCommande);
+        Session::set('commande_numero', $result['numero_commande']);
         $this->redirect('/mes-commandes');
     }
 

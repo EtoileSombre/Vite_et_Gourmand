@@ -1,0 +1,312 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\Commande;
+use App\Models\Menu;
+use App\MongoDB\MongoStats;
+use App\Repository\BoissonRepositoryInterface;
+use App\Repository\CommandeMenuRepositoryInterface;
+use App\Repository\CommandeRepositoryInterface;
+use App\Repository\MaterielRepositoryInterface;
+use App\Repository\MenuRepositoryInterface;
+use App\Repository\SuiviCommandeRepositoryInterface;
+use App\Services\Exceptions\CommandeException;
+
+/**
+ * Service métier pour la gestion des commandes.
+ *
+ * Centralise la logique de tarification, la création/modification/annulation
+ * des commandes, la persistance multi-tables (lignes menus, boissons,
+ * matériels), la mise à jour des stocks et le logging MongoDB.
+ *
+ * Le service est agnostique vis-à-vis de HTTP : aucune Session, Request,
+ * header() ni echo. Les controllers orchestrent l'appel et gèrent :
+ *   - l'autorisation (utilisateur connecté, rôle)
+ *   - l'envoi des emails (à partir du payload retourné)
+ *   - les flash messages et redirects
+ */
+class CommandeService extends AbstractService
+{
+    public const TVA_REDUCTION_SEUIL = 5;       // nb personnes au-dessus du min
+    public const TVA_REDUCTION_TAUX = 0.10;     // 10% de réduction
+    public const FRAIS_LIVRAISON_FORFAIT = 5.00;
+    public const FRAIS_LIVRAISON_PAR_KM = 0.59;
+    public const MATERIEL_DUREE_PRET_JOURS = 10;
+
+    public function __construct(
+        private CommandeRepositoryInterface $commandeRepository,
+        private MenuRepositoryInterface $menuRepository,
+        private CommandeMenuRepositoryInterface $commandeMenuRepository,
+        private BoissonRepositoryInterface $boissonRepository,
+        private MaterielRepositoryInterface $materielRepository,
+        private SuiviCommandeRepositoryInterface $suiviCommandeRepository,
+        private MongoStats $mongoStats,
+    ) {
+    }
+
+    // ========================================================================
+    // LOGIQUE PURE DE TARIFICATION (testable sans repo)
+    // ========================================================================
+
+    /**
+     * Calcule la tarification complète d'une commande.
+     *
+     * Règles métier :
+     *  - Prix de base = prix_par_personne × nombre_personnes
+     *  - Réduction 10% si nombre_personnes >= minimum + 5
+     *  - Frais livraison = 5€ forfait + 0,59€/km
+     *  - Total TTC = (prix_base − réduction) + total_boissons + frais_livraison
+     *
+     * La caution matériel n'entre PAS dans le total (restituable).
+     *
+     * @return array{
+     *   prix_menu: float,
+     *   reduction: float,
+     *   total_menus: float,
+     *   total_boissons: float,
+     *   frais_livraison: float,
+     *   prix_total: float
+     * }
+     */
+    public static function calculatePricing(
+        float $prixParPersonne,
+        int $nombrePersonnes,
+        int $nombrePersonneMinimum,
+        float $distanceKm,
+        float $totalBoissons = 0.0,
+    ): array {
+        $prixMenu = $prixParPersonne * $nombrePersonnes;
+
+        $reduction = 0.0;
+        if ($nombrePersonnes >= ($nombrePersonneMinimum + self::TVA_REDUCTION_SEUIL)) {
+            $reduction = $prixMenu * self::TVA_REDUCTION_TAUX;
+        }
+
+        $fraisLivraison = self::FRAIS_LIVRAISON_FORFAIT + ($distanceKm * self::FRAIS_LIVRAISON_PAR_KM);
+
+        $totalMenus = $prixMenu - $reduction;
+        $prixTotal = $totalMenus + $totalBoissons + $fraisLivraison;
+
+        return [
+            'prix_menu' => $prixMenu,
+            'reduction' => $reduction,
+            'total_menus' => $totalMenus,
+            'total_boissons' => $totalBoissons,
+            'frais_livraison' => $fraisLivraison,
+            'prix_total' => $prixTotal,
+        ];
+    }
+
+    /**
+     * Calcule le total des boissons à partir du tableau de données en entrée.
+     *
+     * @param array<int, array{quantite:int|string, prix_unitaire:float|string}>|null $boissons
+     */
+    public static function calculateTotalBoissons(?array $boissons): float
+    {
+        if (empty($boissons)) {
+            return 0.0;
+        }
+        $total = 0.0;
+        foreach ($boissons as $b) {
+            $total += ((int) ($b['quantite'] ?? 0)) * ((float) ($b['prix_unitaire'] ?? 0));
+        }
+        return $total;
+    }
+
+    /**
+     * Génère un numéro de commande unique au format C-YYMMDD-XXXX.
+     */
+    public static function generateNumeroCommande(): string
+    {
+        return 'C-' . date('ymd') . '-' . strtoupper(substr(uniqid(), -4));
+    }
+
+    // ========================================================================
+    // CAS D'USAGE : CRÉATION D'UNE COMMANDE (UTILISATEUR)
+    // ========================================================================
+
+    /**
+     * Crée une nouvelle commande pour un utilisateur.
+     *
+     * Orchestration :
+     *  1. Validation des champs obligatoires
+     *  2. Chargement et vérification du menu
+     *  3. Calcul du prix (calculatePricing)
+     *  4. Persistance de l'en-tête de commande
+     *  5. Ajout de la ligne menu principale
+     *  6. Ajout des boissons (si fournies)
+     *  7. Ajout des matériels + décrément du stock (si fournis)
+     *  8. Log MongoDB
+     *
+     * L'envoi d'email est laissé au controller, qui utilise le payload retourné.
+     *
+     * @param array{
+     *   menu_id: int|string,
+     *   nombre_personnes: int|string,
+     *   date_prestation: string,
+     *   heure_livraison: string,
+     *   adresse_livraison: string,
+     *   ville_livraison?: string,
+     *   code_postal_livraison?: string,
+     *   distance_km?: float|int|string,
+     *   pret_materiel?: mixed,
+     *   boissons?: array<int, array{id:int|string, quantite:int|string, prix_unitaire:float|string}>,
+     *   materiels?: array<int, array{id:int|string, quantite:int|string, caution_unitaire:float|string}>
+     * } $data
+     *
+     * @return array{
+     *   numero_commande: string,
+     *   menu: Menu,
+     *   nombre_personnes: int,
+     *   pricing: array{prix_menu:float, reduction:float, total_menus:float, frais_livraison:float, prix_total:float},
+     *   date_prestation: string,
+     *   heure_livraison: string,
+     *   adresse_livraison: string,
+     *   pret_materiel: int
+     * }
+     *
+     * @throws CommandeException si données invalides ou menu introuvable
+     */
+    public function createCommande(int $userId, array $data): array
+    {
+        $this->requireFields($data, [
+            'menu_id',
+            'nombre_personnes',
+            'date_prestation',
+            'heure_livraison',
+            'adresse_livraison',
+        ]);
+
+        $menuId = (int) $data['menu_id'];
+        $nombrePersonnes = (int) $data['nombre_personnes'];
+        $dateLivraison = (string) $data['date_prestation'];
+        $heureLivraison = (string) $data['heure_livraison'];
+        $adresseLivraison = (string) $data['adresse_livraison'];
+        $villeLivraison = !empty($data['ville_livraison']) ? (string) $data['ville_livraison'] : 'Bordeaux';
+        $codePostalLivraison = (string) ($data['code_postal_livraison'] ?? '');
+        $distanceKm = (float) ($data['distance_km'] ?? 0);
+        $pretMateriel = !empty($data['pret_materiel']) ? 1 : 0;
+
+        if ($nombrePersonnes <= 0) {
+            throw new CommandeException("Le nombre de personnes doit être supérieur à zéro.");
+        }
+
+        $menu = $this->menuRepository->findById($menuId);
+        if (!$menu) {
+            throw new CommandeException("Menu introuvable.");
+        }
+
+        $boissonsInput = (!empty($data['boissons']) && is_array($data['boissons'])) ? $data['boissons'] : [];
+        $totalBoissons = self::calculateTotalBoissons($boissonsInput);
+
+        $pricing = self::calculatePricing(
+            (float) $menu->getPrixParPersonne(),
+            $nombrePersonnes,
+            (int) $menu->getNombrePersonneMinimum(),
+            $distanceKm,
+            $totalBoissons,
+        );
+
+        $numeroCommande = self::generateNumeroCommande();
+
+        // 1. En-tête de commande
+        $this->commandeRepository->create([
+            'numero_commande' => $numeroCommande,
+            'utilisateur_id' => $userId,
+            'date_prestation' => $dateLivraison,
+            'heure_livraison' => $heureLivraison,
+            'lieu_livraison' => $adresseLivraison,
+            'ville_livraison' => $villeLivraison,
+            'code_postal_livraison' => $codePostalLivraison,
+            'distance_km' => $distanceKm,
+            'prix_livraison' => $pricing['frais_livraison'],
+            'total_final' => $pricing['prix_total'],
+            'pret_materiel' => $pretMateriel,
+            'statut' => 'en_attente',
+        ]);
+
+        // 2. Ligne menu principale
+        $this->commandeMenuRepository->addMenuToCommande(
+            $numeroCommande,
+            $menuId,
+            $nombrePersonnes,
+            (float) $menu->getPrixParPersonne(),
+            $pricing['reduction'],
+        );
+
+        // 3. Boissons (optionnel, non bloquant)
+        if (!empty($boissonsInput)) {
+            try {
+                foreach ($boissonsInput as $boisson) {
+                    $this->boissonRepository->addBoissonToCommande(
+                        $numeroCommande,
+                        (int) $boisson['id'],
+                        (int) $boisson['quantite'],
+                        (float) $boisson['prix_unitaire'],
+                    );
+                }
+            } catch (\Exception $e) {
+                error_log("Erreur ajout boissons : " . $e->getMessage());
+            }
+        }
+
+        // 4. Matériels + décrément stock (optionnel, non bloquant)
+        if (!empty($data['materiels']) && is_array($data['materiels'])) {
+            try {
+                $dateRetourPrevue = date(
+                    'Y-m-d H:i:s',
+                    strtotime($dateLivraison . ' +' . self::MATERIEL_DUREE_PRET_JOURS . ' days'),
+                );
+                foreach ($data['materiels'] as $materiel) {
+                    $this->materielRepository->addMaterielToCommande(
+                        $numeroCommande,
+                        (int) $materiel['id'],
+                        (int) $materiel['quantite'],
+                        (float) $materiel['caution_unitaire'],
+                        $dateRetourPrevue,
+                    );
+                    $this->materielRepository->decrementQuantite(
+                        (int) $materiel['id'],
+                        (int) $materiel['quantite'],
+                    );
+                }
+            } catch (\Exception $e) {
+                error_log("Erreur ajout matériel : " . $e->getMessage());
+            }
+        }
+
+        // 5. Logging MongoDB (non bloquant)
+        try {
+            $this->mongoStats->logCommande($numeroCommande, [
+                'menu_id' => $menuId,
+                'prix_total' => $pricing['prix_total'],
+                'nombre_personne' => $nombrePersonnes,
+                'statut' => 'en_attente',
+            ]);
+        } catch (\Exception $e) {
+            error_log("Erreur log MongoDB commande : " . $e->getMessage());
+        }
+
+        error_log(sprintf(
+            "[COMMANDE] Création : numero=%s, user_id=%d, menu_id=%d, personnes=%d, total=%s€",
+            $numeroCommande,
+            $userId,
+            $menuId,
+            $nombrePersonnes,
+            $pricing['prix_total'],
+        ));
+
+        return [
+            'numero_commande' => $numeroCommande,
+            'menu' => $menu,
+            'nombre_personnes' => $nombrePersonnes,
+            'pricing' => $pricing,
+            'date_prestation' => $dateLivraison,
+            'heure_livraison' => $heureLivraison,
+            'adresse_livraison' => $adresseLivraison,
+            'pret_materiel' => $pretMateriel,
+        ];
+    }
+}

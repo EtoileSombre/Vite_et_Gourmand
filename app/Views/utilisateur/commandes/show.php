@@ -295,10 +295,23 @@ include __DIR__ . '/../../layouts/header.php';
                                                     <?= htmlspecialchars($suivi->getEmployeNom()) ?>
                                                 </small>
                                             <?php endif; ?>
-                                            <?php if (!empty($suivi->getCommentaire())): ?>
+                                            <?php if (!empty($suivi->getCommentaire())):
+                                                // Retirer les préfixes techniques [ANNULATION] / [MODIFICATION] / [Contact: …]
+                                                // qui font doublon avec le nom du statut affiché juste au-dessus.
+                                                $commentaire = preg_replace('/\[[^\]]+\]\s*/', '', $suivi->getCommentaire());
+                                                $commentaire = trim($commentaire);
+                                                // Masquer si le commentaire résiduel est identique au libellé du statut
+                                                $statutLibelle = $statuts[$suivi->getNouveauStatut()] ?? '';
+                                                $afficher = $commentaire !== ''
+                                                    && strcasecmp($commentaire, $statutLibelle) !== 0
+                                                    && strcasecmp($commentaire, 'Annulation') !== 0
+                                                    && strcasecmp($commentaire, 'Modification') !== 0;
+                                            ?>
+                                                <?php if ($afficher): ?>
                                                 <div class="mt-1">
-                                                    <small><em><?= htmlspecialchars($suivi->getCommentaire()) ?></em></small>
+                                                    <small><em><?= htmlspecialchars($commentaire) ?></em></small>
                                                 </div>
+                                                <?php endif; ?>
                                             <?php endif; ?>
                                         </div>
                                     </div>

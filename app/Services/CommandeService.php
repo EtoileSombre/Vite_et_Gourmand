@@ -13,23 +13,10 @@ use App\Repository\MenuRepositoryInterface;
 use App\Repository\SuiviCommandeRepositoryInterface;
 use App\Services\Exceptions\CommandeException;
 
-/**
- * Service métier pour la gestion des commandes.
- *
- * Centralise la logique de tarification, la création/modification/annulation
- * des commandes, la persistance multi-tables (lignes menus, boissons,
- * matériels), la mise à jour des stocks et le logging MongoDB.
- *
- * Le service est agnostique vis-à-vis de HTTP : aucune Session, Request,
- * header() ni echo. Les controllers orchestrent l'appel et gèrent :
- *   - l'autorisation (utilisateur connecté, rôle)
- *   - l'envoi des emails (à partir du payload retourné)
- *   - les flash messages et redirects
- */
 class CommandeService extends AbstractService
 {
-    public const TVA_REDUCTION_SEUIL = 5;       // nb personnes au-dessus du min
-    public const TVA_REDUCTION_TAUX = 0.10;     // 10% de réduction
+    public const TVA_REDUCTION_SEUIL = 5;
+    public const TVA_REDUCTION_TAUX = 0.10;
     public const FRAIS_LIVRAISON_FORFAIT = 5.00;
     public const FRAIS_LIVRAISON_PAR_KM = 0.59;
     public const MATERIEL_DUREE_PRET_JOURS = 10;
@@ -45,29 +32,9 @@ class CommandeService extends AbstractService
     ) {
     }
 
-    // ========================================================================
-    // LOGIQUE PURE DE TARIFICATION (testable sans repo)
-    // ========================================================================
-
     /**
-     * Calcule la tarification complète d'une commande.
-     *
-     * Règles métier :
-     *  - Prix de base = prix_par_personne × nombre_personnes
-     *  - Réduction 10% si nombre_personnes >= minimum + 5
-     *  - Frais livraison = 5€ forfait + 0,59€/km
-     *  - Total TTC = (prix_base − réduction) + total_boissons + frais_livraison
-     *
-     * La caution matériel n'entre PAS dans le total (restituable).
-     *
-     * @return array{
-     *   prix_menu: float,
-     *   reduction: float,
-     *   total_menus: float,
-     *   total_boissons: float,
-     *   frais_livraison: float,
-     *   prix_total: float
-     * }
+     * Règles : réduction 10% si personnes >= min + 5, livraison = 5€ + 0,59€/km.
+     * La caution matériel n'entre pas dans le total.
      */
     public static function calculatePricing(
         float $prixParPersonne,
@@ -98,11 +65,6 @@ class CommandeService extends AbstractService
         ];
     }
 
-    /**
-     * Calcule le total des boissons à partir du tableau de données en entrée.
-     *
-     * @param array<int, array{quantite:int|string, prix_unitaire:float|string}>|null $boissons
-     */
     public static function calculateTotalBoissons(?array $boissons): float
     {
         if (empty($boissons)) {
@@ -115,58 +77,13 @@ class CommandeService extends AbstractService
         return $total;
     }
 
-    /**
-     * Génère un numéro de commande unique au format C-YYMMDD-XXXX.
-     */
+    /** Format : C-YYMMDD-XXXX. */
     public static function generateNumeroCommande(): string
     {
         return 'C-' . date('ymd') . '-' . strtoupper(substr(uniqid(), -4));
     }
 
-    // ========================================================================
-    // CAS D'USAGE : CRÉATION D'UNE COMMANDE (UTILISATEUR)
-    // ========================================================================
-
     /**
-     * Crée une nouvelle commande pour un utilisateur.
-     *
-     * Orchestration :
-     *  1. Validation des champs obligatoires
-     *  2. Chargement et vérification du menu
-     *  3. Calcul du prix (calculatePricing)
-     *  4. Persistance de l'en-tête de commande
-     *  5. Ajout de la ligne menu principale
-     *  6. Ajout des boissons (si fournies)
-     *  7. Ajout des matériels + décrément du stock (si fournis)
-     *  8. Log MongoDB
-     *
-     * L'envoi d'email est laissé au controller, qui utilise le payload retourné.
-     *
-     * @param array{
-     *   menu_id: int|string,
-     *   nombre_personnes: int|string,
-     *   date_prestation: string,
-     *   heure_livraison: string,
-     *   adresse_livraison: string,
-     *   ville_livraison?: string,
-     *   code_postal_livraison?: string,
-     *   distance_km?: float|int|string,
-     *   pret_materiel?: mixed,
-     *   boissons?: array<int, array{id:int|string, quantite:int|string, prix_unitaire:float|string}>,
-     *   materiels?: array<int, array{id:int|string, quantite:int|string, caution_unitaire:float|string}>
-     * } $data
-     *
-     * @return array{
-     *   numero_commande: string,
-     *   menu: Menu,
-     *   nombre_personnes: int,
-     *   pricing: array{prix_menu:float, reduction:float, total_menus:float, frais_livraison:float, prix_total:float},
-     *   date_prestation: string,
-     *   heure_livraison: string,
-     *   adresse_livraison: string,
-     *   pret_materiel: int
-     * }
-     *
      * @throws CommandeException si données invalides ou menu introuvable
      */
     public function createCommande(int $userId, array $data): array
@@ -211,7 +128,6 @@ class CommandeService extends AbstractService
 
         $numeroCommande = self::generateNumeroCommande();
 
-        // 1. En-tête de commande
         $this->commandeRepository->create([
             'numero_commande' => $numeroCommande,
             'utilisateur_id' => $userId,
@@ -227,7 +143,6 @@ class CommandeService extends AbstractService
             'statut' => 'en_attente',
         ]);
 
-        // 2. Ligne menu principale
         $this->commandeMenuRepository->addMenuToCommande(
             $numeroCommande,
             $menuId,
@@ -236,7 +151,6 @@ class CommandeService extends AbstractService
             $pricing['reduction'],
         );
 
-        // 3. Boissons (optionnel, non bloquant)
         if (!empty($boissonsInput)) {
             try {
                 foreach ($boissonsInput as $boisson) {
@@ -252,7 +166,6 @@ class CommandeService extends AbstractService
             }
         }
 
-        // 4. Matériels + décrément stock (optionnel, non bloquant)
         if (!empty($data['materiels']) && is_array($data['materiels'])) {
             try {
                 $dateRetourPrevue = date(
@@ -277,7 +190,6 @@ class CommandeService extends AbstractService
             }
         }
 
-        // 5. Logging MongoDB (non bloquant)
         try {
             $this->mongoStats->logCommande($numeroCommande, [
                 'menu_id' => $menuId,
@@ -310,31 +222,7 @@ class CommandeService extends AbstractService
         ];
     }
 
-    // ========================================================================
-    // CAS D'USAGE : MODIFICATION D'UNE COMMANDE (UTILISATEUR)
-    // ========================================================================
-
     /**
-     * Modifie une commande existante d'un utilisateur.
-     *
-     * Règles métier :
-     *  - La commande doit appartenir à l'utilisateur.
-     *  - Elle doit être au statut `en_attente` (sinon refus).
-     *  - Si le nombre de personnes change, on met à jour la première ligne
-     *    et on recalcule total_final (menus + boissons déjà en base + livraison).
-     *
-     * @param array{
-     *   numero_commande: string,
-     *   nombre_personnes: int|string,
-     *   date_prestation: string
-     * } $data
-     *
-     * @return array{
-     *   numero_commande: string,
-     *   lignes_menus: array,
-     *   date_prestation: string
-     * }
-     *
      * @throws CommandeException
      */
     public function updateCommande(int $userId, array $data): array
@@ -366,7 +254,6 @@ class CommandeService extends AbstractService
             'date_prestation' => $dateLivraison,
         ]);
 
-        // Si le nombre de personnes a changé, on met à jour la 1ère ligne et on recalcule
         if (!empty($lignesMenus) && $nombrePersonnes != $lignesMenus[0]->getNombrePersonne()) {
             $this->commandeMenuRepository->updateLigne(
                 $lignesMenus[0]->getCommandeMenuId(),
@@ -383,7 +270,6 @@ class CommandeService extends AbstractService
             ]);
         }
 
-        // Recharger les lignes après update
         $lignesMenus = $this->commandeMenuRepository->findByCommande($numeroCommande);
 
         error_log(sprintf(
@@ -401,21 +287,7 @@ class CommandeService extends AbstractService
         ];
     }
 
-    // ========================================================================
-    // CAS D'USAGE : ANNULATION D'UNE COMMANDE (UTILISATEUR)
-    // ========================================================================
-
     /**
-     * Annule une commande d'un utilisateur.
-     *
-     * Règles métier :
-     *  - La commande doit appartenir à l'utilisateur.
-     *  - Elle doit être au statut `en_attente` (sinon refus, il faut passer
-     *    par le support).
-     *  - Change le statut en `annulee` et enregistre dans le suivi.
-     *
-     * @return array{numero_commande: string, ancien_statut: string}
-     *
      * @throws CommandeException
      */
     public function cancelCommandeByUser(int $userId, string $numeroCommande): array
@@ -444,7 +316,7 @@ class CommandeService extends AbstractService
             $ancienStatut,
             'annulee',
             $userId,
-            "Annulation par l'utilisateur"
+            null
         );
 
         error_log(sprintf(
@@ -459,26 +331,9 @@ class CommandeService extends AbstractService
         ];
     }
 
-    // ========================================================================
-    // CAS D'USAGE : GESTION CÔTÉ EMPLOYÉ
-    // ========================================================================
-
-    /**
-     * Statuts interdits en modification pour un employé.
-     */
     private const STATUTS_VERROUILLES = ['terminee', 'annulee', 'refusee'];
 
     /**
-     * Change le statut d'une commande par un employé.
-     *
-     * Règles :
-     *  - Le statut `annulee` n'est pas autorisé ici (passer par editByEmploye
-     *    avec un motif pour garder la traçabilité du contact utilisateur).
-     *  - Si le nouveau statut est `terminee`, marque la restitution matériel.
-     *  - Enregistre le changement dans le suivi et MongoDB.
-     *
-     * @return array{numero_commande: string, ancien_statut: string, nouveau_statut: string, commande: Commande}
-     *
      * @throws CommandeException
      */
     public function changeStatutByEmploye(int $employeId, string $numeroCommande, string $nouveauStatut): array
@@ -547,28 +402,8 @@ class CommandeService extends AbstractService
     }
 
     /**
-     * Modifie (ou annule) une commande par un employé, avec motif obligatoire.
-     *
-     * Règles :
-     *  - Commande non terminée/annulée/refusée.
-     *  - Mode de contact et motif (≥ 10 caractères) obligatoires.
-     *  - Si `annuler` = true : passe le statut à `annulee`, sinon met à jour
-     *    les champs de livraison + les quantités de menus.
-     *
-     * @param array{
-     *   mode_contact: string,
-     *   motif: string,
-     *   annuler?: bool,
-     *   date_prestation?: string,
-     *   heure_livraison?: string,
-     *   lieu_livraison?: string,
-     *   ville_livraison?: string,
-     *   code_postal_livraison?: string,
-     *   instructions_speciales?: string,
-     *   quantites_menus?: array<int|string, int|string>
-     * } $data
-     *
-     * @return array{numero_commande: string, annulee: bool}
+     * Mode de contact + motif (>= 10 caractères) obligatoires.
+     * Si $data['annuler'] est vrai, passe la commande en annulee.
      *
      * @throws CommandeException
      */
@@ -598,7 +433,6 @@ class CommandeService extends AbstractService
             throw new CommandeException("Cette commande ne peut plus être modifiée");
         }
 
-        // ---- Branche ANNULATION ----
         if ($annuler) {
             if (!empty($errors)) {
                 throw new CommandeException(implode(' ', $errors));
@@ -617,7 +451,7 @@ class CommandeService extends AbstractService
                 $commande->getStatut(),
                 'annulee',
                 $employeId,
-                "[ANNULATION] {$motif}",
+                $motif,
             );
 
             try {
@@ -636,7 +470,6 @@ class CommandeService extends AbstractService
             ];
         }
 
-        // ---- Branche MODIFICATION ----
         $datePrestation = trim((string) ($data['date_prestation'] ?? ''));
         $heureLivraison = trim((string) ($data['heure_livraison'] ?? ''));
         $lieuLivraison = trim((string) ($data['lieu_livraison'] ?? ''));
@@ -680,9 +513,9 @@ class CommandeService extends AbstractService
         $this->suiviCommandeRepository->enregistrerChangement(
             $numeroCommande,
             $commande->getStatut(),
-            $commande->getStatut(), // même statut
+            $commande->getStatut(),
             $employeId,
-            "[MODIFICATION] {$motif}",
+            $motif,
         );
 
         try {

@@ -4,6 +4,7 @@ namespace App\Factory;
 
 use App\Services\AuthService;
 use App\Services\CommandeService;
+use App\Services\MenuService;
 use App\MongoDB\MongoStats;
 
 /**
@@ -67,5 +68,17 @@ class ServiceFactory
             );
         }
         return $this->services['auth'];
+    }
+
+    public function createMenuService(): MenuService
+    {
+        if (!isset($this->services['menu'])) {
+            $repoFactory = RepositoryFactory::getInstance();
+            $this->services['menu'] = new MenuService(
+                $repoFactory->createMenuRepository(),
+                $repoFactory->createPlatRepository(),
+            );
+        }
+        return $this->services['menu'];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Factory;
 
+use App\Services\AdminService;
 use App\Services\AuthService;
 use App\Services\CommandeService;
 use App\Services\MenuService;
@@ -80,5 +81,20 @@ class ServiceFactory
             );
         }
         return $this->services['menu'];
+    }
+
+    public function createAdminService(): AdminService
+    {
+        if (!isset($this->services['admin'])) {
+            $repoFactory = RepositoryFactory::getInstance();
+            $this->services['admin'] = new AdminService(
+                $repoFactory->createUserRepository(),
+                $repoFactory->createCommandeRepository(),
+                $repoFactory->createMenuRepository(),
+                $repoFactory->createCommandeMenuRepository(),
+                new MongoStats(),
+            );
+        }
+        return $this->services['admin'];
     }
 }

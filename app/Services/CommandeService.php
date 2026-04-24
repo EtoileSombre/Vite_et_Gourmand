@@ -458,4 +458,246 @@ class CommandeService extends AbstractService
             'ancien_statut' => $ancienStatut,
         ];
     }
+
+    // ========================================================================
+    // CAS D'USAGE : GESTION CÔTÉ EMPLOYÉ
+    // ========================================================================
+
+    /**
+     * Statuts interdits en modification pour un employé.
+     */
+    private const STATUTS_VERROUILLES = ['terminee', 'annulee', 'refusee'];
+
+    /**
+     * Change le statut d'une commande par un employé.
+     *
+     * Règles :
+     *  - Le statut `annulee` n'est pas autorisé ici (passer par editByEmploye
+     *    avec un motif pour garder la traçabilité du contact utilisateur).
+     *  - Si le nouveau statut est `terminee`, marque la restitution matériel.
+     *  - Enregistre le changement dans le suivi et MongoDB.
+     *
+     * @return array{numero_commande: string, ancien_statut: string, nouveau_statut: string, commande: Commande}
+     *
+     * @throws CommandeException
+     */
+    public function changeStatutByEmploye(int $employeId, string $numeroCommande, string $nouveauStatut): array
+    {
+        if ($numeroCommande === '') {
+            throw new CommandeException("Commande introuvable");
+        }
+        if ($nouveauStatut === '') {
+            throw new CommandeException("Le nouveau statut est obligatoire");
+        }
+        if ($nouveauStatut === 'annulee') {
+            throw new CommandeException(
+                "Vous devez contacter l'utilisateur en remplissant le formulaire \"Modifier Commande\"."
+            );
+        }
+
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
+        if (!$commande) {
+            throw new CommandeException("Commande introuvable");
+        }
+
+        $ancienStatut = $commande->getStatut();
+
+        $updateData = ['statut' => $nouveauStatut];
+        if ($nouveauStatut === 'terminee') {
+            $updateData['restitution_materiel'] = 1;
+        }
+
+        $success = $this->commandeRepository->updateByNumero($numeroCommande, $updateData);
+        if (!$success) {
+            throw new CommandeException("Erreur lors de la mise à jour du statut");
+        }
+
+        $this->suiviCommandeRepository->enregistrerChangement(
+            $numeroCommande,
+            $ancienStatut,
+            $nouveauStatut,
+            $employeId,
+            null,
+        );
+
+        try {
+            $this->mongoStats->logUserActivity('change_order_status', $employeId, [
+                'numero_commande' => $numeroCommande,
+                'ancien_statut' => $ancienStatut,
+                'nouveau_statut' => $nouveauStatut,
+            ]);
+        } catch (\Exception $e) {
+            error_log("Erreur log MongoDB changement statut : " . $e->getMessage());
+        }
+
+        error_log(sprintf(
+            "[EMPLOYE] Changement statut : numero=%s, %s -> %s, employe_id=%d",
+            $numeroCommande,
+            $ancienStatut,
+            $nouveauStatut,
+            $employeId,
+        ));
+
+        return [
+            'numero_commande' => $numeroCommande,
+            'ancien_statut' => $ancienStatut,
+            'nouveau_statut' => $nouveauStatut,
+            'commande' => $commande,
+        ];
+    }
+
+    /**
+     * Modifie (ou annule) une commande par un employé, avec motif obligatoire.
+     *
+     * Règles :
+     *  - Commande non terminée/annulée/refusée.
+     *  - Mode de contact et motif (≥ 10 caractères) obligatoires.
+     *  - Si `annuler` = true : passe le statut à `annulee`, sinon met à jour
+     *    les champs de livraison + les quantités de menus.
+     *
+     * @param array{
+     *   mode_contact: string,
+     *   motif: string,
+     *   annuler?: bool,
+     *   date_prestation?: string,
+     *   heure_livraison?: string,
+     *   lieu_livraison?: string,
+     *   ville_livraison?: string,
+     *   code_postal_livraison?: string,
+     *   instructions_speciales?: string,
+     *   quantites_menus?: array<int|string, int|string>
+     * } $data
+     *
+     * @return array{numero_commande: string, annulee: bool}
+     *
+     * @throws CommandeException
+     */
+    public function editCommandeByEmploye(int $employeId, string $numeroCommande, array $data): array
+    {
+        if ($numeroCommande === '') {
+            throw new CommandeException("Commande introuvable");
+        }
+
+        $modeContact = trim((string) ($data['mode_contact'] ?? ''));
+        $motif = trim((string) ($data['motif'] ?? ''));
+        $annuler = !empty($data['annuler']);
+
+        $errors = [];
+        if ($modeContact === '') {
+            $errors[] = "Le mode de contact est obligatoire";
+        }
+        if (strlen($motif) < 10) {
+            $errors[] = "Le motif de modification doit contenir au moins 10 caractères";
+        }
+
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
+        if (!$commande) {
+            throw new CommandeException("Commande introuvable");
+        }
+        if (in_array($commande->getStatut(), self::STATUTS_VERROUILLES, true)) {
+            throw new CommandeException("Cette commande ne peut plus être modifiée");
+        }
+
+        // ---- Branche ANNULATION ----
+        if ($annuler) {
+            if (!empty($errors)) {
+                throw new CommandeException(implode(' ', $errors));
+            }
+
+            $ok = $this->commandeRepository->updateByNumero($numeroCommande, [
+                'statut' => 'annulee',
+                'motif_annulation' => "[Contact: {$modeContact} - ANNULATION] {$motif}",
+            ]);
+            if (!$ok) {
+                throw new CommandeException("Erreur lors de l'annulation de la commande");
+            }
+
+            $this->suiviCommandeRepository->enregistrerChangement(
+                $numeroCommande,
+                $commande->getStatut(),
+                'annulee',
+                $employeId,
+                "[ANNULATION] {$motif}",
+            );
+
+            try {
+                $this->mongoStats->logUserActivity('cancel_order', $employeId, [
+                    'numero_commande' => $numeroCommande,
+                    'mode_contact' => $modeContact,
+                    'motif' => $motif,
+                ]);
+            } catch (\Exception $e) {
+                error_log("Erreur log MongoDB annulation employé : " . $e->getMessage());
+            }
+
+            return [
+                'numero_commande' => $numeroCommande,
+                'annulee' => true,
+            ];
+        }
+
+        // ---- Branche MODIFICATION ----
+        $datePrestation = trim((string) ($data['date_prestation'] ?? ''));
+        $heureLivraison = trim((string) ($data['heure_livraison'] ?? ''));
+        $lieuLivraison = trim((string) ($data['lieu_livraison'] ?? ''));
+        $villeLivraison = trim((string) ($data['ville_livraison'] ?? ''));
+        $codePostal = trim((string) ($data['code_postal_livraison'] ?? ''));
+        $instructions = trim((string) ($data['instructions_speciales'] ?? ''));
+
+        if ($datePrestation === '') $errors[] = "La date de prestation est obligatoire";
+        if ($heureLivraison === '') $errors[] = "L'heure de livraison est obligatoire";
+        if ($lieuLivraison === '')  $errors[] = "Le lieu de livraison est obligatoire";
+        if ($villeLivraison === '') $errors[] = "La ville est obligatoire";
+        if ($codePostal === '')     $errors[] = "Le code postal est obligatoire";
+
+        if (!empty($errors)) {
+            throw new CommandeException(implode(' ', $errors));
+        }
+
+        $ok = $this->commandeRepository->updateByNumero($numeroCommande, [
+            'date_prestation' => $datePrestation,
+            'heure_livraison' => $heureLivraison,
+            'lieu_livraison' => $lieuLivraison,
+            'ville_livraison' => $villeLivraison,
+            'code_postal_livraison' => $codePostal,
+            'instructions_speciales' => $instructions,
+            'motif_annulation' => "[Contact: {$modeContact} - MODIFICATION] {$motif}",
+        ]);
+        if (!$ok) {
+            throw new CommandeException("Erreur lors de la modification de la commande");
+        }
+
+        if (!empty($data['quantites_menus']) && is_array($data['quantites_menus'])) {
+            foreach ($data['quantites_menus'] as $menuId => $quantite) {
+                $this->commandeMenuRepository->updateQuantite(
+                    $numeroCommande,
+                    (int) $menuId,
+                    (int) $quantite,
+                );
+            }
+        }
+
+        $this->suiviCommandeRepository->enregistrerChangement(
+            $numeroCommande,
+            $commande->getStatut(),
+            $commande->getStatut(), // même statut
+            $employeId,
+            "[MODIFICATION] {$motif}",
+        );
+
+        try {
+            $this->mongoStats->logUserActivity('edit_order', $employeId, [
+                'numero_commande' => $numeroCommande,
+                'mode_contact' => $modeContact,
+                'motif' => $motif,
+            ]);
+        } catch (\Exception $e) {
+            error_log("Erreur log MongoDB modification employé : " . $e->getMessage());
+        }
+
+        return [
+            'numero_commande' => $numeroCommande,
+            'annulee' => false,
+        ];
+    }
 }

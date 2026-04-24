@@ -11,8 +11,10 @@ use App\Repository\SuiviCommandeRepositoryInterface;
 use App\Repository\BoissonRepositoryInterface;
 use App\Repository\MaterielRepositoryInterface;
 use App\Factory\RepositoryFactory;
+use App\Factory\ServiceFactory;
+use App\Services\CommandeService;
+use App\Services\Exceptions\CommandeException;
 use App\Models\Commande;
-use App\MongoDB\MongoStats;
 
 /**
  * Contrôleur Employé - Gestion des Commandes
@@ -25,6 +27,7 @@ class CommandeController extends Controller
     private SuiviCommandeRepositoryInterface $suiviCommandeRepository;
     private BoissonRepositoryInterface $boissonRepository;
     private MaterielRepositoryInterface $materielRepository;
+    private CommandeService $commandeService;
 
     public function __construct()
     {
@@ -47,6 +50,7 @@ class CommandeController extends Controller
         $this->suiviCommandeRepository = $factory->createSuiviCommandeRepository();
         $this->boissonRepository = $factory->createBoissonRepository();
         $this->materielRepository = $factory->createMaterielRepository();
+        $this->commandeService = ServiceFactory::getInstance()->createCommandeService();
     }
 
     public function index(Request $request): void
@@ -138,110 +142,64 @@ class CommandeController extends Controller
      */
     private function processStatusChange(string $numeroCommande, Commande $commande): void
     {
-        $errors = [];
-
-        // Récupérer les données du formulaire
         $nouveauStatut = $_POST['nouveau_statut'] ?? '';
 
-        // Validation
-        if (empty($nouveauStatut)) {
-            $errors[] = "Le nouveau statut est obligatoire";
-        }
-
-        // Bloquer les annulations - elles doivent passer par le formulaire de modification
-        if ($nouveauStatut === 'annulee') {
-            $errors[] = "Vous devez contacter l'utilisateur en remplissant le formulaire \"Modifier Commande\".";
-        }
-
-        if (!empty($errors)) {
-            Session::set('flash_error', implode(' ', $errors));
+        try {
+            $result = $this->commandeService->changeStatutByEmploye(
+                (int) Session::get('user_id'),
+                $numeroCommande,
+                (string) $nouveauStatut
+            );
+        } catch (CommandeException $e) {
+            Session::set('flash_error', $e->getMessage());
             $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
             return;
         }
-        $updateData = [
-            'statut' => $nouveauStatut
-        ];
 
-        // Si la commande passe à "terminée", marquer la restitution du matériel comme effectuée
-        if ($nouveauStatut === 'terminee') {
-            $updateData['restitution_materiel'] = 1;
-        }
+        // Envoi des emails automatiques selon le nouveau statut
+        require_once __DIR__ . '/../../config/mail.php';
 
-        $success = $this->commandeRepository->updateByNumero($numeroCommande, $updateData);
-
-        if ($success) {
-            // Enregistrer dans l'historique de suivi
-            $this->suiviCommandeRepository->enregistrerChangement(
+        if ($nouveauStatut === 'acceptee') {
+            $sent = sendOrderAcceptedEmail(
+                $commande->getUtilisateurEmail(),
+                $commande->getUtilisateurPrenom(),
                 $numeroCommande,
-                $commande->getStatut(),
-                $nouveauStatut,
-                Session::get('user_id'),
-                null
+                $commande->getDatePrestation()
             );
-
-            // Logger dans MongoDB
-            $mongoStats = new MongoStats();
-            $mongoStats->logUserActivity('change_order_status', Session::get('user_id'), [
-                'numero_commande' => $numeroCommande,
-                'ancien_statut' => $commande->getStatut(),
-                'nouveau_statut' => $nouveauStatut
-            ]);
-
-            // Envoyer les emails automatiques selon le nouveau statut
-            require_once __DIR__ . '/../../config/mail.php';
-            
-            // Email #1 : Commande acceptée
-            if ($nouveauStatut === 'acceptee') {
-                $emailSent = sendOrderAcceptedEmail(
-                    $commande->getUtilisateurEmail(),
-                    $commande->getUtilisateurPrenom(),
-                    $numeroCommande,
-                    $commande->getDatePrestation()
-                );
-                if (!$emailSent) {
-                    error_log("Échec envoi email acceptation commande #$numeroCommande à " . $commande->getUtilisateurEmail());
-                }
+            if (!$sent) {
+                error_log("Échec envoi email acceptation commande #$numeroCommande à " . $commande->getUtilisateurEmail());
             }
-            
-            // Email #2 : Commande terminée (avec invitation avis)
-            if ($nouveauStatut === 'terminee') {
-                $emailSent = sendOrderCompletedEmail(
-                    $commande->getUtilisateurEmail(),
-                    $commande->getUtilisateurPrenom(),
-                    $numeroCommande,
-                    $commande->getMenuTitre() ?? 'Menu'
-                );
-                if (!$emailSent) {
-                    error_log("Échec envoi email terminaison commande #$numeroCommande à " . $commande->getUtilisateurEmail());
-                }
-            }
-            
-            // Email #3 : Attente retour matériel (rappel 10 jours, pénalité 600€)
-            if ($nouveauStatut === 'attente_retour_materiel') {
-                $materiels = $this->materielRepository->getByCommande($numeroCommande);
-                $dateRetour = $commande->getDateRestitutionMateriel() ?? $commande->getDatePrestation();
-                $emailSent = sendMaterialReturnReminderEmail(
-                    $commande->getUtilisateurEmail(),
-                    $commande->getUtilisateurPrenom(),
-                    $numeroCommande,
-                    $materiels,
-                    $dateRetour
-                );
-                if (!$emailSent) {
-                    error_log("Échec envoi email rappel matériel commande #$numeroCommande à " . $commande->getUtilisateurEmail());
-                }
-            }
-
-            Session::set('flash_success', "Statut de la commande mis à jour avec succès !");
-
-            error_log("[EMPLOYE] Changement statut commande : numero={$numeroCommande}, ancien={$commande->getStatut()}, nouveau={$nouveauStatut}, par=" . Session::get('user_email'));
-            
-            // Rediriger vers la page de détail de la commande
-            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
-        } else {
-            Session::set('flash_error', "Erreur lors de la mise à jour du statut");
-            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
         }
+
+        if ($nouveauStatut === 'terminee') {
+            $sent = sendOrderCompletedEmail(
+                $commande->getUtilisateurEmail(),
+                $commande->getUtilisateurPrenom(),
+                $numeroCommande,
+                $commande->getMenuTitre() ?? 'Menu'
+            );
+            if (!$sent) {
+                error_log("Échec envoi email terminaison commande #$numeroCommande à " . $commande->getUtilisateurEmail());
+            }
+        }
+
+        if ($nouveauStatut === 'attente_retour_materiel') {
+            $materiels = $this->materielRepository->getByCommande($numeroCommande);
+            $dateRetour = $commande->getDateRestitutionMateriel() ?? $commande->getDatePrestation();
+            $sent = sendMaterialReturnReminderEmail(
+                $commande->getUtilisateurEmail(),
+                $commande->getUtilisateurPrenom(),
+                $numeroCommande,
+                $materiels,
+                $dateRetour
+            );
+            if (!$sent) {
+                error_log("Échec envoi email rappel matériel commande #$numeroCommande à " . $commande->getUtilisateurEmail());
+            }
+        }
+
+        Session::set('flash_success', "Statut de la commande mis à jour avec succès !");
+        $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
     }
 
     /**
@@ -314,153 +272,50 @@ class CommandeController extends Controller
             return;
         }
 
-        $errors = [];
         $numeroCommande = $_POST['numero_commande'] ?? '';
 
-        // Vérifier que la commande existe
-        $commande = $this->commandeRepository->findByNumero($numeroCommande);
-        if (!$commande) {
-            Session::set('flash_error', 'Commande introuvable');
-            $this->redirect('/employe/commandes');
-            return;
-        }
-
-        // Vérifier que la commande n'est pas terminée/annulée
-        if (in_array($commande->getStatut(), ['terminee', 'annulee', 'refusee'])) {
-            Session::set('flash_error', 'Cette commande ne peut plus être modifiée');
-            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
-            return;
-        }
-
-        // Récupérer les données du formulaire
-        $annulerCommande = isset($_POST['annuler_commande']) && $_POST['annuler_commande'] == '1';
-        $datePrestation = $_POST['date_prestation'] ?? '';
-        $heureLivraison = $_POST['heure_livraison'] ?? '';
-        $lieuLivraison = trim($_POST['lieu_livraison'] ?? '');
-        $villeLivraison = trim($_POST['ville_livraison'] ?? '');
-        $codePostal = trim($_POST['code_postal_livraison'] ?? '');
-        $instructionsSpeciales = trim($_POST['instructions_speciales'] ?? '');
-        $quantitesMenus = $_POST['quantite_menu'] ?? [];
-        
-        // Validation du contact utilisateur
-        $contacteUtilisateur = isset($_POST['contacte_utilisateur_edit']);
-        $modeContact = $_POST['mode_contact_edit'] ?? '';
-        $motifModification = trim($_POST['motif_modification'] ?? '');
-
-        if (!$contacteUtilisateur) {
-            $errors[] = "Vous devez confirmer avoir contacté l'utilisateur";
-        }
-        if (empty($modeContact)) {
-            $errors[] = "Le mode de contact est obligatoire";
-        }
-        if (strlen($motifModification) < 10) {
-            $errors[] = "Le motif de modification doit contenir au moins 10 caractères";
-        }
-
-        // Si annulation, pas besoin de valider les autres champs
-        if ($annulerCommande) {
-            if (!empty($errors)) {
-                Session::set('flash_error', implode('<br>', $errors));
-                $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
-                return;
-            }
-
-            // Annuler la commande
-            $updateData = [
-                'statut' => 'annulee',
-                'motif_annulation' => "[Contact: $modeContact - ANNULATION] $motifModification"
-            ];
-
-            $success = $this->commandeRepository->updateByNumero($numeroCommande, $updateData);
-
-            if ($success) {
-                // Enregistrer dans l'historique
-                $this->suiviCommandeRepository->enregistrerChangement(
-                    $numeroCommande,
-                    $commande->getStatut(),
-                    'annulee',
-                    Session::get('user_id'),
-                    "[ANNULATION] $motifModification"
-                );
-
-                // Logger dans MongoDB
-                $mongoStats = new MongoStats();
-                $mongoStats->logUserActivity('cancel_order', Session::get('user_id'), [
-                    'numero_commande' => $numeroCommande,
-                    'mode_contact' => $modeContact,
-                    'motif' => $motifModification
-                ]);
-
-                Session::set('flash_success', 'Commande annulée avec succès !');
-            } else {
-                Session::set('flash_error', 'Erreur lors de l\'annulation de la commande');
-            }
-
-            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
-            return;
-        }
-
-        // Validation des données pour modification normale
-        if (empty($datePrestation)) {
-            $errors[] = "La date de prestation est obligatoire";
-        }
-        if (empty($heureLivraison)) {
-            $errors[] = "L'heure de livraison est obligatoire";
-        }
-        if (empty($lieuLivraison)) {
-            $errors[] = "Le lieu de livraison est obligatoire";
-        }
-        if (empty($villeLivraison)) {
-            $errors[] = "La ville est obligatoire";
-        }
-        if (empty($codePostal)) {
-            $errors[] = "Le code postal est obligatoire";
-        }
-
-        if (!empty($errors)) {
-            Session::set('flash_error', implode('<br>', $errors));
-            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
-            return;
-        }
-        $updateData = [
-            'date_prestation' => $datePrestation,
-            'heure_livraison' => $heureLivraison,
-            'lieu_livraison' => $lieuLivraison,
-            'ville_livraison' => $villeLivraison,
-            'code_postal_livraison' => $codePostal,
-            'instructions_speciales' => $instructionsSpeciales,
-            'motif_annulation' => "[Contact: $modeContact - MODIFICATION] $motifModification"
+        $data = [
+            'mode_contact'           => $_POST['mode_contact_edit'] ?? '',
+            'motif'                  => $_POST['motif_modification'] ?? '',
+            'annuler'                => isset($_POST['annuler_commande']) && $_POST['annuler_commande'] == '1',
+            'date_prestation'        => $_POST['date_prestation'] ?? '',
+            'heure_livraison'        => $_POST['heure_livraison'] ?? '',
+            'lieu_livraison'         => $_POST['lieu_livraison'] ?? '',
+            'ville_livraison'        => $_POST['ville_livraison'] ?? '',
+            'code_postal_livraison'  => $_POST['code_postal_livraison'] ?? '',
+            'instructions_speciales' => $_POST['instructions_speciales'] ?? '',
+            'quantites_menus'        => $_POST['quantite_menu'] ?? [],
         ];
 
-        $success = $this->commandeRepository->updateByNumero($numeroCommande, $updateData);
-
-        if ($success) {
-            foreach ($quantitesMenus as $menuId => $quantite) {
-                $this->commandeMenuRepository->updateQuantite($numeroCommande, $menuId, (int)$quantite);
-            }
-
-            // Enregistrer dans l'historique
-            $this->suiviCommandeRepository->enregistrerChangement(
-                $numeroCommande,
-                $commande->getStatut(),
-                $commande->getStatut(), // Même statut
-                Session::get('user_id'),
-                "[MODIFICATION] $motifModification"
-            );
-
-            // Logger dans MongoDB
-            $mongoStats = new MongoStats();
-            $mongoStats->logUserActivity('edit_order', Session::get('user_id'), [
-                'numero_commande' => $numeroCommande,
-                'mode_contact' => $modeContact,
-                'motif' => $motifModification
-            ]);
-
-            Session::set('flash_success', 'Commande modifiée avec succès !');
-        } else {
-            Session::set('flash_error', 'Erreur lors de la modification de la commande');
+        // Vérification du consentement de contact utilisateur (exigence UI)
+        if (!isset($_POST['contacte_utilisateur_edit'])) {
+            Session::set('flash_error', "Vous devez confirmer avoir contacté l'utilisateur");
+            $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
+            return;
         }
 
+        try {
+            $result = $this->commandeService->editCommandeByEmploye(
+                (int) Session::get('user_id'),
+                (string) $numeroCommande,
+                $data
+            );
+        } catch (CommandeException $e) {
+            Session::set('flash_error', $e->getMessage());
+            $this->redirect(
+                $numeroCommande
+                    ? '/employe/commandes/view?id=' . $numeroCommande
+                    : '/employe/commandes'
+            );
+            return;
+        }
+
+        Session::set(
+            'flash_success',
+            $result['annulee']
+                ? 'Commande annulée avec succès !'
+                : 'Commande modifiée avec succès !'
+        );
         $this->redirect('/employe/commandes/view?id=' . $numeroCommande);
     }
 }

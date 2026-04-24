@@ -148,8 +148,6 @@ class CommandeController extends Controller
 
         $request = new Request();
 
-        // Préparation du payload pour le service (pas de logique métier ici,
-        // seulement extraction depuis la requête HTTP).
         $data = [
             'menu_id' => $request->post('menu_id'),
             'nombre_personnes' => $request->post('nombre_personnes'),
@@ -172,7 +170,7 @@ class CommandeController extends Controller
             return;
         }
 
-        // Envoi de l'email de confirmation (côté controller : préoccupation HTTP/SMTP)
+        // Envoi de l'email de confirmation
         $userEmail = Session::get('user_email');
         $userPrenom = Session::get('user_prenom');
         if ($userEmail && $userPrenom) {
@@ -267,75 +265,46 @@ class CommandeController extends Controller
 
         $request = new Request();
         $numeroCommande = $request->post('numero_commande');
-        $nombrePersonnes = $request->post('nombre_personnes');
-        $dateLivraison = $request->post('date_livraison');
 
-        $commande = $this->commandeRepository->findByNumero($numeroCommande);
-
-        // Vérifier que la commande appartient à l'utilisateur
-        if (!$commande || $commande->getUtilisateurId() != $userId) {
-            Session::set('error', 'Commande introuvable.');
-            $this->redirect('/mes-commandes');
-            return;
-        }
-
-        // Vérifier que la commande peut être modifiée (uniquement si en_attente)
-        if ($commande->getStatut() !== 'en_attente') {
-            Session::set('error', 'Cette commande ne peut plus être modifiée car elle a été acceptée.');
-            $this->redirect('/mes-commandes');
-            return;
-        }
-
-        // Récupérer les lignes de menus
-        $lignesMenus = $this->commandeMenuRepository->findByCommande($numeroCommande);
-        $this->commandeRepository->updateByNumero($numeroCommande, [
-            'date_prestation' => $dateLivraison
-        ]);
-
-        // Si nombre de personnes changé, mettre à jour la première ligne de menu
-        if (!empty($lignesMenus) && $nombrePersonnes != $lignesMenus[0]->getNombrePersonne()) {
-            $this->commandeMenuRepository->updateLigne(
-                $lignesMenus[0]->getCommandeMenuId(),
-                $nombrePersonnes,
-                $lignesMenus[0]->getPrixParPersonne(),
-                $lignesMenus[0]->getReduction()
-            );
-            
-            // Recalculer le total de la commande
-            $totalMenus = $this->commandeMenuRepository->getTotalMenus($numeroCommande);
-            $nouveauTotal = $totalMenus + $commande->getPrixLivraison();
-            
-            $this->commandeRepository->updateByNumero($numeroCommande, [
-                'total_final' => $nouveauTotal
+        try {
+            $result = $this->commandeService->updateCommande((int) $userId, [
+                'numero_commande' => $numeroCommande,
+                'nombre_personnes' => $request->post('nombre_personnes'),
+                'date_prestation' => $request->post('date_livraison'),
             ]);
+        } catch (CommandeException $e) {
+            Session::set('error', $e->getMessage());
+            $this->redirect('/mes-commandes');
+            return;
         }
 
-        // Envoyer l'email de modification
+        // Email de modification
         $userEmail = Session::get('user_email');
         $userPrenom = Session::get('user_prenom');
-        
+
         if ($userEmail && $userPrenom) {
             require_once __DIR__ . '/../../config/mail.php';
-            
-            $lignesMenus = $this->commandeMenuRepository->findByCommande($numeroCommande);
-            
+
             $detailsCommande = [
                 'lignesMenus' => array_map(fn($l) => [
                     'menu_nom' => $l->getMenuNom(),
                     'nombre_personne' => $l->getNombrePersonne(),
                     'prix_par_personne' => $l->getPrixParPersonne(),
                     'total_ligne' => $l->getTotalLigne(),
-                ], $lignesMenus),
-                'date_prestation' => $dateLivraison
+                ], $result['lignes_menus']),
+                'date_prestation' => $result['date_prestation'],
             ];
-            
-            sendOrderUpdateEmail($userEmail, $userPrenom, $numeroCommande, $detailsCommande);
+
+            sendOrderUpdateEmail(
+                $userEmail,
+                $userPrenom,
+                $result['numero_commande'],
+                $detailsCommande
+            );
         }
 
-        error_log("[COMMANDE] Modification : numero={$numeroCommande}, user_id={$userId}, date={$dateLivraison}, personnes={$nombrePersonnes}");
-
         Session::set('commande_modifiee', true);
-        $this->redirect('/commande/modifier?numero=' . urlencode($numeroCommande));
+        $this->redirect('/commande/modifier?numero=' . urlencode($result['numero_commande']));
     }
 
     /**
@@ -349,54 +318,29 @@ class CommandeController extends Controller
         }
 
         $request = new Request();
-        $numeroCommande = $request->get('numero');
+        $numeroCommande = (string) $request->get('numero');
 
-        $commande = $this->commandeRepository->findByNumero($numeroCommande);
-
-        // Vérifier que la commande appartient à l'utilisateur
-        if (!$commande || $commande->getUtilisateurId() != $userId) {
-            Session::set('error', 'Commande introuvable.');
+        try {
+            $result = $this->commandeService->cancelCommandeByUser((int) $userId, $numeroCommande);
+        } catch (CommandeException $e) {
+            Session::set('error', $e->getMessage());
             $this->redirect('/mes-commandes');
             return;
         }
 
-        // Vérifier que la commande peut être annulée (uniquement si en_attente)
-        if ($commande->getStatut() !== 'en_attente') {
-            Session::set('error', 'Cette commande ne peut plus être annulée car elle a déjà été acceptée par notre équipe. Veuillez nous contacter.');
-            $this->redirect('/mes-commandes');
-            return;
-        }
-        $this->commandeRepository->updateByNumero($numeroCommande, ['statut' => 'annulee']);
-
-        error_log("[COMMANDE] Annulation : numero={$numeroCommande}, user_id={$userId}");
-        
-        // Enregistrer dans l'historique de suivi
-        $this->suiviCommandeRepository->enregistrerChangement(
-            $numeroCommande,
-            $commande->getStatut(),
-            'annulee',
-            $userId,
-            'Annulation par l\'utilisateur'
-        );
-
-        // Envoyer les emails de notification
+        // Emails de notification
         try {
             require_once __DIR__ . '/../../config/mail.php';
-            
-            // Récupérer les infos utilisateur
+
             $user = $this->userRepository->findById($userId);
-            
             if ($user) {
-                // Email à l'utilisateur
                 sendCancellationEmailToUser(
                     $user->getEmail(),
                     $user->getPrenom(),
-                    $numeroCommande
+                    $result['numero_commande']
                 );
-                
-                // Email au restaurant
                 sendCancellationEmailToRestaurant(
-                    $numeroCommande,
+                    $result['numero_commande'],
                     $user->getNom() . ' ' . $user->getPrenom(),
                     $user->getEmail()
                 );

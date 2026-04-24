@@ -309,4 +309,153 @@ class CommandeService extends AbstractService
             'pret_materiel' => $pretMateriel,
         ];
     }
+
+    // ========================================================================
+    // CAS D'USAGE : MODIFICATION D'UNE COMMANDE (UTILISATEUR)
+    // ========================================================================
+
+    /**
+     * Modifie une commande existante d'un utilisateur.
+     *
+     * Règles métier :
+     *  - La commande doit appartenir à l'utilisateur.
+     *  - Elle doit être au statut `en_attente` (sinon refus).
+     *  - Si le nombre de personnes change, on met à jour la première ligne
+     *    et on recalcule total_final (menus + boissons déjà en base + livraison).
+     *
+     * @param array{
+     *   numero_commande: string,
+     *   nombre_personnes: int|string,
+     *   date_prestation: string
+     * } $data
+     *
+     * @return array{
+     *   numero_commande: string,
+     *   lignes_menus: array,
+     *   date_prestation: string
+     * }
+     *
+     * @throws CommandeException
+     */
+    public function updateCommande(int $userId, array $data): array
+    {
+        $this->requireFields($data, ['numero_commande', 'nombre_personnes', 'date_prestation']);
+
+        $numeroCommande = (string) $data['numero_commande'];
+        $nombrePersonnes = (int) $data['nombre_personnes'];
+        $dateLivraison = (string) $data['date_prestation'];
+
+        if ($nombrePersonnes <= 0) {
+            throw new CommandeException("Le nombre de personnes doit être supérieur à zéro.");
+        }
+
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
+        if (!$commande || $commande->getUtilisateurId() != $userId) {
+            throw new CommandeException("Commande introuvable.");
+        }
+
+        if ($commande->getStatut() !== 'en_attente') {
+            throw new CommandeException(
+                "Cette commande ne peut plus être modifiée car elle a été acceptée."
+            );
+        }
+
+        $lignesMenus = $this->commandeMenuRepository->findByCommande($numeroCommande);
+
+        $this->commandeRepository->updateByNumero($numeroCommande, [
+            'date_prestation' => $dateLivraison,
+        ]);
+
+        // Si le nombre de personnes a changé, on met à jour la 1ère ligne et on recalcule
+        if (!empty($lignesMenus) && $nombrePersonnes != $lignesMenus[0]->getNombrePersonne()) {
+            $this->commandeMenuRepository->updateLigne(
+                $lignesMenus[0]->getCommandeMenuId(),
+                $nombrePersonnes,
+                $lignesMenus[0]->getPrixParPersonne(),
+                $lignesMenus[0]->getReduction()
+            );
+
+            $totalMenus = $this->commandeMenuRepository->getTotalMenus($numeroCommande);
+            $nouveauTotal = $totalMenus + (float) $commande->getPrixLivraison();
+
+            $this->commandeRepository->updateByNumero($numeroCommande, [
+                'total_final' => $nouveauTotal,
+            ]);
+        }
+
+        // Recharger les lignes après update
+        $lignesMenus = $this->commandeMenuRepository->findByCommande($numeroCommande);
+
+        error_log(sprintf(
+            "[COMMANDE] Modification : numero=%s, user_id=%d, date=%s, personnes=%d",
+            $numeroCommande,
+            $userId,
+            $dateLivraison,
+            $nombrePersonnes,
+        ));
+
+        return [
+            'numero_commande' => $numeroCommande,
+            'lignes_menus' => $lignesMenus,
+            'date_prestation' => $dateLivraison,
+        ];
+    }
+
+    // ========================================================================
+    // CAS D'USAGE : ANNULATION D'UNE COMMANDE (UTILISATEUR)
+    // ========================================================================
+
+    /**
+     * Annule une commande d'un utilisateur.
+     *
+     * Règles métier :
+     *  - La commande doit appartenir à l'utilisateur.
+     *  - Elle doit être au statut `en_attente` (sinon refus, il faut passer
+     *    par le support).
+     *  - Change le statut en `annulee` et enregistre dans le suivi.
+     *
+     * @return array{numero_commande: string, ancien_statut: string}
+     *
+     * @throws CommandeException
+     */
+    public function cancelCommandeByUser(int $userId, string $numeroCommande): array
+    {
+        if ($numeroCommande === '') {
+            throw new CommandeException("Numéro de commande manquant.");
+        }
+
+        $commande = $this->commandeRepository->findByNumero($numeroCommande);
+        if (!$commande || $commande->getUtilisateurId() != $userId) {
+            throw new CommandeException("Commande introuvable.");
+        }
+
+        if ($commande->getStatut() !== 'en_attente') {
+            throw new CommandeException(
+                "Cette commande ne peut plus être annulée car elle a déjà été acceptée par notre équipe. Veuillez nous contacter."
+            );
+        }
+
+        $ancienStatut = $commande->getStatut();
+
+        $this->commandeRepository->updateByNumero($numeroCommande, ['statut' => 'annulee']);
+
+        $this->suiviCommandeRepository->enregistrerChangement(
+            $numeroCommande,
+            $ancienStatut,
+            'annulee',
+            $userId,
+            "Annulation par l'utilisateur"
+        );
+
+        error_log(sprintf(
+            "[COMMANDE] Annulation : numero=%s, user_id=%d",
+            $numeroCommande,
+            $userId,
+        ));
+
+        return [
+            'numero_commande' => $numeroCommande,
+            'ancien_statut' => $ancienStatut,
+        ];
+    }
 }

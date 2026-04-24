@@ -2,6 +2,7 @@
 
 namespace App\Factory;
 
+use App\Services\AuthService;
 use App\Services\CommandeService;
 use App\MongoDB\MongoStats;
 
@@ -54,5 +55,17 @@ class ServiceFactory
             );
         }
         return $this->services['commande'];
+    }
+
+    public function createAuthService(): AuthService
+    {
+        if (!isset($this->services['auth'])) {
+            $repoFactory = RepositoryFactory::getInstance();
+            $this->services['auth'] = new AuthService(
+                $repoFactory->createUserRepository(),
+                $repoFactory->createPasswordResetRepository(),
+            );
+        }
+        return $this->services['auth'];
     }
 }

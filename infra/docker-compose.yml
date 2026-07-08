@@ -21,6 +21,7 @@ services:
       context: ..
       dockerfile: Dockerfile
     container_name: ${APP_NAME}-app
+    restart: unless-stopped
     expose:
       - "80"
     environment:
